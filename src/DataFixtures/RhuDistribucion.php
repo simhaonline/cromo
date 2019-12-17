@@ -54,6 +54,15 @@ class RhuDistribucion extends Fixture
             $arDistribucion->setOrden(5);
             $manager->persist($arDistribucion);
         }
+
+        $arDistribucion = $manager->getRepository(\App\Entity\RecursoHumano\RhuDistribucion::class)->find('1TE01');
+        if(!$arDistribucion){
+            $arDistribucion = new \App\Entity\RecursoHumano\RhuDistribucion();
+            $arDistribucion->setCodigoDistribucionPk('1TE01');
+            $arDistribucion->setNombre('DISTRIBUCION 6');
+            $arDistribucion->setOrden(6);
+            $manager->persist($arDistribucion);
+        }
         $manager->flush();
     }
 }

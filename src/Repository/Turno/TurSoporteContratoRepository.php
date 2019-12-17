@@ -5,6 +5,7 @@ namespace App\Repository\Turno;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\Turno\TurContratoTipo;
+use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurSector;
@@ -696,6 +697,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         $arrSemanasCompensacion = array();
         $arrDomingos = array();
         $arrFestivos = array();
+        $arFestivos = $em->getRepository(TurFestivo::class)->festivos($arSoporte->getFechaDesde()->format('Y-m-d'), $arSoporte->getFechaHasta()->format('Y-m-d'));
         $dateFechaDesde = $arSoporte->getFechaDesde();
         $dateFechaHasta = $arSoporte->getFechaHasta();
         $intDiaInicial = $dateFechaDesde->format('j');
@@ -721,6 +723,11 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             }
         }
         $arrFestivos = $arrDomingos;
+        $arrSoloFestivos = array();
+        foreach ($arFestivos as $arFestivo) {
+            $arrFestivos[] = array('domingo' => $arFestivo['fecha']);
+            $arrSoloFestivos[] = array('domingo' => $arFestivo['fecha']);
+        }
         $arrSemanasCompensacion[] = array('diaInicial' => 1, 'diaFinal' => 7, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 1, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 7);
         $arrSemanasCompensacion[] = array('diaInicial' => 8, 'diaFinal' => 15, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 8, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 15);
         $arrSemanasCompensacion[] = array('diaInicial' => 16, 'diaFinal' => 22, 'fechaInicial' => $dateFechaDesde->format('Y/m/') . 16, 'fechaFinal' => $dateFechaDesde->format('Y/m/') . 22);
@@ -729,7 +736,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         foreach ($arrSoporteContratos as $codigo) {
             $arSoporteContrato = $em->getRepository(TurSoporteContrato::class)->find($codigo);
             if($arSoporteContrato->getCodigoDistribucionFk()) {
-                $this->distribucion($arSoporte, $arSoporte->getGrupoRel(), $arSoporteContrato, $arrSemanas, $arrSemanasCompensacion, $arrDomingos);
+                $this->distribucion($arSoporte, $arSoporte->getGrupoRel(), $arSoporteContrato, $arrSemanas, $arrSemanasCompensacion, $arrDomingos, $arrSoloFestivos);
             }
         }
     }
@@ -741,11 +748,10 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
      * @param $arrSemanas
      * @throws \Doctrine\ORM\ORMException
      */
-    public function distribucion($arSoporte, $arGrupo, $arSoporteContrato, $arrSemanas, $arrSemanasCompensacion, $arrDomingos) {
+    public function distribucion($arSoporte, $arGrupo, $arSoporteContrato, $arrSemanas, $arrSemanasCompensacion, $arrDomingos, $arrSoloFestivos) {
         $em = $this->getEntityManager();
 
         if($arSoporteContrato->getCodigoDistribucionFk() == 'DP001') {
-
             $dias = $arSoporteContrato->getDiasTransporte();
             /*if ($arSoportePagoPeriodo->getDiasAdicionalesFebrero() > 0) {
                 $novedades = $arSoportePagoAct->getIncapacidad() + $arSoportePagoAct->getIncapacidadNoLegalizada() + $arSoportePagoAct->getLicencia() + $arSoportePagoAct->getLicenciaNoRemunerada();
@@ -1207,6 +1213,106 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                 $em->persist($arSoporteContrato);
             }
         }
+
+        if($arSoporteContrato->getCodigoDistribucionFk() == '1TE01') {
+            $descanso = $arGrupo->getDescansoDistribucion();
+            $diasPeriodo = $arSoporte->getDias();
+            $diasDescansoSoportePago = $arSoporte->getDomingos() + $arSoporte->getFestivos();
+            //Descansos de compensacion
+            $descansoCompensacion = $arSoporte->getDomingos() + $arSoporte->getFestivos();
+
+            //Si son propuestos por el usuario prevalece
+            if ($descanso > 0) {
+                $diasDescansoSoportePago = $descanso;
+                $descansoCompensacion = $descanso;
+            }
+
+
+            $novedadesIngresoRetiro = $arSoporteContrato->getIngreso() + $arSoporteContrato->getRetiro();
+            if ($novedadesIngresoRetiro > 0) {
+                $descansoDescontar = 0;
+                foreach ($arrSemanasCompensacion as $arrSemana) {
+                    $numeroIngresoRetiro = $em->getRepository(TurSoporteHora::class)->numeroIngresoRetiros($arSoporteContrato->getCodigoSoporteContratoPk(), $arrSemana['fechaInicial'], $arrSemana['fechaFinal']);
+                    if ($numeroIngresoRetiro > 0) {
+                        $descansoDescontar++;
+                    }
+                }
+                if ($descansoDescontar <= $descansoCompensacion) {
+                    $descansoCompensacion = $descansoCompensacion - $descansoDescontar;
+                } else {
+                    $descansoCompensacion = 0;
+                }
+                if ($descansoDescontar <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $descansoDescontar;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+            }
+            //Descanso por sln
+            $novedadesAfectaDescanso = $arSoporteContrato->getLicenciaNoRemunerada();
+            if ($novedadesAfectaDescanso > 0) {
+                $descansoDescontar = 0;
+                foreach ($arrSemanas as $arrSemana) {
+                    $numeroLicenciasNoRemuneradas = $em->getRepository(TurSoporteHora::class)->numeroLicenciasNoRemunerada($arSoporteContrato->getCodigoSoporteContratoPk(), $arrSemana['fechaInicial'], $arrSemana['fechaFinal']);
+                    if ($numeroLicenciasNoRemuneradas > 0) {
+                        $descansoDescontar++;
+                    }
+                }
+                if ($descansoDescontar <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $descansoDescontar;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+            }
+            if ($diasDescansoSoportePago > 0) {
+                $domingosPagados = $this->domingosNovedad($arrDomingos, $arSoporteContrato->getCodigoSoporteContratoPk());
+                if ($domingosPagados <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $domingosPagados;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+                $festivosPagados = $this->festivosNovedad($arrSoloFestivos, $arSoporteContrato->getCodigoSoporteContratoPk());
+                if ($festivosPagados <= $diasDescansoSoportePago) {
+                    $diasDescansoSoportePago = $diasDescansoSoportePago - $festivosPagados;
+                } else {
+                    $diasDescansoSoportePago = 0;
+                }
+            }
+            $diasPeriodoCompensar = $diasPeriodo;
+            $horasPeriodo = $diasPeriodoCompensar * 8;
+            $horasDescansoSoportePago = $diasDescansoSoportePago * 8;
+
+
+            $horasDia = $arSoporteContrato->getHorasDiurnasReales();
+            $horasNoche = $arSoporteContrato->getHorasNocturnasReales();
+            $horasFestivasDia = $arSoporteContrato->getHorasFestivasDiurnasReales();
+            $horasFestivasNoche = $arSoporteContrato->getHorasFestivasNocturnasReales();
+            $horasExtraDia = $arSoporteContrato->getHorasExtrasOrdinariasDiurnasReales();
+            $horasExtraNoche = $arSoporteContrato->getHorasExtrasOrdinariasNocturnasReales();
+            $horasExtraFestivasDia = $arSoporteContrato->getHorasExtrasFestivasDiurnasReales();
+            $horasExtraFestivasNoche = $arSoporteContrato->getHorasExtrasFestivasNocturnasReales();
+
+            $arSoporteContratoAct = new TurSoporteContrato();
+            $arSoporteContratoAct = $em->getRepository(TurSoporteContrato::class)->find($arSoporteContrato->getCodigoSoporteContratoPk());
+            $arSoporteContratoAct->setHorasDiurnas($horasDia);
+            $arSoporteContratoAct->setHorasNocturnas($horasNoche);
+            $arSoporteContratoAct->setHorasFestivasDiurnas($horasFestivasDia);
+            $arSoporteContratoAct->setHorasFestivasNocturnas($horasFestivasNoche);
+            $arSoporteContratoAct->setHorasExtrasOrdinariasDiurnas($horasExtraDia);
+            $arSoporteContratoAct->setHorasExtrasOrdinariasNocturnas($horasExtraNoche);
+            $arSoporteContratoAct->setHorasExtrasFestivasDiurnas($horasExtraFestivasDia);
+            $arSoporteContratoAct->setHorasExtrasFestivasNocturnas($horasExtraFestivasNoche);
+            //$arSoporteContratoAct->setDiasPeriodoCompensar($diasPeriodoCompensar);
+            //$arSoporteContratoAct->setDiasPeriodoDescansoCompensar($descansoCompensacion);
+            $horasDescansoRecurso = $horasDescansoSoportePago;
+            if ($diasPeriodo == $arSoporteContrato->getNovedad()) {
+                $horasDescansoRecurso = 0;
+            }
+            $arSoporteContratoAct->setHorasDescanso($horasDescansoRecurso);
+            $horas = $horasDia + $horasNoche + $horasFestivasDia + $horasFestivasNoche + $horasDescansoRecurso;
+            $arSoporteContratoAct->setHoras($horas);
+            $em->persist($arSoporteContratoAct);
+        }
     }
 
     /**
@@ -1267,6 +1373,26 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         foreach ($arrDomingos as $arrDomingo) {
             $descansoPagado = false;
             $arSoportePagoDetalles = $em->getRepository(TurSoporteHora::class)->findBy(array('codigoSoporteContratoFk' => $codigoSoporteContrato, 'fecha' => $arrDomingo['domingo']));
+            foreach ($arSoportePagoDetalles as $arSoportePagoDetalle) {
+                if ($arSoportePagoDetalle->getIncapacidad() || $arSoportePagoDetalle->getVacacion() || $arSoportePagoDetalle->getRetiro() || $arSoportePagoDetalle->getIngreso()) {
+                    $descansoPagado = true;
+                }
+            }
+            if ($descansoPagado == true) {
+                $descansosPagados++;
+            }
+        }
+        return $descansosPagados;
+    }
+
+    private function festivosNovedad($arrFestivos, $codigoSoportePago)
+    {
+        $em = $this->getEntityManager();
+        $descansosPagados = 0;
+        foreach ($arrFestivos as $arrDomingo) {
+            $descansoPagado = false;
+            $arSoportePagoDetalles = new TurSoporteHora();
+            $arSoportePagoDetalles = $em->getRepository(TurSoporteHora::class)->findBy(array('codigoSoporteContratoFk' => $codigoSoportePago, 'fecha' => $arrDomingo['domingo']));
             foreach ($arSoportePagoDetalles as $arSoportePagoDetalle) {
                 if ($arSoportePagoDetalle->getIncapacidad() || $arSoportePagoDetalle->getVacacion() || $arSoportePagoDetalle->getRetiro() || $arSoportePagoDetalle->getIngreso()) {
                     $descansoPagado = true;

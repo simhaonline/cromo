@@ -2,8 +2,8 @@
     <tr>
         <td class="titulo">CODIGO:</td>
         <td class="td-in-well">{{ arSoporte.codigoSoportePk }}</td>
-        <td class="titulo"></td>
-        <td class="td-in-well"></td>
+        <td class="titulo">GRUPO:</td>
+        <td class="td-in-well">{{ arSoporte.grupoRel.nombre | default('') }}</td>
         <td class="titulo"></td>
         <td align="right"></td>
     </tr>

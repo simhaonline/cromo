@@ -235,7 +235,7 @@ class ProgramacionController extends AbstractController
             if ($form->get('btnAprobar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                $em->getRepository(RhuProgramacion::class)->aprobarCuentasPagar($arProgramacion);
+                $em->getRepository(RhuProgramacion::class)->aprobar($arProgramacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnLiberarSoporte')->isClicked()) {

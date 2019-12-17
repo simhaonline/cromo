@@ -104,6 +104,37 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Clasificación</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Sector comercial:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.sectorComercialRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Cobertura:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.coberturaRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Dimension:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.dimensionRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <label class="col-sm-2 control-label">Origen capital:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.origenCapitalRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Sector economico:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.sectorEconomicoRel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_comercial_cliente_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}

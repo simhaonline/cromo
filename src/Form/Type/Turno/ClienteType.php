@@ -3,6 +3,10 @@
 namespace App\Form\Type\Turno;
 
 use App\Entity\General\GenAsesor;
+use App\Entity\General\GenCobertura;
+use App\Entity\General\GenDimension;
+use App\Entity\General\GenOrigenCapital;
+use App\Entity\General\GenSectorComercial;
 use App\Entity\Turno\TurCliente;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -56,6 +60,56 @@ class ClienteType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'ciudad:'
+            ])
+            ->add('sectorComercialRel', EntityType::class, [
+                'class' => GenSectorComercial::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('sc')
+                        ->orderBy('sc.nombre');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'ciudad:',
+                'required'=>false
+            ])
+            ->add('coberturaRel', EntityType::class, [
+                'class' => GenCobertura::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'ciudad:',
+                'required' => false
+            ])
+            ->add('dimensionRel', EntityType::class, [
+                'class' => GenDimension::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.nombre');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'ciudad:',
+                'required'=>false
+            ])
+            ->add('origenCapitalRel', EntityType::class, [
+                'class' => GenOrigenCapital::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('oc')
+                        ->orderBy('oc.nombre');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'ciudad:',
+                'required'=>false
+            ])
+            ->add('sectorEconomicoRel', EntityType::class, [
+                'class' => GenSectorComercial::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('sc')
+                        ->orderBy('sc.nombre');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'ciudad:',
+                'required' => false
             ])
             ->add('numeroIdentificacion', NumberType::class)
             ->add('digitoVerificacion', NumberType::class)

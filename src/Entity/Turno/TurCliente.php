@@ -123,6 +123,31 @@ class TurCliente
     private $codigoFormaPagoFk;
 
     /**
+     * @ORM\Column(name="codigo_sector_comercial_fk",type="integer", nullable=true, options={"default":0})
+     */
+    private $codigoSectorComercialFk;
+
+    /**
+     * @ORM\Column(name="codigo_cobertura_fk", type="integer", nullable=true, options={"default":0})
+     */
+    private $codigoCoberturaFk;
+
+    /**
+     * @ORM\Column(name="codigo_dimension_fk",type="integer", nullable=true, options={"default":0})
+     */
+    private $codigoDimensionFk;
+
+    /**
+     * @ORM\Column(name="codigo_origen_capital_fk",type="integer", nullable=true, options={"default":0})
+     */
+    private $codigoOrigenCapitalFk;
+
+    /**
+     * @ORM\Column(name="codigo_sector_economico_fk",type="integer", nullable=true, options={"default":0})
+     */
+    private $codigoSectorEconomicoFk;
+
+    /**
      * @ORM\Column(name="estrato", type="string", length=5, nullable=true)
      */
     private $estrato;
@@ -180,6 +205,36 @@ class TurCliente
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="clienteRel")
      */
     protected $costosServiciosClienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSectorComercial", inversedBy="turClientesSectorComercialRel")
+     * @ORM\JoinColumn(name="codigo_sector_comercial_fk", referencedColumnName="codigo_sector_comercial_pk")
+     */
+    protected $sectorComercialRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCobertura", inversedBy="turClientesCoberturaRel")
+     * @ORM\JoinColumn(name="codigo_cobertura_fk", referencedColumnName="codigo_cobertura_pk")
+     */
+    protected $coberturaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenDimension", inversedBy="turClientesDimensionRel")
+     * @ORM\JoinColumn(name="codigo_dimension_fk", referencedColumnName="codigo_dimension_pk")
+     */
+    protected $dimensionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenOrigenCapital", inversedBy="turClientesOrigenCapitalRel")
+     * @ORM\JoinColumn(name="codigo_origen_capital_fk", referencedColumnName="codigo_origen_capital_pk")
+     */
+    protected $origenCapitalRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSectorEconomico", inversedBy="turClientesSectorEconomicoRel")
+     * @ORM\JoinColumn(name="codigo_sector_economico_fk", referencedColumnName="codigo_sector_economico_pk")
+     */
+    protected $sectorEconomicoRel;
 
     /**
      * @return array
@@ -243,6 +298,22 @@ class TurCliente
     public function setCodigoCiudadFk($codigoCiudadFk): void
     {
         $this->codigoCiudadFk = $codigoCiudadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAsesorFk()
+    {
+        return $this->codigoAsesorFk;
+    }
+
+    /**
+     * @param mixed $codigoAsesorFk
+     */
+    public function setCodigoAsesorFk($codigoAsesorFk): void
+    {
+        $this->codigoAsesorFk = $codigoAsesorFk;
     }
 
     /**
@@ -422,17 +493,17 @@ class TurCliente
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getPlazoPago()
+    public function getPlazoPago(): int
     {
         return $this->plazoPago;
     }
 
     /**
-     * @param mixed $plazoPago
+     * @param int $plazoPago
      */
-    public function setPlazoPago($plazoPago): void
+    public function setPlazoPago(int $plazoPago): void
     {
         $this->plazoPago = $plazoPago;
     }
@@ -454,19 +525,51 @@ class TurCliente
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getEstadoInactivo()
+    public function isEstadoInactivo(): bool
     {
         return $this->estadoInactivo;
     }
 
     /**
-     * @param mixed $estadoInactivo
+     * @param bool $estadoInactivo
      */
-    public function setEstadoInactivo($estadoInactivo): void
+    public function setEstadoInactivo(bool $estadoInactivo): void
     {
         $this->estadoInactivo = $estadoInactivo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRetencionFuente(): bool
+    {
+        return $this->retencionFuente;
+    }
+
+    /**
+     * @param bool $retencionFuente
+     */
+    public function setRetencionFuente(bool $retencionFuente): void
+    {
+        $this->retencionFuente = $retencionFuente;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRetencionFuenteSinBase(): bool
+    {
+        return $this->retencionFuenteSinBase;
+    }
+
+    /**
+     * @param bool $retencionFuenteSinBase
+     */
+    public function setRetencionFuenteSinBase(bool $retencionFuenteSinBase): void
+    {
+        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
     }
 
     /**
@@ -483,6 +586,102 @@ class TurCliente
     public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
     {
         $this->codigoFormaPagoFk = $codigoFormaPagoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSectorComercialFk()
+    {
+        return $this->codigoSectorComercialFk;
+    }
+
+    /**
+     * @param mixed $codigoSectorComercialFk
+     */
+    public function setCodigoSectorComercialFk($codigoSectorComercialFk): void
+    {
+        $this->codigoSectorComercialFk = $codigoSectorComercialFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCoberturaFk()
+    {
+        return $this->codigoCoberturaFk;
+    }
+
+    /**
+     * @param mixed $codigoCoberturaFk
+     */
+    public function setCodigoCoberturaFk($codigoCoberturaFk): void
+    {
+        $this->codigoCoberturaFk = $codigoCoberturaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDimensionFk()
+    {
+        return $this->codigoDimensionFk;
+    }
+
+    /**
+     * @param mixed $codigoDimensionFk
+     */
+    public function setCodigoDimensionFk($codigoDimensionFk): void
+    {
+        $this->codigoDimensionFk = $codigoDimensionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOrigenCapitalFk()
+    {
+        return $this->codigoOrigenCapitalFk;
+    }
+
+    /**
+     * @param mixed $codigoOrigenCapitalFk
+     */
+    public function setCodigoOrigenCapitalFk($codigoOrigenCapitalFk): void
+    {
+        $this->codigoOrigenCapitalFk = $codigoOrigenCapitalFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSectorEconomicoFk()
+    {
+        return $this->codigoSectorEconomicoFk;
+    }
+
+    /**
+     * @param mixed $codigoSectorEconomicoFk
+     */
+    public function setCodigoSectorEconomicoFk($codigoSectorEconomicoFk): void
+    {
+        $this->codigoSectorEconomicoFk = $codigoSectorEconomicoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEstrato()
+    {
+        return $this->estrato;
+    }
+
+    /**
+     * @param mixed $estrato
+     */
+    public function setEstrato($estrato): void
+    {
+        $this->estrato = $estrato;
     }
 
     /**
@@ -552,17 +751,33 @@ class TurCliente
     /**
      * @return mixed
      */
-    public function getPedidosClienteRel()
+    public function getAsesorRel()
     {
-        return $this->pedidosClienteRel;
+        return $this->asesorRel;
     }
 
     /**
-     * @param mixed $pedidosClienteRel
+     * @param mixed $asesorRel
      */
-    public function setPedidosClienteRel($pedidosClienteRel): void
+    public function setAsesorRel($asesorRel): void
     {
-        $this->pedidosClienteRel = $pedidosClienteRel;
+        $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasClienteRel()
+    {
+        return $this->facturasClienteRel;
+    }
+
+    /**
+     * @param mixed $facturasClienteRel
+     */
+    public function setFacturasClienteRel($facturasClienteRel): void
+    {
+        $this->facturasClienteRel = $facturasClienteRel;
     }
 
     /**
@@ -600,70 +815,6 @@ class TurCliente
     /**
      * @return mixed
      */
-    public function getFacturasClienteRel()
-    {
-        return $this->facturasClienteRel;
-    }
-
-    /**
-     * @param mixed $facturasClienteRel
-     */
-    public function setFacturasClienteRel($facturasClienteRel): void
-    {
-        $this->facturasClienteRel = $facturasClienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuente()
-    {
-        return $this->retencionFuente;
-    }
-
-    /**
-     * @param mixed $retencionFuente
-     */
-    public function setRetencionFuente($retencionFuente): void
-    {
-        $this->retencionFuente = $retencionFuente;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRetencionFuenteSinBase()
-    {
-        return $this->retencionFuenteSinBase;
-    }
-
-    /**
-     * @param mixed $retencionFuenteSinBase
-     */
-    public function setRetencionFuenteSinBase($retencionFuenteSinBase): void
-    {
-        $this->retencionFuenteSinBase = $retencionFuenteSinBase;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstrato()
-    {
-        return $this->estrato;
-    }
-
-    /**
-     * @param mixed $estrato
-     */
-    public function setEstrato($estrato): void
-    {
-        $this->estrato = $estrato;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCostosEmpleadosServiciosClienteRel()
     {
         return $this->costosEmpleadosServiciosClienteRel;
@@ -696,17 +847,81 @@ class TurCliente
     /**
      * @return mixed
      */
-    public function getAsesorRel()
+    public function getSectorComercialRel()
     {
-        return $this->asesorRel;
+        return $this->sectorComercialRel;
     }
 
     /**
-     * @param mixed $asesorRel
+     * @param mixed $sectorComercialRel
      */
-    public function setAsesorRel($asesorRel): void
+    public function setSectorComercialRel($sectorComercialRel): void
     {
-        $this->asesorRel = $asesorRel;
+        $this->sectorComercialRel = $sectorComercialRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoberturaRel()
+    {
+        return $this->coberturaRel;
+    }
+
+    /**
+     * @param mixed $coberturaRel
+     */
+    public function setCoberturaRel($coberturaRel): void
+    {
+        $this->coberturaRel = $coberturaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDimensionRel()
+    {
+        return $this->dimensionRel;
+    }
+
+    /**
+     * @param mixed $dimensionRel
+     */
+    public function setDimensionRel($dimensionRel): void
+    {
+        $this->dimensionRel = $dimensionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrigenCapitalRel()
+    {
+        return $this->origenCapitalRel;
+    }
+
+    /**
+     * @param mixed $origenCapitalRel
+     */
+    public function setOrigenCapitalRel($origenCapitalRel): void
+    {
+        $this->origenCapitalRel = $origenCapitalRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSectorEconomicoRel()
+    {
+        return $this->sectorEconomicoRel;
+    }
+
+    /**
+     * @param mixed $sectorEconomicoRel
+     */
+    public function setSectorEconomicoRel($sectorEconomicoRel): void
+    {
+        $this->sectorEconomicoRel = $sectorEconomicoRel;
     }
 
 

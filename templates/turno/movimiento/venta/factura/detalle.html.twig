@@ -110,6 +110,8 @@
                             <th>CANT</th>
                             <th>PRECIO</th>
                             <th>SUBTOTAL</th>
+                            <th title="Porcentaje base iva">%B</th>
+                            <th title="Base iva">BASE</th>
                             <th>COD</th>
                             <th>IVA</th>
                             <th>RET</th>
@@ -144,6 +146,8 @@
                                                                            size="10"></td>
                                 {% endif %}
                                 <td class="numero">{{ arFacturaDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
+                                <td class="numero">{{ arFacturaDetalle.porcentajeBaseIva | number_format(0,'.',',') }}</td>
+                                <td class="numero">{{ arFacturaDetalle.vrBaseIva | number_format(0,'.',',') }}</td>
                                 {% if arFactura.estadoAutorizado %}
                                     <td>{{ arFacturaDetalle.codigoImpuestoIvaFk }}</td>
                                     <td style="text-align: right;">{{ arFacturaDetalle.vrIva | number_format(0,'.',',') }}</td>

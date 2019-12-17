@@ -38,6 +38,8 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('p.nombre as puestoNombre')
             ->addSelect('fd.codigoPedidoDetalleFk')
             ->addSelect('fd.detalle')
+            ->addSelect('fd.porcentajeBaseIva')
+            ->addSelect('fd.vrBaseIva')
             ->leftJoin('fd.itemRel', 'i')
             ->leftJoin('fd.puestoRel', 'p')
             ->where('fd.codigoFacturaFk = ' . $id);
@@ -193,6 +195,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFacturaDetalle::class, 'fd')
             ->select('fd.codigoImpuestoIvaFk')
             ->addSelect('SUM(fd.vrIva) as vrIva')
+            ->addSelect('SUM(fd.vrBaseIva) as vrBaseIva')
             ->where('fd.codigoFacturaFk = ' . $codigo)
             ->andWhere('fd.vrIva > 0')
             ->groupBy('fd.codigoImpuestoIvaFk');

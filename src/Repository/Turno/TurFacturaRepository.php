@@ -192,6 +192,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             $arFacturaDetalle->setVrIva($vrIva);
             $arFacturaDetalle->setVrTotal($vrTotal);
             $arFacturaDetalle->setVrRetencionFuente($vrRetencionFuente);
+            $arFacturaDetalle->setVrBaseIva($vrBaseAiu);
             $this->getEntityManager()->persist($arFacturaDetalle);
         }
 
@@ -665,7 +666,7 @@ class TurFacturaRepository extends ServiceEntityRepository
                                             $arRegistro->setVrCredito($arrIva['vrIva']);
                                             $arRegistro->setNaturaleza('C');
                                         }
-
+                                        $arRegistro->setVrBase($arrIva['vrBaseIva']);
                                         $arRegistro->setDescripcion('IVA');
                                         $arRegistro->setCodigoModeloFk('TurFactura');
                                         $arRegistro->setCodigoDocumento($arFactura['codigoFacturaPk']);

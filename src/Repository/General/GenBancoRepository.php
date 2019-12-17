@@ -40,4 +40,27 @@ class GenBancoRepository extends ServiceEntityRepository
         return $array;
     }
 
+    public function lista($raw)
+    {
+        $filtros = $raw['filtros'] ?? null;
+        $codigoBanco = null;
+        $nombre = null;
+        if ($filtros) {
+            $codigoBanco = $filtros['codigoBanco'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenBanco::class, 'b')
+            ->select('b.codigoBancoPk')
+            ->addSelect('b.nombre');
+        if ($codigoBanco) {
+            $queryBuilder->andWhere("b.codigoBancoPk = '{$codigoBanco}'");
+        }
+        if ($nombre) {
+            $queryBuilder->andWhere("b.nombre like '%{$nombre}%'");
+        }
+        $queryBuilder->addOrderBy('b.codigoBancoPk', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
 }

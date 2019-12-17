@@ -6,6 +6,7 @@ namespace App\Repository\Tesoreria;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Tesoreria\TesMovimiento;
+use App\Entity\General\GenBanco;
 use App\Entity\Tesoreria\TesMovimientoDetalle;
 use App\Entity\Tesoreria\TesTercero;
 use App\Utilidades\Mensajes;
@@ -38,6 +39,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.codigoTerceroFk')
             ->addSelect('md.naturaleza')
             ->addSelect('md.cuenta')
+            ->addSelect('b.codigoBancoPk')
             ->addSelect('b.nombre AS banco')
             ->addSelect('md.detalle')
             ->addSelect('md.codigoCentroCostoFk')
@@ -88,6 +90,8 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         $arrTercero = $arrControles['arrTercero'];
         $arrDetalle = $arrControles['arrDetalle'];
         $arrNumero = $arrControles['arrNumero']??null;
+        $arrBanco = $arrControles['arrBanco']??null;
+
         $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $idMovimiento]);
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             $intCodigo = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
@@ -124,6 +128,12 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
                 }
             } else {
                 $arMovimientoDetalle->setCentroCostoRel(null);
+            }
+            if($arrBanco[$intCodigo]){
+                $arBanco = $em->getRepository(GenBanco::class)->find($arrBanco[$intCodigo]);
+                if ($arBanco){
+                    $arMovimientoDetalle->setBancoRel($arBanco);
+                }
             }
             $arMovimientoDetalle->setVrBase($valorBase);
             $arMovimientoDetalle->setVrPago($valorPago);

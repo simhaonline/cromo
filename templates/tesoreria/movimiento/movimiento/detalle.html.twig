@@ -202,7 +202,19 @@
                                 {% endif %}
                                 {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                     <td>{{ arMovimientoDetalle.cuenta }}</td>
-                                    <td>{{ arMovimientoDetalle.banco }}</td>
+                                    {% if arMovimiento.estadoAutorizado == false %}
+                                        <td>
+                                            <input type="text"
+                                                   name="arrBanco[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   id="arrBanco[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   value="{{ arMovimientoDetalle.codigoBancoPk }}"
+                                                   style="text-align: left; width:50px" size="20">
+                                            <a href="javascript:abrirVentana3('{{ path('general_buscar_banco',{'campoCodigo' : 'arrBanco['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBanco',600,900)"
+                                               class="btn-xs btn btn-default" style="height: 20px;">..</a>
+                                        </td>
+                                    {% else %}
+                                        <td>{{ arMovimientoDetalle.banco  }}</td>
+                                    {% endif %}
                                 {% endif %}
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"
                                                                        value="{{ arMovimientoDetalle.codigoMovimientoDetallePk }}"/>

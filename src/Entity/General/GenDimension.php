@@ -3,7 +3,11 @@
 
 namespace App\Entity\General;
 
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\General\GenDimensionRepository")
+ */
 class GenDimension
 {
     /**
@@ -18,7 +22,7 @@ class GenDimension
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="Brasa\TurnoBundle\Entity\TurCliente", mappedBy="dimensionRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="dimensionRel")
      */
     protected $turClientesDimensionRel;
 

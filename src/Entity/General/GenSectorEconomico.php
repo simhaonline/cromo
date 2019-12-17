@@ -3,9 +3,9 @@
 
 namespace App\Entity\General;
 
+use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\General\GenSectorEconomicoRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class GenSectorEconomico
 {
@@ -21,7 +21,7 @@ class GenSectorEconomico
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="Brasa\TurnoBundle\Entity\TurCliente", mappedBy="sectorEconomicoRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="sectorEconomicoRel")
      */
     protected $turClientesSectorEconomicoRel;
 

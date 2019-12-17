@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\General\GenCoberturaRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class GenCobertura
 {
@@ -23,7 +22,7 @@ class GenCobertura
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="Brasa\TurnoBundle\Entity\TurCliente", mappedBy="coberturaRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="coberturaRel")
      */
     protected $turClientesCoberturaRel;
 

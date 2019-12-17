@@ -215,7 +215,8 @@ class MovimientoController extends AbstractController
         $form
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
-            ->add('btnAdicionar', SubmitType::class, $arrBtnAdicionar);
+            ->add('btnAdicionar', SubmitType::class, $arrBtnAdicionar)
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -235,6 +236,9 @@ class MovimientoController extends AbstractController
                     Mensajes::error("El movimiento debe estar autorizado y no puede estar aprobado");
                 }
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TesMovimientoDetalle::class)->lista($arMovimiento->getCodigoMovimientoPk()), "Movimientos detalle");
             }
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TesMovimiento::class)->aprobar($arMovimiento);

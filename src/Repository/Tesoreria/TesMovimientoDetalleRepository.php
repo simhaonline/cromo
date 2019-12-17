@@ -46,7 +46,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('md.bancoRel', 'b')
             ->where("md.codigoMovimientoFk = '{$codigoMovimiento}'");
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
 

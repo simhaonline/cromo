@@ -468,6 +468,7 @@ class TurFacturaRepository extends ServiceEntityRepository
                 $arFacturaDetalle->setVrBaseIva(0);
                 $arFacturaDetalle->setVrIva(0);
                 $arFacturaDetalle->setVrTotal(0);
+                $arFacturaDetalle->setVrRetencionFuente(0);
                 $em->persist($arFacturaDetalle);
             }
 

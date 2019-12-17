@@ -353,7 +353,7 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
                 $sheet->setCellValue('F' . $j, $arRegistro['numeroIdentificacion']);
                 $sheet->setCellValue('G' . $j, '0');
                 $sheet->setCellValue('H' . $j, $arRegistro['numero']);
-                $sheet->setCellValue('I' . $j, $arRegistro['nombreCorto']);
+                $sheet->setCellValue('I' . $j, trim($arRegistro['nombreCorto']));
                 $sheet->setCellValue('J' . $j, $arRegistro['direccion']);
 //                $sheet->setCellValue('B' . $j, $arRegistro['codigoComprobanteFk']);
 //                $sheet->setCellValue('C' . $j, $arRegistro['numeroPrefijo']);

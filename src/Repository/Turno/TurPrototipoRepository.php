@@ -122,10 +122,15 @@ class TurPrototipoRepository extends ServiceEntityRepository
         $arrSecuencia = $arrControles['cboSecuencia'];
         $arrInicioSecuencia = $arrControles['arrInicioSecuencia'];
         $arrFechaInicio = $arrControles['arrFechaInicio'];
-
+        $arrPosicion = $arrControles['arrPosicion'];
+        $arrTurnoA = $arrControles['arrA'];
+        $arrTurnoB = $arrControles['arrB'];
+        $arrTurnoC = $arrControles['arrC'];
+        $arrTurnoD = $arrControles['arrD'];
+        $arrTurnoE = $arrControles['arrE'];
         foreach ($arrCodigo as $codigo) {
             /** @var $arPrototipo TurPrototipo */
-            $arPrototipo =$em->getRepository(TurPrototipo::class)->find($codigo);
+            $arPrototipo = $em->getRepository(TurPrototipo::class)->find($codigo);
             $arPrototipo->setInicioSecuencia($arrInicioSecuencia[$codigo]);
             $fecha = $arrFechaInicio[$codigo];
             $arPrototipo->setFechaInicioSecuencia(date_create($fecha));
@@ -134,6 +139,12 @@ class TurPrototipoRepository extends ServiceEntityRepository
                 $arSecuencia = $em->getRepository(TurSecuencia::class)->find($codigoSecuencia);
                 $arPrototipo->setSecuenciaRel($arSecuencia);
             }
+            $arPrototipo->setTurnoA($arrTurnoA[$codigo]);
+            $arPrototipo->setTurnoB($arrTurnoB[$codigo]);
+            $arPrototipo->setTurnoC($arrTurnoC[$codigo]);
+            $arPrototipo->setTurnoD($arrTurnoD[$codigo]);
+            $arPrototipo->setTurnoE($arrTurnoE[$codigo]);
+            $arPrototipo->setPosicion($arrPosicion[$codigo]);
             $em->persist($arPrototipo);
         }
         $em->flush();

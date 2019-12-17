@@ -127,6 +127,7 @@
                             <th>SUBTOTAL</th>
                             <th title="Compuesto">COM</th>
                             <th title="Contrato detalle">CD</th>
+                            <th title="Programado">PR</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -135,7 +136,7 @@
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr style="background-color: #c8c8c8">
-                                <td colspan="30">
+                                <td colspan="31">
                                     <b>
                                         ({{ arPedidoDetalle.codigoPuestoFk | default('') }})
                                         {{ arPedidoDetalle.puesto }}
@@ -212,6 +213,7 @@
                                     <td class="text-center">NO</td>
                                 {% endif %}
                                 <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
+                                <td>{{ arPedidoDetalle.estadoProgramado ? 'S':'N' }}</td>
                                 {% if arPedido.estadoAutorizado %}
                                     <td></td>
                                 {% else %}

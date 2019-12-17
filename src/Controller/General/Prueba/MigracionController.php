@@ -88,10 +88,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bd1tegv1', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -527,7 +527,10 @@ class MigracionController extends Controller
                 $arEmpleado->setCorreo(utf8_encode($row['correo']));
                 $arEmpleado->setFechaNacimiento(date_create($row['fecha_nacimiento']));
                 $arEmpleado->setCodigoCuentaTipoFk($row['tipo_cuenta']);
-                $arEmpleado->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
+                if($row['codigo_ciudad_nacimiento_fk']) {
+                    $arEmpleado->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
+                }
+
                 $arEmpleado->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
                 $arEmpleado->setCuenta($row['cuenta']);
                 $arEmpleado->setTallaCamisa($row['camisa']);
@@ -2357,8 +2360,12 @@ class MigracionController extends Controller
                 if($row['codigo_ciudad_fk']) {
                     $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
                 }
-                $arPuesto->setLatitud($row['latitud']);
-                $arPuesto->setLongitud($row['longitud']);
+                if($row['latitud']) {
+                    $arPuesto->setLatitud($row['latitud']);
+                }
+                if($row['longitud']) {
+                    $arPuesto->setLongitud($row['longitud']);
+                }
                 $em->persist($arPuesto);
                 $metadata = $em->getClassMetaData(get_class($arPuesto));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2783,8 +2790,8 @@ class MigracionController extends Controller
                 }
                 $arPedidoDetalle->setAnio($row['anio']);
                 $arPedidoDetalle->setMes($row['mes']);
-                $arPedidoDetalle->setDiaDesde(date_create($row['dia_desde']));
-                $arPedidoDetalle->setDiaHasta(date_create($row['dia_hasta']));
+                $arPedidoDetalle->setDiaDesde($row['dia_desde']);
+                $arPedidoDetalle->setDiaHasta($row['dia_hasta']);
                 $arPedidoDetalle->setDias($row['dias']);
                 $arPedidoDetalle->setHoras($row['horas']);
                 $arPedidoDetalle->setHorasDiurnas($row['horas_diurnas']);

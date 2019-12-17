@@ -57,6 +57,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('p.nombre AS puesto')
             ->addSelect('pd.codigoContratoDetalleFk')
             ->addSelect('pd.codigoModalidadFk')
+            ->addSelect('pd.estadoProgramado')
             ->addSelect('c.nombre as conceptoNombre')
             ->addSelect('i.nombre as itemNombre')
             ->leftJoin('pd.conceptoRel', 'c')

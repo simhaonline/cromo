@@ -172,6 +172,18 @@ class TurProgramacionRepository extends ServiceEntityRepository
                             }
                         }
 
+                        # Si hay que homologar el turno nos llegara A, B, C, D, etc. Por ende obtenemos el que le
+                        # corresponde directamente del detalle del recurso.
+                        if ($turno != null && $arSecuencia->isHomologar()) {
+                            $nombreMetodo = "getTurno{$turno}";
+                            if (method_exists($arPrototipo, $nombreMetodo)) {
+                                # La funcion call user function nos permite llamar un metodo de un objeto
+                                # utilizando un string ( que puede ser compuesto ).
+                                # Mas informacion: http://php.net/manual/es/function.call-user-func-array.php
+                                $turno = call_user_func_array([$arPrototipo, $nombreMetodo], []);
+                            }
+                        }
+
                         $posicion += 1;
                         if ($posicion > $intervalo) {
                             $posicion = 1;

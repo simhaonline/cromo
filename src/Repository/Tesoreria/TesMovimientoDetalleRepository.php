@@ -38,11 +38,12 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.codigoTerceroFk')
             ->addSelect('md.naturaleza')
             ->addSelect('md.cuenta')
-            ->addSelect('md.codigoBancoFk')
+            ->addSelect('b.nombre AS banco')
             ->addSelect('md.detalle')
             ->addSelect('md.codigoCentroCostoFk')
             ->leftJoin('md.cuentaPagarRel', 'cp')
             ->leftJoin('md.terceroRel', 't')
+            ->leftJoin('md.bancoRel', 'b')
             ->where("md.codigoMovimientoFk = '{$codigoMovimiento}'");
 
         return $queryBuilder;

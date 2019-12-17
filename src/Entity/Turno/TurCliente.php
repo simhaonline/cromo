@@ -123,27 +123,27 @@ class TurCliente
     private $codigoFormaPagoFk;
 
     /**
-     * @ORM\Column(name="codigo_sector_comercial_fk",type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="codigo_sector_comercial_fk",type="integer", nullable=true)
      */
     private $codigoSectorComercialFk;
 
     /**
-     * @ORM\Column(name="codigo_cobertura_fk", type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="codigo_cobertura_fk", type="integer", nullable=true)
      */
     private $codigoCoberturaFk;
 
     /**
-     * @ORM\Column(name="codigo_dimension_fk",type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="codigo_dimension_fk",type="integer", nullable=true)
      */
     private $codigoDimensionFk;
 
     /**
-     * @ORM\Column(name="codigo_origen_capital_fk",type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="codigo_origen_capital_fk",type="integer", nullable=true)
      */
     private $codigoOrigenCapitalFk;
 
     /**
-     * @ORM\Column(name="codigo_sector_economico_fk",type="integer", nullable=true, options={"default":0})
+     * @ORM\Column(name="codigo_sector_economico_fk",type="integer", nullable=true)
      */
     private $codigoSectorEconomicoFk;
 
@@ -527,7 +527,7 @@ class TurCliente
     /**
      * @return bool
      */
-    public function isEstadoInactivo(): bool
+    public function getEstadoInactivo()
     {
         return $this->estadoInactivo;
     }
@@ -543,7 +543,7 @@ class TurCliente
     /**
      * @return bool
      */
-    public function isRetencionFuente(): bool
+    public function getRetencionFuente()
     {
         return $this->retencionFuente;
     }
@@ -559,7 +559,7 @@ class TurCliente
     /**
      * @return bool
      */
-    public function isRetencionFuenteSinBase(): bool
+    public function getRetencionFuenteSinBase()
     {
         return $this->retencionFuenteSinBase;
     }

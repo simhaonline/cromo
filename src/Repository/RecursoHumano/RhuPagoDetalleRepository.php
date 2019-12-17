@@ -661,7 +661,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
         $dql = "SELECT p.numero as numero, pd.vrIngresoBasePrestacion as vrIngresoPrestacion,p.fechaDesde as fechaDesde, 100 as porcentaje, pc.nombre as concepto,
          p.fechaHasta as fechaHasta FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p JOIN pd.conceptoRel pc "
             . "WHERE p.estadoAprobado = 1 AND p.codigoContratoFk = " . $codigoContrato . "AND  pd.vrIngresoBasePrestacion > 0"
-            . "AND p.fechaDesde >= '" . $fechaDesde . "' AND p.fechaDesde <= '" . $fechaHasta . "'";
+            . "AND p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "'";
         $query = $em->createQuery($dql);
         $arrayResultado = $query->getResult();
         $ibp = $arrayResultado;

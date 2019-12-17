@@ -6,7 +6,9 @@ use App\Entity\General\GenAsesor;
 use App\Entity\General\GenCobertura;
 use App\Entity\General\GenDimension;
 use App\Entity\General\GenOrigenCapital;
+use App\Entity\General\GenRegimen;
 use App\Entity\General\GenSectorComercial;
+use App\Entity\General\GenTipoPersona;
 use App\Entity\Turno\TurCliente;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -111,6 +113,27 @@ class ClienteType extends AbstractType
                 'label' => 'ciudad:',
                 'required' => false
             ])
+            ->add('tipoPersonaRel',EntityType::class,[
+                'required' => true,
+                'class' => GenTipoPersona::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('tp')
+                        ->orderBy('tp.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo persona:'
+            ])
+            ->add('regimenRel',EntityType::class,[
+                'required' => true,
+                'class' => GenRegimen::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Regimen:'
+            ])
+            ->add('codigoCIUU',TextType::class,['required' => false,'label' => 'CIUU:'])
             ->add('numeroIdentificacion', NumberType::class)
             ->add('digitoVerificacion', NumberType::class)
             ->add('nombreCorto', TextType::class, ['required' => true])

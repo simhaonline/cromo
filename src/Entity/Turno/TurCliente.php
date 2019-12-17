@@ -148,9 +148,24 @@ class TurCliente
     private $codigoSectorEconomicoFk;
 
     /**
+      * @ORM\Column(name="codigo_tipo_persona_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoTipoPersonaFk;
+
+    /**
+        * @ORM\Column(name="codigo_regimen_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoRegimenFk;
+
+    /**
      * @ORM\Column(name="estrato", type="string", length=5, nullable=true)
      */
     private $estrato;
+
+    /**
+     * @ORM\Column(name="codigo_ciuu", type="string", length=20, nullable=true)
+     */
+    private $codigoCIUU;
 
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
@@ -235,6 +250,18 @@ class TurCliente
      * @ORM\JoinColumn(name="codigo_sector_economico_fk", referencedColumnName="codigo_sector_economico_pk")
      */
     protected $sectorEconomicoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenRegimen", inversedBy="turClientesRegimenRel")
+     * @ORM\JoinColumn(name="codigo_regimen_fk", referencedColumnName="codigo_regimen_pk")
+     */
+    private $regimenRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenTipoPersona", inversedBy="turClientesTipoPersonaRel")
+     * @ORM\JoinColumn(name="codigo_tipo_persona_fk", referencedColumnName="codigo_tipo_persona_pk")
+     */
+    private $tipoPersonaRel;
 
     /**
      * @return array
@@ -924,7 +951,53 @@ class TurCliente
         $this->sectorEconomicoRel = $sectorEconomicoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoCIUU()
+    {
+        return $this->codigoCIUU;
+    }
 
+    /**
+     * @param mixed $codigoCIUU
+     */
+    public function setCodigoCIUU($codigoCIUU): void
+    {
+        $this->codigoCIUU = $codigoCIUU;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegimenRel()
+    {
+        return $this->regimenRel;
+    }
+
+    /**
+     * @param mixed $regimenRel
+     */
+    public function setRegimenRel($regimenRel): void
+    {
+        $this->regimenRel = $regimenRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoPersonaRel()
+    {
+        return $this->tipoPersonaRel;
+    }
+
+    /**
+     * @param mixed $tipoPersonaRel
+     */
+    public function setTipoPersonaRel($tipoPersonaRel): void
+    {
+        $this->tipoPersonaRel = $tipoPersonaRel;
+    }
 
 }
 

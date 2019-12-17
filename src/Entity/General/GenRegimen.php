@@ -37,6 +37,11 @@ class GenRegimen
     protected $invTercerosRegimenRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="regimenRel")
+     */
+    protected $turClientesRegimenRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoRegimenPk()

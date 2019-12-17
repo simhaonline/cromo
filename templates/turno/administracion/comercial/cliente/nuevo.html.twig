@@ -135,6 +135,26 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Clasificación</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_condiciionRel" class="col-sm-2 control-label">Tipo persona:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tipoPersonaRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+                <label for="form_condiciionRel" class="col-sm-2 control-label">Regimen:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.regimenRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_condiciionRel" class="col-sm-2 control-label">CIUU:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCIUU) }}
+                </div>
+        </div>
+    </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" href="{{ path('turno_administracion_comercial_cliente_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}

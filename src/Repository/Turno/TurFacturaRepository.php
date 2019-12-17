@@ -46,6 +46,7 @@ class TurFacturaRepository extends ServiceEntityRepository
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
+        $estadoContabilizado = null;
 
 
         if ($filtros) {
@@ -58,6 +59,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
@@ -70,6 +72,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.vrIva')
             ->addSelect('f.vrNeto')
             ->addSelect('f.vrTotal')
+            ->addSelect('f.vrBaseAiu')
             ->addSelect('f.usuario')
             ->addSelect('f.estadoAutorizado')
             ->addSelect('f.estadoAprobado')
@@ -123,9 +126,19 @@ class TurFacturaRepository extends ServiceEntityRepository
                 break;
         }
 
+        switch ($estadoContabilizado) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoContabilizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoContabilizado = 1");
+                break;
+        }
+
         $queryBuilder->setMaxResults($limiteRegistros);
         $queryBuilder->orderBy('f.estadoAprobado', 'ASC');
         $queryBuilder->addOrderBy('f.fecha', 'DESC');
+        $queryBuilder->addOrderBy('f.numero', 'DESC');
         return $queryBuilder->getQuery()->getResult();
     }
 

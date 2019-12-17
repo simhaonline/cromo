@@ -69,6 +69,16 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
+
+                    </div>
+                    <label for="" class="control-label  col-sm-offset-6 col-sm-1">Contabilizado:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget((form.estadoContabilizado)) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
                     <div class="col-sm-offset-2 col-sm-10">
                         {{ form_widget(form.btnFiltro, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                     </div>
@@ -84,6 +94,7 @@
             <th title="Fecha"> FECHA</th>
             <th title="Nombre del cliente"> NOMBRE</th>
             <th title="Subtotal"> SUBTOTAL</th>
+            <th title="Base Aiu">AIU</th>
             <th title="Iva">IVA</th>
             <th title="Neto">NETO</th>
             <th title="Total">TOTAL</th>
@@ -107,6 +118,7 @@
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFactura.cliente }}</td>
                 <td class="numero">{{ arFactura.vrSubtotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arFactura.vrBaseAiu | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFactura.vrIva | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFactura.vrNeto | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arFactura.vrTotal | number_format(0, '.', ',') }}</td>

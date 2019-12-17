@@ -346,7 +346,7 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
             /** @var  $arRegistro FinRegistro */
             foreach ($arRegistros as $arRegistro) {
                 $sheet->setCellValue('A' . $j, $arRegistro['codigoCuenta']);
-                $sheet->setCellValue('B' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('B' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('Y/m/d') : '');
                 $sheet->setCellValue('C' . $j, $arRegistro['descripcion']);
                 $sheet->setCellValue('D' . $j, $arRegistro['vrDebito']);
                 $sheet->setCellValue('E' . $j, $arRegistro['vrCredito']);

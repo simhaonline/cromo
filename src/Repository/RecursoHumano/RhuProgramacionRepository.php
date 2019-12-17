@@ -286,7 +286,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     if ($intDiasSalarioPromedio > 0) {
                         $otrosConceptos = ($ibpConceptos / $intDiasSalarioPromedio) * 30;
                     }
-                    if ($arProgramacion->getAplicarTransporte()) {
+                    if ($arProgramacion->getAplicarTransporte() && $arContrato->getAuxilioTransporte()) {
                         $salarioPromedioPrimas = $douSalario + $auxilioTransporte + $otrosConceptos;
                     } else {
                         $salarioPromedioPrimas = $douSalario + $otrosConceptos;

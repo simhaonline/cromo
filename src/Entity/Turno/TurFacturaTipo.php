@@ -207,6 +207,16 @@ class TurFacturaTipo
     private $codigoCuentaClienteFk;
 
     /**
+     * @ORM\Column(name="codigo_cuenta_ingreso_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaIngresoFk;
+
+    /**
+     * @ORM\Column(name="codigo_cuenta_aiu_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCuentaAiuFk;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="facturaTipoRel")
      */
     protected $facturasFacturaTipoRel;
@@ -849,6 +859,38 @@ class TurFacturaTipo
     public function setNotaCredito($notaCredito): void
     {
         $this->notaCredito = $notaCredito;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaIngresoFk()
+    {
+        return $this->codigoCuentaIngresoFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaIngresoFk
+     */
+    public function setCodigoCuentaIngresoFk($codigoCuentaIngresoFk): void
+    {
+        $this->codigoCuentaIngresoFk = $codigoCuentaIngresoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaAiuFk()
+    {
+        return $this->codigoCuentaAiuFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaAiuFk
+     */
+    public function setCodigoCuentaAiuFk($codigoCuentaAiuFk): void
+    {
+        $this->codigoCuentaAiuFk = $codigoCuentaAiuFk;
     }
 
 

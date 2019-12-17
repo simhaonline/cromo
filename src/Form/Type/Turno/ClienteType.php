@@ -8,6 +8,7 @@ use App\Entity\General\GenDimension;
 use App\Entity\General\GenOrigenCapital;
 use App\Entity\General\GenRegimen;
 use App\Entity\General\GenSectorComercial;
+use App\Entity\General\GenSectorEconomico;
 use App\Entity\General\GenTipoPersona;
 use App\Entity\Turno\TurCliente;
 use Doctrine\ORM\EntityRepository;
@@ -70,7 +71,6 @@ class ClienteType extends AbstractType
                         ->orderBy('sc.nombre');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'ciudad:',
                 'required'=>false
             ])
             ->add('coberturaRel', EntityType::class, [
@@ -80,7 +80,6 @@ class ClienteType extends AbstractType
                         ->orderBy('c.nombre');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'ciudad:',
                 'required' => false
             ])
             ->add('dimensionRel', EntityType::class, [
@@ -90,7 +89,6 @@ class ClienteType extends AbstractType
                         ->orderBy('d.nombre');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'ciudad:',
                 'required'=>false
             ])
             ->add('origenCapitalRel', EntityType::class, [
@@ -100,17 +98,15 @@ class ClienteType extends AbstractType
                         ->orderBy('oc.nombre');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'ciudad:',
                 'required'=>false
             ])
             ->add('sectorEconomicoRel', EntityType::class, [
-                'class' => GenSectorComercial::class,
+                'class' => GenSectorEconomico::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('sc')
                         ->orderBy('sc.nombre');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'ciudad:',
                 'required' => false
             ])
             ->add('tipoPersonaRel',EntityType::class,[

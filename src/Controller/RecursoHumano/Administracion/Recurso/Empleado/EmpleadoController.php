@@ -7,12 +7,16 @@ use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuSeleccion;
+use App\Entity\Transporte\TteOperacion;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -45,6 +49,16 @@ class EmpleadoController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $form = $this->createFormBuilder()
+            ->add('codigoGrupoFk', EntityType::class, [
+                'class' => RhuGrupo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->orderBy('g.codigoGrupoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS'
+            ])
             ->add('codigoEmpleadoPk', TextType::class, array('required' => false))
             ->add('nombreCorto', TextType::class, array('required' => false))
             ->add('numeroIdentificacion', IntegerType::class, array('required' => false))
@@ -263,12 +277,20 @@ class EmpleadoController extends AbstractController
 
     public function getFiltros($form)
     {
-        return $filtro = [
+        $filtro = [
             'codigoEmpleadoPk' => $form->get('codigoEmpleadoPk')->getData(),
+            'codigoGrupoFk' => $form->get('codigoGrupoFk')->getData(),
             'nombreCorto' => $form->get('nombreCorto')->getData(),
             'numeroIdentificacion' => $form->get('numeroIdentificacion')->getData(),
             'estadoContrato' => $form->get('estadoContrato')->getData(),
         ];
+        $arGrupo = $form->get('codigoGrupoFk')->getData();
+        if (is_object($arGrupo)) {
+            $filtro['codigoGrupoFk'] = $arGrupo->getCodigoGrupoPk();
+        } else {
+            $filtro['codigoGrupoFk'] = $arGrupo;
+        }
+        return $filtro;
     }
 }
 

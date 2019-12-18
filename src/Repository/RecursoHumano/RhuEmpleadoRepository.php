@@ -63,8 +63,10 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         $nombreCorto = null;
         $numeroIdentificacion =null;
         $estadoContrato = null;
+        $codigoGrupoFk = null;
         if ($filtros){
             $codigoEmpleadoPk = $filtros['codigoEmpleadoPk']??null;
+            $codigoGrupoFk = $filtros['codigoGrupoFk']??null;
             $nombreCorto = $filtros['nombreCorto']??null;
             $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
             $estadoContrato = $filtros['estadoContrato']??null;
@@ -75,10 +77,13 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->addSelect('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
             ->addSelect('e.numeroIdentificacion')
+            ->addSelect('g.nombre AS grupo')
             ->addSelect('e.telefono')
             ->addSelect('e.correo')
             ->addSelect('e.direccion')
             ->addSelect('e.estadoContrato')
+            ->leftJoin('e.contratoRel', 'c')
+            ->leftJoin('c.grupoRel', 'g')
             ->where('e.codigoEmpleadoPk <> 0');
         if($codigoEmpleadoPk){
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$codigoEmpleadoPk}");
@@ -88,6 +93,9 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         }
         if($numeroIdentificacion){
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$numeroIdentificacion}' ");
+        }
+        if($codigoGrupoFk){
+            $queryBuilder->andWhere("c.codigoGrupoFk = '{$codigoGrupoFk}' ");
         }
         switch ($estadoContrato ) {
             case '0':

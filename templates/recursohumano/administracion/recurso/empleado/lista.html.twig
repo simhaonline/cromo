@@ -22,6 +22,10 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoContrato, { 'attr': {'class': 'form-control'} }) }}
                         </div>
+                        <label for="form_numeroIdentificacion" class="col-sm-1 control-label">Grupo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoGrupoFk, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
                     </div>
                     <div class="form-group form-group-sm">
                         <label for="form_TxtCodigo" class="col-sm-1 control-label">Codigo:</label>
@@ -49,6 +53,7 @@
             <th title="Numero de identificacion del empleado" >IDENTIFICACION</th>
             <th title="Nombre del empleado" >NOMBRE</th>
             <th title="Codigo del contrato" >CONTRATO</th>
+            <th>GRUPO</th>
             <th title="Telefono del empleado" >TELEFONO</th>
             <th title="Correo del empleado" >CORREO</th>
             <th title="Direccion de residencia del empleado" >DIRECCION</th>
@@ -65,6 +70,7 @@
                 <td>{{ arEmpleado.numeroIdentificacion }}</td>
                 <td>{{ arEmpleado.nombreCorto }}</td>
                 <td>{{ arEmpleado.codigoContratoFk }}</td>
+                <td>{{ arEmpleado.grupo }}</td>
                 <td>{{ arEmpleado.telefono }}</td>
                 <td>{{ arEmpleado.correo }}</td>
                 <td>{{ arEmpleado.direccion }}</td>

@@ -765,6 +765,9 @@ class MigracionController extends Controller
                 $arAdicional->setAplicaNomina(1);
                 $arAdicional->setAplicaCesantia($row['aplica_cesantia']);
                 $arAdicional->setAplicaPrima($row['aplica_prima']);
+                if($row['aplica_prima'] || $row['aplica_cesantia']) {
+                    $arAdicional->setAplicaNomina(0);
+                }
                 $arAdicional->setAplicaDiaLaborado($row['aplica_dia_laborado']);
                 $arAdicional->setPermanente($row['permanente']);
                 $arAdicional->setDetalle(utf8_encode($row['detalle']));

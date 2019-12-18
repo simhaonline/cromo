@@ -923,38 +923,31 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
                     $horasExtraNocheAfectar = round($horasCompensar * $participacionNoche / 100);
                 }
 
-                /*foreach ($arSoporteHoras as $arSoporteHora) {
-                    //Afectar diurnas
-                    if ($horasAfectadas < $horasCompensar) {
-                        if ($arSoporteHora->getHorasExtrasOrdinariasDiurnas() > 0) {
-                            $horasTemporal = 0;
-                            if (($horasAfectadas + $arSoporteHora->getHorasExtrasOrdinariasDiurnas()) < $horasCompensar) {
-                                $horasTemporal = $arSoporteHora->getHorasExtrasOrdinariasDiurnas();
-                            } else {
-                                $horasTemporal = ($horasCompensar - $horasAfectadas);
-                            }
-                            $horasAfectadas += $horasTemporal;
-                            $horasExtraDiaAfectar += $horasTemporal;
-                        }
-                    }
-                    //Afectar nocturnas
-                    if ($horasAfectadas < $horasCompensar) {
-                        if ($arSoporteHora->getHorasExtrasOrdinariasNocturnas() > 0) {
-                            $horasTemporal = 0;
-                            if (($horasAfectadas + $arSoporteHora->getHorasExtrasOrdinariasNocturnas()) < $horasCompensar) {
-                                $horasTemporal = $arSoporteHora->getHorasExtrasOrdinariasNocturnas();
-                            } else {
-                                $horasTemporal = ($horasCompensar - $horasAfectadas);
-                            }
-                            $horasAfectadas += $horasTemporal;
-                            $horasExtraNocheAfectar += $horasTemporal;
-                        }
-                    }
-                }*/
                 $horasExtraDia -= $horasExtraDiaAfectar;
                 $horasDia += $horasExtraDiaAfectar;
                 $horasExtraNoche -= $horasExtraNocheAfectar;
                 $horasNoche += $horasExtraNocheAfectar;
+            } elseif ($horasCompensar < 0) {
+                $horasCompensar = $horasCompensar * -1;
+                $horasDiaAfectar = 0;
+                $horasNocheAfectar = 0;
+                $diurna = $arSoporteContrato->getHorasDiurnasReales();
+                $nocturna = $arSoporteContrato->getHorasNocturnasReales();
+                $totalHorasOrdinarias = $diurna + $nocturna;
+                if($horasCompensar > $totalHorasOrdinarias) {
+                    $horasCompensar = $totalHorasOrdinarias;
+                }
+                if($totalHorasOrdinarias > 0) {
+                    $participacionDia = round($diurna / $totalHorasOrdinarias * 100);
+                    $participacionNoche = round($nocturna / $totalHorasOrdinarias * 100);
+                    $horasDiaAfectar = round($horasCompensar * $participacionDia / 100);
+                    $horasNocheAfectar = round($horasCompensar * $participacionNoche / 100);
+                }
+
+                $horasDia -= $horasDiaAfectar;
+                $horasExtraDia += $horasDiaAfectar;
+                $horasNoche -= $horasNocheAfectar;
+                $horasExtraNoche += $horasNocheAfectar;
             }
 
             if ($horasNoche > 0) {

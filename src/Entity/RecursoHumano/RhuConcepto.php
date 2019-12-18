@@ -135,6 +135,11 @@ class RhuConcepto
     private $porcentajeVacaciones = 0;
 
     /**
+     * @ORM\Column(name="orden", type="integer", options={"default":0} , nullable=true)
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuNovedadTipo", mappedBy="conceptoRel")
      */
     protected $novedadesConceptoRel;
@@ -957,6 +962,22 @@ class RhuConcepto
     public function setFacturasDetallesConceptoRel($facturasDetallesConceptoRel): void
     {
         $this->facturasDetallesConceptoRel = $facturasDetallesConceptoRel;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrden(): int
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param int $orden
+     */
+    public function setOrden(int $orden): void
+    {
+        $this->orden = $orden;
     }
 
 

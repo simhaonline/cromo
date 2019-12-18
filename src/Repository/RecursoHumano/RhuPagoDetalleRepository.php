@@ -51,8 +51,8 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
     public function pagosDetallesProgramacionPago($codigoProgramacion)
     {
         $em = $this->getEntityManager();
-        $dql = "SELECT pd FROM App\Entity\RecursoHumano\RhuPagoDetalle pd JOIN pd.pagoRel p "
-            . "WHERE p.codigoProgramacionFk = " . $codigoProgramacion . " ORDER BY p.codigoEmpleadoFk, pd.codigoConceptoFk";
+        $dql = "SELECT pd FROM App\Entity\RecursoHumano\RhuPagoDetalle pd LEFT JOIN pd.pagoRel p LEFT JOIN pd.conceptoRel c "
+            . "WHERE p.codigoProgramacionFk = " . $codigoProgramacion . " ORDER BY p.codigoEmpleadoFk, c.orden";
         $query = $em->createQuery($dql);
         $arPagosDetalles = $query->getResult();
         return $arPagosDetalles;

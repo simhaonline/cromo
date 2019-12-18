@@ -161,6 +161,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_permisoEspecial" class="col-sm-2 control-label">Permiso especial:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.permisoEspecial, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
+                    {{ form_errors(form.permisoEspecial) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-1 col-sm-2">
                     {{ form_widget(form.discapacidad) }}
                     {{ form_errors(form.discapacidad) }}

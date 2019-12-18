@@ -130,6 +130,7 @@ class EmpleadoType extends AbstractType
             ->add('moto', CheckboxType::class, ['required' => false, 'label' => 'Moto'])
             ->add('padreFamilia', CheckboxType::class, ['required' => false, 'label' => 'Padre familia'])
             ->add('cabezaHogar', CheckboxType::class, ['required' => false, 'label' => 'Cabeza hogar'])
+            ->add('permisoEspecial', TextType::class, array('required' => false, 'attr' => ['placeholder' => "Campo para documento de extranjeria"]))
             ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

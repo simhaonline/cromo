@@ -270,6 +270,15 @@ class RhuEmpleado
     private $pagadoEntidad = false;
 
     /**
+     * @ORM\Column(name="permiso_especial", type="string", length=15, nullable=true)
+     * * @Assert\Length(
+     *     max=15,
+     *     maxMessage="El campo no puede tener mas de 15 caracteres"
+     * )
+     */
+    private $permisoEspecial;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -1968,6 +1977,22 @@ class RhuEmpleado
     public function setNovedadesEmpeladoReemplazoRel($novedadesEmpeladoReemplazoRel): void
     {
         $this->novedadesEmpeladoReemplazoRel = $novedadesEmpeladoReemplazoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPermisoEspecial()
+    {
+        return $this->permisoEspecial;
+    }
+
+    /**
+     * @param mixed $permisoEspecial
+     */
+    public function setPermisoEspecial($permisoEspecial): void
+    {
+        $this->permisoEspecial = $permisoEspecial;
     }
 
 

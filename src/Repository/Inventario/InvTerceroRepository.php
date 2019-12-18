@@ -74,7 +74,7 @@ class InvTerceroRepository extends ServiceEntityRepository
         }
         $queryBuilder->addOrderBy('t.codigoTerceroPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
 
     }
 

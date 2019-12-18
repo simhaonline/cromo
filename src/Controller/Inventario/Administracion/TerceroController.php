@@ -70,7 +70,7 @@ class TerceroController extends AbstractController
                 }
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(InvTercero::class)->listaControlador($raw)->getQuery()->getResult(), "Terceros");
+                General::get()->setExportar($em->getRepository(InvTercero::class)->listaControlador($raw), "Terceros");
             }
         }
         $arTerceros = $paginator->paginate($em->getRepository(InvTercero::class)->listaControlador($raw), $request->query->getInt('page', 1), 30);

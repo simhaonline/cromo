@@ -130,8 +130,12 @@ class LicenciaController extends AbstractController
             if ($form->get('guardar')->isClicked()) {
                 $codigoEmpleado = $form->get('codigoEmpleadoFk')->getData();
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->findOneBy(['codigoEmpleadoPk' => $codigoEmpleado]);
-                $arContrato = $em->getRepository(RhuContrato::class)->findOneBy(['codigoEmpleadoFk' => $arEmpleado->getCodigoEmpleadoPk() ?? 0]);
-                $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+                $arContrato = null;
+                if ($arEmpleado->getCodigoContratoFk()) {
+                    $arContrato = $arEmpleado->getContratoRel();
+                } elseif ($arEmpleado->getCodigoContratoUltimoFk()) {
+                    $arContrato = $em->getReference(RhuContrato::class, $arEmpleado->getCodigoContratoUltimoFk());
+                }                $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
                 $arLicencia = $form->getData();
                 if ($arEmpleado) {
                     if ($arContrato) {
@@ -216,28 +220,27 @@ class LicenciaController extends AbstractController
                                         $em->persist($arLicencia);
                                         $em->flush();
                                         return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_detalle', array("id" => $arLicencia->getCodigoLicenciaPk())));
+                                    }else{
+                                        Mensajes::error("La fecha de inicio del contrato es mayor a la licencia");
                                     }
                                 } else {
-                                    Mensajes::error("La fecha de inicio del contrato es mayor a la licencia");
+                                    Mensajes::error("Existe otra licencia en este rango de fechas");
                                 }
                             } else {
-                                Mensajes::error("Existe otra licencia en este rango de fechas");
+                                Mensajes::error("Hay incapacidades que se cruzan con la fecha de la licencia");
                             }
                         } else {
-                            Mensajes::error("Hay incapacidades que se cruzan con la fecha de la licencia");
+                            Mensajes::error("La fecha desde debe ser inferior o igual a la fecha hasta");
                         }
                     } else {
-                        Mensajes::error("La fecha desde debe ser inferior o igual a la fecha hasta");
+                        Mensajes::error("El contrato no existe");
                     }
                     return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_licencia_lista', ['id' => $arLicencia->getCodigoLicenciaPk()]));
-                } else {
-                    Mensajes::error("El contrato no existe");
+                }  else {
+                    Mensajes::error("El empleado no existe");
                 }
 
-            } else {
-                Mensajes::error("El empleado no existe");
             }
-
         }
         return $this->render('recursohumano/movimiento/nomina/licencia/nuevo.html.twig', [
             'form' => $form->createView(),

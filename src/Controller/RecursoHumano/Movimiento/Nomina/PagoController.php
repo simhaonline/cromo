@@ -85,7 +85,7 @@ class PagoController extends AbstractController
             }
             if ($form->get('btnContabilizar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(RhuPago::class)->contabilizar($arrSeleccionados);
             }
         }

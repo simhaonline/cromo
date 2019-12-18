@@ -97,7 +97,7 @@ class pagoDetalleController extends Controller
                 $session->set('filtroRhuInformePagoDetalleFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->informe()->getQuery()->getResult();
+                $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->informe();
                 $this->exportarExcelPersonalizado($arPagoDetalles);
 
             }

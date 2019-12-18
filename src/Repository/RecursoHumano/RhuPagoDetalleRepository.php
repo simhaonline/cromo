@@ -188,7 +188,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
         }
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
 
     }
 

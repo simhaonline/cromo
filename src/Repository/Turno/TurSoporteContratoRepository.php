@@ -1344,6 +1344,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             $arSoporteContrato->setHorasRecargoFestivoNocturno(0);
             $em->getRepository(TurSoporteContrato::class)->valorizar($arSoporteContrato);
             $vrAdicionalDevengadoPactado = ($arSoporteContrato->getVrDevengadoPactado() / 30) * $dias;
+            $vrAdicionalDevengadoPactado -= $arSoporteContrato->getVrDiurna();
             if($vrAdicionalDevengadoPactado > 0) {
                 $arSoporteContrato->setVrAdicionalDevengadoPactado($vrAdicionalDevengadoPactado);
             } else {

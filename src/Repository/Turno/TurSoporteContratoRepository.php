@@ -1318,6 +1318,39 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             $arSoporteContratoAct->setHoras($horas);
             $em->persist($arSoporteContratoAct);
         }
+
+        if($arSoporteContrato->getCodigoDistribucionFk() == 'DP002') {
+            $dias = $arSoporteContrato->getDiasTransporte();
+            /*if ($arSoportePagoPeriodo->getDiasAdicionalesFebrero() > 0) {
+                $novedades = $arSoportePagoAct->getIncapacidad() + $arSoportePagoAct->getIncapacidadNoLegalizada() + $arSoportePagoAct->getLicencia() + $arSoportePagoAct->getLicenciaNoRemunerada();
+                if ($arSoportePagoAct->getRetiro() <= 0 && $novedades < $diasRealesPeriodo) {
+                    $dias += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+                    $diasTransporte += $arSoportePagoPeriodo->getDiasAdicionalesFebrero();
+                }
+            }*/
+            $horas = $dias * 8;
+            $arSoporteContrato->setHoras($horas);
+            $arSoporteContrato->setHorasDescanso(0);
+            $arSoporteContrato->setHorasDiurnas($horas);
+            $arSoporteContrato->setHorasNocturnas(0);
+            $arSoporteContrato->setHorasFestivasDiurnas(0);
+            $arSoporteContrato->setHorasFestivasNocturnas(0);
+            $arSoporteContrato->setHorasExtrasOrdinariasDiurnas(0);
+            $arSoporteContrato->setHorasExtrasOrdinariasNocturnas(0);
+            $arSoporteContrato->setHorasExtrasFestivasDiurnas(0);
+            $arSoporteContrato->setHorasExtrasFestivasNocturnas(0);
+            $arSoporteContrato->setHorasRecargoNocturno(0);
+            $arSoporteContrato->setHorasRecargoFestivoDiurno(0);
+            $arSoporteContrato->setHorasRecargoFestivoNocturno(0);
+            $em->getRepository(TurSoporteContrato::class)->valorizar($arSoporteContrato);
+            $vrAdicionalDevengadoPactado = ($arSoporteContrato->getVrDevengadoPactado() / 30) * $dias;
+            if($vrAdicionalDevengadoPactado > 0) {
+                $arSoporteContrato->setVrAdicionalDevengadoPactado($vrAdicionalDevengadoPactado);
+            } else {
+                $arSoporteContrato->setVrAdicionalDevengadoPactado(0);
+            }
+            $em->persist($arSoporteContrato);
+        }
     }
 
     /**

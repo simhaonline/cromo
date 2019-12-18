@@ -88,10 +88,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bd1tegv1', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();

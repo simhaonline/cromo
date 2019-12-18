@@ -370,7 +370,6 @@ class TurSoporteRepository extends ServiceEntityRepository
                         $diasTransporte = 0;
                     }
                 }
-
                 $intHoras = $arrayResultado[$i]['horasDescanso'] + $arrayResultado[$i]['horasNovedad'] + $arrayResultado[$i]['horasDiurnas'] + $arrayResultado[$i]['horasNocturnas'] + $arrayResultado[$i]['horasFestivasDiurnas'] + $arrayResultado[$i]['horasFestivasNocturnas'];
                 $arSoporteContrato->setDias($arrayResultado[$i]['dias']?? 0);
                 $arSoporteContrato->setDiasTransporte($diasTransporte);
@@ -625,7 +624,7 @@ class TurSoporteRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $diasIncapacidad = 0;
-        $dql = "SELECT SUM(sp.incapacidad) as diasIncapacidad "
+        $dql = "SELECT SUM(sp.incapacidad+sp.incapacidadNoLegalizada) as diasIncapacidad "
             . "FROM App\Entity\Turno\TurSoporteContrato sp "
             . "WHERE sp.codigoSoporteFk =  " . $codigoSoporte . " AND sp.codigoEmpleadoFk = " . $codigoEmpleado;
         $query = $em->createQuery($dql);

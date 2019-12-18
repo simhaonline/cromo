@@ -41,6 +41,7 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->addSelect('sc.ingreso')
             ->addSelect('sc.retiro')
             ->addSelect('sc.incapacidad')
+            ->addSelect('sc.incapacidadNoLegalizada')
             ->addSelect('sc.licencia')
             ->addSelect('sc.licenciaNoRemunerada')
             ->addSelect('sc.ausentismo')
@@ -905,12 +906,16 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             }
             $horarOrdinarias = $horasDia + $horasNoche + $horasFestivasDia + $horasFestivasNoche;
             $horasCompensar = $horasLimite - $horarOrdinarias;
+
             if ($horasCompensar > 0) {
                 $horasExtraDiaAfectar = 0;
                 $horasExtraNocheAfectar = 0;
                 $extraDiurna = $arSoporteContrato->getHorasExtrasOrdinariasDiurnasReales();
                 $extraNocturna = $arSoporteContrato->getHorasExtrasOrdinariasNocturnasReales();
                 $totalExtras = $extraDiurna + $extraNocturna;
+                if($horasCompensar > $totalExtras) {
+                    $horasCompensar = $totalExtras;
+                }
                 if($totalExtras > 0) {
                     $participacionDia = round($extraDiurna / $totalExtras * 100);
                     $participacionNoche = round($extraNocturna / $totalExtras * 100);

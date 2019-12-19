@@ -498,5 +498,49 @@ class CarMovimientoRepository extends ServiceEntityRepository
         return true;
     }
 
+    public function listaFormatoMasivo($arrDatos)
+    {
+        $codigoReciboDesde = null;
+        $codigoReciboHasta = null;
+        $fechaDesde=null;
+        $fechaHasta=null;
+        if ($arrDatos) {
+            $codigoReciboDesde = $arrDatos['codigoReciboDesde'] ?? null;
+            $codigoReciboHasta = $arrDatos['codigoReciboHasta'] ?? null;
+            $fechaDesde = $arrDatos['fechaDesde'] ?? null;
+            $fechaHasta = $arrDatos['fechaHasta'] ?? null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.fecha')
+            ->addSelect('m.numero')
+            ->addSelect('m.vrTotalNeto')
+            ->addSelect('m.estadoAutorizado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoContabilizado')
+            ->addSelect('m.comentarios')
+            ->addSelect('cl.nombreCorto')
+            ->addSelect('cl.numeroIdentificacion')
+            ->addSelect('cl.direccion')
+            ->addSelect('cl.telefono')
+            ->leftJoin('m.movimientoTipoRel', 'it')
+            ->leftJoin('m.clienteRel', 'cl')
+            ->leftJoin('m.cuentaRel', 'cu');
+        if ($codigoReciboDesde) {
+            $queryBuilder->andWhere("m.codigoMovimientoPk >= '{$codigoReciboDesde}'");
+        }
+        if ($codigoReciboHasta) {
+            $queryBuilder->andWhere("m.codigoMovimientoPk <= '{$codigoReciboHasta}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("m.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("m.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        return $queryBuilder->getQuery()->getResult();
+
+    }
 
 }

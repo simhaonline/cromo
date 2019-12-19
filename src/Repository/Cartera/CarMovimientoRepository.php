@@ -528,10 +528,10 @@ class CarMovimientoRepository extends ServiceEntityRepository
             ->leftJoin('m.clienteRel', 'cl')
             ->leftJoin('m.cuentaRel', 'cu');
         if ($codigoReciboDesde) {
-            $queryBuilder->andWhere("m.codigoMovimientoPk >= '{$codigoReciboDesde}'");
+            $queryBuilder->andWhere("m.numero >= '{$codigoReciboDesde}'");
         }
         if ($codigoReciboHasta) {
-            $queryBuilder->andWhere("m.codigoMovimientoPk <= '{$codigoReciboHasta}'");
+            $queryBuilder->andWhere("m.numero <= '{$codigoReciboHasta}'");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("m.fecha >= '{$fechaDesde} 00:00:00'");

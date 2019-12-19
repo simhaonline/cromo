@@ -206,8 +206,8 @@ class ImportacionController extends AbstractController
             }
             return $this->redirect($this->generateUrl('inventario_movimiento_extranjero_importacion_detalle', ['id' => $id]));
         }
-        $arImportacionDetalles = $paginator->paginate($em->getRepository(InvImportacionDetalle::class)->importacion($id), $request->query->getInt('page', 1), 10);
-        $arImportacionCostos = $paginator->paginate($em->getRepository(InvImportacionCosto::class)->lista($id), $request->query->getInt('page', 1), 10);
+        $arImportacionDetalles = $paginator->paginate($em->getRepository(InvImportacionDetalle::class)->importacion($id), $request->query->getInt('page', 1), 500);
+        $arImportacionCostos = $paginator->paginate($em->getRepository(InvImportacionCosto::class)->lista($id), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/movimiento/extranjero/importacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles,
@@ -284,8 +284,9 @@ class ImportacionController extends AbstractController
                         }
                     }
                     $em->flush();
+
                     $em->getRepository(InvImportacion::class)->liquidar($codigoImportacion);
-                    echo "<script languaje='javascript' type='text/javascript'>window.opener.location.reload();</script>";
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }
         }

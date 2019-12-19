@@ -200,7 +200,7 @@ class LicenciaController extends AbstractController
                                         if ($salarioEmpleado <= $arContrato->getVrSalario()) {
                                             $floVrLicencia = $intDiasCobro * $douVrDiaSalarioMinimo;
                                         } else {
-                                            if ($arEmpleado->getVrSalario()) {
+                                            if ($arEmpleado->getContratoRel()->getVrSalario()) {
                                                 $floVrLicencia = $intDiasCobro * $douVrDia;
                                             }
                                         }

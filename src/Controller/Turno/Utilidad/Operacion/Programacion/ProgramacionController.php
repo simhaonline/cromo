@@ -101,7 +101,8 @@ class ProgramacionController extends AbstractController
                 return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $this->get("UtilidadesModelo")->eliminar(TurPrototipo::class, $arrDetallesSeleccionados);
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurPrototipo::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if($form->get('btnSimular')->isClicked()) {

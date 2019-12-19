@@ -150,4 +150,14 @@ class TurPrototipoRepository extends ServiceEntityRepository
         $em->flush();
     }
 
+    public function eliminar($arrSeleccionados)
+    {
+        foreach ($arrSeleccionados as $arrSeleccionado) {
+            $ar = $this->getEntityManager()->getRepository(TurPrototipo::class)->find($arrSeleccionado);
+            if ($ar) {
+                $this->getEntityManager()->remove($ar);
+            }
+        }
+        $this->getEntityManager()->flush();
+    }
 }

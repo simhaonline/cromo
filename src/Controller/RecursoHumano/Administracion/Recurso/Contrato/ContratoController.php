@@ -138,7 +138,7 @@ class ContratoController extends AbstractController
                     '#5' => $arContrato->getContratoTipoRel()->getNombre(),
                     '#6' => $arContrato->getCargoRel()->getNombre(),
                     '#7' => number_format($arContrato->getVrSalario(), 0, '.', ','),
-                    '#8' => $fechaActual->format('Y-m-d'),
+                    '#8' =>strftime("%d de " . $this->MesesEspañol($fechaActual->format('m')) . " de %Y", strtotime($fechaActual->format('Y/m/d'))),
                     '#9' => $salarioLetras]);
             }
             if($form->get('btnPdf')->isClicked()){

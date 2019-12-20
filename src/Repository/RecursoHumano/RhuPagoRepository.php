@@ -175,7 +175,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPago->setFechaDesde($arProgramacion->getFechaDesde());
             $arPago->setFechaHasta($arProgramacion->getFechaHasta());
             $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaDesdeContrato());
-            $arPago->setFechaDesdeContrato($arProgramacionDetalle->getFechaHastaContrato());
+            $arPago->setFechaHastaContrato($arProgramacionDetalle->getFechaHastaContrato());
             $arPago->setCodigoSoporteContratoFk($arProgramacionDetalle->getCodigoSoporteContratoFk());
 
             $arrDatosGenerales = array(

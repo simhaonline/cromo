@@ -84,7 +84,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->addSelect('e.direccion')
             ->addSelect('e.telefono')
             ->addSelect('e.correo')
-            ->addSelect('e.codigoContratoFk AS contrato')
+            ->addSelect('e.codigoContratoFk')
             ->addSelect('e.codigoContratoUltimoFk AS ultimo_contrato_activo')
             ->addSelect('e.estadoContrato AS contratado')
             ->leftJoin('e.contratoRel', 'c')

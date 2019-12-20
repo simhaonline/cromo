@@ -73,17 +73,24 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         }
 
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
-            ->select('e.codigoContratoFk')
-            ->addSelect('e.codigoEmpleadoPk')
-            ->addSelect('e.nombreCorto')
+            ->select('e.codigoEmpleadoPk')
+            ->addSelect('e.fechaNacimiento')
             ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.nombreCorto')
             ->addSelect('g.nombre AS grupo')
+            ->addSelect('b.nombre AS  banco')
+            ->addSelect('e.cuenta')
+            ->addSelect('ci.nombre AS ciudad')
+            ->addSelect('e.direccion')
             ->addSelect('e.telefono')
             ->addSelect('e.correo')
-            ->addSelect('e.direccion')
-            ->addSelect('e.estadoContrato')
+            ->addSelect('e.codigoContratoFk AS contrato')
+            ->addSelect('e.codigoContratoUltimoFk AS ultimo_contrato_activo')
+            ->addSelect('e.estadoContrato AS contratado')
             ->leftJoin('e.contratoRel', 'c')
+            ->leftJoin('e.ciudadRel', 'ci')
             ->leftJoin('c.grupoRel', 'g')
+            ->leftJoin('e.bancoRel', 'b')
             ->where('e.codigoEmpleadoPk <> 0');
         if($codigoEmpleadoPk){
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$codigoEmpleadoPk}");

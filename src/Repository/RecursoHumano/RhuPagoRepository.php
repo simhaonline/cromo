@@ -1726,47 +1726,52 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 if ($arPago->getVrCesantia() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'CES', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                     if ($arConfiguracionProvision) {
-                                        $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
-                                        $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
-                                        if ($arCuentaDebito && $arCuentaCredito) {
-                                            //Debito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaDebito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrDebito($arPago->getVrCesantia());
-                                            $arRegistro->setNaturaleza("D");
-                                            $arRegistro->setDescripcion('PROV CESANTIA DEB');
-                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                        if($arConfiguracionProvision->getCodigoCuentaDebitoFk() && $arConfiguracionProvision->getCodigoCuentaCreditoFk()) {
+                                            $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
+                                            $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
+                                            if ($arCuentaDebito && $arCuentaCredito) {
+                                                //Debito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaDebito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrDebito($arPago->getVrCesantia());
+                                                $arRegistro->setNaturaleza("D");
+                                                $arRegistro->setDescripcion('PROV CESANTIA DEB');
+                                                if ($arCuentaDebito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
-                                            //Credito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaCredito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrCredito($arPago->getVrCesantia());
-                                            $arRegistro->setNaturaleza("C");
-                                            $arRegistro->setDescripcion('PROV CESANTIA CRE');
-                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                                //Credito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaCredito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrCredito($arPago->getVrCesantia());
+                                                $arRegistro->setNaturaleza("C");
+                                                $arRegistro->setDescripcion('PROV CESANTIA CRE');
+                                                if ($arCuentaCredito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
+                                            } else {
+                                                $error = "La cuenta debito o credito no existe";
+                                                break;
+                                            }
                                         } else {
-                                            $error = "La cuenta debito o credito no existe";
+                                            $error = "No estan configuradas las cuentas de provision cesantias";
                                             break;
                                         }
                                     } else {
@@ -1779,47 +1784,52 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 if ($arPago->getVrInteres() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'INT', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                     if ($arConfiguracionProvision) {
-                                        $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
-                                        $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
-                                        if ($arCuentaDebito && $arCuentaCredito) {
-                                            //Debito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaDebito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrDebito($arPago->getVrInteres());
-                                            $arRegistro->setNaturaleza("D");
-                                            $arRegistro->setDescripcion('PROV INTERES DEB');
-                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                        if($arConfiguracionProvision->getCodigoCuentaDebitoFk() && $arConfiguracionProvision->getCodigoCuentaCreditoFk()) {
+                                            $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
+                                            $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
+                                            if ($arCuentaDebito && $arCuentaCredito) {
+                                                //Debito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaDebito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrDebito($arPago->getVrInteres());
+                                                $arRegistro->setNaturaleza("D");
+                                                $arRegistro->setDescripcion('PROV INTERES DEB');
+                                                if ($arCuentaDebito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
-                                            //Credito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaCredito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrCredito($arPago->getVrInteres());
-                                            $arRegistro->setNaturaleza("C");
-                                            $arRegistro->setDescripcion('PROV INTERES CRE');
-                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                                //Credito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaCredito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrCredito($arPago->getVrInteres());
+                                                $arRegistro->setNaturaleza("C");
+                                                $arRegistro->setDescripcion('PROV INTERES CRE');
+                                                if ($arCuentaCredito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
+                                            } else {
+                                                $error = "La cuenta debito o credito no existe";
+                                                break;
+                                            }
                                         } else {
-                                            $error = "La cuenta debito o credito no existe";
+                                            $error = "No estan configuradas las cuentas de provision intereses";
                                             break;
                                         }
                                     } else {
@@ -1832,47 +1842,52 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 if ($arPago->getVrPrima() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'PRI', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                     if ($arConfiguracionProvision) {
-                                        $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
-                                        $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
-                                        if ($arCuentaDebito && $arCuentaCredito) {
-                                            //Debito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaDebito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrDebito($arPago->getVrPrima());
-                                            $arRegistro->setNaturaleza("D");
-                                            $arRegistro->setDescripcion('PROV PRIMA DEB');
-                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                        if($arConfiguracionProvision->getCodigoCuentaDebitoFk() && $arConfiguracionProvision->getCodigoCuentaCreditoFk()) {
+                                            $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
+                                            $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
+                                            if ($arCuentaDebito && $arCuentaCredito) {
+                                                //Debito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaDebito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrDebito($arPago->getVrPrima());
+                                                $arRegistro->setNaturaleza("D");
+                                                $arRegistro->setDescripcion('PROV PRIMA DEB');
+                                                if ($arCuentaDebito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
-                                            //Credito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaCredito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrCredito($arPago->getVrPrima());
-                                            $arRegistro->setNaturaleza("C");
-                                            $arRegistro->setDescripcion('PROV PRIMA CRE');
-                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                                //Credito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaCredito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrCredito($arPago->getVrPrima());
+                                                $arRegistro->setNaturaleza("C");
+                                                $arRegistro->setDescripcion('PROV PRIMA CRE');
+                                                if ($arCuentaCredito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
+                                            } else {
+                                                $error = "La cuenta debito o credito no existe";
+                                                break;
+                                            }
                                         } else {
-                                            $error = "La cuenta debito o credito no existe";
+                                            $error = "No estan configuradas las cuentas de provision primas";
                                             break;
                                         }
                                     } else {
@@ -1885,47 +1900,52 @@ class RhuPagoRepository extends ServiceEntityRepository
                                 if ($arPago->getVrVacacion() > 0) {
                                     $arConfiguracionProvision = $em->getRepository(RhuConfiguracionProvision::class)->findOneBy(['tipo' => 'VAC', 'codigoCostoClaseFk' => $arContrato->getCodigoCostoClaseFk()]);
                                     if ($arConfiguracionProvision) {
-                                        $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
-                                        $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
-                                        if ($arCuentaDebito && $arCuentaCredito) {
-                                            //Debito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaDebito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrDebito($arPago->getVrVacacion());
-                                            $arRegistro->setNaturaleza("D");
-                                            $arRegistro->setDescripcion('PROV VACACION DEB');
-                                            if ($arCuentaDebito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                        if($arConfiguracionProvision->getCodigoCuentaDebitoFk() && $arConfiguracionProvision->getCodigoCuentaCreditoFk()) {
+                                            $arCuentaDebito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaDebitoFk());
+                                            $arCuentaCredito = $em->getRepository(FinCuenta::class)->find($arConfiguracionProvision->getCodigoCuentaCreditoFk());
+                                            if ($arCuentaDebito && $arCuentaCredito) {
+                                                //Debito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaDebito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrDebito($arPago->getVrVacacion());
+                                                $arRegistro->setNaturaleza("D");
+                                                $arRegistro->setDescripcion('PROV VACACION DEB');
+                                                if ($arCuentaDebito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
-                                            //Credito
-                                            $arRegistro = new FinRegistro();
-                                            $arRegistro->setCuentaRel($arCuentaCredito);
-                                            $arRegistro->setTerceroRel($arTercero);
-                                            $arRegistro->setComprobanteRel($arComprobante);
-                                            $arRegistro->setNumero($arPago->getNumero());
-                                            $arRegistro->setNumeroReferencia($arPago->getNumero());
-                                            $arRegistro->setFecha($arPago->getFechaHasta());
-                                            $arRegistro->setVrCredito($arPago->getVrVacacion());
-                                            $arRegistro->setNaturaleza("C");
-                                            $arRegistro->setDescripcion('PROV VACACION CRE');
-                                            if ($arCuentaCredito->getExigeCentroCosto() == 1) {
-                                                $arRegistro->setCentroCostoRel($arCentroCosto);
-                                            }
-                                            $arRegistro->setCodigoModeloFk('RhuPago');
-                                            $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
-                                            $em->persist($arRegistro);
+                                                //Credito
+                                                $arRegistro = new FinRegistro();
+                                                $arRegistro->setCuentaRel($arCuentaCredito);
+                                                $arRegistro->setTerceroRel($arTercero);
+                                                $arRegistro->setComprobanteRel($arComprobante);
+                                                $arRegistro->setNumero($arPago->getNumero());
+                                                $arRegistro->setNumeroReferencia($arPago->getNumero());
+                                                $arRegistro->setFecha($arPago->getFechaHasta());
+                                                $arRegistro->setVrCredito($arPago->getVrVacacion());
+                                                $arRegistro->setNaturaleza("C");
+                                                $arRegistro->setDescripcion('PROV VACACION CRE');
+                                                if ($arCuentaCredito->getExigeCentroCosto() == 1) {
+                                                    $arRegistro->setCentroCostoRel($arCentroCosto);
+                                                }
+                                                $arRegistro->setCodigoModeloFk('RhuPago');
+                                                $arRegistro->setCodigoDocumento($arPago->getCodigoPagoPk());
+                                                $em->persist($arRegistro);
 
+                                            } else {
+                                                $error = "La cuenta debito o credito no existe";
+                                                break;
+                                            }
                                         } else {
-                                            $error = "La cuenta debito o credito no existe";
+                                            $error = "No estan configuradas las cuentas de provision vacacion";
                                             break;
                                         }
                                     } else {

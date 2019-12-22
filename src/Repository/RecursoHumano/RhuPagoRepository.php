@@ -2011,13 +2011,17 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arEmpleadoDistribucion = $query->getResult();*/
         }
         if ($costotipo == 'FIJ') {
-            $respuesta['arContratoDistribucion'] =
-                array(
+            if($arCentroCosto) {
+                $respuesta['arContratoDistribucion'] =
                     array(
-                        'codigoCentroCostoFk' => $arCentroCosto->getCodigoCentroCostoPk(),
-                        'participacion' => 100
-                    )
-                );
+                        array(
+                            'codigoCentroCostoFk' => $arCentroCosto->getCodigoCentroCostoPk(),
+                            'participacion' => 100
+                        )
+                    );
+            } else {
+                $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el tipo de costo es fijo pero el empleado no tiene centro de costo";
+            }
             /*if ($arConfiguracionNomina->getContabilizarPagoCentroCostoCliente()) {//Validar si tambien el cliente maneja la configuracion para contabilizar el centro de costo del cliente
                 if ($arPago->getEmpleadoRel()->getEmpleadoTipoRel()->getOperativo()) {
                     if ($arPago->getContratoRel()->getCentroCostoRel()->getClienteRel()->getCentroCostoRel()) {
@@ -2029,17 +2033,19 @@ class RhuPagoRepository extends ServiceEntityRepository
                 }
             }*/
         }
-        if ($respuesta['arContratoDistribucion']) {
-            $participacionTotal = 0;
-            foreach ($respuesta['arContratoDistribucion'] as $arContratoDistribucionFijo) {
-                $participacionDetalle = $arContratoDistribucionFijo['participacion'];
-                $participacionTotal += $participacionDetalle;
+        if($respuesta['error'] == "") {
+            if ($respuesta['arContratoDistribucion']) {
+                $participacionTotal = 0;
+                foreach ($respuesta['arContratoDistribucion'] as $arContratoDistribucionFijo) {
+                    $participacionDetalle = $arContratoDistribucionFijo['participacion'];
+                    $participacionTotal += $participacionDetalle;
+                }
+                if (round($participacionTotal) != 100) {
+                    $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene el 100% en la distribucion de costos";
+                }
+            } else {
+                $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene distribucion de costos";
             }
-            if (round($participacionTotal) != 100) {
-                $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene el 100% en la distribucion de costos";
-            }
-        } else {
-            $respuesta['error'] = "En el pago numero " . $arPago->getNumero() . " el empleado no tiene distribucion de costos";
         }
         return $respuesta;
     }

@@ -58,7 +58,7 @@ class TurCostoServicioRepository extends ServiceEntityRepository
                 $arCostoServicio->setHorasNocturnas($arPedidoDetalle->getHorasNocturnas());
                 $arCostoServicio->setCantidad($arPedidoDetalle->getCantidad());
                 $arCostoServicio->setVrTotal($arPedidoDetalle->getVrSubtotal());
-                $arCostoServicio->setVrCostoRecurso($costo);
+                $arCostoServicio->setVrCosto($costo);
                 $em->persist($arCostoServicio);
             }
             $em->flush();
@@ -100,6 +100,21 @@ class TurCostoServicioRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("cs.codigoEmpleadoFk = '{$session->get('filtroTurCostoServicioCodigoEmpleado')}'");
         }
         return $queryBuilder->setMaxResults(5000)->getQuery();
+    }
+
+    public function lista($codigoCierre)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TurCostoServicio::class, 'cs')
+            ->select('cs.codigoCostoServicioPk')
+            ->addSelect('cs.vrCosto')
+            ->addSelect('cs.vrTotal')
+            ->addSelect('c.nombreCorto as clienteNombreCorto')
+            ->addSelect('p.nombre as puestoNombre')
+            ->leftJoin('cs.clienteRel', 'c')
+            ->leftJoin('cs.puestoRel', 'p')
+            ->where('cs.codigoCierreFk = ' . $codigoCierre);
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

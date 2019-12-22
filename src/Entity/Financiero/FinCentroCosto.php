@@ -75,11 +75,6 @@ class FinCentroCosto
     protected $distribucionesEmpleadosCentroCostoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleado", mappedBy="centroCostoRel")
-     */
-    protected $costosEmpleadosCentroCostoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="centroCostoRel")
      */
     protected $costosEmpleadosServiciosCentroCostoRel;
@@ -137,17 +132,17 @@ class FinCentroCosto
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getEstadoInactivo()
+    public function isEstadoInactivo(): bool
     {
         return $this->estadoInactivo;
     }
 
     /**
-     * @param mixed $estadoInactivo
+     * @param bool $estadoInactivo
      */
-    public function setEstadoInactivo($estadoInactivo): void
+    public function setEstadoInactivo(bool $estadoInactivo): void
     {
         $this->estadoInactivo = $estadoInactivo;
     }
@@ -235,22 +230,6 @@ class FinCentroCosto
     /**
      * @return mixed
      */
-    public function getCostosEmpleadosCentroCostoRel()
-    {
-        return $this->costosEmpleadosCentroCostoRel;
-    }
-
-    /**
-     * @param mixed $costosEmpleadosCentroCostoRel
-     */
-    public function setCostosEmpleadosCentroCostoRel($costosEmpleadosCentroCostoRel): void
-    {
-        $this->costosEmpleadosCentroCostoRel = $costosEmpleadosCentroCostoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCostosEmpleadosServiciosCentroCostoRel()
     {
         return $this->costosEmpleadosServiciosCentroCostoRel;
@@ -327,7 +306,6 @@ class FinCentroCosto
     {
         $this->carMovimientosDetallesCentroCostoRel = $carMovimientosDetallesCentroCostoRel;
     }
-
 
 
 }

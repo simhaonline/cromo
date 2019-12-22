@@ -24,6 +24,11 @@ class TurDistribucionEmpleado
     private $codigoDistribucionEmpleadoPk;
 
     /**
+     * @ORM\Column(name="codigo_cierre_fk", type="integer")
+     */
+    private $codigoCierreFk;
+
+    /**
      * @ORM\Column(name="anio", type="integer", nullable=true)
      */
     private $anio;
@@ -59,6 +64,12 @@ class TurDistribucionEmpleado
      * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
      */
     protected $centroCostoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurCierre", inversedBy="distribucionesEmpleadosCierreRel")
+     * @ORM\JoinColumn(name="codigo_cierre_fk", referencedColumnName="codigo_cierre_pk")
+     */
+    protected $cierreRel;
 
     /**
      * @return mixed
@@ -186,6 +197,38 @@ class TurDistribucionEmpleado
     public function setCentroCostoRel($centroCostoRel): void
     {
         $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCierreFk()
+    {
+        return $this->codigoCierreFk;
+    }
+
+    /**
+     * @param mixed $codigoCierreFk
+     */
+    public function setCodigoCierreFk($codigoCierreFk): void
+    {
+        $this->codigoCierreFk = $codigoCierreFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCierreRel()
+    {
+        return $this->cierreRel;
+    }
+
+    /**
+     * @param mixed $cierreRel
+     */
+    public function setCierreRel($cierreRel): void
+    {
+        $this->cierreRel = $cierreRel;
     }
 
 

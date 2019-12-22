@@ -64,11 +64,6 @@ class TurCostoServicio
     private $codigoModalidadFk;
 
     /**
-     * @ORM\Column(name="codigo_periodo_fk", type="integer", nullable=true)
-     */
-    private $codigoPeriodoFk;
-
-    /**
      * @ORM\Column(name="dia_desde", type="integer")
      */
     private $diaDesde = 1;
@@ -119,9 +114,9 @@ class TurCostoServicio
     private $cantidad = 0;
 
     /**
-     * @ORM\Column(name="vr_costo_recurso", type="float")
+     * @ORM\Column(name="vr_costo", type="float")
      */
-    private $vrCostoRecurso = 0;
+    private $vrCosto = 0;
 
     /**
      * @ORM\Column(name="vr_total", type="float")
@@ -315,225 +310,209 @@ class TurCostoServicio
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getCodigoPeriodoFk()
-    {
-        return $this->codigoPeriodoFk;
-    }
-
-    /**
-     * @param mixed $codigoPeriodoFk
-     */
-    public function setCodigoPeriodoFk($codigoPeriodoFk): void
-    {
-        $this->codigoPeriodoFk = $codigoPeriodoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDiaDesde()
+    public function getDiaDesde(): int
     {
         return $this->diaDesde;
     }
 
     /**
-     * @param mixed $diaDesde
+     * @param int $diaDesde
      */
-    public function setDiaDesde($diaDesde): void
+    public function setDiaDesde(int $diaDesde): void
     {
         $this->diaDesde = $diaDesde;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getDiaHasta()
+    public function getDiaHasta(): int
     {
         return $this->diaHasta;
     }
 
     /**
-     * @param mixed $diaHasta
+     * @param int $diaHasta
      */
-    public function setDiaHasta($diaHasta): void
+    public function setDiaHasta(int $diaHasta): void
     {
         $this->diaHasta = $diaHasta;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getDias()
+    public function getDias(): int
     {
         return $this->dias;
     }
 
     /**
-     * @param mixed $dias
+     * @param int $dias
      */
-    public function setDias($dias): void
+    public function setDias(int $dias): void
     {
         $this->dias = $dias;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getHoras()
+    public function getHoras(): int
     {
         return $this->horas;
     }
 
     /**
-     * @param mixed $horas
+     * @param int $horas
      */
-    public function setHoras($horas): void
+    public function setHoras(int $horas): void
     {
         $this->horas = $horas;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getHorasDiurnas()
+    public function getHorasDiurnas(): int
     {
         return $this->horasDiurnas;
     }
 
     /**
-     * @param mixed $horasDiurnas
+     * @param int $horasDiurnas
      */
-    public function setHorasDiurnas($horasDiurnas): void
+    public function setHorasDiurnas(int $horasDiurnas): void
     {
         $this->horasDiurnas = $horasDiurnas;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getHorasNocturnas()
+    public function getHorasNocturnas(): int
     {
         return $this->horasNocturnas;
     }
 
     /**
-     * @param mixed $horasNocturnas
+     * @param int $horasNocturnas
      */
-    public function setHorasNocturnas($horasNocturnas): void
+    public function setHorasNocturnas(int $horasNocturnas): void
     {
         $this->horasNocturnas = $horasNocturnas;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getHorasProgramadas()
+    public function getHorasProgramadas(): int
     {
         return $this->horasProgramadas;
     }
 
     /**
-     * @param mixed $horasProgramadas
+     * @param int $horasProgramadas
      */
-    public function setHorasProgramadas($horasProgramadas): void
+    public function setHorasProgramadas(int $horasProgramadas): void
     {
         $this->horasProgramadas = $horasProgramadas;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getHorasDiurnasProgramadas()
+    public function getHorasDiurnasProgramadas(): int
     {
         return $this->horasDiurnasProgramadas;
     }
 
     /**
-     * @param mixed $horasDiurnasProgramadas
+     * @param int $horasDiurnasProgramadas
      */
-    public function setHorasDiurnasProgramadas($horasDiurnasProgramadas): void
+    public function setHorasDiurnasProgramadas(int $horasDiurnasProgramadas): void
     {
         $this->horasDiurnasProgramadas = $horasDiurnasProgramadas;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getHorasNocturnasProgramadas()
+    public function getHorasNocturnasProgramadas(): int
     {
         return $this->horasNocturnasProgramadas;
     }
 
     /**
-     * @param mixed $horasNocturnasProgramadas
+     * @param int $horasNocturnasProgramadas
      */
-    public function setHorasNocturnasProgramadas($horasNocturnasProgramadas): void
+    public function setHorasNocturnasProgramadas(int $horasNocturnasProgramadas): void
     {
         $this->horasNocturnasProgramadas = $horasNocturnasProgramadas;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getCantidad()
+    public function getCantidad(): int
     {
         return $this->cantidad;
     }
 
     /**
-     * @param mixed $cantidad
+     * @param int $cantidad
      */
-    public function setCantidad($cantidad): void
+    public function setCantidad(int $cantidad): void
     {
         $this->cantidad = $cantidad;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrCostoRecurso()
+    public function getVrCosto(): int
     {
-        return $this->vrCostoRecurso;
+        return $this->vrCosto;
     }
 
     /**
-     * @param mixed $vrCostoRecurso
+     * @param int $vrCosto
      */
-    public function setVrCostoRecurso($vrCostoRecurso): void
+    public function setVrCosto(int $vrCosto): void
     {
-        $this->vrCostoRecurso = $vrCostoRecurso;
+        $this->vrCosto = $vrCosto;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrTotal()
+    public function getVrTotal(): int
     {
         return $this->vrTotal;
     }
 
     /**
-     * @param mixed $vrTotal
+     * @param int $vrTotal
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrTotal(int $vrTotal): void
     {
         $this->vrTotal = $vrTotal;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getMargen()
+    public function getMargen(): int
     {
         return $this->margen;
     }
 
     /**
-     * @param mixed $margen
+     * @param int $margen
      */
-    public function setMargen($margen): void
+    public function setMargen(int $margen): void
     {
         $this->margen = $margen;
     }
@@ -633,6 +612,7 @@ class TurCostoServicio
     {
         $this->modalidadRel = $modalidadRel;
     }
+
 
 
 }

@@ -79,6 +79,16 @@ class TurCierre
     protected $costosServiciosCierreRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurDistribucion", mappedBy="cierreRel")
+     */
+    protected $distribucionesCierreRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurDistribucionEmpleado", mappedBy="cierreRel")
+     */
+    protected $distribucionesEmpleadosCierreRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCierrePk()
@@ -268,6 +278,38 @@ class TurCierre
     public function setCostosServiciosCierreRel($costosServiciosCierreRel): void
     {
         $this->costosServiciosCierreRel = $costosServiciosCierreRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionesCierreRel()
+    {
+        return $this->distribucionesCierreRel;
+    }
+
+    /**
+     * @param mixed $distribucionesCierreRel
+     */
+    public function setDistribucionesCierreRel($distribucionesCierreRel): void
+    {
+        $this->distribucionesCierreRel = $distribucionesCierreRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionesEmpleadosCierreRel()
+    {
+        return $this->distribucionesEmpleadosCierreRel;
+    }
+
+    /**
+     * @param mixed $distribucionesEmpleadosCierreRel
+     */
+    public function setDistribucionesEmpleadosCierreRel($distribucionesEmpleadosCierreRel): void
+    {
+        $this->distribucionesEmpleadosCierreRel = $distribucionesEmpleadosCierreRel;
     }
 
 

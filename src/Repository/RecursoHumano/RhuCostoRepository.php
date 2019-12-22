@@ -76,4 +76,25 @@ class RhuCostoRepository extends ServiceEntityRepository
         }
         $em->flush();
     }
+
+    public function lista($codigoCierre)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(RhuCosto::class, 'c')
+            ->select('c.codigoCostoPk')
+            ->addSelect('c.codigoCierreFk')
+            ->addSelect('c.anio')
+            ->addSelect('c.mes')
+            ->addSelect('c.vrNomina')
+            ->addSelect('c.vrAporte')
+            ->addSelect('c.vrProvision')
+            ->addSelect('c.vrTotal')
+            ->addSelect('c.codigoEmpleadoFk')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->where('c.codigoCierreFk = ' . $codigoCierre);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

@@ -85,14 +85,17 @@ class TurCostoEmpleadoRepository extends ServiceEntityRepository
 
                     $query = $em->createQuery($dql);
                     $arrayResultados = $query->getResult();
+                    $numeroServicios = count($arrayResultados);
                     $pesoTotal = 0;
                     foreach ($arrayResultados as $detalle) {
                         $peso = $detalle['pDS'] + $detalle['pD'] + $detalle['pN'] + $detalle['pFD'] + $detalle['pFN'] + $detalle['pEOD'] + $detalle['pEON'] + $detalle['pEFD'] + $detalle['pEFN'] + $detalle['pRN'] + $detalle['pRFD'] + $detalle['pRFN'];
                         $pesoTotal += $peso;
                     }
                     $participacionMayor = 0;
+                    $diferencia = 0;
+                    $registro = 0;
                     foreach ($arrayResultados as $detalle) {
-
+                        $registro++;
                         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($detalle['codigoPedidoDetalleFk']);
                         $arCostoEmpleadoServicio = new TurCostoEmpleadoServicio();
                         $arCostoEmpleadoServicio->setAnio($arCierre->getAnio());
@@ -116,100 +119,109 @@ class TurCostoEmpleadoRepository extends ServiceEntityRepository
                         $arCostoEmpleadoServicio->setHorasRecargoFestivoNocturno($detalle['horasRecargoFestivoNocturno']);
 
                         $peso = $detalle['pDS'] + $detalle['pD'] + $detalle['pN'] + $detalle['pFD'] + $detalle['pFN'] + $detalle['pEOD'] + $detalle['pEON'] + $detalle['pEFD'] + $detalle['pEFN'] + $detalle['pRN'] + $detalle['pRFD'] + $detalle['pRFN'];
-                        $participacionRecurso = 0;
+                        $participacionEmpleado = 0;
                         if ($peso > 0) {
-                            $participacionRecurso = $peso / $pesoTotal;
+                            $participacionEmpleado = $peso / $pesoTotal;
                         }
-                        $costoDetalle = $participacionRecurso * $costoRecurso;
-                        $costoDetalleNomina = $participacionRecurso * $nomina;
-                        $costoDetalleSeguridadSocial = $participacionRecurso * $aporte;
-                        $costoDetallePrestaciones = $participacionRecurso * $provision;
-                        $participacion = 0;
 
-                        if ($detalle['pDS'] > 0) {
-                            $participacion = $detalle['pDS'] / $peso;
+                        $participacionAbsoluta = $participacionEmpleado * 100;
+                        $participacion = round($participacionEmpleado * 100);
+                        $diferencia += $participacionAbsoluta - $participacion;
+                        if($numeroServicios == $registro && $diferencia > 0) {
+                            $participacion += $diferencia;
                         }
-                        $costo = $participacion * $costoDetalle;
+
+                        $costoDetalle = ($participacion * $costoRecurso) / 100;
+                        $costoDetalleNomina = ($participacion * $nomina) / 100;
+                        $costoDetalleSeguridadSocial = ($participacion * $aporte) / 100;
+                        $costoDetallePrestaciones = ($participacion * $provision) / 100;
+
+                        $participacionDetalle = 0;
+                        if ($detalle['pDS'] > 0) {
+                            $participacionDetalle = $detalle['pDS'] / $peso;
+                        }
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasDescansoCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pD'] > 0) {
-                            $participacion = $detalle['pD'] / $peso;
+                            $participacionDetalle = $detalle['pD'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasDiurnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pN'] > 0) {
-                            $participacion = $detalle['pN'] / $peso;
+                            $participacionDetalle = $detalle['pN'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasNocturnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pFD'] > 0) {
-                            $participacion = $detalle['pFD'] / $peso;
+                            $participacionDetalle = $detalle['pFD'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasFestivasDiurnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pFN'] > 0) {
-                            $participacion = $detalle['pFN'] / $peso;
+                            $participacionDetalle = $detalle['pFN'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasFestivasNocturnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pEOD'] > 0) {
-                            $participacion = $detalle['pEOD'] / $peso;
+                            $participacionDetalle = $detalle['pEOD'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasExtrasOrdinariasDiurnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pEON'] > 0) {
-                            $participacion = $detalle['pEON'] / $peso;
+                            $participacionDetalle = $detalle['pEON'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasExtrasOrdinariasNocturnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pEFD'] > 0) {
-                            $participacion = $detalle['pEFD'] / $peso;
+                            $participacionDetalle = $detalle['pEFD'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasExtrasFestivasDiurnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pEFN'] > 0) {
-                            $participacion = $detalle['pEFN'] / $peso;
+                            $participacionDetalle = $detalle['pEFN'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasExtrasFestivasNocturnasCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pRN'] > 0) {
-                            $participacion = $detalle['pRN'] / $peso;
+                            $participacionDetalle = $detalle['pRN'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasRecargoNocturnoCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pRFD'] > 0) {
-                            $participacion = $detalle['pRFD'] / $peso;
+                            $participacionDetalle = $detalle['pRFD'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasRecargoFestivoDiurnoCosto($costo);
 
-                        $participacion = 0;
+                        $participacionDetalle = 0;
                         if ($detalle['pRFN'] > 0) {
-                            $participacion = $detalle['pRFN'] / $peso;
+                            $participacionDetalle = $detalle['pRFN'] / $peso;
                         }
-                        $costo = $participacion * $costoDetalle;
+                        $costo = $participacionDetalle * $costoDetalle;
                         $arCostoEmpleadoServicio->setHorasRecargoFestivoNocturnoCosto($costo);
-                        $participacionRecurso = $participacionRecurso * 100;
-                        $arCostoEmpleadoServicio->setParticipacion($participacionRecurso);
+
+                        //$participacionRecurso = $participacionRecurso * 100;
+                        $arCostoEmpleadoServicio->setParticipacion($participacion);
                         $arCostoEmpleadoServicio->setPeso($peso);
                         $arCostoEmpleadoServicio->setVrCosto($costoDetalle);
                         $arCostoEmpleadoServicio->setVrNomina($costoDetalleNomina);
@@ -217,8 +229,8 @@ class TurCostoEmpleadoRepository extends ServiceEntityRepository
                         $arCostoEmpleadoServicio->setVrProvision($costoDetallePrestaciones);
                         $arCostoEmpleadoServicio->setCentroCostoRel($arPedidoDetalle->getPuestoRel()->getCentroCostoRel());
                         $em->persist($arCostoEmpleadoServicio);
-                        if ($participacionMayor < $participacionRecurso) {
-                            $participacionMayor = $participacionRecurso;
+                        if ($participacionMayor < $participacion) {
+                            $participacionMayor = $participacion;
                             $arCentroCostoParticipacion = $arPedidoDetalle->getPuestoRel()->getCentroCostoRel();
                         }
                     }
@@ -274,5 +286,23 @@ class TurCostoEmpleadoRepository extends ServiceEntityRepository
 
     }
 
+    public function lista($codigoCierre)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TurCostoEmpleado::class, 'ce')
+            ->select('ce.codigoCostoEmpleadoPk')
+            ->addSelect('ce.anio')
+            ->addSelect('ce.mes')
+            ->addSelect('ce.codigoEmpleadoFk')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->addSelect('ce.vrNomina')
+            ->addSelect('ce.vrProvision')
+            ->addSelect('ce.vrAporte')
+            ->addSelect('ce.vrTotal')
+            ->leftJoin('ce.empleadoRel', 'e')
+            ->where('ce.codigoCierreFk = ' . $codigoCierre);
+        return $queryBuilder->getQuery()->getResult();
+    }
 
 }

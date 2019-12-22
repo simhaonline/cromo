@@ -64,21 +64,6 @@ class TurCostoEmpleado
     private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="horas", type="integer")
-     */
-    private $horas = 0;
-
-    /**
-     * @ORM\Column(name="vr_hora", type="float")
-     */
-    private $vrHora = 0;
-
-    /**
-     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
-     */
-    private $codigoCentroCostoFk;
-
-    /**
      * @ORM\ManyToOne(targetEntity="TurCierre", inversedBy="costosEmpleadosCierreRel")
      * @ORM\JoinColumn(name="codigo_cierre_fk", referencedColumnName="codigo_cierre_pk")
      */
@@ -89,12 +74,6 @@ class TurCostoEmpleado
      * @ORM\JoinColumn(name="codigo_empleado_fk", referencedColumnName="codigo_empleado_pk")
      */
     protected $empleadoRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="costosEmpleadosCentroCostoRel")
-     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
-     */
-    protected $centroCostoRel;
 
     /**
      * @return mixed
@@ -177,115 +156,67 @@ class TurCostoEmpleado
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrNomina()
+    public function getVrNomina(): int
     {
         return $this->vrNomina;
     }
 
     /**
-     * @param mixed $vrNomina
+     * @param int $vrNomina
      */
-    public function setVrNomina($vrNomina): void
+    public function setVrNomina(int $vrNomina): void
     {
         $this->vrNomina = $vrNomina;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrProvision()
+    public function getVrProvision(): int
     {
         return $this->vrProvision;
     }
 
     /**
-     * @param mixed $vrProvision
+     * @param int $vrProvision
      */
-    public function setVrProvision($vrProvision): void
+    public function setVrProvision(int $vrProvision): void
     {
         $this->vrProvision = $vrProvision;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrAporte()
+    public function getVrAporte(): int
     {
         return $this->vrAporte;
     }
 
     /**
-     * @param mixed $vrAporte
+     * @param int $vrAporte
      */
-    public function setVrAporte($vrAporte): void
+    public function setVrAporte(int $vrAporte): void
     {
         $this->vrAporte = $vrAporte;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getVrTotal()
+    public function getVrTotal(): int
     {
         return $this->vrTotal;
     }
 
     /**
-     * @param mixed $vrTotal
+     * @param int $vrTotal
      */
-    public function setVrTotal($vrTotal): void
+    public function setVrTotal(int $vrTotal): void
     {
         $this->vrTotal = $vrTotal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHoras()
-    {
-        return $this->horas;
-    }
-
-    /**
-     * @param mixed $horas
-     */
-    public function setHoras($horas): void
-    {
-        $this->horas = $horas;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrHora()
-    {
-        return $this->vrHora;
-    }
-
-    /**
-     * @param mixed $vrHora
-     */
-    public function setVrHora($vrHora): void
-    {
-        $this->vrHora = $vrHora;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCentroCostoFk()
-    {
-        return $this->codigoCentroCostoFk;
-    }
-
-    /**
-     * @param mixed $codigoCentroCostoFk
-     */
-    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
-    {
-        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
     }
 
     /**
@@ -319,23 +250,6 @@ class TurCostoEmpleado
     {
         $this->empleadoRel = $empleadoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCentroCostoRel()
-    {
-        return $this->centroCostoRel;
-    }
-
-    /**
-     * @param mixed $centroCostoRel
-     */
-    public function setCentroCostoRel($centroCostoRel): void
-    {
-        $this->centroCostoRel = $centroCostoRel;
-    }
-
 
 
 }

@@ -12,11 +12,15 @@ use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurCierre;
 use App\Entity\Turno\TurCierreDetalle;
 use App\Entity\Turno\TurCierreTipo;
+use App\Entity\Turno\TurCostoEmpleado;
+use App\Entity\Turno\TurCostoServicio;
+use App\Entity\Turno\TurDistribucionEmpleado;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\CierreType;
 use App\Form\Type\Turno\CierreDetalleType;
 use App\Formato\Infinancierorio\Cierre;
 use App\General\General;
+use App\Repository\Turno\TurDistribucionEmpleadoRepository;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
@@ -164,9 +168,14 @@ class CierreController extends AbstractController
 
             return $this->redirect($this->generateUrl('turno_movimiento_financiero_cierre_detalle', ['id' => $id]));
         }
-        //$arCierreDetalles = $paginator->paginate($em->getRepository(TurCierreDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
+        $arDistribucionEmpleados = $paginator->paginate($em->getRepository(TurDistribucionEmpleado::class)->lista($id), $request->query->getInt('page', 1), 1000);
+        $arCostoEmpleados = $paginator->paginate($em->getRepository(TurCostoEmpleado::class)->lista($id), $request->query->getInt('page', 1), 1000);
+        $arCostoServicios = $paginator->paginate($em->getRepository(TurCostoServicio::class)->lista($id), $request->query->getInt('page', 1), 1000);
         return $this->render('turno/movimiento/financiero/cierre/detalle.html.twig', [
             'form' => $form->createView(),
+            'arDistribucionEmpleados' => $arDistribucionEmpleados,
+            'arCostoEmpleados' => $arCostoEmpleados,
+            'arCostoServicios' => $arCostoServicios,
             'arCierre' => $arCierre
         ]);
     }

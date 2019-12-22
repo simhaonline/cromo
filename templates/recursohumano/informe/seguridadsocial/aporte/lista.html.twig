@@ -100,6 +100,7 @@
             <th style="text-align: right">C.C</th>
             <th style="text-align: right">C.FSSO</th>
             <th style="text-align: right">C.FSSU</th>
+            <th style="text-align: right">TOTAL</th>
         </tr>
         </thead>
         <!--cromo-->
@@ -141,6 +142,7 @@
                 <td style="text-align: right">{{ arAporte.cotizacionCaja | number_format(0, '.', ',') }}</td>
                 <td style="text-align: right">{{ arAporte.aportesFondoSolidaridadPensionalSolidaridad | number_format(0, '.', ',') }}</td>
                 <td style="text-align: right">{{ arAporte.aportesFondoSolidaridadPensionalSubsistencia | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arAporte.totalCotizacion | number_format(0, '.', ',') }}</td>
             </tr>
         {% endfor %}
         </tbody>

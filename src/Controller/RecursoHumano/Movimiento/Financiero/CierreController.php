@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Financiero;
 
+use App\Entity\RecursoHumano\RhuCosto;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuCierre;
 use App\Entity\RecursoHumano\RhuCierreDetalle;
@@ -144,9 +145,10 @@ class CierreController extends AbstractController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_financiero_cierre_detalle', ['id' => $id]));
             }
         }
-        //$arCierreDetalles = $paginator->paginate($em->getRepository(RhuCierreDetalle::class)->lista($arCierre->getCodigoCierrePk()), $request->query->get('page', 1), 1000);
+        $arCostos = $paginator->paginate($em->getRepository(RhuCosto::class)->lista($arCierre->getCodigoCierrePk()), $request->query->get('page', 1), 1000);
         return $this->render('recursohumano/movimiento/financiero/cierre/detalle.html.twig', [
             'arCierre' => $arCierre,
+            'arCostos' => $arCostos,
             'clase' => array('clase' => 'RhuCierre', 'codigo' => $id),
             'form' => $form->createView(),
         ]);

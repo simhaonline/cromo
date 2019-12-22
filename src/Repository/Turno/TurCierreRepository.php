@@ -344,17 +344,19 @@ class TurCierreRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (!$arCierre->getEstadoAutorizado()) {
+            set_time_limit(0);
+            ini_set("memory_limit", -1);
             $em->createQueryBuilder()->delete(TurDistribucion::class, 'd')
-                ->where("d.anio = " . $arCierre->getAnio() . " AND d.mes = " . $arCierre->getMes())->getQuery()->execute();
+                ->where("d.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
             $em->createQueryBuilder()->delete(TurDistribucionEmpleado::class, 'de')
-                ->where("de.anio = " . $arCierre->getAnio() . " AND de.mes = " . $arCierre->getMes())->getQuery()->execute();
+                ->where("de.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
             $em->createQueryBuilder()->delete(TurCostoEmpleado::class, 'ce')
                 ->where("ce.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
             $em->createQueryBuilder()->delete(TurCostoEmpleadoServicio::class, 'ces')
                 ->where("ces.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
             $em->createQueryBuilder()->delete(TurCostoServicio::class, 'cs')
                 ->where("cs.codigoCierreFk = " . $arCierre->getCodigoCierrePk())->getQuery()->execute();
-            $em->getRepository(TurDistribucion::class)->generar($arCierre->getAnio(), $arCierre->getMes());
+            $em->getRepository(TurDistribucion::class)->generar($arCierre->getAnio(), $arCierre->getMes(), $arCierre);
             $em->getRepository(TurDistribucionEmpleado::class)->generar($arCierre);
             $em->getRepository(TurCostoEmpleado::class)->generar($arCierre);
             $em->getRepository(TurCostoServicio::class)->generar($arCierre);

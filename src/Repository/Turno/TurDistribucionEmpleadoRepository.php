@@ -2,7 +2,9 @@
 
 namespace App\Repository\Turno;
 
+use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\Turno\TurContrato;
 use App\Entity\Turno\TurDistribucion;
 use App\Entity\Turno\TurDistribucionEmpleado;
 use App\Entity\Turno\TurFestivo;
@@ -25,14 +27,17 @@ class TurDistribucionEmpleadoRepository extends ServiceEntityRepository
         $strDesde = $arCierre->getAnio() . "/" . $arCierre->getMes() . "/01";
         $strUltimoDia = date("d", (mktime(0, 0, 0, $arCierre->getMes() + 1, 1, $arCierre->getAnio()) - 1));
         $strHasta = $arCierre->getAnio() . "/" . $arCierre->getMes() . "/" . $strUltimoDia;
-        $dql = "SELECT pd.codigoEmpleadoFk "
-            . "FROM App\Entity\Turno\TurProgramacion pd "
-            . "WHERE pd.anio =  " . $arCierre->getAnio() . " AND pd.mes =  " . $arCierre->getMes() . " AND pd.codigoEmpleadoFk <> ''"
-            . "GROUP BY pd.codigoEmpleadoFk";
-        $query = $em->createQuery($dql);
-        $arEmpleados = $query->getResult();
+        $queryBuilder = $em->createQueryBuilder()->from(TurProgramacion::class, 'p')
+            ->select('p.codigoEmpleadoFk')
+            ->addSelect('e.codigoContratoFk')
+            ->addSelect('e.codigoContratoUltimoFk')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->where('p.anio = ' . $arCierre->getAnio())
+            ->andWhere('p.mes = ' . $arCierre->getMes())
+            ->andWhere("p.codigoEmpleadoFk <> ''")
+            ->groupBy('p.codigoEmpleadoFk');
+        $arEmpleados = $queryBuilder->getQuery()->getResult();
         foreach ($arEmpleados as $arEmpleado) {
-            //$arEmpleado = $em->getRepository('BrasaRecursoHumanoBundle:RhuEmpleado')->find($arRecursoPeriodo['codigoRecursoFk']);
             $dql = "SELECT dd.codigoPedidoDetalleFk, "
                 . "SUM(dd.horasDescanso) as horasDescanso, "
                 . "SUM(dd.horasDiurnas) as horasDiurnas, "
@@ -73,96 +78,48 @@ class TurDistribucionEmpleadoRepository extends ServiceEntityRepository
                 $pesoTotal = 1;
             }
             $participacionMayor = 0;
+            $diferencia = 0;
+            $registro = 0;
             foreach ($arrayResultados as $detalle) {
-
+                $registro++;
                 $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($detalle['codigoPedidoDetalleFk']);
-
                 $peso = $detalle['pDS'] + $detalle['pD'] + $detalle['pN'] + $detalle['pFD'] + $detalle['pFN'] + $detalle['pEOD'] + $detalle['pEON'] + $detalle['pEFD'] + $detalle['pEFN'] + $detalle['pRN'] + $detalle['pRFD'] + $detalle['pRFN'];
-                $participacionRecurso = 0;
+                $participacionEmpleado = 0;
                 //Para el caso en que el empleado esta en novedad todo el periodo
                 if ($peso == 0 && $numeroServicios >= 1 && $pesoTotal == 1) {
                     $peso = 1 / $numeroServicios;
                 }
                 if ($peso > 0) {
-                    $participacionRecurso = $peso / $pesoTotal;
+                    $participacionEmpleado = $peso / $pesoTotal;
                 }
 
-                $participacion = 0;
-                if ($detalle['pDS'] > 0) {
-                    $participacion = $detalle['pDS'] / $peso;
+                $participacionAbsoluta = $participacionEmpleado * 100;
+                $participacion = round($participacionEmpleado * 100);
+                $diferencia += $participacionAbsoluta - $participacion;
+                if($numeroServicios == $registro && $diferencia > 0) {
+                    $participacion += $diferencia;
                 }
 
-                $participacion = 0;
-                if ($detalle['pD'] > 0) {
-                    $participacion = $detalle['pD'] / $peso;
+                if ($participacionMayor < $participacion) {
+                    $participacionMayor = $participacion;
+                    if($arEmpleado['codigoContratoFk']) {
+                        $codigoContrato = $arEmpleado['codigoContratoFk'];
+                    } else {
+                        $codigoContrato = $arEmpleado['codigoContratoUltimoFk'];
+                    }
+                    $arContrato = $em->getRepository(RhuContrato::class)->find($codigoContrato);
+                    $arContrato->setCentroCostoRel($arPedidoDetalle->getPuestoRel()->getCentroCostoRel());
+                    $em->persist($arContrato);
                 }
 
-                $participacion = 0;
-                if ($detalle['pN'] > 0) {
-                    $participacion = $detalle['pN'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pFD'] > 0) {
-                    $participacion = $detalle['pFD'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pFN'] > 0) {
-                    $participacion = $detalle['pFN'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pEOD'] > 0) {
-                    $participacion = $detalle['pEOD'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pEON'] > 0) {
-                    $participacion = $detalle['pEON'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pEFD'] > 0) {
-                    $participacion = $detalle['pEFD'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pEFN'] > 0) {
-                    $participacion = $detalle['pEFN'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pRN'] > 0) {
-                    $participacion = $detalle['pRN'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pRFD'] > 0) {
-                    $participacion = $detalle['pRFD'] / $peso;
-                }
-
-                $participacion = 0;
-                if ($detalle['pRFN'] > 0) {
-                    $participacion = $detalle['pRFN'] / $peso;
-                }
-                $participacionRecurso = $participacionRecurso * 100;
-                /*if ($participacionMayor < $participacionRecurso) {
-                    $participacionMayor = $participacionRecurso;
-                    $arEmpleado->setCentroCostoContabilidadRel($arPedidoDetalle->getPuestoRel()->getCentroCostoContabilidadRel());
-                    $arEmpleado->setSucursalRel($arPedidoDetalle->getPuestoRel()->getSucursalRel());
-                    $arEmpleado->setAreaRel($arPedidoDetalle->getPuestoRel()->getAreaRel());
-                    $arEmpleado->setProyectoRel($arPedidoDetalle->getPuestoRel()->getProyectoRel());
-                    $arEmpleado->setCodigoClienteTurnoFk($arPedidoDetalle->getPedidoRel()->getCodigoClienteFk());
-                    $arEmpleado->setCodigoZonaPuestoFk($arPedidoDetalle->getPuestoRel()->getCodigoZonaFk());
-                }*/
-                if ($participacionRecurso > 0) {
+                if ($participacion > 0) {
                     $arDistribucionEmpleado = new TurDistribucionEmpleado();
+                    $arDistribucionEmpleado->setCierreRel($arCierre);
                     $arDistribucionEmpleado->setAnio($arCierre->getAnio());
                     $arDistribucionEmpleado->setMes($arCierre->getMes());
                     $arDistribucionEmpleado->setEmpleadoRel($em->getReference(RhuEmpleado::class, $arEmpleado['codigoEmpleadoFk']));
                     $arDistribucionEmpleado->setCentroCostoRel($arPedidoDetalle->getPuestoRel()->getCentroCostoRel());
-                    $arDistribucionEmpleado->setParticipacion($participacionRecurso);
+                    $arDistribucionEmpleado->setParticipacion($participacion);
                 }
                 $em->persist($arDistribucionEmpleado);
             }
@@ -170,5 +127,23 @@ class TurDistribucionEmpleadoRepository extends ServiceEntityRepository
         $em->flush();
     }
 
+    public function lista($codigoCierre)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TurDistribucionEmpleado::class, 'de')
+            ->select('de.codigoDistribucionEmpleadoPk')
+            ->addSelect('de.anio')
+            ->addSelect('de.mes')
+            ->addSelect('de.codigoEmpleadoFk')
+            ->addSelect('de.codigoCentroCostoFk')
+            ->addSelect('de.participacion')
+            ->addSelect('cc.nombre as centroCostoNombre')
+            ->addSelect('e.numeroIdentificacion as empleadoNumeroIdentificacion')
+            ->addSelect('e.nombreCorto as empleadoNombreCorto')
+            ->leftJoin('de.empleadoRel', 'e')
+            ->leftJoin('de.centroCostoRel', 'cc')
+            ->where('de.codigoCierreFk = ' . $codigoCierre);
+        return $queryBuilder->getQuery()->getResult();
+    }
 
 }

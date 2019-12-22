@@ -19,7 +19,7 @@ class TurDistribucionRepository extends ServiceEntityRepository
         parent::__construct($registry, TurDistribucion::class);
     }
 
-    public function generar($anio, $mes)
+    public function generar($anio, $mes, $arCierre)
     {
         $em = $this->getEntityManager();
         $dateFechaDesde = date_create($anio . "/" . $mes . "/01");
@@ -68,6 +68,7 @@ class TurDistribucionRepository extends ServiceEntityRepository
                             $arrHoras = $this->getHoras($strTurno, $dateFecha, $dateFecha2, $boolFestivo, $boolFestivo2, $horasIniciales);
                             $horasIniciales += $arrHoras['horas'];
                             $arDistribucion = new TurDistribucion();
+                            $arDistribucion->setCierreRel($arCierre);
                             $arDistribucion->setCodigoEmpleadoFk($arEmpleado['codigoEmpleadoFk']);
                             $arDistribucion->setCodigoTurnoFk($strTurno);
                             $arDistribucion->setCodigoPedidoDetalleFk($arrTurno['codigoPedidoDetalle']);

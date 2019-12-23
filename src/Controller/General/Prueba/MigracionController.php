@@ -2739,6 +2739,8 @@ class MigracionController extends Controller
                     tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo,
                     dia_desde,
                     dia_hasta,
+                    hora_inicio,
+                    hora_fin,                    
                     anio,
                     mes,
                     dias,
@@ -2827,6 +2829,12 @@ class MigracionController extends Controller
                 $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
                 $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
                 $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
+                if($row['hora_inicio']) {
+                    $arPedidoDetalle->setHoraDesde(date_create($row['hora_inicio']));
+                }
+                if($row['hora_fin']) {
+                    $arPedidoDetalle->setHoraHasta(date_create($row['hora_fin']));
+                }
                 $em->persist($arPedidoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

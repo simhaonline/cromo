@@ -249,14 +249,14 @@ class TurPedidoDetalle
     private $vrSalarioBase = 0;
 
     /**
-     * @ORM\Column(name="hora_inicio", type="time", nullable=true)
+     * @ORM\Column(name="hora_desde", type="time", nullable=true)
      */
-    private $horaInicio;
+    private $horaDesde;
 
     /**
-     * @ORM\Column(name="hora_fin", type="time", nullable=true)
+     * @ORM\Column(name="hora_hasta", type="time", nullable=true)
      */
-    private $horaFin;
+    private $horaHasta;
 
     /**
      * @ORM\Column(name="compuesto", type="boolean")
@@ -1067,38 +1067,6 @@ class TurPedidoDetalle
     /**
      * @return mixed
      */
-    public function getHoraInicio()
-    {
-        return $this->horaInicio;
-    }
-
-    /**
-     * @param mixed $horaInicio
-     */
-    public function setHoraInicio($horaInicio): void
-    {
-        $this->horaInicio = $horaInicio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHoraFin()
-    {
-        return $this->horaFin;
-    }
-
-    /**
-     * @param mixed $horaFin
-     */
-    public function setHoraFin($horaFin): void
-    {
-        $this->horaFin = $horaFin;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCompuesto()
     {
         return $this->compuesto;
@@ -1351,6 +1319,39 @@ class TurPedidoDetalle
     {
         $this->pedidosDetallesCompuestosPedidoDetalleRel = $pedidosDetallesCompuestosPedidoDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraDesde()
+    {
+        return $this->horaDesde;
+    }
+
+    /**
+     * @param mixed $horaDesde
+     */
+    public function setHoraDesde($horaDesde): void
+    {
+        $this->horaDesde = $horaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraHasta()
+    {
+        return $this->horaHasta;
+    }
+
+    /**
+     * @param mixed $horaHasta
+     */
+    public function setHoraHasta($horaHasta): void
+    {
+        $this->horaHasta = $horaHasta;
+    }
+
 
 
 }

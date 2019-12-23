@@ -1767,7 +1767,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                                 $em->persist($arRegistro);
 
                                             } else {
-                                                $error = "La cuenta debito o credito no existe";
+                                                $error = "La cuenta debito o credito no existe provision cesantias";
                                                 break;
                                             }
                                         } else {

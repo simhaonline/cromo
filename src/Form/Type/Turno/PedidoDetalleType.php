@@ -80,6 +80,8 @@ class PedidoDetalleType extends AbstractType
             ->add('porcentajeBaseIva', NumberType::class, array('required' => false))
             ->add('diaDesde', NumberType::class)
             ->add('diaHasta', NumberType::class)
+            ->add('horaDesde', TimeType::class)
+            ->add('horaHasta', TimeType::class)
             ->add('lunes', CheckboxType::class, array('required' => false))
             ->add('martes', CheckboxType::class, array('required' => false))
             ->add('miercoles', CheckboxType::class, array('required' => false))

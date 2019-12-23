@@ -203,7 +203,7 @@ class SoporteController extends ControllerListenerGeneral
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
-        $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($id), $request->query->getInt('page', 1), 1000);
+        $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($id), $request->query->getInt('page', 1), 500);
 
         return $this->render('turno/movimiento/operacion/soporte/detalle.html.twig', [
             'form' => $form->createView(),

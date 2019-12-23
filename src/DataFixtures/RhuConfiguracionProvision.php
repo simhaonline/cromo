@@ -34,7 +34,7 @@ class RhuConfiguracionProvision extends Fixture
             ['codigo' => 21, 'tipo' => 'ICB', 'nombre' => 'ICBF', 'clase' => 'ADM'],
             ['codigo' => 22, 'tipo' => 'SAL', 'nombre' => 'SALUD', 'clase' => 'OPE'],
             ['codigo' => 23, 'tipo' => 'PEN', 'nombre' => 'PENSION', 'clase' => 'OPE'],
-            ['codigo' => 24, 'tipo' => 'CA', 'nombre' => 'CAJA', 'clase' => 'OPE'],
+            ['codigo' => 24, 'tipo' => 'CAJ', 'nombre' => 'CAJA', 'clase' => 'OPE'],
             ['codigo' => 25, 'tipo' => 'RIE', 'nombre' => 'RIESGOS', 'clase' => 'OPE'],
             ['codigo' => 26, 'tipo' => 'SEN', 'nombre' => 'SENA', 'clase' => 'OPE'],
             ['codigo' => 27, 'tipo' => 'ICB', 'nombre' => 'ICBF', 'clase' => 'OPE'],

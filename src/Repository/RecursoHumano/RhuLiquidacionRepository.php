@@ -1338,7 +1338,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             $vrDeduccionEmbargo = 0;
             $vrPago = 0;
             if ($arEmbargo->getAfectaVacacion()) {
-                $vrPago += $arLiquidacion->getVrVacaciones();
+                $vrPago += $arLiquidacion->getVrVacacion();
             }
             if ($arEmbargo->getAfectaPrima()) {
                 $vrPago += $arLiquidacion->getVrPrima();

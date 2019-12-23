@@ -7,14 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurSoporteContratoRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TurSoporteContrato
 {
-    public $infoLog = [
-        "primaryKey" => "codigoSoporteContratoPk",
-        "todos" => true,
-    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_soporte_contrato_pk", type="integer")

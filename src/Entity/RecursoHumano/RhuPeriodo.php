@@ -51,6 +51,16 @@ class RhuPeriodo
     private $periodosMes = 0;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuPago", mappedBy="periodoRel" )
+     */
+    protected $pagosPeriodoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuGrupo", mappedBy="periodoRel" )
+     */
+    protected $gruposPeriodoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPeriodoPk()
@@ -144,6 +154,38 @@ class RhuPeriodo
     public function setPeriodosMes(int $periodosMes): void
     {
         $this->periodosMes = $periodosMes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagosPeriodoRel()
+    {
+        return $this->pagosPeriodoRel;
+    }
+
+    /**
+     * @param mixed $pagosPeriodoRel
+     */
+    public function setPagosPeriodoRel($pagosPeriodoRel): void
+    {
+        $this->pagosPeriodoRel = $pagosPeriodoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGruposPeriodoRel()
+    {
+        return $this->gruposPeriodoRel;
+    }
+
+    /**
+     * @param mixed $gruposPeriodoRel
+     */
+    public function setGruposPeriodoRel($gruposPeriodoRel): void
+    {
+        $this->gruposPeriodoRel = $gruposPeriodoRel;
     }
 
 

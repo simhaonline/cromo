@@ -28,6 +28,11 @@ class RhuGrupo
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_periodo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoPeriodoFk;
+
+    /**
      * @ORM\Column(name="descanso_distribucion", type="integer", nullable=true, options={"default":0})
      */
     private $descansoDistribucion = false;
@@ -57,6 +62,12 @@ class RhuGrupo
      * @ORM\JoinColumn(name="codigo_distribucion_fk",referencedColumnName="codigo_distribucion_pk")
      */
     protected $distribucionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuPeriodo", inversedBy="gruposPeriodoRel")
+     * @ORM\JoinColumn(name="codigo_periodo_fk",referencedColumnName="codigo_periodo_pk")
+     */
+    protected $periodoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="grupoRel")
@@ -394,6 +405,38 @@ class RhuGrupo
     public function setLicenciasGrupoRel($licenciasGrupoRel): void
     {
         $this->licenciasGrupoRel = $licenciasGrupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPeriodoFk()
+    {
+        return $this->codigoPeriodoFk;
+    }
+
+    /**
+     * @param mixed $codigoPeriodoFk
+     */
+    public function setCodigoPeriodoFk($codigoPeriodoFk): void
+    {
+        $this->codigoPeriodoFk = $codigoPeriodoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodoRel()
+    {
+        return $this->periodoRel;
+    }
+
+    /**
+     * @param mixed $periodoRel
+     */
+    public function setPeriodoRel($periodoRel): void
+    {
+        $this->periodoRel = $periodoRel;
     }
 
 

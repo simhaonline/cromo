@@ -7,14 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuPagoRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class RhuPago
 {
-    public $infoLog = [
-        "primaryKey" => "codigoPagoPk",
-        "todos"     => true,
-    ];
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_pago_pk", type="integer")
@@ -294,6 +289,12 @@ class RhuPago
      * @ORM\JoinColumn(name="codigo_tiempo_fk",referencedColumnName="codigo_tiempo_pk")
      */
     protected $tiempoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuPeriodo", inversedBy="pagosPeriodoRel")
+     * @ORM\JoinColumn(name="codigo_periodo_fk",referencedColumnName="codigo_periodo_pk")
+     */
+    protected $periodoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuPagoDetalle", mappedBy="pagoRel" )
@@ -1178,6 +1179,22 @@ class RhuPago
     public function setTiempoRel($tiempoRel): void
     {
         $this->tiempoRel = $tiempoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodoRel()
+    {
+        return $this->periodoRel;
+    }
+
+    /**
+     * @param mixed $periodoRel
+     */
+    public function setPeriodoRel($periodoRel): void
+    {
+        $this->periodoRel = $periodoRel;
     }
 
 

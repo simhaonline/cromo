@@ -394,7 +394,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $devengado += $pagoDetalle;
                 $devengadoPrestacional += $pagoDetalle;
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-                //$arPagoDetalle->setNumeroHoras($intHorasProcesarLicencia);
+                $arPagoDetalle->setHoras($intHorasProcesarLicencia);
                 $em->persist($arPagoDetalle);
                 /*if ($arLicencia->getAfectaTransporte() == 1) {
                     $intDiasLicenciaProcesar = intval($intHorasProcesarLicencia / $factorHorasDia);

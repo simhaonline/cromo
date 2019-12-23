@@ -1697,7 +1697,7 @@ class MigracionController extends Controller
                 $arPago->setCodigoPagoPk($row['codigo_pago_pk']);
                 $arPago->setPagoTipoRel($em->getReference(RhuPagoTipo::class, $row['codigo_pago_tipo_externo']));
                 $arPago->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
-                $arPago->setCodigoPeriodoFk($row['codigo_periodo_pago_fk']);
+                //$arPago->setCodigoPeriodoFk($row['codigo_periodo_pago_fk']);
                 $arPago->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
                 $arPago->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
                 $arPago->setNumero($row['numero']);

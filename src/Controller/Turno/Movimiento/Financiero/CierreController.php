@@ -25,6 +25,7 @@ use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -138,7 +139,9 @@ class CierreController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $arCierre = $em->getRepository(TurCierre::class)->find($id);
         $form = Estandares::botonera($arCierre->getEstadoAutorizado(), $arCierre->getEstadoAprobado(), $arCierre->getEstadoAnulado());
-
+		$form->add ('btnExcelDistribucion', SubmitType::class, [ 'label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']]);
+		$form->add ('btnExcelEmpleado', SubmitType::class, [ 'label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']]);
+		$form->add ('btnExcelServicio', SubmitType::class, [ 'label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']]);
 
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -165,6 +168,19 @@ class CierreController extends AbstractController
             if ($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TurCierre::class)->aprobar($arCierre);
             }
+            if ($form->get('btnExcelDistribucion')->isClicked()){
+	            $arMovimientos = $em->getRepository(TurDistribucionEmpleado::class)->lista($id);
+	            $this->exportarExcelPersonalizadoDistribucion($arMovimientos);
+            }
+	        if ($form->get('btnExcelEmpleado')->isClicked()){
+		        $arMovimientos = $em->getRepository(TurCostoEmpleado::class)->lista($id);
+		        $this->exportarExcelPersonalizadoEmpleado($arMovimientos);
+
+	        }
+	        if ($form->get('btnExcelServicio')->isClicked()){
+		        $arMovimientos = $em->getRepository(TurCostoServicio::class)->lista($id);
+		        $this->exportarExcelPersonalizadoServicio($arMovimientos);
+	        }
 
             return $this->redirect($this->generateUrl('turno_movimiento_financiero_cierre_detalle', ['id' => $id]));
         }
@@ -203,5 +219,154 @@ class CierreController extends AbstractController
         return $fitro;
 
     }
+
+
+	public function exportarExcelPersonalizadoDistribucion($arMovimientos)
+	{
+		set_time_limit(0);
+		ini_set("memory_limit", -1);
+		if ($arMovimientos) {
+			$libro = new Spreadsheet();
+			$hoja = $libro->getActiveSheet();
+			$hoja->setTitle('Distribucion');
+			$j=0;
+			$arrColumnas=[ 'ID',
+				'AÑO',
+				'MES',
+				'CODIGO EMPLEADO',
+				'DOCUMENTO',
+				'EMPLEADO',
+				'CODIGO CENTRO COSTO',
+				'CENTRO COSTO',
+				'PAR'
+			];
+			$j=2;
+			for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+				$hoja->getColumnDimension($i)->setAutoSize(true);
+				$hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+				$hoja->getStyle(1)->getFont()->setBold(true);
+				$hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+				$j++;
+			}
+			$j = 2;
+			foreach ($arMovimientos as $arMovimiento) {
+				$hoja->getStyle ($j)->getFont ()->setName ('Arial')->setSize (9);
+				$hoja->setCellValue ('A' . $j, $arMovimiento['codigoDistribucionEmpleadoPk']);
+				$hoja->setCellValue ('B' . $j, $arMovimiento['anio']);
+				$hoja->setCellValue ('C' . $j, $arMovimiento['mes']);
+				$hoja->setCellValue ('D' . $j, $arMovimiento['codigoEmpleadoFk']);
+				$hoja->setCellValue ('E' . $j, $arMovimiento['codigoCentroCostoFk']);
+				$hoja->setCellValue ('F' . $j, $arMovimiento['participacion']);
+				$hoja->setCellValue ('G' . $j, $arMovimiento['centroCostoNombre']);
+				$hoja->setCellValue ('H' . $j, $arMovimiento['empleadoNumeroIdentificacion']);
+				$hoja->setCellValue ('I' . $j, $arMovimiento['empleadoNombreCorto']);
+				$j++;
+			}
+
+			$libro->setActiveSheetIndex(0);
+			header('Content-Type: application/vnd.ms-excel');
+			header("Content-Disposition: attachment;filename=Distribucion.xls");
+			header('Cache-Control: max-age=0');
+			$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+			$writer->save('php://output');
+		}
+	}
+
+	public function exportarExcelPersonalizadoEmpleado($arMovimientos)
+	{
+		set_time_limit(0);
+		ini_set("memory_limit", -1);
+		if ($arMovimientos) {
+			$libro = new Spreadsheet();
+			$hoja = $libro->getActiveSheet();
+			$hoja->setTitle('Empleado');
+			$j=0;
+			$arrColumnas=[
+				'ID',
+				'AÑO',
+				'MES',
+				'CODIGO EMPLEADO',
+				'DOCUMENTO',
+				'EMPLEADO',
+				'NOMINA',
+				'PROVISION',
+				'APORTE',
+				'TOTAL',
+			];
+			for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+				$hoja->getColumnDimension($i)->setAutoSize(true);
+				$hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+				$hoja->getStyle(1)->getFont()->setBold(true);
+				$hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+				$j++;
+			}
+			$j = 2;
+			foreach ($arMovimientos as $arMovimiento) {
+				$hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+				$hoja->setCellValue ('A' . $j, $arMovimiento['codigoCostoEmpleadoPk']);
+				$hoja->setCellValue ('B' . $j, $arMovimiento['anio']);
+				$hoja->setCellValue ('C' . $j, $arMovimiento['mes']);
+				$hoja->setCellValue ('D' . $j, $arMovimiento['codigoEmpleadoFk']);
+				$hoja->setCellValue ('E' . $j, $arMovimiento['empleadoNumeroIdentificacion']);
+				$hoja->setCellValue ('F' . $j, $arMovimiento['empleadoNombreCorto']);
+				$hoja->setCellValue ('G' . $j, $arMovimiento['vrNomina']);
+				$hoja->setCellValue ('H' . $j, $arMovimiento['vrProvision']);
+				$hoja->setCellValue ('I' . $j, $arMovimiento['vrAporte']);
+				$hoja->setCellValue ('J' . $j, $arMovimiento['vrTotal']);
+				$j++;
+
+			}
+			$libro->setActiveSheetIndex(0);
+			header('Content-Type: application/vnd.ms-excel');
+			header("Content-Disposition: attachment;filename=Empleados.xls");
+			header('Cache-Control: max-age=0');
+			$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+			$writer->save('php://output');
+		}
+
+	}
+
+	public function exportarExcelPersonalizadoServicio($arMovimientos)
+	{
+		set_time_limit(0);
+		ini_set("memory_limit", -1);
+		if ($arMovimientos) {
+			$libro = new Spreadsheet();
+			$hoja = $libro->getActiveSheet();
+			$hoja->setTitle('Movimientos');
+			$j=0;
+			$arrColumnas=[
+				'ID',
+				'CLIENTE',
+				'PUESTO',
+				'COSTO',
+				'TOTAL',
+			];
+			for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+				$hoja->getColumnDimension($i)->setAutoSize(true);
+				$hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+				$hoja->getStyle(1)->getFont()->setBold(true);
+				$hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+				$j++;
+			}
+			$j = 2;
+			foreach ($arMovimientos as $arMovimiento) {
+				$hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+				$hoja->setCellValue ('A' . $j, $arMovimiento['codigoCostoServicioPk']);
+				$hoja->setCellValue ('B' . $j, $arMovimiento['clienteNombreCorto']);
+				$hoja->setCellValue ('C' . $j, $arMovimiento['puestoNombre']);
+				$hoja->setCellValue ('D' . $j, $arMovimiento['vrCosto']);
+				$hoja->setCellValue ('E' . $j, $arMovimiento['vrTotal']);
+				$j++;
+			}
+			$libro->setActiveSheetIndex(0);
+			header('Content-Type: application/vnd.ms-excel');
+			header("Content-Disposition: attachment;filename=servicios.xls");
+			header('Cache-Control: max-age=0');
+			$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+			$writer->save('php://output');
+		}
+
+	}
 
 }

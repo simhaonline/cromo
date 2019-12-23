@@ -112,6 +112,7 @@
                 {% endif %}
                 <th>H</th>
                 <th>P.D</th>
+                <th title="Complementario">C</th>
             </tr>
             </thead>
             <tbody>
@@ -129,7 +130,7 @@
                         COD.PUESTO:
                         {{ arProgramacion.codigoPuestoFk }}
                     </td>
-                    <td id="suptipo" colspan="38">
+                    <td id="suptipo" colspan="34">
                         {{ arProgramacion.puestoNombre | default('')}}
                     </td>
                     {% set intCodigoPuesto = arProgramacion.codigoPuestoFk  %}
@@ -176,6 +177,7 @@
                     <td>{{ arProgramacion.dia31 }}</td>
                     <td>{{ arProgramacion.horasDiurnas }}</td>
                     <td>{{ arProgramacion.horasNocturnas }}</td>
+                    <td>{% if arProgramacion.complementario == 1 %} SI {% else %} NO {% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>

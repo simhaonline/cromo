@@ -292,6 +292,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->addSelect('cl.nombreCorto as cliente')
             ->addSelect('ped.codigoClienteFk')
             ->addSelect('pu.nombre as puestoNombre')
+            ->addSelect('p.complementario')
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.pedidoRel', 'ped')
             ->leftJoin('ped.clienteRel', 'cl')

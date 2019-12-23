@@ -59,11 +59,11 @@ class ProgramacionController extends ControllerListenerGeneral
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
         $fechaActual = new \DateTime('now');
-        $intUltimoDia  = date("d", (mktime(0, 0, 0, $fechaActual->format('m') + 1, 1, $fechaActual->format('Y')) - 1));
+        $intUltimoDia = date("d", (mktime(0, 0, 0, $fechaActual->format('m') + 1, 1, $fechaActual->format('Y')) - 1));
         $primerDiaDelMes = $fechaActual->format('Y/m/') . "01";
         $ultimoDiaDelMes = $fechaActual->format('Y/m/') . $intUltimoDia;
-        $session->set('filtroTurPedidoProgramacionFechaDesde',$primerDiaDelMes);
-        $session->set('filtroTurPedidoProgramacionFechaHasta',$ultimoDiaDelMes);
+        $session->set('filtroTurPedidoProgramacionFechaDesde', $primerDiaDelMes);
+        $session->set('filtroTurPedidoProgramacionFechaHasta', $ultimoDiaDelMes);
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('codigoClienteFk', TextType::class, array('required' => false))
@@ -79,8 +79,8 @@ class ProgramacionController extends ControllerListenerGeneral
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoProgramacionFechaDesde') ? date_create($session->get('filtroTurPedidoProgramacionFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoProgramacionFechaHasta') ? date_create($session->get('filtroTurPedidoProgramacionFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoProgramacionFechaDesde') ? date_create($session->get('filtroTurPedidoProgramacionFechaDesde')) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurPedidoProgramacionFechaHasta') ? date_create($session->get('filtroTurPedidoProgramacionFechaHasta')) : null])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -102,8 +102,8 @@ class ProgramacionController extends ControllerListenerGeneral
                 $session->set('filtroTurPedidoProgramacionEstadoAutorizado', $form->get('estadoAutorizado')->getData());
                 $session->set('filtroTurPedidoProgramacionEstadoAprobado', $form->get('estadoAprobado')->getData());
                 $session->set('filtroTurPedidoProgramacionEstadoAnulado', $form->get('estadoAnulado')->getData());
-                $session->set('filtroTurPedidoProgramacionFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroTurPedidoProgramacionFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $session->set('filtroTurPedidoProgramacionFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
+                $session->set('filtroTurPedidoProgramacionFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
             }
 
         }
@@ -175,6 +175,7 @@ class ProgramacionController extends ControllerListenerGeneral
         }
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->add('btnComplementario', SubmitType::class, array('label' => 'Complementario'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -184,6 +185,23 @@ class ProgramacionController extends ControllerListenerGeneral
                 $arrControles = $request->request->All();
                 $resultado = $this->actualizarDetalle($arrControles);
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+            if ($form->get('btnComplementario')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados AS $codigo) {
+                        $arProgramacionDetalle = $em->getRepository(TurProgramacion::class)->find($codigo);
+                        if ($arProgramacionDetalle->getComplementario()) {
+                            $arProgramacionDetalle->setComplementario(false);
+                        } else {
+                            $arProgramacionDetalle->setComplementario(true);
+                        }
+                        $em->persist($arProgramacionDetalle);
+                    }
+                    $em->flush();
+                }
             }
         }
         $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(array('anio' => $arPedidoDetalle->getAnio(), 'mes' => $arPedidoDetalle->getMes(), 'codigoEmpleadoFk' => $codigoEmpleado));
@@ -240,36 +258,36 @@ class ProgramacionController extends ControllerListenerGeneral
                     $diffDiurnas = $validar['horasDiurnas'] - $validar['horasDiurnasLinea'];
                     $diffNocturnas = $validar['horasNocturnas'] - $validar['horasNocturnasLinea'];
                     //if ($horasDiurnasPendientes >= $diffDiurnas) {
-                        //if ($horasNocturnasPendientes >= $diffNocturnas) {
-                            $horasDiurnasProgramadas = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arProgramacion->getHorasDiurnas()) + $validar['horasDiurnas'];
-                            $horasNocturnasProgramadas = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arProgramacion->getHorasNocturnas()) + $validar['horasNocturnas'];
-                            $horasProgramadas = $horasDiurnasProgramadas + $horasNocturnasProgramadas;
-                            $arPedidoDetalle->setHorasDiurnasProgramadas($horasDiurnasProgramadas);
-                            $arPedidoDetalle->setHorasNocturnasProgramadas($horasNocturnasProgramadas);
-                            $arPedidoDetalle->setHorasProgramadas($horasProgramadas);
-                            $em->persist($arPedidoDetalle);
-                            for ($i = 1; $i <= 31; $i++) {
-                                $indice = "TxtDia" . ($i < 10 ? "0{$i}" : $i) . "D" . $codigoProgramacion;
-                                if (isset($arrControles[$indice])) {
-                                    call_user_func_array([$arProgramacion, "setDia{$i}"], [$arrControles[$indice]]);
-                                }
-                            }
-                            $arProgramacion->setHorasDiurnas($validar['horasDiurnas']);
-                            $arProgramacion->setHorasNocturnas($validar['horasNocturnas']);
-                            $arProgramacion->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
-                            $em->persist($arProgramacion);
-                            $em->flush();
-                        //} else {
-                        //    $error = true;
-                        //    Mensajes::error("error", "Horas nocturnas superan las horas del pedido disponibles para programar detalle " );
-                        //}
+                    //if ($horasNocturnasPendientes >= $diffNocturnas) {
+                    $horasDiurnasProgramadas = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arProgramacion->getHorasDiurnas()) + $validar['horasDiurnas'];
+                    $horasNocturnasProgramadas = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arProgramacion->getHorasNocturnas()) + $validar['horasNocturnas'];
+                    $horasProgramadas = $horasDiurnasProgramadas + $horasNocturnasProgramadas;
+                    $arPedidoDetalle->setHorasDiurnasProgramadas($horasDiurnasProgramadas);
+                    $arPedidoDetalle->setHorasNocturnasProgramadas($horasNocturnasProgramadas);
+                    $arPedidoDetalle->setHorasProgramadas($horasProgramadas);
+                    $em->persist($arPedidoDetalle);
+                    for ($i = 1; $i <= 31; $i++) {
+                        $indice = "TxtDia" . ($i < 10 ? "0{$i}" : $i) . "D" . $codigoProgramacion;
+                        if (isset($arrControles[$indice])) {
+                            call_user_func_array([$arProgramacion, "setDia{$i}"], [$arrControles[$indice]]);
+                        }
+                    }
+                    $arProgramacion->setHorasDiurnas($validar['horasDiurnas']);
+                    $arProgramacion->setHorasNocturnas($validar['horasNocturnas']);
+                    $arProgramacion->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
+                    $em->persist($arProgramacion);
+                    $em->flush();
+                    //} else {
+                    //    $error = true;
+                    //    Mensajes::error("error", "Horas nocturnas superan las horas del pedido disponibles para programar detalle " );
+                    //}
                     //} else {
                     //    $error = true;
                     //    Mensajes::error("error", "Horas diurnas superan las horas del pedido disponibles para programar detalle " );
                     //}
                 } else {
                     $error = true;
-                   Mensajes::error("error", $validar['mensaje']);
+                    Mensajes::error("error", $validar['mensaje']);
                 }
 
             } else {

@@ -1775,7 +1775,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                                             break;
                                         }
                                     } else {
-                                        $error = "No esta configurada la cuenta para provision de cesantias de esta clase de costo";
+                                        $error = "Pago numero " . $arPago->getNumero() . " no esta configurada la cuenta para provision de cesantias de esta clase de costo";
                                         break;
                                     }
                                 }

@@ -351,7 +351,7 @@ Print #1, "F" & strComprobante & strNumero & Rellenar(J & "", 5, "0", 1) & Relle
                 $sheet->setCellValue('D' . $j, $arRegistro['vrDebito']);
                 $sheet->setCellValue('E' . $j, $arRegistro['vrCredito']);
                 $sheet->setCellValue('F' . $j, $arRegistro['numeroIdentificacion']);
-                $sheet->setCellValue('G' . $j, '0');
+                $sheet->setCellValue('G' . $j, $arRegistro['codigoCentroCostoFk']);
                 $sheet->setCellValue('H' . $j, $arRegistro['numero']);
                 $sheet->setCellValue('I' . $j, trim($arRegistro['nombreCorto']));
                 $sheet->setCellValue('J' . $j, $arRegistro['direccion']);

@@ -360,7 +360,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                                         $em->persist($arRegistro);
 
                                     } else {
-                                        $error = "La cuenta debito o credito no existe";
+                                        $error = "La cuenta debito o credito de pension no existe";
                                         break;
                                     }
                                 } else {
@@ -414,7 +414,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                                         $em->persist($arRegistro);
 
                                     } else {
-                                        $error = "La cuenta debito o credito no existe";
+                                        $error = "La cuenta debito o credito de salud no existe";
                                         break;
                                     }
                                 } else {
@@ -468,7 +468,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                                         $em->persist($arRegistro);
 
                                     } else {
-                                        $error = "La cuenta debito o credito no existe";
+                                        $error = "La cuenta debito o credito de caja no existe";
                                         break;
                                     }
                                 } else {
@@ -522,7 +522,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                                         $em->persist($arRegistro);
 
                                     } else {
-                                        $error = "La cuenta debito o credito no existe";
+                                        $error = "La cuenta debito o credito de riesgos no existe";
                                         break;
                                     }
                                 } else {
@@ -576,7 +576,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                                         $em->persist($arRegistro);
 
                                     } else {
-                                        $error = "La cuenta debito o credito no existe";
+                                        $error = "La cuenta debito o credito de sena no existe";
                                         break;
                                     }
                                 } else {
@@ -630,7 +630,7 @@ class RhuAporteRepository extends ServiceEntityRepository
                                         $em->persist($arRegistro);
 
                                     } else {
-                                        $error = "La cuenta debito o credito no existe";
+                                        $error = "La cuenta debito o credito de icbf no existe";
                                         break;
                                     }
                                 } else {

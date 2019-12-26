@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>TIPO</th>
+                <th>NOMBRE</th>
+                <th>CLASE</th>
+                <th>CUENTA DEBITO</th>
+                <th>CUENTA CREDITO</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for arConfiguracionProvision in arConfiguracionProvisiones %}
+            <tr>
+                <td>{{ arConfiguracionProvision.codigoConfiguracionProvisionPk }}</td>
+                <td>{{ arConfiguracionProvision.tipo }}</td>
+                <td>{{ arConfiguracionProvision.nombre }}</td>
+                <td>{{ arConfiguracionProvision.codigoCostoClaseFk }}</td>
+                <td><input type="number" name="{{ arConfiguracionProvision.codigoConfiguracionProvisionPk }}[cuentaDebito]" value="{{ arConfiguracionProvision.codigoCuentaDebitoFk}}" style="width:80px"></td>
+                <td><input type="number" name="{{ arConfiguracionProvision.codigoConfiguracionProvisionPk }}[cuentaCredito]" value="{{ arConfiguracionProvision.codigoCuentaCreditoFk}}" style="width:80px"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-group form-group-sm">
+        <div class="col-sm-offset-2 col-sm-10">
+            {{ form_widget(form.btnActualizar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

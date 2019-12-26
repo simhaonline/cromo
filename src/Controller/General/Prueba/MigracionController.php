@@ -4,11 +4,19 @@ namespace App\Controller\General\Prueba;
 
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenCiudad;
+use App\Entity\General\GenCobertura;
 use App\Entity\General\GenDepartamento;
+use App\Entity\General\GenDimension;
 use App\Entity\General\GenEstadoCivil;
+use App\Entity\General\GenFormaPago;
 use App\Entity\General\GenIdentificacion;
+use App\Entity\General\GenOrigenCapital;
 use App\Entity\General\GenPais;
+use App\Entity\General\GenRegimen;
+use App\Entity\General\GenSectorComercial;
+use App\Entity\General\GenSectorEconomico;
 use App\Entity\General\GenSexo;
+use App\Entity\General\GenTipoPersona;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
@@ -88,10 +96,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepltdav1', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -527,7 +535,7 @@ class MigracionController extends Controller
                 $arEmpleado->setCorreo(utf8_encode($row['correo']));
                 $arEmpleado->setFechaNacimiento(date_create($row['fecha_nacimiento']));
                 $arEmpleado->setCodigoCuentaTipoFk($row['tipo_cuenta']);
-                if($row['codigo_ciudad_nacimiento_fk']) {
+                if ($row['codigo_ciudad_nacimiento_fk']) {
                     $arEmpleado->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
                 }
 
@@ -765,7 +773,7 @@ class MigracionController extends Controller
                 $arAdicional->setAplicaNomina(1);
                 $arAdicional->setAplicaCesantia($row['aplica_cesantia']);
                 $arAdicional->setAplicaPrima($row['aplica_prima']);
-                if($row['aplica_prima'] || $row['aplica_cesantia']) {
+                if ($row['aplica_prima'] || $row['aplica_cesantia']) {
                     $arAdicional->setAplicaNomina(0);
                 }
                 $arAdicional->setAplicaDiaLaborado($row['aplica_dia_laborado']);
@@ -2297,7 +2305,15 @@ class MigracionController extends Controller
                 nombre_completo,
                 estrato,
                 direccion,
-                telefono
+                telefono,
+                codigo_forma_pago_fk,
+                regimen_comun,
+                codigo_origen_judicial_fk,
+                codigo_sector_comercial_fk,
+                codigo_cobertura_fk,
+                codigo_dimension_fk,
+                codigo_origen_capital_fk,
+                codigo_sector_economico_fk
                  FROM tur_cliente 
                  ORDER BY codigo_cliente_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -2310,6 +2326,43 @@ class MigracionController extends Controller
                 $arCliente->setEstrato($row['estrato']);
                 $arCliente->setDireccion(utf8_encode($row['direccion']));
                 $arCliente->setTelefono($row['telefono']);
+                if ($row['codigo_sector_comercial_fk']) {
+                    $arCliente->setSectorComercialRel($em->getReference(GenSectorComercial::class, $row['codigo_sector_comercial_fk']));
+                }
+                if ($row['codigo_cobertura_fk']) {
+                    $arCliente->setCoberturaRel($em->getReference(GenCobertura::class, $row['codigo_cobertura_fk']));
+                }
+                if ($row['codigo_dimension_fk']) {
+                    $arCliente->setDimensionRel($em->getReference(GenDimension::class, $row['codigo_dimension_fk']));
+                }
+                if ($row['codigo_origen_capital_fk']) {
+                    $arCliente->setOrigenCapitalRel($em->getReference(GenOrigenCapital::class, $row['codigo_origen_capital_fk']));
+                }
+                if ($row['codigo_sector_economico_fk']) {
+                    $arCliente->setSectorEconomicoRel($em->getReference(GenSectorEconomico::class, $row['codigo_sector_economico_fk']));
+                }
+                if ($row['codigo_forma_pago_fk']) {
+                    if ($row['codigo_forma_pago_fk'] == 1) {
+                        $formaPago = 'CON';
+                    } else {
+                        $formaPago = 'CRE';
+                    }
+                    $arCliente->setFormaPagoRel($em->getReference(GenFormaPago::class, $formaPago));
+                }
+                if ($row['codigo_origen_judicial_fk']) {
+                    if ($row['codigo_origen_judicial_fk'] == 1) {
+                        $tipoPersonal = 'J';
+                    } else {
+                        $tipoPersonal = 'N';
+                    }
+                    $arCliente->setTipoPersonaRel($em->getReference(GenTipoPersona::class, $tipoPersonal));
+                }
+                if ($row['regimen_comun'] == 1) {
+                    $regimen = 'O';
+                } else {
+                    $regimen = 'S';
+                }
+                $arCliente->setRegimenRel($em->getReference(GenRegimen::class, $regimen));
                 $em->persist($arCliente);
                 $metadata = $em->getClassMetaData(get_class($arCliente));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2349,10 +2402,10 @@ class MigracionController extends Controller
             foreach ($datos as $row) {
                 $arPuesto = new TurPuesto();
                 $arPuesto->setCodigoPuestoPk($row['codigo_puesto_pk']);
-                if($row['codigo_cliente_fk']) {
+                if ($row['codigo_cliente_fk']) {
                     $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
                 }
-                if($row['codigo_centro_costo_contabilidad_fk']) {
+                if ($row['codigo_centro_costo_contabilidad_fk']) {
                     $arPuesto->setCentroCostoRel($em->getReference(TurCliente::class, $row['codigo_centro_costo_contabilidad_fk']));
                 }
                 $arPuesto->setNombre(utf8_encode($row['nombre']));
@@ -2360,13 +2413,13 @@ class MigracionController extends Controller
                 $arPuesto->setTelefono(utf8_encode($row['telefono']));
                 $arPuesto->setCelular(utf8_encode($row['celular']));
                 $arPuesto->setContacto(utf8_encode($row['contacto']));
-                if($row['codigo_ciudad_fk']) {
+                if ($row['codigo_ciudad_fk']) {
                     $arPuesto->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
                 }
-                if($row['latitud']) {
+                if ($row['latitud']) {
                     $arPuesto->setLatitud($row['latitud']);
                 }
-                if($row['longitud']) {
+                if ($row['longitud']) {
                     $arPuesto->setLongitud($row['longitud']);
                 }
                 $em->persist($arPuesto);
@@ -2829,10 +2882,10 @@ class MigracionController extends Controller
                 $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
                 $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
                 $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
-                if($row['hora_inicio']) {
+                if ($row['hora_inicio']) {
                     $arPedidoDetalle->setHoraDesde(date_create($row['hora_inicio']));
                 }
-                if($row['hora_fin']) {
+                if ($row['hora_fin']) {
                     $arPedidoDetalle->setHoraHasta(date_create($row['hora_fin']));
                 }
                 $em->persist($arPedidoDetalle);
@@ -3110,7 +3163,7 @@ class MigracionController extends Controller
                     adicional
                  FROM tur_programacion_detalle  ORDER BY codigo_programacion_detalle_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
-                if($row['codigo_recurso_fk']) {
+                if ($row['codigo_recurso_fk']) {
                     $arProgramacion = new TurProgramacion();
                     $arProgramacion->setCodigoProgramacionPk($row['codigo_programacion_detalle_pk']);
                     if ($row['codigo_recurso_fk']) {
@@ -3203,17 +3256,17 @@ class MigracionController extends Controller
             foreach ($datos as $row) {
                 $arPrototipo = new TurPrototipo();
                 $arPrototipo->setCodigoPrototipoPk($row['codigo_servicio_detalle_recurso_pk']);
-                if($row['codigo_servicio_detalle_fk']) {
+                if ($row['codigo_servicio_detalle_fk']) {
                     $arPrototipo->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
                 }
-                if($row['codigo_recurso_fk']) {
+                if ($row['codigo_recurso_fk']) {
                     $arPrototipo->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_recurso_fk']));
                 }
-                if($row['codigo_secuencia_fk']) {
+                if ($row['codigo_secuencia_fk']) {
                     $arPrototipo->setSecuenciaRel($em->getReference(TurSecuencia::class, $row['codigo_secuencia_fk']));
                 }
-                if($row['fecha_inicio_secuencia']) {
-                    $arPrototipo->setFechaInicioSecuencia( date_create($row['fecha_inicio_secuencia']));
+                if ($row['fecha_inicio_secuencia']) {
+                    $arPrototipo->setFechaInicioSecuencia(date_create($row['fecha_inicio_secuencia']));
                 }
                 $arPrototipo->setPosicion($row['posicion']);
                 $arPrototipo->setInicioSecuencia($row['inicio_secuencia']);

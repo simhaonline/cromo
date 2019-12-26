@@ -90,7 +90,10 @@ class ContratoType extends AbstractType
                     return $er->createQueryBuilder('cc')
                         ->orderBy('cc.nombre', 'ASC');
                 },
-                'choice_label' => 'nombre',
+                'choice_label' => function($er){
+                    $codigoCentroCosto = $er->getCodigoCentroCostoPk();
+                    return $codigoCentroCosto.' - '.$er->getNombre();
+                },
                 'required' => true
             ])
             ->add('saludRel', EntityType::class, [

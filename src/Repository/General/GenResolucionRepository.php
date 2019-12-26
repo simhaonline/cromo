@@ -3,17 +3,18 @@
 namespace App\Repository\General;
 
 use App\Entity\General\GenAsesor;
+use App\Entity\General\GenResolucion;
 use App\Entity\General\GenResolucionFactura;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class GenResolucionFacturaRepository extends ServiceEntityRepository
+class GenResolucionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, GenResolucionFactura::class);
+        parent::__construct($registry, GenResolucion::class);
     }
 
     public function lista($raw)
@@ -21,25 +22,28 @@ class GenResolucionFacturaRepository extends ServiceEntityRepository
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
-        $codigoResolucionFactura = null;
+        $codigoResolucion = null;
 
         if ($filtros) {
-            $codigoResolucionFactura = $filtros['codigoResolucionFactura'] ?? null;
+            $codigoResolucion = $filtros['codigoResolucion'] ?? null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenResolucionFactura::class, 'rf')
-            ->select('rf.codigoResolucionFacturaPk')
-            ->addSelect('rf.numero')
-            ->addselect('rf.fechaDesde')
-            ->addselect('rf.fechaHasta')
-            ->addselect('rf.fechaHasta')
-            ->addselect('rf.prefijo')
-            ->addselect('rf.numeroDesde')
-            ->addselect('rf.numeroHasta');
-        if ($codigoResolucionFactura) {
-            $queryBuilder->andWhere("rf.codigoResolucionFacturaPk = '{$codigoResolucionFactura}'");
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(GenResolucion::class, 'r')
+            ->select('r.codigoResolucionPk')
+            ->addSelect('r.numero')
+            ->addSelect('r.fecha')
+            ->addSelect('r.fechaDesde')
+            ->addSelect('r.fechaHasta')
+            ->addSelect('r.prefijo')
+            ->addSelect('r.numeroDesde')
+            ->addSelect('r.numeroHasta')
+            ->addSelect('r.llaveTecnica')
+            ->addSelect('r.ambiente')
+            ->addSelect('r.pin');
+        if ($codigoResolucion) {
+            $queryBuilder->andWhere("r.codigoResolucionPk = '{$codigoResolucion}'");
         }
-        $queryBuilder->addOrderBy('rf.codigoResolucionFacturaPk', 'DESC');
+        $queryBuilder->addOrderBy('r.codigoResolucionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }
@@ -50,7 +54,7 @@ class GenResolucionFacturaRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados AS $codigo) {
-                $ar = $em->getRepository(GenResolucionFactura::class)->find($codigo);
+                $ar = $em->getRepository(GenResolucion::class)->find($codigo);
                 if ($ar) {
                     $em->remove($ar);
                 }

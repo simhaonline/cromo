@@ -29,11 +29,15 @@
         <tr>
             <th>ID</th>
             <th>NUMERO</th>
+            <th>FECHA</th>
             <th>DESDE</th>
             <th>HASTA</th>
             <th>PREFIJO</th>
             <th>N.DESDE</th>
             <th>N.HASTA</th>
+            <th>CLAVE TECNICA</th>
+            <th>PIN</th>
+            <th>AMBINETE</th>
             <th></th>
             <th></th>
             <th><input type="checkbox" name="ChkSeleccionarTodos"
@@ -43,25 +47,29 @@
         <tbody>
         {% for arResolucionFactura in arResolucionFacturas %}
             <tr>
-                <td>{{ arResolucionFactura.codigoResolucionFacturaPk }}</td>
+                <td>{{ arResolucionFactura.codigoResolucionPk }}</td>
                 <td>{{ arResolucionFactura.numero }}</td>
+                <td>{{ arResolucionFactura.fecha | date ('Y-m-d')}}</td>
                 <td>{{ arResolucionFactura.fechaDesde | date ('Y-m-d')}}</td>
                 <td>{{ arResolucionFactura.fechaHasta | date ('Y-m-d')}}</td>
                 <td>{{ arResolucionFactura.prefijo }}</td>
                 <td>{{ arResolucionFactura.numeroDesde }}</td>
                 <td>{{ arResolucionFactura.numeroHasta }}</td>
+                <td>{{ arResolucionFactura.llaveTecnica }}</td>
+                <td>{{ arResolucionFactura.pin }}</td>
+                <td>{{ arResolucionFactura.ambiente }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ path('general_administracion_general_resolucion_nuevo',{'id': arResolucionFactura.codigoResolucionFacturaPk }) }}"><i
+                    <a href="{{ path('general_administracion_general_resolucion_nuevo',{'id': arResolucionFactura.codigoResolucionPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('general_administracion_general_resolucion_detalle',{'id' : arResolucionFactura.codigoResolucionFacturaPk }) }}">
+                    <a href="{{ path('general_administracion_general_resolucion_detalle',{'id' : arResolucionFactura.codigoResolucionPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
                 <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
-                                          value="{{ arResolucionFactura.codigoResolucionFacturaPk }}"/></td>
+                                          value="{{ arResolucionFactura.codigoResolucionPk }}"/></td>
             </tr>
         {% endfor %}
         </tbody>

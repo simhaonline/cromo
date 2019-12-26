@@ -4,9 +4,9 @@
 namespace App\Controller\General\Administracion\General;
 
 
-use App\Entity\General\GenResolucionFactura;
+use App\Entity\General\GenResolucion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
-use App\Form\Type\General\ResolucionFacturaType;
+use App\Form\Type\General\ResolucionType;
 use App\Form\Type\RecursoHumano\VacacionTipoType;
 use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
@@ -18,12 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ResolucionController extends AbstractController
 {
-    protected $clase = GenResolucionFactura::class;
-    protected $claseNombre = "GenResolucionFactura";
+    protected $clase = GenResolucion::class;
+    protected $claseNombre = "GenResolucion";
     protected $modulo = "General";
     protected $funcion = "Administracion";
     protected $grupo = "General";
-    protected $nombre = "ResolucionFactura";
+    protected $nombre = "Resolucion";
 
     /**
      * @param Request $request
@@ -54,15 +54,15 @@ class ResolucionController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(GenResolucionFactura::class)->lista($raw), "Conceptos");
+                General::get()->setExportar($em->getRepository(GenResolucion::class)->lista($raw), "Conceptos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(GenResolucionFactura::class)->eliminar($arrSeleccionados);
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $em->getRepository(GenResolucion::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('general_administracion_general_resolucion_lista'));
             }
         }
-        $arResolucionFacturas = $paginator->paginate($em->getRepository(GenResolucionFactura::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        $arResolucionFacturas = $paginator->paginate($em->getRepository(GenResolucion::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('general/administracion/general/resolucion/lista.html.twig', [
             'arResolucionFacturas' => $arResolucionFacturas,
             'form' => $form->createView(),
@@ -75,25 +75,25 @@ class ResolucionController extends AbstractController
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arResolucionFactura = $em->getRepository(GenResolucionFactura::class)->find($id);
+        $arResolucion = $em->getRepository(GenResolucion::class)->find($id);
         if ($id != 0) {
-            if (gettype($arResolucionFactura) == null) {
-                $arResolucionFactura = new GenResolucionFactura();
+            if (gettype($arResolucion) == null) {
+                $arResolucion = new GenResolucion();
             }
         }
-        $form = $this->createForm(ResolucionFacturaType::class, $arResolucionFactura);
+        $form = $this->createForm(ResolucionType::class, $arResolucion);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arResolucionFactura = $form->getData();
-                $em->persist($arResolucionFactura);
+                $arResolucion = $form->getData();
+                $em->persist($arResolucion);
                 $em->flush();
-                return $this->redirect($this->generateUrl('general_administracion_general_resolucion_detalle', ['id' => $arResolucionFactura->getCodigoResolucionFacturaPk()]));
+                return $this->redirect($this->generateUrl('general_administracion_general_resolucion_detalle', ['id' => $arResolucion->getCodigoResolucionPk()]));
             }
         }
-        return $this->render('general/administracion/calidad/nuevo.html.twig', [
+        return $this->render('general/administracion/general/resolucion/nuevo.html.twig', [
             'form' => $form->createView(),
-            'arResolucionFactura' => $arResolucionFactura
+            'arResolucion' => $arResolucion
         ]);
     }
 
@@ -106,9 +106,9 @@ class ResolucionController extends AbstractController
         $form = $this->createFormBuilder()
             ->getForm();
         $form->handleRequest($request);
-        $arResolucionFactura = $em->getRepository(GenResolucionFactura::class)->find($id);
+        $arResolucion = $em->getRepository(GenResolucion::class)->find($id);
         return $this->render('general/administracion/general/resolucion/detalle.html.twig', [
-            'arResolucionFactura' => $arResolucionFactura,
+            'arResolucion' => $arResolucion,
             'form' => $form->createView()
         ]);
     }
@@ -116,7 +116,7 @@ class ResolucionController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoResolucionFactura' => $form->get('codigoResolucionFacturaPk')->getData(),
+            'codigoResolucion' => $form->get('codigoResolucionPk')->getData(),
         ];
 
         return $filtro;

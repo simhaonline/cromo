@@ -193,9 +193,9 @@ class InvMovimiento
     private $operacionComercial = 0;
 
     /**
-     * @ORM\Column(name="codigo_resolucion_factura_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_resolucion_fk", type="integer", nullable=true)
      */
-    private $codigoResolucionFacturaFk;
+    private $codigoResolucionFk;
 
     /**
      * @internal Para saber si el documento genera costo promedio
@@ -239,11 +239,11 @@ class InvMovimiento
      */
     protected $facturaTipoRel;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenResolucionFactura", inversedBy="movimientosResolucionFacturaRel")
-     * @ORM\JoinColumn(name="codigo_resolucion_factura_fk", referencedColumnName="codigo_resolucion_factura_pk")
-     */
-    protected $resolucionFacturaRel;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenResolucion", inversedBy="movimientosResolucionRel")
+//     * @ORM\JoinColumn(name="codigo_resolucion_fk", referencedColumnName="codigo_resolucion_pk")
+//     */
+//    protected $resolucionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
@@ -977,21 +977,52 @@ class InvMovimiento
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getResolucionFacturaRel()
+    public function getInfoLog(): array
     {
-        return $this->resolucionFacturaRel;
+        return $this->infoLog;
     }
 
     /**
-     * @param mixed $resolucionFacturaRel
+     * @param array $infoLog
      */
-    public function setResolucionFacturaRel($resolucionFacturaRel): void
+    public function setInfoLog(array $infoLog): void
     {
-        $this->resolucionFacturaRel = $resolucionFacturaRel;
+        $this->infoLog = $infoLog;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoResolucionFk()
+    {
+        return $this->codigoResolucionFk;
+    }
+
+    /**
+     * @param mixed $codigoResolucionFk
+     */
+    public function setCodigoResolucionFk($codigoResolucionFk): void
+    {
+        $this->codigoResolucionFk = $codigoResolucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResolucionRel()
+    {
+        return $this->resolucionRel;
+    }
+
+    /**
+     * @param mixed $resolucionRel
+     */
+    public function setResolucionRel($resolucionRel): void
+    {
+        $this->resolucionRel = $resolucionRel;
+    }
 
 
 }

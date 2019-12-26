@@ -5,40 +5,79 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_examenClaseRel" class="col-sm-2 control-label">Código:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.codigoVacacionTipoPk) }}
-                    {{ form_errors(form.codigoVacacionTipoPk) }}
+                <label for="form_examenClaseRel" class="col-sm-1 control-label">Numero:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.numero) }}
+                    {{ form_errors(form.numero) }}
                 </div>
-                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Nombre:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.nombre) }}
-                    {{ form_errors(form.nombre) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_examenClaseRel" class="col-sm-2 control-label">Concepto dinero:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.conceptoDineroRel) }}
-                    {{ form_errors(form.conceptoDineroRel) }}
-                </div>
-                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Concepto disfrute:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.conceptoDisfrutadaRel) }}
-                    {{ form_errors(form.conceptoDisfrutadaRel) }}
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Fecha:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.fecha) }}
+                    {{ form_errors(form.fecha) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label for="form_examenClaseRel" class="col-sm-2 control-label">Consecutivo:</label>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Prefijo:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.prefijo) }}
+                    {{ form_errors(form.prefijo) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Llave tecnica:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.llaveTecnica) }}
+                    {{ form_errors(form.llaveTecnica) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-1 control-label">Numeración desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.numeroDesde) }}
+                    {{ form_errors(form.numeroDesde) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Numeración hasta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.numeroHasta) }}
+                    {{ form_errors(form.numeroHasta) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Set pruebas:</label>
+                <div class="col-sm-5">
+                    {{ form_widget(form.setPruebas) }}
+                    {{ form_errors(form.setPruebas) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-1 control-label">Fecha desde:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaDesde) }}
+                    {{ form_errors(form.fechaDesde) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Fecha hasta:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.fechaHasta) }}
+                    {{ form_errors(form.fechaHasta) }}
+                </div>
+                <label for="form_examenClaseRel" class="col-sm-1 control-label">PIN:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.pin) }}
+                    {{ form_errors(form.pin) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label">Ambiente:</label>
+                <div class="col-sm-2">
+                    {{ form_widget(form.ambiente) }}
+                    {{ form_errors(form.ambiente) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.consecutivo) }}
-                    {{ form_errors(form.consecutivo) }}
+                    {{ form_widget(form.prueba) }}
+                    {{ form_errors(form.prueba) }}
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_nomina_vacaciontipo_lista') }}">Cancelar</a>
+        <a class="btn btn-default btn-sm" href="{{ path('general_administracion_general_resolucion_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

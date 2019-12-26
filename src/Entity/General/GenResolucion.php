@@ -6,22 +6,22 @@ namespace App\Entity\General;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\General\GenResolucionFacturaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\General\GenResolucionRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class GenResolucionFactura
+class GenResolucion
 {
     public $infoLog = [
-        "primaryKey" => "codigoResolucionFacturaPk",
+        "primaryKey" => "codigoResolucionPk",
         "todos"     => true,
     ];
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_resolucion_factura_pk", type="integer")
+     * @ORM\Column(name="codigo_resolucion_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoResolucionFacturaPk;
+    private $codigoResolucionPk;
 
     /**
      * @ORM\Column(name="numero", type="float", nullable=true)
@@ -64,24 +64,65 @@ class GenResolucionFactura
     private $llaveTecnica;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento", mappedBy="resolucionFacturaRel")
+     * @ORM\Column(name="pin", type="string",length=20, nullable=true)
      */
-    protected $movimientosResolucionFacturaRel;
+    private $pin;
+
+    /**
+     * @ORM\Column(name="ambiente", type="string",length=10, nullable=true)
+     */
+    private $ambiente;
+
+    /**
+     * @ORM\Column(name="set_pruebas", type="string",length=500, nullable=true)
+     */
+    private $setPruebas;
+
+    /**
+     * @ORM\Column(name="codigo_empresa_fk", type="string",length=10, nullable=true)
+     */
+    private $codigoEmpresaFk;
+
+    /**
+     * @ORM\Column(name="prueba", type="boolean", options={"default":false})
+     */
+    private $prueba = false;
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento", mappedBy="resolucionRel")
+//     */
+//    protected $movimientosResolucionRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
      */
-    public function getCodigoResolucionFacturaPk()
+    public function getCodigoResolucionPk()
     {
-        return $this->codigoResolucionFacturaPk;
+        return $this->codigoResolucionPk;
     }
 
     /**
-     * @param mixed $codigoResolucionFacturaPk
+     * @param mixed $codigoResolucionPk
      */
-    public function setCodigoResolucionFacturaPk($codigoResolucionFacturaPk): void
+    public function setCodigoResolucionPk($codigoResolucionPk): void
     {
-        $this->codigoResolucionFacturaPk = $codigoResolucionFacturaPk;
+        $this->codigoResolucionPk = $codigoResolucionPk;
     }
 
     /**
@@ -98,6 +139,22 @@ class GenResolucionFactura
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * @param mixed $fecha
+     */
+    public function setFecha($fecha): void
+    {
+        $this->fecha = $fecha;
     }
 
     /**
@@ -183,22 +240,6 @@ class GenResolucionFactura
     /**
      * @return mixed
      */
-    public function getFecha()
-    {
-        return $this->fecha;
-    }
-
-    /**
-     * @param mixed $fecha
-     */
-    public function setFecha($fecha): void
-    {
-        $this->fecha = $fecha;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getLlaveTecnica()
     {
         return $this->llaveTecnica;
@@ -210,6 +251,86 @@ class GenResolucionFactura
     public function setLlaveTecnica($llaveTecnica): void
     {
         $this->llaveTecnica = $llaveTecnica;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPin()
+    {
+        return $this->pin;
+    }
+
+    /**
+     * @param mixed $pin
+     */
+    public function setPin($pin): void
+    {
+        $this->pin = $pin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmbiente()
+    {
+        return $this->ambiente;
+    }
+
+    /**
+     * @param mixed $ambiente
+     */
+    public function setAmbiente($ambiente): void
+    {
+        $this->ambiente = $ambiente;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSetPruebas()
+    {
+        return $this->setPruebas;
+    }
+
+    /**
+     * @param mixed $setPruebas
+     */
+    public function setSetPruebas($setPruebas): void
+    {
+        $this->setPruebas = $setPruebas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpresaFk()
+    {
+        return $this->codigoEmpresaFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpresaFk
+     */
+    public function setCodigoEmpresaFk($codigoEmpresaFk): void
+    {
+        $this->codigoEmpresaFk = $codigoEmpresaFk;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrueba(): bool
+    {
+        return $this->prueba;
+    }
+
+    /**
+     * @param bool $prueba
+     */
+    public function setPrueba(bool $prueba): void
+    {
+        $this->prueba = $prueba;
     }
 
     /**
@@ -227,7 +348,6 @@ class GenResolucionFactura
     {
         $this->movimientosResolucionFacturaRel = $movimientosResolucionFacturaRel;
     }
-
 
 
 }

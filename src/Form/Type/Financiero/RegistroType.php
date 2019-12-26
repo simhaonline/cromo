@@ -76,39 +76,4 @@ class RegistroType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        return '[
-            {"campo":"codigoRegistroPk",               "tipo":"pk"    , "ayuda":"Código del registro",        "titulo":"ID"},
-            {"campo":"numero",                         "tipo":"texto" , "ayuda":"Numero",                     "titulo":"NUMERO"},
-            {"campo":"terceroRel.numeroIdentificacion","tipo":"texto" , "ayuda":"Identificacion del tercero",         "titulo":"IDENTIFICACION", "relacion":""},
-            {"campo":"terceroRel.nombreCorto",         "tipo":"texto" , "ayuda":"Nombre del tercero",         "titulo":"TERCERO", "relacion":""},
-            {"campo":"codigoCuentaFk",                 "tipo":"texto" , "ayuda":"Código de la cuenta",        "titulo":"CUENTA"},
-            {"campo":"codigoComprobanteFk",            "tipo":"texto" , "ayuda":"Código del registro",        "titulo":"COMPROBANTE"},
-            {"campo":"codigoCentroCostoFk",            "tipo":"texto" , "ayuda":"Código del centro de costo", "titulo":"CENTRO_COSTO"},
-            {"campo":"fecha",                          "tipo":"fecha" , "ayuda":"Fecha",                      "titulo":"FECHA"},
-            {"campo":"vrDebito",                       "tipo":"moneda", "ayuda":"Débito",                     "titulo":"DEBITO"},
-            {"campo":"vrCredito",                      "tipo":"moneda", "ayuda":"Crédito",                    "titulo":"CREDITO"},
-            {"campo":"vrBase",                         "tipo":"moneda", "ayuda":"Base",                       "titulo":"BASE"},
-            {"campo":"descripcion",                    "tipo":"texto" , "ayuda":"Descripción contable",       "titulo":"DESCRIPCION"}
-        ]';
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoTerceroFk",    "tipo":"TextType" , "propiedades":{"label":"Tercero"}},
-            {"child":"numero",             "tipo":"TextType",  "propiedades":{"label":"Numero"}},
-            {"child":"codigoComprobanteFk","tipo":"EntityType","propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"Comprobante"}},
-            {"child":"fechaDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoIntercambio",  "tipo":"ChoiceType","propiedades":{"label":"Intercambio",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",     "tipo":"ChoiceType","propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",      "tipo":"ChoiceType","propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

@@ -1,10 +1,167 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {% include 'financiero/movimiento/contabilidad/registro/filtro.html.twig' %}
-    <div class="table-responsive" style="padding:0px;">
-        {{ form_start(formBotonera) }}
-        {% include 'estructura/movimiento/tablaGeneral.html.twig' %}
-        {% include 'estructura/movimiento/botoneraGeneral.html.twig' %}
-        {{ form_end(formBotonera) }}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false"
+         data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>Lista</h2>
+        </header>
+        <div>
+            <div class="widget-body no-padding">
+                <div class="panel-body">
+                    <div class="form-group form-group-sm">
+                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Tercero:</label>
+                        <div class="col-sm-11">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.codigoTerceroFk) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('financiero_buscar_tercero', { 'campoCodigo': 'form_codigoTerceroFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Numero:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.numero) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Comprobante:</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.codigoComprobanteFk, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Desde</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.fechaDesde) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Intercambio</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.estadoIntercambio) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-1">Hasta</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.fechaHasta) }}
+                        </div>
+                        <label for="" class="control-label col-sm-1">Autorizado</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.estadoAutorizado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-offset-6 col-sm-1">Aprobado</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.estadoAprobado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="control-label col-sm-offset-6 col-sm-1">Anulado</label>
+                        <div class="col-sm-5">
+                            {{ form_widget(form.estadoAnulado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos">
+        <thead>
+        <tr>
+            <th title="Código del registro">ID</th>
+            <th title="Numero">NUMERO</th>
+            <th title="Identificacion del tercero">IDENTIFICACION</th>
+            <th title="Nombre del tercero">TERCERO</th>
+            <th title="Código de la cuenta">CUENTA</th>
+            <th title="Código del registro">COMPROBANTE</th>
+            <th title="Código del centro de costo">CENTRO_COSTO</th>
+            <th title="Fecha">FECHA</th>
+            <th title="Débito">DEBITO</th>
+            <th title="Crédito">CREDITO</th>
+            <th title="Base">BASE</th>
+            <th title="Descripción contable">DESCRIPCION</th>
+            <th></th>
+            <th></th>
+            <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for arRegistro in arRegistros %}
+                <tr>
+                    <td>{{ arRegistro.codigoRegistroPk }}</td>
+                    <td>{{ arRegistro.numero }}</td>
+                    <td>{{ arRegistro.numeroIdentificacion }}</td>
+                    <td>{{ arRegistro.nombreCorto }}</td>
+                    <td>{{ arRegistro.codigoCuentaFk }}</td>
+                    <td>{{ arRegistro.codigoComprobanteFk }}</td>
+                    <td>{{ arRegistro.codigoCentroCostoFk }}</td>
+                    <td>{{ arRegistro.fecha | date ('Y-m-d') }}</td>
+                    <td>{{ arRegistro.vrDebito }}</td>
+                    <td>{{ arRegistro.vrCredito }}</td>
+                    <td>{{ arRegistro.vrBase }}</td>
+                    <td>{{ arRegistro.descripcion }}</td>
+                    {% if arRegistro.estadoAutorizado %}
+                        <td></td>
+                    {% else %}
+                        <td style="text-align: center;">
+                            <a href="{{ path('financiero_movimiento_contabilidad_registro_nuevo',{'id': arRegistro.codigoRegistroPk }) }}"><i
+                                        class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                        </td>
+                    {% endif %}
+                    {% if arRegistro.estadoAutorizado %}
+                        <td></td>
+                    {% else %}
+                        <td style="text-align: center;">
+                            <a href="{{ path('financiero_movimiento_contabilidad_registro_detalle',{'id' : arRegistro.codigoRegistroPk }) }}">
+                                <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                                </i>
+                            </a>
+                        </td>
+                    {% endif %}
+                    <td style="text-align: center;">
+                        <input type="checkbox" name="ChkSeleccionar[]" value="{{ arRegistro.codigoRegistroPk }}">
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arRegistros.getTotalItemCount }}
+            </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arRegistros) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('financiero_movimiento_contabilidad_registro_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    <br/><br/>
+    {{ form_end(form) }}
 {% endblock %}

@@ -16,6 +16,101 @@ class FinRegistroRepository extends ServiceEntityRepository
         parent::__construct($registry, FinRegistro::class);
     }
 
+	public function lista ($raw)
+	{
+		$limiteRegistros = $raw['limiteRegistros'] ?? 100;
+		$filtros = $raw['filtros'] ?? null;
+
+		$codigoTercero = null;
+		$numero = null;
+		$codigoComprobante = null;
+		$fechaDesde = null;
+		$fechaHasta = null;
+		$estadoAutorizado = null;
+		$estadoAprobado = null;
+		$estadoAnulado = null;
+		$estadoIntercambio = null;
+
+		if ($filtros) {
+			$codigoTercero = $filtros['codigoTercero'] ?? null;
+			$numero = $filtros['numero'] ?? null;
+			$codigoComprobante = $filtros['codigoComprobante'] ?? null;
+			$fechaDesde = $filtros['fechaDesde'] ?? null;
+			$fechaHasta = $filtros['fechaHasta'] ?? null;
+			$estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+			$estadoAprobado = $filtros['estadoAprobado'] ?? null;
+			$estadoAnulado = $filtros['estadoAnulado'] ?? null;
+			$estadoIntercambio = $filtros['estadoIntercambio'] ?? null;
+		}
+
+		$queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
+			->addSelect ('r.codigoRegistroPk')
+			->addSelect ('r.numero')
+			->addSelect ('r.codigoCuentaFk')
+			->addSelect ('r.codigoComprobanteFk')
+			->addSelect ('r.codigoCentroCostoFk')
+			->addSelect ('r.fecha')
+			->addSelect ('r.vrDebito')
+			->addSelect ('r.vrCredito')
+			->addSelect ('r.vrBase')
+			->addSelect ('r.estadoAutorizado')
+			->addSelect ('r.descripcion')
+			->addSelect ('t.numeroIdentificacion')
+			->addSelect ('t.nombreCorto')
+			->leftJoin ('r.terceroRel', 't');
+		if ($codigoTercero) {
+			$queryBuilder->andWhere("r.codigoTerceroFk = {$codigoTercero}");
+		}
+		if ($numero) {
+			$queryBuilder->andWhere("r.numero = {$numero}");
+		}
+		if ($codigoComprobante) {
+			$queryBuilder->andWhere("r.codigoTerceroFk = {$codigoComprobante}");
+		}
+		if ($fechaDesde) {
+			$queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");
+		}
+		if ($fechaHasta) {
+			$queryBuilder->andWhere("r.fecha <= '{$fechaHasta} 23:59:59'");
+		}
+		switch ($estadoAutorizado) {
+			case '0':
+				$queryBuilder->andWhere("r.estadoAutorizado = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("r.estadoAutorizado = 1");
+				break;
+		}
+		switch ($estadoAprobado) {
+			case '0':
+				$queryBuilder->andWhere("r.estadoAprobado = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("r.estadoAprobado = 1");
+				break;
+		}
+		switch ($estadoAnulado) {
+			case '0':
+				$queryBuilder->andWhere("r.estadoAnulado = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("r.estadoAnulado = 1");
+				break;
+		}
+		switch ($estadoIntercambio) {
+			case '0':
+				$queryBuilder->andWhere("r.estadoIntercambio = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("r.estadoIntercambio = 1");
+				break;
+		}
+
+		$queryBuilder->addOrderBy('r.codigoRegistroPk', 'DESC');
+		$queryBuilder->setMaxResults($limiteRegistros);
+		return $queryBuilder->getQuery()->getResult();
+    }
+
     public function registros()
     {
 

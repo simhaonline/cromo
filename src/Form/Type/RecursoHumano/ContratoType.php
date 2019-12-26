@@ -94,7 +94,8 @@ class ContratoType extends AbstractType
                     $codigoCentroCosto = $er->getCodigoCentroCostoPk();
                     return $codigoCentroCosto.' - '.$er->getNombre();
                 },
-                'required' => true
+                'required' => true,
+                'attr' => ['class' => 'form-control to-select-2']
             ])
             ->add('saludRel', EntityType::class, [
                 'class' => RhuSalud::class,

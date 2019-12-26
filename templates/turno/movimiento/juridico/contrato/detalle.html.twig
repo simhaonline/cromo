@@ -32,12 +32,12 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th title="Concepto">CONCEPTO</th>
                             <th title="Item">ITEM</th>
-                            <th title="Puesto">PUESTO</th>
                             <th title="Modalidad">MOD</th>
                             <th title="Fecha desde">DES</th>
                             <th title="Fecha hasta">HAS</th>
+                            <th title="Hora inicia el servicio">H_I</th>
+                            <th title="Hora finaliza el servicio">H_F</th>
                             <th>CANT</th>
                             <th>L</th>
                             <th>M</th>
@@ -53,10 +53,11 @@
                             <th title="Salario base">BASE</th>
                             <th title="Precio minimo">P.MINIMO</th>
                             <th title="Precio ajustado">P.AJUSTADO</th>
+                            <th title="Base iva">BI</th>
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
-                            <th title="Compuesto">COM</th>
+                            <th title="Compuesto">CP</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -67,12 +68,12 @@
                             <td> {{ arContratoDetalle.codigoContratoDetallePk }}</td> <input type="hidden"
                                                                                              name="arrCodigo[]"
                                                                                              value="{{ arContratoDetalle.codigoContratoDetallePk }}">
-                            <td>{{ arContratoDetalle.conceptoNombre }}</td>
                             <td>{{ arContratoDetalle.itemNombre }}</td>
-                            <td>{{ arContratoDetalle.puesto }}</td>
                             <td>{{ arContratoDetalle.modalidadNombre }}</td>
                             <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
                             <td>{{ arContratoDetalle.fechaHasta | date('Y-m-d') }}</td>
+                            <td>{{ arContratoDetalle.horaDesde | date('H:i') }}</td>
+                            <td>{{ arContratoDetalle.horaHasta | date('H:i') }}</td>
                             <td>{{ arContratoDetalle.cantidad }}</td>
                             <td>{{ arContratoDetalle.lunes ? 'S':'N' }}</td>
                             <td>{{ arContratoDetalle.martes ? 'S':'N' }}</td>
@@ -89,6 +90,7 @@
                             <td class="numero">{{ arContratoDetalle.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
                             {% if arContrato.estadoAutorizado %}
                                 <td class="numero">{{ arContratoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
+                                <td>{{ arContratoDetalle.porcentajeBaseIva }}</td>
                                 <td class="numero">{{ arContratoDetalle.porcentajeIva | number_format(0, '.', ',') }}</td>
                             {% else %}
                                 {% if arContratoDetalle.compuesto == 0 %}
@@ -100,7 +102,11 @@
                                 {% else %}
                                     <td class="numero">{{ arContratoDetalle.vrPrecioAjustado | number_format(0, '.', ',') }}</td>
                                 {% endif %}
-
+                                <td style="text-align: center;"><input type="number"
+                                                                       name="arrPorcentajeBaseIva[{{ arContratoDetalle.codigoContratoDetallePk }}]"
+                                                                       value="{{ arContratoDetalle.porcentajeBaseIva }}"
+                                                                       style="text-align: right; width:60px"
+                                                                       size="10"></td>
                                 <td style="text-align: center;"><input type="number"
                                                                        name="arrPorcentajeIva[{{ arContratoDetalle.codigoContratoDetallePk }}]"
                                                                        value="{{ arContratoDetalle.porcentajeIva }}"
@@ -125,7 +131,7 @@
 
                             <td style="text-align: center;">
                                 {% if arContrato.estadoAutorizado == 0 %}
-                                    <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 900)"><i
+                                    <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 1200)"><i
                                                 title="Editar el registro" class="fa fa-edit"
                                                 style="font-size: large;color: black;"></i></a>
                                 {% endif %}
@@ -174,6 +180,8 @@
                             <th title="Modalidad">MOD</th>
                             <th title="Fecha desde">DES</th>
                             <th title="Fecha hasta">HAS</th>
+                            <th title="Hora inicia el servicio">H_I</th>
+                            <th title="Hora finaliza el servicio">H_F</th>
                             <th>CANT</th>
                             <th>L</th>
                             <th>M</th>
@@ -206,6 +214,8 @@
                             <td>{{ arContratoDetalleCerrado.modalidadNombre }}</td>
                             <td>{{ arContratoDetalleCerrado.fechaDesde | date('Y-m-d') }}</td>
                             <td>{{ arContratoDetalleCerrado.fechaHasta | date('Y-m-d') }}</td>
+                            <td>{{ arContratoDetalleCerrado.horaDesde | date('H:i') }}</td>
+                            <td>{{ arContratoDetalleCerrado.horaHasta | date('H:i') }}</td>
                             <td>{{ arContratoDetalleCerrado.cantidad }}</td>
                             <td>{{ arContratoDetalleCerrado.lunes ? 'S':'N' }}</td>
                             <td>{{ arContratoDetalleCerrado.martes ? 'S':'N' }}</td>

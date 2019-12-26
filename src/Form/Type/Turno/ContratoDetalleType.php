@@ -85,6 +85,8 @@ class ContratoDetalleType extends AbstractType
             ->add('vrSalarioBase', NumberType::class)
             ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('horaDesde', TimeType::class)
+            ->add('horaHasta', TimeType::class)
             ->add('guardar', SubmitType::class);
     }
 

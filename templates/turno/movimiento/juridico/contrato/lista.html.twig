@@ -64,12 +64,13 @@
             <th title="Numero de identificacion">NIT</th>
             <th title="Cliente del contrato">CLIENTE</th>
             <th title="Sector al que pertenece el cliente">SECTOR</th>
-            <th title="Contrato horas">H</th>
-            <th title="Contrato horas diurnas">HD</th>
-            <th title="Contrato horas nocturnas">HN</th>
+            <th title="Ultima fecha de generacion de un pedido con base en el contrato">GENERADO</th>
+            <th title="Horas totales del contrato">H</th>
+            <th title="Horas diurnas">HD</th>
+            <th title="Horas nocturnas">HN</th>
             <th title="Total del contrato">VALOR</th>
-            <th title="Autoriza contrato">AUT</th>
-            <th title="Contrato cerrado">CER</th>
+            <th title="">AUT</th>
+            <th title="">CER</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -85,9 +86,10 @@
                 <td>{{ arContrato.numeroIdentificacion }}</td>
                 <td>{{ arContrato.nombreCorto }}</td>
                 <td>{{ arContrato.sector }}</td>
-                <td>{{ arContrato.horas | date("H:i:s") }}</td>
-                <td>{{ arContrato.horasDiurnas }}</td>
-                <td>{{ arContrato.horasNocturnas }}</td>
+                <td>{{ arContrato.fechaGeneracion | date('Y-m-d') }}</td>
+                <td class="numero">{{ arContrato.horas | number_format }}</td>
+                <td class="numero">{{ arContrato.horasDiurnas | number_format }}</td>
+                <td class="numero">{{ arContrato.horasNocturnas | number_format }}</td>
                 <td class="numero">{{ arContrato.vrTotal | number_format(0, '.', ',') }}</td>
                 <td>{{ arContrato.estadoAutorizado ? "SI":"NO" }}</td>
                 <td>{{ arContrato.estadoCerrado ? "SI":"NO" }}</td>

@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Prueba;
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenCiudad;
 use App\Entity\General\GenCobertura;
@@ -96,10 +97,10 @@ class MigracionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('servidor', TextType::class, ['required' => false, 'data' => 'localhost', 'attr' => ['class' => 'form-control']])
-            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdinsepltdav1', 'attr' => ['class' => 'form-control']])
-            ->add('usuario', TextType::class, ['required' => false, 'data' => 'root', 'attr' => ['class' => 'form-control']])
-            ->add('clave', TextType::class, ['required' => false, 'data' => '70143086', 'attr' => ['class' => 'form-control']])
+            ->add('servidor', TextType::class, ['required' => false, 'data' => '192.168.2.199', 'attr' => ['class' => 'form-control']])
+            ->add('basedatos', TextType::class, ['required' => false, 'data' => 'bdseracis', 'attr' => ['class' => 'form-control']])
+            ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
+            ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -2406,7 +2407,7 @@ class MigracionController extends Controller
                     $arPuesto->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
                 }
                 if ($row['codigo_centro_costo_contabilidad_fk']) {
-                    $arPuesto->setCentroCostoRel($em->getReference(TurCliente::class, $row['codigo_centro_costo_contabilidad_fk']));
+                    $arPuesto->setCentroCostoRel($em->getReference(FinCentroCosto::class, $row['codigo_centro_costo_contabilidad_fk']));
                 }
                 $arPuesto->setNombre(utf8_encode($row['nombre']));
                 $arPuesto->setDireccion(utf8_encode($row['direccion']));
@@ -2547,6 +2548,8 @@ class MigracionController extends Controller
                     tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo,
                     fecha_desde,
                     fecha_hasta,
+                    hora_inicio,
+                    hora_fin,                    
                     liquidar_dias_reales,
                     dias,
                     horas,
@@ -2607,6 +2610,8 @@ class MigracionController extends Controller
                 $arContratoDetalle->setVrSalarioBase($row['vr_salario_base']);
                 $arContratoDetalle->setPorcentajeIva($row['porcentaje_iva']);
                 $arContratoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
+                $arContratoDetalle->setHoraDesde(date_create($row['hora_inicio']));
+                $arContratoDetalle->setHoraHasta(date_create($row['hora_fin']));
                 $em->persist($arContratoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

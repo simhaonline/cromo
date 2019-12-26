@@ -85,6 +85,20 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Hora desde:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.horaDesde) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Hora hasta:</label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.horaHasta) }}
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
                     <div class="col-sm-offset-2 col-sm-9">
                         <div class="col-sm-4">{{ form_widget(form.lunes) }}
                             {{ form_errors(form.lunes) }}</div>

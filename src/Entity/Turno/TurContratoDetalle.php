@@ -62,6 +62,16 @@ class TurContratoDetalle
     private $fechaHasta;
 
     /**
+     * @ORM\Column(name="hora_desde", type="time", nullable=true)
+     */
+    private $horaDesde;
+
+    /**
+     * @ORM\Column(name="hora_hasta", type="time", nullable=true)
+     */
+    private $horaHasta;
+
+    /**
      * @ORM\Column(name="compuesto", type="boolean", options={"default":false})
      */
     private $compuesto = false;
@@ -922,6 +932,54 @@ class TurContratoDetalle
     public function setItemRel($itemRel): void
     {
         $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraDesde()
+    {
+        return $this->horaDesde;
+    }
+
+    /**
+     * @param mixed $horaDesde
+     */
+    public function setHoraDesde($horaDesde): void
+    {
+        $this->horaDesde = $horaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraHasta()
+    {
+        return $this->horaHasta;
+    }
+
+    /**
+     * @param mixed $horaHasta
+     */
+    public function setHoraHasta($horaHasta): void
+    {
+        $this->horaHasta = $horaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContratoDetallesCompuestosContratoDetalleRel()
+    {
+        return $this->contratoDetallesCompuestosContratoDetalleRel;
+    }
+
+    /**
+     * @param mixed $contratoDetallesCompuestosContratoDetalleRel
+     */
+    public function setContratoDetallesCompuestosContratoDetalleRel($contratoDetallesCompuestosContratoDetalleRel): void
+    {
+        $this->contratoDetallesCompuestosContratoDetalleRel = $contratoDetallesCompuestosContratoDetalleRel;
     }
 
 

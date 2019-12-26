@@ -45,6 +45,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.horas')
             ->addSelect('cd.horasDiurnas')
             ->addSelect('cd.horasNocturnas')
+            ->addSelect('cd.horaDesde')
+            ->addSelect('cd.horaHasta')
             ->addSelect('cd.compuesto')
             ->addSelect('con.nombre as conceptoNombre')
             ->addSelect('i.nombre as itemNombre')
@@ -87,6 +89,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.horas')
             ->addSelect('cd.horasDiurnas')
             ->addSelect('cd.horasNocturnas')
+            ->addSelect('cd.horaDesde')
+            ->addSelect('cd.horaHasta')
             ->addSelect('con.nombre as conceptoNombre')
             ->addSelect('mod.nombre as modalidadNombre')
             ->leftJoin('cd.conceptoRel', 'con')
@@ -119,6 +123,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             }
 
             $arrPorcentajeIva = $arrControles['arrPorcentajeIva'];
+            $arrPorcentajeBaseIva = $arrControles['arrPorcentajeBaseIva'];
             $arrCodigo = $arrControles['arrCodigo'];
             foreach ($arrCodigo as $codigoContratoDetalle) {
                 $arContratoDetalle = $this->getEntityManager()->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
@@ -126,6 +131,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
                     $arContratoDetalle->setVrPrecioAjustado($arrPrecioAjustado[$codigoContratoDetalle]);
                 }
                 $arContratoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoContratoDetalle]);
+                $arContratoDetalle->setPorcentajeBaseIva($arrPorcentajeBaseIva[$codigoContratoDetalle]);
                 $em->persist($arContratoDetalle);
                 $em->flush();
             }

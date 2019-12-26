@@ -48,6 +48,7 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('c.vrTotal')
             ->addSelect('c.estadoAutorizado')
             ->addSelect('c.estadoCerrado')
+            ->addSelect('c.fechaGeneracion')
             ->addSelect('ct.nombre as contratoTipo')
             ->addSelect('cl.numeroIdentificacion')
             ->addSelect('cl.nombreCorto ')
@@ -80,7 +81,8 @@ class TurContratoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("c.estadoCerrado = 1");
                 break;
         }
-
+        $queryBuilder->orderBy('c.estadoAutorizado', 'ASC');
+        $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

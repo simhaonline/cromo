@@ -216,10 +216,10 @@ class ContratoController extends AbstractController
                 //$objFormatopedido->Generar($em, $id);
             }
             if ($form->get('btnAprobar')->isClicked()) {
-                //$em->getRepository(InvPedido::class)->aprobar($arPedido);
+
             }
             if ($form->get('btnAnular')->isClicked()) {
-                //$em->getRepository(InvPedido::class)->anular($arPedido);
+
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(TurContratoDetalle::class)->eliminar($arrDetallesSeleccionados, $id);

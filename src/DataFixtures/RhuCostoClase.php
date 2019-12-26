@@ -37,6 +37,15 @@ class RhuCostoClase extends Fixture
             $arCostoClase->setOrden(3);
             $manager->persist($arCostoClase);
         }
+        $arCostoClase = $manager->getRepository(\App\Entity\RecursoHumano\RhuCostoClase::class)->find('ADO');
+        if(!$arCostoClase){
+            $arCostoClase = new \App\Entity\RecursoHumano\RhuCostoClase();
+            $arCostoClase->setCodigoCostoClasePk('ADO');
+            $arCostoClase->setNombre('ADMINISTRATIVO OPERATIVO');
+            $arCostoClase->setOperativo(false);
+            $arCostoClase->setOrden(4);
+            $manager->persist($arCostoClase);
+        }
         $manager->flush();
     }
 }

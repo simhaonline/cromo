@@ -107,9 +107,12 @@ class TurDistribucionEmpleadoRepository extends ServiceEntityRepository
                     } else {
                         $codigoContrato = $arEmpleado['codigoContratoUltimoFk'];
                     }
+                    /** @var $arContrato RhuContrato */
                     $arContrato = $em->getRepository(RhuContrato::class)->find($codigoContrato);
-                    $arContrato->setCentroCostoRel($arPedidoDetalle->getPuestoRel()->getCentroCostoRel());
-                    $em->persist($arContrato);
+                    if($arContrato->getCodigoCostoTipoFk() == 'OPE') {
+                        $arContrato->setCentroCostoRel($arPedidoDetalle->getPuestoRel()->getCentroCostoRel());
+                        $em->persist($arContrato);
+                    }
                 }
 
                 if ($participacion > 0) {

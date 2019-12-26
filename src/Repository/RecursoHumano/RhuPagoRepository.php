@@ -565,12 +565,14 @@ class RhuPagoRepository extends ServiceEntityRepository
                 if ($arContrato->getAuxilioTransporte() == 1) {
                     $arConcepto = $em->getRepository(RhuConcepto::class)->find($arConfiguracion['codigoConceptoAuxilioTransporteFk']);
                     $pagoDetalle = round($diaAuxilioTransporte * $arProgramacionDetalle->getDiasTransporte());
-                    $transporte += $pagoDetalle;
-                    $devengado += $pagoDetalle;
-                    $arPagoDetalle = new RhuPagoDetalle();
-                    $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
-                    $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-                    $em->persist($arPagoDetalle);
+                    if($pagoDetalle > 0) {
+                        $transporte += $pagoDetalle;
+                        $devengado += $pagoDetalle;
+                        $arPagoDetalle = new RhuPagoDetalle();
+                        $arPagoDetalle->setDias($arProgramacionDetalle->getDiasTransporte());
+                        $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+                        $em->persist($arPagoDetalle);
+                    }
                 }
             }
 

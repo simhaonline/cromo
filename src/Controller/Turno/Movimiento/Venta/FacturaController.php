@@ -24,6 +24,7 @@ use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -327,28 +328,19 @@ class FacturaController extends AbstractController
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TurFactura::class)->find($id);
+        $codigoCliente =  $arFactura->getCodigoClienteFk();
         $form = $this->createFormBuilder()
+            ->add('ChkMostrarTodo', CheckboxType::class, array('label' => false, 'required' => false))
+            ->add('numero', TextType::class, array('required' => false))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        $raw['filtros'] = ['codigoCliente' => $arFactura->getCodigoClienteFk()];
+        $raw['filtros'] = [
+            'mostrarTodo' => $form->get('ChkMostrarTodo')->getData(),
+            'numero' => $form->get('numero')->getData(),
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
-//            if ($form->get('btnFiltrar')->isClicked()) {
-//                $arCuentaCobrarTipo = $form->get('cboCuentaCobrarTipo')->getData();
-//                if ($arCuentaCobrarTipo) {
-//                    $session->set('filtroCarCuentaCobrarTipo', $arCuentaCobrarTipo->getCodigoCuentaCobrarTipoPk());
-//                } else {
-//                    $session->set('filtroCarCuentaCobrarTipo', null);
-//                }
-//                $session->set('filtroCarCodigoCliente', $form->get('txtCodigoCliente')->getData());
-//                $session->set('filtroCarCuentaCobrarCodigo', $form->get('txtCodigoCuentaCobrar')->getData());
-//                $session->set('filtroCarCuentaCobrarNumero', $form->get('txtNumero')->getData());
-//                $session->set('filtroCarCuentaCobrarSoporte', $form->get('txtSoporte')->getData());
-//                $session->set('filtroCarFechaDesde', $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null);
-//                $session->set('filtroCarFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null);
-//                $session->set('filtroCarCuentaCobrarTodosClientes', $form->get('todosClientes')->getData());
-//            }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 if ($arrSeleccionados) {
@@ -375,7 +367,7 @@ class FacturaController extends AbstractController
                 }
             }
         }
-        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturar($raw), $request->query->getInt('page', 1), 500);
+        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturar($raw, $codigoCliente), $request->query->getInt('page', 1), 500);
         return $this->render('turno/movimiento/venta/factura/detalleNuevoPedido.html.twig', [
             'arPedidoDetalles' => $arPedidoDetalles,
             'form' => $form->createView()

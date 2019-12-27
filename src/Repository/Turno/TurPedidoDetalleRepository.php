@@ -126,7 +126,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('p.clienteRel', 'cl')
             ->leftJoin('pd.puestoRel', 'pu')
             ->where('pd.estadoProgramado = 0')
-        ->orderBy('p.codigoPedidoPk', 'DESC');
+            ->orderBy('p.codigoPedidoPk', 'DESC');
 
         if ($codigoCliente) {
             $queryBuilder->andWhere("cl.codigoClientePk = '{$codigoCliente}'");
@@ -160,7 +160,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($this->getEntityManager()->getRepository(TurPedido::class)->contarDetalles($arPedido->getCodigoPedidoPk()) > 0) {
-            if(isset($arrControles['arrPrecioAjustado'])) {
+            if (isset($arrControles['arrPrecioAjustado'])) {
                 $arrPrecioAjustado = $arrControles['arrPrecioAjustado'];
             } else {
                 $arrPrecioAjustado = [];
@@ -170,7 +170,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             $arrCodigo = $arrControles['arrCodigo'];
             foreach ($arrCodigo as $codigoPedidoDetalle) {
                 $arPedidoDetalle = $this->getEntityManager()->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
-                if(isset($arrPrecioAjustado[$codigoPedidoDetalle])){
+                if (isset($arrPrecioAjustado[$codigoPedidoDetalle])) {
                     $arPedidoDetalle->setVrPrecioAjustado($arrPrecioAjustado[$codigoPedidoDetalle]);
                 }
                 $arPedidoDetalle->setPorcentajeIva($arrPorcentajeIva[$codigoPedidoDetalle]);
@@ -250,15 +250,18 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function pendienteFacturar ($raw)
+    public function pendienteFacturar($raw, $codigoCliente)
     {
         $filtros = $raw['filtros'] ?? null;
 
-        $codigoCliente = null;
+        $mostrarTodo = null;
+        $numero = null;
 
         if ($filtros) {
-            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $mostrarTodo = $filtros['mostrarTodo'] ?? null;
+            $numero = $filtros['numero'] ?? null;
         }
+
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
             ->select('pd.codigoPedidoDetallePk')
@@ -291,7 +294,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('p.estadoProgramado as pedidoEstadoProgramado')
             ->addSelect('p.estadoFacturado as pedidoEstadoFacturado')
             ->addSelect('p.estadoAnulado as pedidoEstadoAnulado')
-            ->addSelect('c.nombreCorto')
+            ->addSelect('c.nombreCorto AS cliente')
             ->addSelect('c.codigoClientePk')
             ->addSelect('c.numeroIdentificacion')
             ->addSelect('c.digitoVerificacion')
@@ -311,9 +314,11 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin("pd.modalidadRel", "m")
             ->where("pd.vrPendiente > 0")
             ->andWhere('p.estadoAutorizado = 1');
-
-        if ($codigoCliente) {
-            $queryBuilder->andWhere("c.codigoClientePk = '{$codigoCliente}'");
+        if ($mostrarTodo == 0) {
+            $queryBuilder->andWhere("p.codigoClienteFk = '{$codigoCliente}'");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("p.numero = {$numero}");
         }
         $queryBuilder->orderBy('pd.anio', 'DESC');
         $queryBuilder->addOrderBy('pd.mes', 'DESC');

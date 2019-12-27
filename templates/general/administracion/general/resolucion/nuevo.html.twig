@@ -69,9 +69,14 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_entidadExamenRel" class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
+                <div class="col-sm-1">
                     {{ form_widget(form.prueba) }}
                     {{ form_errors(form.prueba) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-1 control-label"></label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.estadoActivo) }}
+                    {{ form_errors(form.estadoActivo) }}
                 </div>
             </div>
         </div>

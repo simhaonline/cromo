@@ -209,15 +209,21 @@ class MovimientoController extends ControllerListenerGeneral
         $em = $this->getDoctrine()->getManager();
         $arMovimiento = new InvMovimiento();
         $objFunciones = new FuncionesController();
+        $arDocumento = $em->getRepository(InvDocumento::class)->find($codigoDocumento);
         if ($id != 0) {
             $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
             if (!$arMovimiento) {
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento]));
             }
+        } else {
+            $arMovimiento->setDocumentoRel($arDocumento);
+            $arMovimiento->setUsuario($this->getUser()->getUserName());
+            $arMovimiento->setResolucionRel($arDocumento->getResolucionRel());
+            $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
+            $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
+            $arMovimiento->setOperacionComercial($arDocumento->getOperacionComercial());
+            $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
         }
-        $arMovimiento->setUsuario($this->getUser()->getUserName());
-        $arDocumento = $em->getRepository(InvDocumento::class)->find($codigoDocumento);
-        $arMovimiento->setDocumentoRel($arDocumento);
         $form = $this->createForm(FacturaType::class, $arMovimiento);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -231,10 +237,6 @@ class MovimientoController extends ControllerListenerGeneral
                 }
                 $fecha = new \DateTime('now');
                 $arMovimiento->setFechaVence($arMovimiento->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha, $arMovimiento->getPlazoPago()));
-                $arMovimiento->setDocumentoTipoRel($arDocumento->getDocumentoTipoRel());
-                $arMovimiento->setOperacionInventario($arDocumento->getOperacionInventario());
-                $arMovimiento->setOperacionComercial($arDocumento->getOperacionComercial());
-                $arMovimiento->setGeneraCostoPromedio($arDocumento->getGeneraCostoPromedio());
                 if ($arMovimiento->getCodigoSucursalFk()) {
                     $arSucursal = $em->getRepository(InvSucursal::class)->find($arMovimiento->getCodigoSucursalFk());
                     if ($arSucursal) {

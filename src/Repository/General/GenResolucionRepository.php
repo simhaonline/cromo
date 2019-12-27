@@ -4,7 +4,6 @@ namespace App\Repository\General;
 
 use App\Entity\General\GenAsesor;
 use App\Entity\General\GenResolucion;
-use App\Entity\General\GenResolucionFactura;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -39,7 +38,8 @@ class GenResolucionRepository extends ServiceEntityRepository
             ->addSelect('r.numeroHasta')
             ->addSelect('r.llaveTecnica')
             ->addSelect('r.ambiente')
-            ->addSelect('r.pin');
+            ->addSelect('r.pin')
+            ->addSelect('r.estadoActivo');
         if ($codigoResolucion) {
             $queryBuilder->andWhere("r.codigoResolucionPk = '{$codigoResolucion}'");
         }

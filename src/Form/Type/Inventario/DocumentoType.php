@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Inventario;
 
+use App\Entity\General\GenResolucion;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvDocumentoTipo;
 use Doctrine\ORM\EntityRepository;
@@ -20,6 +21,17 @@ class DocumentoType extends AbstractType
         $builder
             ->add('codigoDocumentoPk',TextType::class,['label' => 'Codigo:','required' => true])
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
+            ->add('resolucionRel',EntityType::class,[
+                'required' => false,
+                'class' => GenResolucion::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->where('r.estadoActivo = true')
+                        ->orderBy('r.numero', 'ASC');
+                },
+                'choice_label' => 'numero',
+                'label' => 'Resolucion:'
+            ])
             ->add('documentoTipoRel',EntityType::class,[
                 'required' => true,
                 'class' => InvDocumentoTipo::class,

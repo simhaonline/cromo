@@ -239,11 +239,11 @@ class InvMovimiento
      */
     protected $facturaTipoRel;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenResolucion", inversedBy="movimientosResolucionRel")
-//     * @ORM\JoinColumn(name="codigo_resolucion_fk", referencedColumnName="codigo_resolucion_pk")
-//     */
-//    protected $resolucionRel;
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenResolucion", inversedBy="movimientosResolucionRel")
+     * @ORM\JoinColumn(name="codigo_resolucion_fk", referencedColumnName="codigo_resolucion_pk")
+     */
+    protected $resolucionRel;
 
     /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
@@ -1023,6 +1023,7 @@ class InvMovimiento
     {
         $this->resolucionRel = $resolucionRel;
     }
+
 
 
 }

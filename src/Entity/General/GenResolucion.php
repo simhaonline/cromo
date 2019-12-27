@@ -88,10 +88,20 @@ class GenResolucion
      */
     private $prueba = false;
 
-//    /**
-//     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento", mappedBy="resolucionRel")
-//     */
-//    protected $movimientosResolucionRel;
+    /**
+     * @ORM\Column(name="estado_activo", type="boolean", options={"default":false})
+     */
+    private $estadoActivo = false;
+
+        /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvDocumento", mappedBy="resolucionRel")
+     */
+    protected $documentosResolucionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento", mappedBy="resolucionRel")
+     */
+    protected $movimientosResolucionRel;
 
     /**
      * @return array
@@ -348,6 +358,55 @@ class GenResolucion
     {
         $this->movimientosResolucionFacturaRel = $movimientosResolucionFacturaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentosResolucionRel()
+    {
+        return $this->documentosResolucionRel;
+    }
+
+    /**
+     * @param mixed $documentosResolucionRel
+     */
+    public function setDocumentosResolucionRel($documentosResolucionRel): void
+    {
+        $this->documentosResolucionRel = $documentosResolucionRel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEstadoActivo(): bool
+    {
+        return $this->estadoActivo;
+    }
+
+    /**
+     * @param bool $estadoActivo
+     */
+    public function setEstadoActivo(bool $estadoActivo): void
+    {
+        $this->estadoActivo = $estadoActivo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosResolucionRel()
+    {
+        return $this->movimientosResolucionRel;
+    }
+
+    /**
+     * @param mixed $movimientosResolucionRel
+     */
+    public function setMovimientosResolucionRel($movimientosResolucionRel): void
+    {
+        $this->movimientosResolucionRel = $movimientosResolucionRel;
+    }
+
 
 
 }

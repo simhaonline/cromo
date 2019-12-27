@@ -38,6 +38,7 @@
             <th>CLAVE TECNICA</th>
             <th>PIN</th>
             <th>AMBINETE</th>
+            <th>ACTIVO</th>
             <th></th>
             <th></th>
             <th><input type="checkbox" name="ChkSeleccionarTodos"
@@ -58,6 +59,7 @@
                 <td>{{ arResolucionFactura.llaveTecnica }}</td>
                 <td>{{ arResolucionFactura.pin }}</td>
                 <td>{{ arResolucionFactura.ambiente }}</td>
+                <td>{{ arResolucionFactura.estadoActivo ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('general_administracion_general_resolucion_nuevo',{'id': arResolucionFactura.codigoResolucionPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

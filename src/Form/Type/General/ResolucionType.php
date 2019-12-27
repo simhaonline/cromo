@@ -26,6 +26,7 @@ class ResolucionType extends AbstractType
             ->add('pin',TextType::class,['required' => true,'label' => 'Pin:'])
             ->add('ambiente',TextType::class,['required' => true,'label' => 'Ambiente:'])
             ->add('prueba', CheckboxType::class, ['required' => false])
+            ->add('estadoActivo', CheckboxType::class, ['required' => false])
             ->add('fecha', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])

@@ -46,6 +46,13 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_operacionComercial" class="col-sm-2 control-label">Resolucion:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.resolucionRel,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.resolucionRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_generaCostoPromedio" class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
                     {{ form_widget(form.generaCostoPromedio) }}

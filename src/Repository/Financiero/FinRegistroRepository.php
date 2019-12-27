@@ -44,7 +44,7 @@ class FinRegistroRepository extends ServiceEntityRepository
 		}
 
 		$queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinRegistro::class, 'r')
-			->addSelect ('r.codigoRegistroPk')
+			->addSelect('r.codigoRegistroPk')
 			->addSelect ('r.numero')
 			->addSelect ('r.codigoCuentaFk')
 			->addSelect ('r.codigoComprobanteFk')
@@ -54,6 +54,8 @@ class FinRegistroRepository extends ServiceEntityRepository
 			->addSelect ('r.vrCredito')
 			->addSelect ('r.vrBase')
 			->addSelect ('r.estadoAutorizado')
+			->addSelect ('r.estadoAprobado')
+			->addSelect ('r.estadoAnulado')
 			->addSelect ('r.descripcion')
 			->addSelect ('t.numeroIdentificacion')
 			->addSelect ('t.nombreCorto')

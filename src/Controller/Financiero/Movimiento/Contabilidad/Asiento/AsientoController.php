@@ -3,11 +3,11 @@
 namespace App\Controller\Financiero\Movimiento\Contabilidad\Asiento;
 
 use App\Controller\BaseController;
-use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinTercero;
 use App\Form\Type\Financiero\AsientoType;
@@ -15,6 +15,12 @@ use App\Formato\Financiero\Asiento;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,14 +28,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class AsientoController extends ControllerListenerGeneral
+class AsientoController extends AbstractController
 {
-    protected $clase = FinAsiento::class;
-    protected $claseNombre = "FinAsiento";
-    protected $modulo = "Financiero";
-    protected $funcion = "Movimiento";
-    protected $grupo = "Contabilidad";
-    protected $nombre = "Asiento";
 
     /**
      * @param Request $request
@@ -38,34 +38,55 @@ class AsientoController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/financiero/movimiento/contabilidad/asiento/lista", name="financiero_movimiento_contabilidad_asiento_lista")
      */
-    public function lista(Request $request)
+	public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
-        $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-            }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Asientos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+
+	    $em = $this->getDoctrine()->getManager();
+	    $form = $this->createFormBuilder()
+		    ->add('numero', TextType::class, array('required' => false))
+		    ->add('codigoComprobanteFk', EntityType::class, [
+			    'class' => FinComprobante::class,
+			    'query_builder' => function (EntityRepository $er) {
+				    return $er->createQueryBuilder('c')
+					    ->orderBy('c.codigoComprobantePk', 'ASC');
+			    },
+			    'required' => false,
+			    'choice_label' => 'nombre',
+			    'placeholder' => 'TODOS'
+		    ])
+		    ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+		    ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+		    ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+		    ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+		    ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+		    ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+		    ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+		    ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+		    ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+		    ->setMethod('GET')
+		    ->getForm();
+	    $form->handleRequest($request);
+	    $raw = [
+		    'limiteRegistros' => $form->get('limiteRegistros')->getData()
+	    ];
+        if ($form->isSubmitted()) {
+	        if ($form->get('btnFiltrar')->isClicked()) {
+		        $raw['filtros'] = $this->getFiltros($form);
+	        }
+	        if ($form->get('btnExcel')->isClicked()) {
+		        $raw['filtros'] = $this->getFiltros($form);
+		        General::get()->setExportar($em->getRepository(FinAsiento::class)->lista($raw), "Asientos");
+	        }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(FinAsiento::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('financiero_movimiento_contabilidad_asiento_lista'));
             }
         }
-        return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+        $arAsientos=$paginator->paginate($em->getRepository(FinAsiento::class)->lista($raw), $request->query->getInt('page', 1), 30);
+
+	    return $this->render('financiero/movimiento/contabilidad/asiento/lista.html.twig', [
+            'arAsientos' => $arAsientos,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -328,4 +349,28 @@ class AsientoController extends ControllerListenerGeneral
             'form' => $form->createView()
         ));
     }
+
+	public function getFiltros($form)
+	{
+		$filtro = [
+			'numero' => $form->get ('numero')->getData (),
+			'fechaDesde' => $form->get ('fechaDesde')->getData () ? $form->get ('fechaDesde')->getData ()->format ('Y-m-d') : null,
+			'fechaHasta' => $form->get ('fechaHasta')->getData () ? $form->get ('fechaHasta')->getData ()->format ('Y-m-d') : null,
+			'estadoAutorizado' => $form->get ('estadoAutorizado')->getData (),
+			'estadoAprobado' => $form->get ('estadoAprobado')->getData (),
+			'estadoAnulado' => $form->get ('estadoAnulado')->getData (),
+		];
+
+		$arComprobante = $form->get('codigoComprobanteFk')->getData();
+
+		if (is_object($arComprobante)) {
+			$filtro['codigoComprobante'] = $arComprobante->getCodigoComprobantePk();
+		} else {
+			$filtro['codigoComprobante'] = $arComprobante;
+		}
+
+
+		return $filtro;
+
+	}
 }

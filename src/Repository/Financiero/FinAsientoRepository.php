@@ -20,6 +20,84 @@ class FinAsientoRepository extends ServiceEntityRepository
         parent::__construct($registry, FinAsiento::class);
     }
 
+	public function  lista($raw)
+	{
+		$limiteRegistros = $raw['limiteRegistros'] ?? 100;
+		$filtros = $raw['filtros'] ?? null;
+
+		$numero = null;
+		$codigoComprobante = null;
+		$fechaDesde = null;
+		$fechaHasta = null;
+		$estadoAutorizado = null;
+		$estadoAprobado = null;
+		$estadoAnulado = null;
+
+		if ($filtros) {
+			$numero = $filtros['numero'] ?? null;
+			$codigoComprobante = $filtros['codigoComprobante'] ?? null;
+			$fechaDesde = $filtros['fechaDesde'] ?? null;
+			$fechaHasta = $filtros['fechaHasta'] ?? null;
+			$estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+			$estadoAprobado = $filtros['estadoAprobado'] ?? null;
+			$estadoAnulado = $filtros['estadoAnulado'] ?? null;
+		}
+
+		$queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsiento::class, 'a')
+			->select('a.codigoAsientoPk')
+			->addSelect('a.numero')
+			->addSelect('a.fecha')
+			->addSelect('a.fechaContable')
+			->addSelect('a.vrDebito')
+			->addSelect('a.vrCredito')
+			->addSelect('a.estadoAutorizado')
+			->addSelect('a.estadoAprobado')
+			->addSelect('a.estadoAnulado')
+			->addSelect('c.nombre as comprobante')
+			->leftJoin ('a.comprobanteRel', 'c');
+		if ($numero) {
+			$queryBuilder->andWhere("a.numero = {$numero}");
+		}
+		if ($numero) {
+			$queryBuilder->andWhere("a.numero = {$numero}");
+		}
+		if ($codigoComprobante) {
+			$queryBuilder->andWhere("a.codigoComprobanteFk = {$codigoComprobante}");
+		}
+		if ($fechaDesde) {
+			$queryBuilder->andWhere("a.fecha >= '{$fechaDesde} 00:00:00'");
+		}
+		if ($fechaHasta) {
+			$queryBuilder->andWhere("a.fecha <= '{$fechaHasta} 23:59:59'");
+		}
+		switch ($estadoAutorizado) {
+			case '0':
+				$queryBuilder->andWhere("a.estadoAutorizado = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("a.estadoAutorizado = 1");
+				break;
+		}
+		switch ($estadoAprobado) {
+			case '0':
+				$queryBuilder->andWhere("a.estadoAprobado = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("a.estadoAprobado = 1");
+				break;
+		}
+		switch ($estadoAnulado) {
+			case '0':
+				$queryBuilder->andWhere("a.estadoAnulado = 0");
+				break;
+			case '1':
+				$queryBuilder->andWhere("a.estadoAnulado = 1");
+				break;
+		}
+		$queryBuilder->addOrderBy('a.codigoAsientoPk', 'DESC');
+		$queryBuilder->setMaxResults($limiteRegistros);
+		return $queryBuilder->getQuery()->getResult();
+	}
 
     /**
      * @param $codigoAsiento
@@ -220,7 +298,6 @@ class FinAsientoRepository extends ServiceEntityRepository
         return $resultado[1];
     }
 
-
     public function registroContabilizar($codigo)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinAsiento::class, 'a')
@@ -283,4 +360,23 @@ class FinAsientoRepository extends ServiceEntityRepository
         return true;
     }
 
+	/**
+	 * @param $arrSeleccionados
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public function eliminar($arrSeleccionados)
+	{
+		try{
+			foreach ($arrSeleccionados as $arrSeleccionado) {
+				$arRegistro = $this->getEntityManager()->getRepository(FinAsiento::class)->find($arrSeleccionado);
+				if ($arRegistro) {
+					$this->getEntityManager()->remove($arRegistro);
+				}
+			}
+			$this->getEntityManager()->flush();
+		} catch (\Exception $ex) {
+			Mensajes::error("El registro tiene registros relacionados");
+		}
+	}
 }

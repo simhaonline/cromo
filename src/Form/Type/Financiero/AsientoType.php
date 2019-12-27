@@ -41,36 +41,4 @@ class AsientoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAsientoPk",       "tipo":"pk",        "ayuda":"Codigo del asiento",        "titulo":"ID"},
-            {"campo":"numero",                "tipo":"entero",    "ayuda":"Consecutivo de aprobación", "titulo":"NUMERO"},
-            {"campo":"comprobanteRel.nombre", "tipo":"texto",     "ayuda":"",                          "titulo":"COMP", "relacion":""},
-            {"campo":"fecha",                 "tipo":"fecha",     "ayuda":"Fecha de registro",         "titulo":"FECHA"},
-            {"campo":"fechaContable",         "tipo":"fecha",     "ayuda":"Fecha de contabilidad",     "titulo":"F_CONT"},            
-            {"campo":"vrDebito",              "tipo":"moneda",    "ayuda":"",                          "titulo":"DEBITO"},
-            {"campo":"vrCredito",             "tipo":"moneda",    "ayuda":"",                          "titulo":"CREDITO"},
-            {"campo":"estadoAutorizado",      "tipo":"bool",      "ayuda":"",                          "titulo":"AUT"},
-            {"campo":"estadoAprobado",        "tipo":"bool",      "ayuda":"",                          "titulo":"APR"},
-            {"campo":"estadoAnulado",         "tipo":"bool",      "ayuda":"",                          "titulo":"ANU"}                                
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"numero",             "tipo":"TextType",   "propiedades":{"label":"Numero"}},
-            {"child":"codigoComprobanteFk","tipo":"EntityType", "propiedades":{"class":"FinComprobante","choice_label":"nombre","label":"Comprobante"}},
-            {"child":"fechaDesde",         "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",         "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoAutorizado",    "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",      "tipo":"ChoiceType","propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",       "tipo":"ChoiceType","propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
-   
-        ]';
-        return $campos;
-    }
 }

@@ -95,6 +95,9 @@
             <th title="Crédito">CREDITO</th>
             <th title="Base">BASE</th>
             <th title="Descripción contable">DESCRIPCION</th>
+            <th title="">AUT</th>
+            <th title="">APR</th>
+            <th title="">ANU</th>
             <th></th>
             <th></th>
             <th><input type="checkbox" name="ChkSeleccionar" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"></th>
@@ -111,10 +114,13 @@
                     <td>{{ arRegistro.codigoComprobanteFk }}</td>
                     <td>{{ arRegistro.codigoCentroCostoFk }}</td>
                     <td>{{ arRegistro.fecha | date ('Y-m-d') }}</td>
-                    <td>{{ arRegistro.vrDebito }}</td>
-                    <td>{{ arRegistro.vrCredito }}</td>
-                    <td>{{ arRegistro.vrBase }}</td>
+                    <td>{{ arRegistro.vrDebito  | number_format(0, '.', ',') }}</td>
+                    <td>{{ arRegistro.vrCredito  | number_format(0, '.', ',') }}</td>
+                    <td>{{ arRegistro.vrBase  | number_format(0, '.', ',')  }}</td>
                     <td>{{ arRegistro.descripcion }}</td>
+                    <td>{{ arRegistro.estadoAutorizado? "SI":"NO" }}</td>
+                    <td>{{ arRegistro.estadoAprobado? "SI":"NO" }}</td>
+                    <td>{{ arRegistro.estadoAnulado? "SI":"NO" }}</td>
                     {% if arRegistro.estadoAutorizado %}
                         <td></td>
                     {% else %}
@@ -123,16 +129,12 @@
                                         class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                         </td>
                     {% endif %}
-                    {% if arRegistro.estadoAutorizado %}
-                        <td></td>
-                    {% else %}
-                        <td style="text-align: center;">
-                            <a href="{{ path('financiero_movimiento_contabilidad_registro_detalle',{'id' : arRegistro.codigoRegistroPk }) }}">
-                                <i class="fa fa-share-square-o" style="font-size: large;color: black;">
-                                </i>
-                            </a>
-                        </td>
-                    {% endif %}
+                    <td style="text-align: center;">
+                        <a href="{{ path('financiero_movimiento_contabilidad_registro_detalle',{'id' : arRegistro.codigoRegistroPk }) }}">
+                            <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                            </i>
+                        </a>
+                    </td>
                     <td style="text-align: center;">
                         <input type="checkbox" name="ChkSeleccionar[]" value="{{ arRegistro.codigoRegistroPk }}">
                     </td>

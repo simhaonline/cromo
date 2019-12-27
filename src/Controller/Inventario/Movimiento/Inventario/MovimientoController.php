@@ -514,7 +514,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 50);
+        $arItems = $paginator->paginate($em->getRepository(InvItem::class)->lista($raw), $request->query->getInt('page', 1), 100);
         return $this->render('inventario/movimiento/inventario/detalleNuevo.html.twig', [
             'form' => $form->createView(),
             'arItems' => $arItems
@@ -598,7 +598,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arOrdenDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->listarDetallesPendientes($raw), $request->query->getInt('page', 1), 10);
+        $arOrdenDetalles = $paginator->paginate($em->getRepository(InvOrdenDetalle::class)->listarDetallesPendientes($raw), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/movimiento/inventario/detalleNuevoOrden.html.twig', [
             'form' => $form->createView(),
             'arOrdenDetalles' => $arOrdenDetalles
@@ -682,7 +682,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arImportacionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvImportacionDetalle::class)->listarDetallesPendientes($raw), $request->query->getInt('page', 1), 10);
+        $arImportacionDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvImportacionDetalle::class)->listarDetallesPendientes($raw), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/movimiento/inventario/detalleNuevoImportacion.html.twig', [
             'form' => $form->createView(),
             'arImportacionDetalles' => $arImportacionDetalles
@@ -749,7 +749,7 @@ class MovimientoController extends ControllerListenerGeneral
                 }
             }
         }
-        $arPedidoDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvPedidoDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 10);
+        $arPedidoDetalles = $paginator->paginate($this->getDoctrine()->getManager()->getRepository(InvPedidoDetalle::class)->listarDetallesPendientes($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 500);
         return $this->render('inventario/movimiento/inventario/detalleNuevoPedido.html.twig', [
             'form' => $form->createView(),
             'arPedidoDetalles' => $arPedidoDetalles

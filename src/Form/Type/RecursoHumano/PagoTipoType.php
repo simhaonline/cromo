@@ -20,6 +20,9 @@ class PagoTipoType extends AbstractType
         $builder
             ->add('codigoPagoTipoPk', TextType::class, ['required' => true, 'label' => 'Codigo pago tipo pk:'])
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Nombre:'])
+            ->add('orden', TextType::class, ['required' => true, 'label' => 'Orden:'])
+            ->add('codigoCuentaFk', TextType::class, ['required' => true, 'label' => 'Cuenta:'])
+            ->add('codigoComprobanteFk', TextType::class, ['required' => true, 'label' => 'Comprobante:'])
             ->add('cuentaPagarTipoRel', EntityType::class, [
                 'class' => TesCuentaPagarTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -41,23 +44,4 @@ class PagoTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoPagoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"cuentaPagarTipoRel.nombre",                    "tipo":"texto",     "ayuda":"Tipo de cuenta por pagar",                               "titulo":"CUENTA PAGAR TIPO",                "relacion":""},
-            {"campo":"generaTesoreria",               "tipo":"bool",      "ayuda":"Si el tipo de pago va a generar cuenta por pagar en compras",          "titulo":"GENERA TESORERIA"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoPagoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
 }

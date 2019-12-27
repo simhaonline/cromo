@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Código:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoPagoTipoPk) }}
+                    {{ form_errors(form.codigoPagoTipoPk) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Nombre:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre) }}
+                    {{ form_errors(form.nombre) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Cuenta pagar tipo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cuentaPagarTipoRel) }}
+                    {{ form_errors(form.cuentaPagarTipoRel) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">Orden:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.orden) }}
+                    {{ form_errors(form.orden) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Cuenta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoCuentaFk) }}
+                    {{ form_errors(form.codigoCuentaFk) }}
+                </div>
+                <label for="form_entidadExamenRel" class="col-sm-2 control-label">codigo comprobante:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoComprobanteFk) }}
+                    {{ form_errors(form.codigoComprobanteFk) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_examenClaseRel" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.generaTesoreria) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_administracion_nomina_pagotipo_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -21,58 +21,58 @@
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arPedido.numero }}</td>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
-            <td class="titulo"></td>
-            <td align="right"></td>
+            <td class="titulo">MINIMO:</td>
+            <td align="right">{{ arPedido.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
+            <td class="titulo">SUBTOTAL:</td>
+            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well">{{ arPedido.clienteRel.nombreCorto }}</td>
             <td class="titulo">SALARIO BASE:</td>
             <td align="right">{{ arPedido.vrSalarioBase | number_format(0, '.', ',') }}</td>
-            <td class="titulo">MINIMO:</td>
-            <td align="right">{{ arPedido.vrTotalPrecioMinimo | number_format(0, '.', ',') }}</td>
+            <td class="titulo">BASE IVA:</td>
+            <td align="right">{{ arPedido.vrBaseIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">TIPO:</td>
             <td class="td-in-well">{{ arPedido.pedidoTipoRel.nombre }}</td>
             <td class="titulo">ESTRATO:</td>
             <td class="td-in-well">{{ arPedido.estrato }}</td>
-            <td class="titulo"></td>
-            <td align="right"></td>
+            <td class="titulo">IVA:</td>
+            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">SECTOR:</td>
             <td class="td-in-well">{{ arPedido.sectorRel.nombre }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">SUBTOTAL:</td>
-            <td align="right">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
+            <td class="titulo">TOTAL:</td>
+            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arPedido.usuario }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">BASE IVA:</td>
-            <td align="right">{{ arPedido.vrBaseIva | number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
         <tr>
             <td class="titulo">HORAS:</td>
             <td class="td-in-well">{{ arPedido.horas }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">IVA:</td>
-            <td align="right">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
         <tr>
             <td class="titulo">HORAS DIURNAS:</td>
             <td class="td-in-well">{{ arPedido.horasDiurnas }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
-            <td class="titulo">TOTAL:</td>
-            <td align="right">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
         <tr>
             <td class="titulo">HORAS NOCTURNAS:</td>
@@ -100,7 +100,6 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th title="Concepto">CONCEPTO</th>
                             <th title="Item">ITEM</th>
                             <th title="Modalidad">MOD</th>
                             <th title="Periodo">P</th>
@@ -115,9 +114,9 @@
                             <th>S</th>
                             <th>D</th>
                             <th>F</th>
-                            <th title="Horas totales">H</th>
-                            <th title="Horas diurnas">HD</th>
-                            <th title="Horas nocturnas">HN</th>
+                            <th title="Horas totales">H(P)</th>
+                            <th title="Horas diurnas">HD(P)</th>
+                            <th title="Horas nocturnas">HN(P)</th>
                             <th title="Salario base">BASE</th>
                             <th title="Precio minimo">P.MINIMO</th>
                             <th title="Precio ajustado">P.AJUSTADO</th>
@@ -125,9 +124,9 @@
                             <th title="Porcentaje iva">%IVA</th>
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
-                            <th title="Compuesto">COM</th>
-                            <th title="Contrato detalle">CD</th>
+                            <th title="Compuesto">CP</th>
                             <th title="Programado">PR</th>
+                            <th title="Contrato detalle">CD</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -136,7 +135,7 @@
                         <tbody>
                         {% for arPedidoDetalle in arPedidoDetalles %}
                             <tr style="background-color: #c8c8c8">
-                                <td colspan="31">
+                                <td colspan="30">
                                     <b>
                                         ({{ arPedidoDetalle.codigoPuestoFk | default('') }})
                                         {{ arPedidoDetalle.puesto }}
@@ -149,7 +148,6 @@
                                                                                         name="arrCodigo[]"
                                                                                         value="{{ arPedidoDetalle.codigoPedidoDetallePk }}">
                                 </td>
-                                <td>{{ arPedidoDetalle.conceptoNombre }}</td>
                                 <td>{{ arPedidoDetalle.itemNombre }}</td>
                                 <td>{{ arPedidoDetalle.codigoModalidadFk }}</td>
                                 <td>{{ arPedidoDetalle.periodo }}</td>
@@ -164,12 +162,9 @@
                                 <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
                                 <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
                                 <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.horas }}({{ arPedidoDetalle.horasProgramadas }})</td>
-                                <td>{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})
-                                </td>
-                                <td>{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }}
-                                    )
-                                </td>
+                                <td>{{ arPedidoDetalle.horas | number_format }}({{ arPedidoDetalle.horasProgramadas | number_format }})</td>
+                                <td>{{ arPedidoDetalle.horasDiurnas | number_format }}({{ arPedidoDetalle.horasDiurnasProgramadas | number_format }})</td>
+                                <td>{{ arPedidoDetalle.horasNocturnas | number_format }}({{ arPedidoDetalle.horasNocturnasProgramadas | number_format }})</td>
                                 <td class="numero">{{ arPedidoDetalle.vrSalarioBase | number_format() }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo | number_format() }}</td>
                                 {% if arPedido.estadoAutorizado == 0 %}
@@ -212,8 +207,8 @@
                                 {% else %}
                                     <td class="text-center">NO</td>
                                 {% endif %}
+                                <td>{{ arPedidoDetalle.estadoProgramado ? 'SI':'NO' }}</td>
                                 <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
-                                <td>{{ arPedidoDetalle.estadoProgramado ? 'S':'N' }}</td>
                                 {% if arPedido.estadoAutorizado %}
                                     <td></td>
                                 {% else %}
@@ -231,6 +226,9 @@
                     </table>
                 </div>
                 <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {{ form_widget(form.btnExcel) }}
+                    </div>
                     <div class="btn-group">
                         {% if arPedido.estadoAutorizado == true %}
                             <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"

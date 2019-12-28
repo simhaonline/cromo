@@ -16,13 +16,13 @@
         {% if arContrato.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arContrato.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arContrato.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
-        {% if arContrato.estadoCerrado == true %}<span class="label label-danger">Cerrado</span>{% endif %}
+        {% if arContrato.estadoTerminado == true %}<span class="label label-danger">Terminado</span>{% endif %}
     </div>
     <br/><br/>
     {% include 'turno/movimiento/juridico/contrato/informacion.html.twig' %}
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
-        <li><a href="#detalleCerrado" data-toggle="tab">Cerrados</a></li>
+        <li><a href="#detalleCerrado" data-toggle="tab">Terminados</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="detalles">
@@ -145,25 +145,30 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                </div>
-                <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        {{ form_widget(form.btnCerrarDetalle) }}
+                    <div class="btn-group" style="float: left">
+                        <div class="btn btn-default btn-sm">
+                            <span class="badge">{{ arContratoDetalles.getTotalItemCount }}</span>
+                        </div>
                     </div>
-                    <div class="btn-group">
-                        {% if arContrato.estadoAutorizado == true %}
-                            <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
-                                   value="Nuevo"/>
-                        {% else %}
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato':arContrato.codigoContratoPk,'id': 0 }) }}', 'ContratoAdicionarDetalle', 600, 1200)">Nuevo</a>
-                        {% endif %}
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnActualizar) }}
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnEliminar) }}
+                    <div class="btn-toolbar" style="float: right">
+                        <div class="btn-group">
+                            {{ form_widget(form.btnCerrarDetalle) }}
+                        </div>
+                        <div class="btn-group">
+                            {% if arContrato.estadoAutorizado == true %}
+                                <input type="button" class="btn btn-default btn-sm" href="#" disabled="disabled"
+                                       value="Nuevo"/>
+                            {% else %}
+                                <a class="btn btn-default btn-sm"
+                                   href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato':arContrato.codigoContratoPk,'id': 0 }) }}', 'ContratoAdicionarDetalle', 600, 1200)">Nuevo</a>
+                            {% endif %}
+                        </div>
+                        <div class="btn-group">
+                            {{ form_widget(form.btnActualizar) }}
+                        </div>
+                        <div class="btn-group">
+                            {{ form_widget(form.btnEliminar) }}
+                        </div>
                     </div>
                 </div>
             </div>

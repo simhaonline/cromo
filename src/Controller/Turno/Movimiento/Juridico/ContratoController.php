@@ -2,9 +2,6 @@
 
 namespace App\Controller\Turno\Movimiento\Juridico;
 
-use App\Controller\BaseController;
-use App\Controller\Estructura\ControllerListenerGeneral;
-use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
@@ -55,12 +52,11 @@ class ContratoController extends AbstractController
             ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN CERRAR' => '0', 'CERRADO' => '1'], 'required' => false])
+            ->add('estadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN TERMINAR' => '0', 'TERMINADO' => '1'], 'required' => false])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -72,7 +68,6 @@ class ContratoController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TurContrato::class)->lista($raw), "Contratos");
-
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
@@ -185,7 +180,7 @@ class ContratoController extends AbstractController
             $arrBtnCerrarDetalle['disabled'] = true;
             $arrBtnAbrirDetalle['disabled'] = true;
         }
-        if ($arContrato->getEstadoCerrado()) {
+        if ($arContrato->getEstadoTerminado()) {
             $arrBtnCerrar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
@@ -227,7 +222,6 @@ class ContratoController extends AbstractController
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurContratoDetalle::class)->actualizarDetalles($arrControles, $form, $arContrato);
-                $em->getRepository(TurContrato::class)->liquidar($arContrato);
             }
             if ($form->get('btnCerrarDetalle')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -242,12 +236,11 @@ class ContratoController extends AbstractController
                 return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
             }
             if ($form->get('btnCerrar')->isClicked()) {
-                if ($arContrato->getEstadoAutorizado() == 1) {
+                if ($arContrato->isEstadoAutorizado() == 1) {
                     $arContrato->setEstadoAprobado(1);
-                    $arContrato->setEstadoCerrado(1);
+                    $arContrato->setEstadoTerminado(1);
                     $arContrato->setCodigoUsuarioCierre($this->getUser()->getUsername());
                     $arContrato->setFechaCierre(new \DateTime('now'));
-
                     $em->persist($arContrato);
                     $em->flush();
                     return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
@@ -256,8 +249,9 @@ class ContratoController extends AbstractController
 
             return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
         }
-        $arContratoDetalles = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->lista($id), $request->query->getInt('page', 1), 10);
-        $arContratoDetallesCerrados = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->cerrado($id), $request->query->getInt('page', 1), 10);
+
+        $arContratoDetalles = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->lista($id), $request->query->getInt('page', 1), 1000);
+        $arContratoDetallesCerrados = $paginator->paginate($em->getRepository(TurContratoDetalle::class)->cerrado($id), $request->query->getInt('page', 1), 1000);
         return $this->render('turno/movimiento/juridico/contrato/detalle.html.twig', array(
             'form' => $form->createView(),
             'arContratoDetalles' => $arContratoDetalles,
@@ -396,7 +390,7 @@ class ContratoController extends AbstractController
             'codigoContratoPk' => $form->get('codigoContratoPk')->getData(),
             'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
-            'estadoCerrado' => $form->get('estadoCerrado')->getData(),
+            'estadoTerminado' => $form->get('estadoTerminado')->getData(),
         ];
 
         return $filtro;

@@ -405,39 +405,39 @@ class TurPuesto
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getLatitud(): int
+    public function getLatitud()
     {
         return $this->latitud;
     }
 
     /**
-     * @param int $latitud
+     * @param mixed $latitud
      */
-    public function setLatitud(int $latitud): void
+    public function setLatitud($latitud): void
     {
         $this->latitud = $latitud;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getLongitud(): int
+    public function getLongitud()
     {
         return $this->longitud;
     }
 
     /**
-     * @param int $longitud
+     * @param mixed $longitud
      */
-    public function setLongitud(int $longitud): void
+    public function setLongitud($longitud): void
     {
         $this->longitud = $longitud;
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
     public function getEstadoInactivo()
     {
@@ -445,9 +445,9 @@ class TurPuesto
     }
 
     /**
-     * @param bool $estadoInactivo
+     * @param mixed $estadoInactivo
      */
-    public function setEstadoInactivo(bool $estadoInactivo): void
+    public function setEstadoInactivo($estadoInactivo): void
     {
         $this->estadoInactivo = $estadoInactivo;
     }
@@ -691,6 +691,7 @@ class TurPuesto
     {
         $this->puestosAdicionalesPuestoRel = $puestosAdicionalesPuestoRel;
     }
+
 
 }
 

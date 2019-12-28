@@ -38,19 +38,20 @@ class PendiendeFacturaraController extends AbstractController
             ->add('estadoAnulado', ChoiceType::class, array('choices' => array('TODOS' => '2', 'ANULADO' => '1', 'SIN ANULAR' => '0')))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [];
         if ($form->isSubmitted()) {
-            if ($form->get('btnExcel')->isClicked()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
                 $arPendientesFacturas = $em->getRepository(TurPedidoDetalle::class)->pendienteFacturarInforme($raw);
                 $this->exportarExcelPersonalizado($arPendientesFacturas);
             }
         }
 
-        $arPedidoDestalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturarInforme($raw), $request->query->getInt('page', 1), 30);
+        $arPedidoDestalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteFacturarInforme($raw), $request->query->getInt('page', 1), 500);
         return $this->render('turno/informe/comercial/pendienteFacturar.html.twig', [
             'arPedidoDestalles' => $arPedidoDestalles,
             'form' => $form->createView(),
@@ -92,9 +93,10 @@ class PendiendeFacturaraController extends AbstractController
         if ($arPendientesFacturas) {
             $libro = new Spreadsheet();
             $hoja = $libro->getActiveSheet();
-            $hoja->setTitle('PagoDetalle');
+            $hoja->setTitle('pedidoPendiente');
             $j = 0;
-            $arrColumnas = ['CÓDIG0','NUMERO PEDIDO','FECHA PEDIDO', 'FECHA PROG', 'NIT', 'CLIENTE', 'SECTOR', 'AUT', 'PRO','FAC','ANU','C_COSTO','PUESTO','SERVICIO','MODALIDAD','PERIODO','PLANTILLA','DESDE','HASTA','CANT','LU','MA','MI'.'JU','VI','SA','DO','FE', 'H','HD','HN','HP','HDP','HNP','DIAS','IVA','VALOR','VR.PEND','TOTAL' ];
+            $arrColumnas = ['ID','TIPO','NUMERO','FECHA', 'NIT', 'CLIENTE', 'SECTOR', '', 'AUT', 'PRO','FAC','ANU','C_COSTO','PUESTO','SERVICIO','MODALIDAD','PERIODO','','DESDE','HASTA',
+                'CANT','LU','MA','MI','JU','VI','SA','DO','FE', 'H','HD','HN','HP','HDP','HNP','DIAS','IVA','VALOR','VR.PEND','TOTAL' ];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
@@ -107,22 +109,22 @@ class PendiendeFacturaraController extends AbstractController
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arPendientesFactura['codigoPedidoDetallePk']);
                 $hoja->setCellValue('B' . $j, $arPendientesFactura['pedidoTipoNombre']);
-                $hoja->setCellValue('C' . $j, $arPendientesFactura['pedidoFecha']);
-                $hoja->setCellValue('D' . $j, $arPendientesFactura['fechaGeneracion']);
-                $hoja->setCellValue('E' . $j, "{$arPendientesFactura['numeroIdentificacion']}-{$arPendientesFactura['digitoVerificacion']}");
+                $hoja->setCellValue('C' . $j, $arPendientesFactura['numero']);
+                $hoja->setCellValue('D' . $j, $arPendientesFactura['fecha']);
+                $hoja->setCellValue('E' . $j, $arPendientesFactura['numeroIdentificacion']);
                 $hoja->setCellValue('F' . $j, $arPendientesFactura['nombreCorto']);
                 $hoja->setCellValue('G' . $j, $arPendientesFactura['sectorNombre']);
-                $hoja->setCellValue('H' . $j, FuncionesController::boolTexto($arPendientesFactura['sectorNombre']));
+                $hoja->setCellValue('H' . $j, '');
                 $hoja->setCellValue('I' . $j, FuncionesController::boolTexto($arPendientesFactura['pedidoEstadoAutorizado']));
                 $hoja->setCellValue('J' . $j, FuncionesController::boolTexto($arPendientesFactura['pedidoEstadoProgramado']));
                 $hoja->setCellValue('K' . $j, FuncionesController::boolTexto($arPendientesFactura['pedidoEstadoFacturado']));
                 $hoja->setCellValue('L' . $j, FuncionesController::boolTexto($arPendientesFactura['pedidoEstadoAnulado']));
-//                $hoja->setCellValue('M' . $i, $arPendientesFactura[''] $arPedidoDetalle->getPuestoRel()->getCodigoCentroCostoContabilidadFk());
-//                $hoja->setCellValue('N' . $i, $arPendientesFactura['puesto']);
+                $hoja->setCellValue('M' . $j, '');
+                $hoja->setCellValue('N' . $j, '');
                 $hoja->setCellValue('O' . $j, $arPendientesFactura['conceptoNombre']);
                 $hoja->setCellValue('p' . $j, $arPendientesFactura['modalidadNombre']);
-//                $hoja->setCellValue('R' . $i, ' ');
-                $hoja->setCellValue('Q' . $j, $arPendientesFactura['numero']);
+                $hoja->setCellValue('Q' . $j, '');
+                $hoja->setCellValue('R' . $j, '');
                 $hoja->setCellValue('S' . $j, $arPendientesFactura['diaDesde']);
                 $hoja->setCellValue('T' . $j, $arPendientesFactura['diaHasta']);
                 $hoja->setCellValue('U' . $j, $arPendientesFactura['cantidad']);
@@ -138,26 +140,18 @@ class PendiendeFacturaraController extends AbstractController
                 $hoja->setCellValue('AE' . $j, $arPendientesFactura['horasDiurnas']);
                 $hoja->setCellValue('AF' . $j, $arPendientesFactura['horasNocturnas']);
                 $hoja->setCellValue('AG' . $j, $arPendientesFactura['horasProgramadas']);
-                $hoja->setCellValue('AI' . $j, $arPendientesFactura['horasDiurnasProgramadas']);
-                $hoja->setCellValue('AJ' . $j, $arPendientesFactura['horasNocturnasProgramadas']);
-                $hoja->setCellValue('AI' . $j, $arPendientesFactura['dias']);
+                $hoja->setCellValue('AH' . $j, $arPendientesFactura['horasDiurnasProgramadas']);
+                $hoja->setCellValue('AI' . $j, $arPendientesFactura['horasNocturnasProgramadas']);
+                $hoja->setCellValue('AJ' . $j, $arPendientesFactura['dias']);
                 $hoja->setCellValue('AK' . $j, $arPendientesFactura['vrIva']);
                 $hoja->setCellValue('AL' . $j, $arPendientesFactura['vrSubtotal']);
-                $hoja->setCellValue('AM' . $j, $arPendientesFactura['vrTotalDetallePendiente']);
-                $hoja->setCellValue('AN' . $j, $arPendientesFactura['vrTotalDetalle']);
-
-//                if ($arPedidoDetalle->getPuestoRel()) {
-//                    $objPHPExcel->setActiveSheetIndex(0)
-
-//                }
-//                if ($arPedidoDetalle->getPlantillaRel()) {
-//                    $objPHPExcel->setActiveSheetIndex(0)
-//                }
+                $hoja->setCellValue('AM' . $j, $arPendientesFactura['vrPendiente']);
+                $hoja->setCellValue('AN' . $j, $arPendientesFactura['vrTotal']);
                 $j++;
             }
             $libro->setActiveSheetIndex(0);
             header('Content-Type: application/vnd.ms-excel');
-            header("Content-Disposition: attachment;filename=PagoDetalle.xls");
+            header("Content-Disposition: attachment;filename=pedidoPendiente.xls");
             header('Cache-Control: max-age=0');
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
             $writer->save('php://output');

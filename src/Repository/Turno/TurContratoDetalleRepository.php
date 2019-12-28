@@ -56,9 +56,9 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('cd.modalidadRel', 'mod')
             ->leftJoin('cd.puestoRel', 'p')
             ->where("cd.codigoContratoFk = {$id}")
-            ->andWhere('cd.estadoCerrado = 0');
+            ->andWhere('cd.estadoTerminado = 0');
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function cerrado($id)
@@ -97,7 +97,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('cd.modalidadRel', 'mod')
             ->leftJoin('cd.puestoRel', 'p')
             ->where("cd.codigoContratoFk = {$id}")
-            ->andWhere('cd.estadoCerrado = 1');
+            ->andWhere('cd.estadoTerminado = 1');
 
         return $queryBuilder;
     }
@@ -136,7 +136,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
                 $em->flush();
             }
             $em->getRepository(TurContrato::class)->liquidar($arContratos);
-            $this->getEntityManager()->flush();
+            $em->flush();
         }
     }
 

@@ -107,6 +107,11 @@ class TurFacturaDetalle
     private $detalle;
 
     /**
+     * @ORM\Column(name="codigo_grupo_fk", type="integer", nullable=true)
+     */
+    private $codigoGrupoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurFactura", inversedBy="facturasDetallesFacturaRel")
      * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
      */
@@ -135,6 +140,12 @@ class TurFacturaDetalle
      * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurGrupo", inversedBy="facturasDetallesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
     /**
      * @return mixed
@@ -518,6 +529,38 @@ class TurFacturaDetalle
     public function setDetalle($detalle): void
     {
         $this->detalle = $detalle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
     }
 
 

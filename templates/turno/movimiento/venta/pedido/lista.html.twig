@@ -113,9 +113,9 @@
                 <td>{{ arPedido.fecha | date("Y-m-d") }}</td>
                 <td>{{ arPedido.clienteNombreCorto }}</td>
                 <td>{{ arPedido.sectorNombre }}</td>
-                <td>{{ arPedido.horas }}</td>
-                <td>{{ arPedido.horasDiurnas }}</td>
-                <td>{{ arPedido.horasNocturnas }}</td>
+                <td class="numero">{{ arPedido.horas | number_format }}</td>
+                <td class="numero">{{ arPedido.horasDiurnas | number_format }}</td>
+                <td class="numero">{{ arPedido.horasNocturnas | number_format }}</td>
                 <td class="numero">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
                 <td>{{ arPedido.usuario }}</td>
                 <td>{{ arPedido.estadoAutorizado? "SI":"NO" }}</td>

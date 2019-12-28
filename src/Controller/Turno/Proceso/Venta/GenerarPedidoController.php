@@ -6,6 +6,7 @@ use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Turno\TurContrato;
+use App\General\General;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -31,10 +32,11 @@ class GenerarPedidoController extends Controller
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $paginator  = $this->get('knp_paginator');
-        $arContratos = null;
+        //$arContratos = null;
         $fecha = new \DateTime('now');
         $anio = $fecha->format('Y');
         $mes = $fecha->format('m');
+        $fecha = $anio . "/" . $mes . "/01";
         $form = $this->createFormBuilder()
             ->add('anio', ChoiceType::class, array(
                 'choices' => array(
@@ -49,6 +51,7 @@ class GenerarPedidoController extends Controller
                 ),
                 'data' => $mes,
             ))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnGenerar', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -61,12 +64,16 @@ class GenerarPedidoController extends Controller
                 $arContratos = $paginator->paginate($em->getRepository(TurContrato::class)->listaGenerarPedido($fecha), $request->query->getInt('page', 1),1000);
             }
             if ($form->get('btnGenerar')->isClicked()) {
-                $arrControles = $request->request->all();
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurContrato::class)->generarPedido($arrSeleccionados, $fecha, $this->getUser()->getUserName());
             }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TurContrato::class)->listaGenerarPedido($fecha), "Contratos");
+            }
         }
-
+        $arContratos = $paginator->paginate($em->getRepository(TurContrato::class)->listaGenerarPedido($fecha), $request->query->getInt('page', 1),1000);
         return $this->render('turno/proceso/venta/generarPedido.html.twig', array(
             'arContratos' => $arContratos,
             'form' => $form->createView()));

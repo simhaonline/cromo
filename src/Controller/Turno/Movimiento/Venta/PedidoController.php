@@ -188,6 +188,7 @@ class PedidoController extends AbstractController
 
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnExcel', SubmitType::class, array('label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -207,6 +208,10 @@ class PedidoController extends AbstractController
             }
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurPedidoDetalle::class)->actualizarDetalles($arrControles, $form, $arPedido);
+            }
+            if ($form->get('btnExcel')->isClicked()){
+                $arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->lista($id);
+                $this->exportarExcel($arPedidoDetalles);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_detalle', ['id' => $id]));
         }
@@ -435,6 +440,45 @@ class PedidoController extends AbstractController
         }
         return $fitro;
 
+    }
+
+    public function exportarExcel($arPedidoDetalles)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arPedidoDetalles) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('pedidoDetalles');
+            $j = 0;
+            $arrColumnas = ['ID', 'COD', 'ITEM', 'SUBTOTAL'];
+
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arPedidoDetalles as $arPedidoDetalle) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arPedidoDetalle['codigoPedidoDetallePk']);
+                $hoja->setCellValue('B' . $j, $arPedidoDetalle['codigoPedidoDetallePk']);
+                $hoja->setCellValue('C' . $j, $arPedidoDetalle['codigoPedidoDetallePk']);
+                $hoja->setCellValue('D' . $j, $arPedidoDetalle['vrSubtotal']);
+                $j++;
+            }
+
+            $libro->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=pedidoDetalles.xls");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 
 }

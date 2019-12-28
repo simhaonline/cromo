@@ -67,6 +67,7 @@ use App\Entity\Turno\TurContratoDetalleCompuesto;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurFactura;
 use App\Entity\Turno\TurFacturaDetalle;
+use App\Entity\Turno\TurGrupo;
 use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
 use App\Entity\Turno\TurPedido;
@@ -186,6 +187,9 @@ class MigracionController extends Controller
                         case 'tur_cliente':
                             $this->turCliente($conn);
                             break;
+                        case 'tur_grupo':
+                            $this->turGrupo($conn);
+                            break;
                         case 'tur_puesto':
                             $this->turPuesto($conn);
                             break;
@@ -246,6 +250,7 @@ class MigracionController extends Controller
             ['clase' => 'rhu_incapacidad', 'registros' => $this->contarRegistros('RhuIncapacidad', 'RecursoHumano', 'codigoIncapacidadPk')],
             ['clase' => 'rhu_licencia', 'registros' => $this->contarRegistros('RhuLicencia', 'RecursoHumano', 'codigoLicenciaPk')],
             ['clase' => 'tur_cliente', 'registros' => $this->contarRegistros('TurCliente', 'Turno', 'codigoClientePk')],
+            ['clase' => 'tur_grupo', 'registros' => $this->contarRegistros('TurGrupo', 'Turno', 'codigoGrupoPk')],
             ['clase' => 'tur_puesto', 'registros' => $this->contarRegistros('TurPuesto', 'Turno', 'codigoPuestoPk')],
             ['clase' => 'tur_contrato', 'registros' => $this->contarRegistros('TurContrato', 'Turno', 'codigoContratoPk')],
             ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle', 'Turno', 'codigoContratoDetallePk')],
@@ -2377,6 +2382,43 @@ class MigracionController extends Controller
 
     }
 
+    private function turGrupo($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_grupo_facturacion_pk FROM tur_grupo_facturacion ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                    codigo_grupo_facturacion_pk,
+                    codigo_cliente_fk,
+                    nombre,
+                    abreviatura,
+                    concepto,
+                    codigo_servicio_factura_fk
+                 FROM tur_grupo_facturacion 
+                 ORDER BY codigo_grupo_facturacion_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arGrupo = new TurGrupo();
+                $arGrupo->setCodigoGrupoPk($row['codigo_grupo_facturacion_pk']);
+                $arGrupo->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                $arGrupo->setNombre(utf8_encode($row['nombre']));
+                $arGrupo->setAbreviatura($row['abreviatura']);
+                $em->persist($arGrupo);
+                $metadata = $em->getClassMetaData(get_class($arGrupo));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+
+    }
+
     private function turPuesto($conn)
     {
         $em = $this->getDoctrine()->getManager();
@@ -2397,7 +2439,7 @@ class MigracionController extends Controller
                 codigo_ciudad_fk,
                 codigo_centro_costo_contabilidad_fk,
                 latitud,
-                longitud
+                longitud    
                  FROM tur_puesto 
                  ORDER BY codigo_puesto_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -2478,10 +2520,10 @@ class MigracionController extends Controller
                 fecha_generacion,
                 soporte,
                 estado_autorizado,
+                estado_cerrado,
                 horas,
                 horas_diurnas,
-                horas_nocturnas,
-                vr_total_servicio,
+                horas_nocturnas,                
                 vr_total_precio_ajustado,
                 vr_total_precio_minimo,
                 vr_subtotal,
@@ -2504,10 +2546,10 @@ class MigracionController extends Controller
                 $arContrato->setFechaGeneracion(date_create($row['fecha_generacion']));
                 $arContrato->setSoporte($row['soporte']);
                 $arContrato->setEstadoAutorizado($row['estado_autorizado']);
+                $arContrato->setEstadoTerminado($row['estado_cerrado']);
                 $arContrato->setHoras($row['horas']);
                 $arContrato->setHorasDiurnas($row['horas_diurnas']);
                 $arContrato->setHorasNocturnas($row['horas_nocturnas']);
-                $arContrato->setVrTotalServicio($row['vr_total_servicio']);
                 $arContrato->setVrTotalPrecioAjustado($row['vr_total_precio_ajustado']);
                 $arContrato->setVrTotalPrecioMinimo($row['vr_total_precio_minimo']);
                 $arContrato->setVrSubtotal($row['vr_subtotal']);
@@ -2517,7 +2559,9 @@ class MigracionController extends Controller
                 $arContrato->setUsuario($row['usuario']);
                 $arContrato->setComentarios(utf8_encode($row['comentarios']));
                 $arContrato->setVrSalarioBase($row['vr_salario_base']);
-                $arContrato->setEstrato($row['estrato']);
+                if($row['estrato']) {
+                    $arContrato->setEstrato($row['estrato']);
+                }
                 $em->persist($arContrato);
                 $metadata = $em->getClassMetaData(get_class($arContrato));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2557,6 +2601,7 @@ class MigracionController extends Controller
                     horas_nocturnas,
                     cantidad,
                     vr_precio_minimo,
+                    vr_precio_ajustado,
                     vr_precio,
                     vr_subtotal,
                     vr_iva,
@@ -2573,7 +2618,9 @@ class MigracionController extends Controller
                     estado_cerrado,
                     vr_salario_base,
                     porcentaje_iva,
-                    porcentaje_base_iva
+                    porcentaje_base_iva,
+                    codigo_grupo_facturacion_fk,
+                    compuesto
                  FROM tur_servicio_detalle 
                  left join tur_modalidad_servicio on tur_servicio_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
                  ORDER BY codigo_servicio_detalle_pk limit {$lote},{$rango}");
@@ -2584,6 +2631,9 @@ class MigracionController extends Controller
                 $arContratoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
                 $arContratoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
                 $arContratoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
+                if($row['codigo_grupo_facturacion_fk']) {
+                    $arContratoDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
+                }
                 $arContratoDetalle->setFechaDesde(date_create($row['fecha_desde']));
                 $arContratoDetalle->setFechaHasta(date_create($row['fecha_hasta']));
                 $arContratoDetalle->setLiquidarDiasReales($row['liquidar_dias_reales']);
@@ -2593,6 +2643,7 @@ class MigracionController extends Controller
                 $arContratoDetalle->setHorasNocturnas($row['horas_nocturnas']);
                 $arContratoDetalle->setCantidad($row['cantidad']);
                 $arContratoDetalle->setVrPrecioMinimo($row['vr_precio_minimo']);
+                $arContratoDetalle->setVrPrecioAjustado($row['vr_precio_ajustado']);
                 $arContratoDetalle->setVrPrecio($row['vr_precio']);
                 $arContratoDetalle->setVrSubtotal($row['vr_subtotal']);
                 $arContratoDetalle->setVrIva($row['vr_iva']);
@@ -2606,12 +2657,14 @@ class MigracionController extends Controller
                 $arContratoDetalle->setSabado($row['sabado']);
                 $arContratoDetalle->setDomingo($row['domingo']);
                 $arContratoDetalle->setFestivo($row['festivo']);
-                $arContratoDetalle->setEstadoCerrado($row['estado_cerrado']);
+                $arContratoDetalle->setEstadoTerminado($row['estado_cerrado']);
                 $arContratoDetalle->setVrSalarioBase($row['vr_salario_base']);
                 $arContratoDetalle->setPorcentajeIva($row['porcentaje_iva']);
                 $arContratoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
                 $arContratoDetalle->setHoraDesde(date_create($row['hora_inicio']));
                 $arContratoDetalle->setHoraHasta(date_create($row['hora_fin']));
+                $arContratoDetalle->setPeriodo('M');
+                $arContratoDetalle->setCompuesto($row['compuesto']);
                 $em->persist($arContratoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2832,7 +2885,8 @@ class MigracionController extends Controller
                     vr_salario_base,
                     porcentaje_iva,
                     porcentaje_base_iva,
-                    estado_programado
+                    estado_programado,
+                    codigo_grupo_facturacion_fk
                  FROM tur_pedido_detalle 
                  left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
                  ORDER BY codigo_pedido_detalle_pk limit {$lote},{$rango}");
@@ -2850,6 +2904,9 @@ class MigracionController extends Controller
                 }
                 if ($row['codigo_servicio_detalle_fk']) {
                     $arPedidoDetalle->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
+                }
+                if($row['codigo_grupo_facturacion_fk']) {
+                    $arPedidoDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
                 }
                 $arPedidoDetalle->setAnio($row['anio']);
                 $arPedidoDetalle->setMes($row['mes']);
@@ -3079,7 +3136,8 @@ class MigracionController extends Controller
                     iva,
                     vr_precio,
                     subtotal,
-                    total
+                    total,
+                    codigo_grupo_facturacion_fk
                  FROM tur_factura_detalle
                  left join tur_concepto_servicio on codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk 
                  ORDER BY codigo_factura_detalle_pk limit {$lote},{$rango}");
@@ -3092,6 +3150,9 @@ class MigracionController extends Controller
                     $arFacturaDetalle->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
                 } else {
                     $arFacturaDetalle->setPedidoDetalleRel(null);
+                }
+                if($row['codigo_grupo_facturacion_fk']) {
+                    $arFacturaDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
                 }
                 $arFacturaDetalle->setCantidad($row['cantidad']);
                 $arFacturaDetalle->setVrPrecio($row['vr_precio']);

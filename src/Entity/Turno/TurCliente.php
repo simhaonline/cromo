@@ -222,6 +222,11 @@ class TurCliente
     protected $costosServiciosClienteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurGrupo", mappedBy="clienteRel")
+     */
+    protected $gruposClienteRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSectorComercial", inversedBy="turClientesSectorComercialRel")
      * @ORM\JoinColumn(name="codigo_sector_comercial_fk", referencedColumnName="codigo_sector_comercial_pk")
      */
@@ -998,6 +1003,55 @@ class TurCliente
     {
         $this->tipoPersonaRel = $tipoPersonaRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoPersonaFk()
+    {
+        return $this->codigoTipoPersonaFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoPersonaFk
+     */
+    public function setCodigoTipoPersonaFk($codigoTipoPersonaFk): void
+    {
+        $this->codigoTipoPersonaFk = $codigoTipoPersonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoRegimenFk()
+    {
+        return $this->codigoRegimenFk;
+    }
+
+    /**
+     * @param mixed $codigoRegimenFk
+     */
+    public function setCodigoRegimenFk($codigoRegimenFk): void
+    {
+        $this->codigoRegimenFk = $codigoRegimenFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGruposClienteRel()
+    {
+        return $this->gruposClienteRel;
+    }
+
+    /**
+     * @param mixed $gruposClienteRel
+     */
+    public function setGruposClienteRel($gruposClienteRel): void
+    {
+        $this->gruposClienteRel = $gruposClienteRel;
+    }
+
 
 }
 

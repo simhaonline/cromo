@@ -31,13 +31,13 @@ class TurContratoRepository extends ServiceEntityRepository
         $codigoContratoPk = null;
         $codigoClienteFk = null;
         $estadoAutorizado = null;
-        $estadoCerrado = null;
+        $estadoTerminado = null;
 
         if ($filtros) {
             $codigoContratoPk = $filtros['codigoContratoPk'] ?? null;
             $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
-            $estadoCerrado = $filtros['estadoCerrado'] ?? null;
+            $estadoTerminado = $filtros['estadoTerminado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContrato::class, 'c')
@@ -47,7 +47,7 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('c.horasNocturnas')
             ->addSelect('c.vrTotal')
             ->addSelect('c.estadoAutorizado')
-            ->addSelect('c.estadoCerrado')
+            ->addSelect('c.estadoTerminado')
             ->addSelect('c.fechaGeneracion')
             ->addSelect('ct.nombre as contratoTipo')
             ->addSelect('cl.numeroIdentificacion')
@@ -73,12 +73,12 @@ class TurContratoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("c.estadoAutorizado = 1");
                 break;
         }
-        switch ($estadoCerrado) {
+        switch ($estadoTerminado) {
             case '0':
-                $queryBuilder->andWhere("c.estadoCerrado = 0");
+                $queryBuilder->andWhere("c.estadoTerminado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("c.estadoCerrado = 1");
+                $queryBuilder->andWhere("c.estadoTerminado = 1");
                 break;
         }
         $queryBuilder->orderBy('c.estadoAutorizado', 'ASC');
@@ -166,7 +166,7 @@ class TurContratoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
             ->select("COUNT(cd.codigoContratoDetallePk)")
             ->where("cd.codigoContratoFk = {$codigoContrato} ")
-            ->andWhere("cd.estadoCerrado = 0");
+            ->andWhere("cd.estadoTerminado = 0");
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
@@ -196,7 +196,7 @@ class TurContratoRepository extends ServiceEntityRepository
         /** @var $arContratoDetalle TurContratoDetalle */
         foreach ($arContratoDetalles as $arContratoDetalle) {
             if ($arContratoDetalle->getCompuesto() == 0) {
-                if ($arContratoDetalle->getEstadoCerrado() == 0) {
+                if ($arContratoDetalle->getEstadoTerminado() == 0) {
                     /** @var $arConcepto TurConcepto */
                     $arConcepto = $arContratoDetalle->getConceptoRel();
                     if ($arContratoDetalle->getPeriodo() == "D") {
@@ -347,17 +347,18 @@ class TurContratoRepository extends ServiceEntityRepository
                     $ivaDetalle = $baseAiuDetalle * ($arContratoDetalle->getPorcentajeIva() / 100);
                     $totalDetalle = $subTotalDetalle + $ivaDetalle;
 
-                    $arContratoDetalle->setVrSubtotal($subTotalDetalle);
-                    $arContratoDetalle->setVrBaseAiu($baseAiuDetalle);
-                    $arContratoDetalle->setVrIva($ivaDetalle);
-                    $arContratoDetalle->setVrTotalDetalle($totalDetalle);
-                    $arContratoDetalle->setVrPrecioMinimo($valorMinimoServicio);
-                    $arContratoDetalle->setVrPrecio($precio);
-                    $arContratoDetalle->setHoras($horas);
-                    $arContratoDetalle->setHorasDiurnas($horasRealesDiurnas);
-                    $arContratoDetalle->setHorasNocturnas($horasRealesNocturnas);
-                    $arContratoDetalle->setDias($dias);
-                    $em->persist($arContratoDetalle);
+                    $arContratoDetalleActualizar = $em->getRepository(TurContratoDetalle::class)->find($arContratoDetalle->getCodigoContratoDetallePk());
+                    $arContratoDetalleActualizar->setVrSubtotal($subTotalDetalle);
+                    $arContratoDetalleActualizar->setVrBaseAiu($baseAiuDetalle);
+                    $arContratoDetalleActualizar->setVrIva($ivaDetalle);
+                    $arContratoDetalleActualizar->setVrTotalDetalle($totalDetalle);
+                    $arContratoDetalleActualizar->setVrPrecioMinimo($valorMinimoServicio);
+                    $arContratoDetalleActualizar->setVrPrecio($precio);
+                    $arContratoDetalleActualizar->setHoras($horas);
+                    $arContratoDetalleActualizar->setHorasDiurnas($horasRealesDiurnas);
+                    $arContratoDetalleActualizar->setHorasNocturnas($horasRealesNocturnas);
+                    $arContratoDetalleActualizar->setDias($dias);
+                    $em->persist($arContratoDetalleActualizar);
 
                     $subtotalGeneral += $subTotalDetalle;
                     $baseAuiGeneral += $baseAiuDetalle;
@@ -372,7 +373,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     $intCantidad++;
                 }
             } else {
-                if ($arContratoDetalle->getEstadoCerrado() == 0) {
+                if ($arContratoDetalle->isEstadoTerminado() == 0) {
                     $totalHoras += $arContratoDetalle->getHoras();
                     $totalHorasDiurnas += $arContratoDetalle->getHorasDiurnas();
                     $totalHorasNocturnas += $arContratoDetalle->getHorasNocturnas();
@@ -390,7 +391,6 @@ class TurContratoRepository extends ServiceEntityRepository
         $arContrato->setHoras($totalHoras);
         $arContrato->setHorasDiurnas($totalHorasDiurnas);
         $arContrato->setHorasNocturnas($totalHorasNocturnas);
-        $arContrato->setVrTotalServicio($totalServicio);
         $arContrato->setVrTotalPrecioMinimo($totalMinimoServicio);
         $arContrato->setVrTotalCosto($totalCostoCalculado);
         $arContrato->setVrSubtotal($subtotalGeneral);
@@ -411,7 +411,6 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('c.horasDiurnas')
             ->addSelect('c.horasNocturnas')
             ->addSelect('c.estadoAutorizado')
-            ->addSelect('c.estadoCerrado')
             ->addSelect('c.fechaGeneracion')
             ->addSelect('cli.numeroIdentificacion as clienteNumeroIdentificacion')
             ->addSelect('cli.nombreCorto as clienteNombreCorto')
@@ -421,7 +420,9 @@ class TurContratoRepository extends ServiceEntityRepository
             ->leftJoin('c.clienteRel', 'cli')
             ->leftJoin('c.sectorRel', 'sec')
             ->where("c.fechaGeneracion < '{$fecha}'")
-            ->where('c.estadoCerrado = 0');
+            ->andWhere('c.estadoTerminado = 0')
+            ->andWhere('c.estadoAutorizado = 1');
+        $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
         $arContratos = $queryBuilder->getQuery()->getResult();
         return $arContratos;
 
@@ -467,7 +468,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     $arContrato->setFechaGeneracion($fechaDesde);
                     $em->persist($arContrato);
 
-                    $arContratoDetalles = $em->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoCerrado' => 0));
+                    $arContratoDetalles = $em->getRepository(TurContratoDetalle::class)->findBy(array('codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoTerminado' => 0));
                     foreach ($arContratoDetalles as $arContratoDetalle) {
                         $arPedidoDetalle = new TurPedidoDetalle();
                         $arPedidoDetalle->setPedidoRel($arPedido);
@@ -620,7 +621,7 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('c.estadoAutorizado')
             ->addSelect('c.estadoAprobado')
             ->addSelect('c.estadoAnulado')
-            ->addSelect('c.estadoCerrado')
+            ->addSelect('c.estadoTerminado')
             ->addSelect('c.cantidad')
             ->addSelect('c.estrato')
             ->addSelect('c.horas')
@@ -635,7 +636,6 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('c.vrBaseAiu')
             ->addSelect('c.vrSalarioBase')
             ->addSelect('c.vrTotal')
-            ->addSelect('c.vrTotalServicio')
             ->addSelect('c.usuario')
             ->leftJoin('c.clienteRel', 'cl')
             ->leftJoin('c.contratoTipoRel', 'ct');

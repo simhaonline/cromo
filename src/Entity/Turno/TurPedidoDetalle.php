@@ -279,6 +279,11 @@ class TurPedidoDetalle
     private $diasReales = false;
 
     /**
+     * @ORM\Column(name="codigo_grupo_fk", type="integer", nullable=true)
+     */
+    private $codigoGrupoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
      * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
@@ -313,6 +318,12 @@ class TurPedidoDetalle
      * @ORM\JoinColumn(name="codigo_contrato_detalle_fk", referencedColumnName="codigo_contrato_detalle_pk")
      */
     protected $contratoDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurGrupo", inversedBy="pedidosDetallesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TurProgramacion", mappedBy="pedidoDetalleRel")
@@ -1350,6 +1361,38 @@ class TurPedidoDetalle
     public function setHoraHasta($horaHasta): void
     {
         $this->horaHasta = $horaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
     }
 
 

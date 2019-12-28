@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurContratoDetalleRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
+ * @ORM\Table(name="tur_contrato_detalle")
  */
 class TurContratoDetalle
 {
@@ -177,9 +178,9 @@ class TurContratoDetalle
     private $festivo = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean", options={"default":false})
+     * @ORM\Column(name="estado_terminado", type="boolean", options={"default":false})
      */
-    private $estadoCerrado = false;
+    private $estadoTerminado = false;
 
     /**
      * @ORM\Column(name="liquidar_dias_reales", type="boolean", options={"default":false})
@@ -200,6 +201,11 @@ class TurContratoDetalle
      * @ORM\Column(name="porcentaje_base_iva", type="float", nullable=true)
      */
     private $porcentajeBaseIva = 0;
+
+    /**
+     * @ORM\Column(name="codigo_grupo_fk", type="integer", nullable=true)
+     */
+    private $codigoGrupoFk;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurContrato", inversedBy="contratosDetallesContratoRel")
@@ -232,6 +238,12 @@ class TurContratoDetalle
     protected $puestoRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurGrupo", inversedBy="contratosDetallesGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurPrototipo", mappedBy="contratoDetalleRel")
      */
     protected $prototiposContratoDetalleRel;
@@ -245,22 +257,6 @@ class TurContratoDetalle
      * @ORM\OneToMany(targetEntity="TurContratoDetalleCompuesto", mappedBy="contratoDetalleRel")
      */
     protected $contratoDetallesCompuestosContratoDetalleRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -308,6 +304,22 @@ class TurContratoDetalle
     public function setCodigoConceptoFk($codigoConceptoFk): void
     {
         $this->codigoConceptoFk = $codigoConceptoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoItemFk()
+    {
+        return $this->codigoItemFk;
+    }
+
+    /**
+     * @param mixed $codigoItemFk
+     */
+    public function setCodigoItemFk($codigoItemFk): void
+    {
+        $this->codigoItemFk = $codigoItemFk;
     }
 
     /**
@@ -388,6 +400,38 @@ class TurContratoDetalle
     public function setFechaHasta($fechaHasta): void
     {
         $this->fechaHasta = $fechaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraDesde()
+    {
+        return $this->horaDesde;
+    }
+
+    /**
+     * @param mixed $horaDesde
+     */
+    public function setHoraDesde($horaDesde): void
+    {
+        $this->horaDesde = $horaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraHasta()
+    {
+        return $this->horaHasta;
+    }
+
+    /**
+     * @param mixed $horaHasta
+     */
+    public function setHoraHasta($horaHasta): void
+    {
+        $this->horaHasta = $horaHasta;
     }
 
     /**
@@ -729,17 +773,17 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
-    public function getEstadoCerrado()
+    public function getEstadoTerminado()
     {
-        return $this->estadoCerrado;
+        return $this->estadoTerminado;
     }
 
     /**
-     * @param mixed $estadoCerrado
+     * @param mixed $estadoTerminado
      */
-    public function setEstadoCerrado($estadoCerrado): void
+    public function setEstadoTerminado($estadoTerminado): void
     {
-        $this->estadoCerrado = $estadoCerrado;
+        $this->estadoTerminado = $estadoTerminado;
     }
 
     /**
@@ -841,6 +885,22 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
+    public function getItemRel()
+    {
+        return $this->itemRel;
+    }
+
+    /**
+     * @param mixed $itemRel
+     */
+    public function setItemRel($itemRel): void
+    {
+        $this->itemRel = $itemRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getModalidadRel()
     {
         return $this->modalidadRel;
@@ -905,70 +965,6 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
-    public function getCodigoItemFk()
-    {
-        return $this->codigoItemFk;
-    }
-
-    /**
-     * @param mixed $codigoItemFk
-     */
-    public function setCodigoItemFk($codigoItemFk): void
-    {
-        $this->codigoItemFk = $codigoItemFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItemRel()
-    {
-        return $this->itemRel;
-    }
-
-    /**
-     * @param mixed $itemRel
-     */
-    public function setItemRel($itemRel): void
-    {
-        $this->itemRel = $itemRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHoraDesde()
-    {
-        return $this->horaDesde;
-    }
-
-    /**
-     * @param mixed $horaDesde
-     */
-    public function setHoraDesde($horaDesde): void
-    {
-        $this->horaDesde = $horaDesde;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHoraHasta()
-    {
-        return $this->horaHasta;
-    }
-
-    /**
-     * @param mixed $horaHasta
-     */
-    public function setHoraHasta($horaHasta): void
-    {
-        $this->horaHasta = $horaHasta;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratoDetallesCompuestosContratoDetalleRel()
     {
         return $this->contratoDetallesCompuestosContratoDetalleRel;
@@ -981,6 +977,40 @@ class TurContratoDetalle
     {
         $this->contratoDetallesCompuestosContratoDetalleRel = $contratoDetallesCompuestosContratoDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+
 
 
 

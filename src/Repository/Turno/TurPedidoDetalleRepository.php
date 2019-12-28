@@ -396,8 +396,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->leftJoin("pd.puestoRel", "pu")
             ->leftJoin("pd.conceptoRel", "cs")
             ->leftJoin("pd.modalidadRel", "m")
-            ->where("pd.vrPendiente > 0")
-            ->andWhere('p.estadoAutorizado = 1');
+            ->where("pd.vrPendiente > 0");
 
         if ($codigoCliente) {
             $queryBuilder->andWhere("c.codigoClientePk = '{$codigoCliente}'");
@@ -443,7 +442,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('pd.codigoPedidoDetallePk', 'DESC');
+        $queryBuilder->addOrderBy('p.codigoClienteFk, pd.codigoGrupoFk, pd.codigoPuestoFk');
         return $queryBuilder->getQuery()->getResult();
     }
 

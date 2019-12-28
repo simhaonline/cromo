@@ -42,9 +42,9 @@
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-4 control-label col-sm-offset-6">Cerrado:</label>
+                        <label class="col-sm-4 control-label col-sm-offset-6">Terminado:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.estadoCerrado) }}
+                            {{ form_widget(form.estadoTerminado) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
@@ -70,7 +70,7 @@
             <th title="Horas nocturnas">HN</th>
             <th title="Total del contrato">VALOR</th>
             <th title="">AUT</th>
-            <th title="">CER</th>
+            <th title="">TER</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -92,7 +92,7 @@
                 <td class="numero">{{ arContrato.horasNocturnas | number_format }}</td>
                 <td class="numero">{{ arContrato.vrTotal | number_format(0, '.', ',') }}</td>
                 <td>{{ arContrato.estadoAutorizado ? "SI":"NO" }}</td>
-                <td>{{ arContrato.estadoCerrado ? "SI":"NO" }}</td>
+                <td>{{ arContrato.estadoTerminado ? "SI":"NO" }}</td>
                 {% if arContrato.estadoAutorizado %}
                     <td></td>
                 {% else %}

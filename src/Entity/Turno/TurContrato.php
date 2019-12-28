@@ -58,9 +58,9 @@ class TurContrato
     private $estadoAnulado = false;
 
     /**
-     * @ORM\Column(name="estado_cerrado", type="boolean", options={"default":false})
+     * @ORM\Column(name="estado_terminado", type="boolean", options={"default":false})
      */
-    private $estadoCerrado = false;
+    private $estadoTerminado = false;
 
     /**
      * @ORM\Column(name="fecha_cierre", type="date", nullable=true)
@@ -148,11 +148,6 @@ class TurContrato
     private $vrTotal = 0;
 
     /**
-     * @ORM\Column(name="vr_total_servicio", type="float", options={"default":0})
-     */
-    private $vrTotalServicio = 0;
-
-    /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
      */
     private $usuario;
@@ -236,6 +231,38 @@ class TurContrato
     /**
      * @return mixed
      */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * @param mixed $soporte
+     */
+    public function setSoporte($soporte): void
+    {
+        $this->soporte = $soporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaGeneracion()
+    {
+        return $this->fechaGeneracion;
+    }
+
+    /**
+     * @param mixed $fechaGeneracion
+     */
+    public function setFechaGeneracion($fechaGeneracion): void
+    {
+        $this->fechaGeneracion = $fechaGeneracion;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEstadoAutorizado()
     {
         return $this->estadoAutorizado;
@@ -284,17 +311,49 @@ class TurContrato
     /**
      * @return mixed
      */
-    public function getEstadoCerrado()
+    public function getEstadoTerminado()
     {
-        return $this->estadoCerrado;
+        return $this->estadoTerminado;
     }
 
     /**
-     * @param mixed $estadoCerrado
+     * @param mixed $estadoTerminado
      */
-    public function setEstadoCerrado($estadoCerrado): void
+    public function setEstadoTerminado($estadoTerminado): void
     {
-        $this->estadoCerrado = $estadoCerrado;
+        $this->estadoTerminado = $estadoTerminado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaCierre()
+    {
+        return $this->fechaCierre;
+    }
+
+    /**
+     * @param mixed $fechaCierre
+     */
+    public function setFechaCierre($fechaCierre): void
+    {
+        $this->fechaCierre = $fechaCierre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoUsuarioCierre()
+    {
+        return $this->codigoUsuarioCierre;
+    }
+
+    /**
+     * @param mixed $codigoUsuarioCierre
+     */
+    public function setCodigoUsuarioCierre($codigoUsuarioCierre): void
+    {
+        $this->codigoUsuarioCierre = $codigoUsuarioCierre;
     }
 
     /**
@@ -540,22 +599,6 @@ class TurContrato
     /**
      * @return mixed
      */
-    public function getVrTotalServicio()
-    {
-        return $this->vrTotalServicio;
-    }
-
-    /**
-     * @param mixed $vrTotalServicio
-     */
-    public function setVrTotalServicio($vrTotalServicio): void
-    {
-        $this->vrTotalServicio = $vrTotalServicio;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getUsuario()
     {
         return $this->usuario;
@@ -648,87 +691,6 @@ class TurContrato
     {
         $this->contratosDetallesContratoRel = $contratosDetallesContratoRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaGeneracion()
-    {
-        return $this->fechaGeneracion;
-    }
-
-    /**
-     * @param mixed $fechaGeneracion
-     */
-    public function setFechaGeneracion($fechaGeneracion): void
-    {
-        $this->fechaGeneracion = $fechaGeneracion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSoporte()
-    {
-        return $this->soporte;
-    }
-
-    /**
-     * @param mixed $soporte
-     */
-    public function setSoporte($soporte): void
-    {
-        $this->soporte = $soporte;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaCierre()
-    {
-        return $this->fechaCierre;
-    }
-
-    /**
-     * @param mixed $fechaCierre
-     */
-    public function setFechaCierre($fechaCierre): void
-    {
-        $this->fechaCierre = $fechaCierre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoUsuarioCierre()
-    {
-        return $this->codigoUsuarioCierre;
-    }
-
-    /**
-     * @param mixed $codigoUsuarioCierre
-     */
-    public function setCodigoUsuarioCierre($codigoUsuarioCierre): void
-    {
-        $this->codigoUsuarioCierre = $codigoUsuarioCierre;
-    }
-
 
 
 }

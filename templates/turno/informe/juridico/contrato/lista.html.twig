@@ -60,12 +60,12 @@
             <th>AUT</th>
             <th>APR</th>
             <th>ANU</th>
-            <th>CER</th>
+            <th>TER</th>
             <th>CANT</th>
             <th>ESTRATO</th>
             <th>HORAS</th>
-            <th TITLE="Horas diurnas">HD</th>
-            <th  TITLE="Horas nocturnas">HN</th>
+            <th title="Horas diurnas">HD</th>
+            <th title="Horas nocturnas">HN</th>
             <th>COSTO</th>
             <th>CONTRATO</th>
             <th>PRECIO AJUSTADO</th>
@@ -75,7 +75,6 @@
             <td>BASE AIU</td>
             <td>BASE</td>
             <td>TOTAL</td>
-            <td>TOTAL SERVICIO</td>
             <td>USUARIO</td>
         </tr>
         </thead>
@@ -89,7 +88,7 @@
                 <td>{{ arContrato.estadoAutorizado?"SI":"NO" }}</td>
                 <td>{{ arContrato.estadoAprobado?"SI":"NO" }}</td>
                 <td>{{ arContrato.estadoAnulado?"SI":"NO" }}</td>
-                <td>{{ arContrato.estadoCerrado?"SI":"NO" }}</td>
+                <td>{{ arContrato.estadoTerminado?"SI":"NO" }}</td>
                 <td>{{ arContrato.cantidad }}</td>
                 <td>{{ arContrato.estrato }}</td>
                 <td>{{ arContrato.horas }}</td>
@@ -104,7 +103,6 @@
                 <td CLASS="numero">{{ arContrato.vrBaseAiu | number_format(0, '.', ',') }}</td>
                 <td CLASS="numero">{{ arContrato.vrSalarioBase | number_format(0, '.', ',') }}</td>
                 <td CLASS="numero">{{ arContrato.vrTotal | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContrato.vrTotalServicio | number_format(0, '.', ',') }}</td>
                 <td>{{ arContrato.usuario }}</td>
             </tr>
         {% endfor %}

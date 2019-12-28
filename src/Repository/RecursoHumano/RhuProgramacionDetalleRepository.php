@@ -282,7 +282,7 @@ class RhuProgramacionDetalleRepository extends ServiceEntityRepository
     public function pagoPrimaDeduccion($codigoEmpleado, $tipoPago)
     {
         $em = $this->getEntityManager();
-        $strSql = "SELECT ppd.codigoProgramacionDetallePk, ppd.vrNetoPagar, ppd.diasAusentismo, ppd.diasReales, ppd.fechaHasta, ppd.fechaHastaPago FROM App\Entity\RecursoHumano\RhuProgramacionDetalle ppd JOIN ppd.programacionRel pp" .
+        $strSql = "SELECT ppd.codigoProgramacionDetallePk, ppd.vrNeto, ppd.diasAusentismo, ppd.dias, ppd.fechaHasta, ppd.fechaHastaContrato FROM App\Entity\RecursoHumano\RhuProgramacionDetalle ppd JOIN ppd.programacionRel pp" .
             " WHERE ppd.codigoEmpleadoFk = {$codigoEmpleado} AND pp.codigoPagoTipoFk={$tipoPago} ORDER BY ppd.fechaHasta DESC";
         $query = $em->createQuery($strSql);
         //$query->getMaxResults(1);

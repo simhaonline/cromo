@@ -834,7 +834,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         $arLiquidacion->setVrIngresoBasePrestacionPrimasInicial($ibpPrimasInicial);
                         $arLiquidacion->setVrSalarioPromedioPrimas($salarioPromedioPrimas);
                     } else {
-                        $arLiquidacion->setDiasPrimas(0);
+                        $arLiquidacion->setDiasPrima(0);
                         $arLiquidacion->setVrPrima(0);
                         $arLiquidacion->setVrIngresoBasePrestacionPrimas(0);
                         $arLiquidacion->setVrIngresoBasePrestacionPrimasInicial(0);

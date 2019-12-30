@@ -30,6 +30,6 @@ class TurConceptoRepository extends ServiceEntityRepository
         if ($session->get('filtroTurConceptoCodigo') != '') {
             $queryBuilder->andWhere("tc.codigoConceptoPk = {$session->get('filtroTurConceptoCodigo')} ");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 }

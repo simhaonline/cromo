@@ -53,7 +53,7 @@ class ConceptoController extends ControllerListenerGeneral
         }
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository($this->clase)->parametrosExcel(), "Excel");
+                General::get()->setExportar($em->getRepository(TurConcepto::class)->lista(), "conceptos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arData = $request->request->get('ChkSeleccionar');

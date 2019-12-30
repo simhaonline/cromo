@@ -19,7 +19,7 @@ class ContratoTipoType extends AbstractType
     {
         $builder
             ->add('codigoContratoTipoPk',TextType::class,['required' => true,'label' => 'Codigo contrato tipo:'])
-            ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
+            ->add('nombreCorto',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('contratoClaseRel',EntityType::class,[
                 'class' => RhuContratoClase::class,
                 'query_builder' => function(EntityRepository $er){

@@ -215,11 +215,22 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function informe()
+    public function informe($raw)
     {
-        $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd');
-        $queryBuilder
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $codigoPedidoDetalle = null;
+        $codigoPuesto = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $codigoPedidoDetalle = $filtros['codigoPedidoDetalle'] ?? null;
+            $codigoPuesto = $filtros['codigoPuesto'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
             ->select('pd.codigoPedidoDetallePk')
             ->addSelect('pd.cantidad')
             ->addSelect('pd.diaDesde')
@@ -245,9 +256,23 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('c.nombre as conceptoNombre')
             ->addSelect('m.nombre as modalidadNombre')
             ->leftJoin('pd.conceptoRel', 'c')
-            ->leftJoin('pd.modalidadRel', 'm');
+            ->leftJoin('pd.modalidadRel', 'm')
+            ->leftJoin('pd.pedidoRel ', 'p')
+            ->leftJoin('p.clienteRel ', 'cl');
 
-        return $queryBuilder;
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("cl.codigoClientePk = '{$codigoCliente}'");
+        }
+        if ($codigoPedidoDetalle) {
+            $queryBuilder->andWhere("pd.codigoPedidoDetallePk = '{$codigoPedidoDetalle}'");
+        }
+        if ($codigoPuesto) {
+            $queryBuilder->andWhere("pd.codigoPuestoFk = '{$codigoPuesto}'");
+        }
+
+        $queryBuilder->addOrderBy('pd.codigoPedidoDetallePk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function pendienteFacturar($raw, $codigoCliente)

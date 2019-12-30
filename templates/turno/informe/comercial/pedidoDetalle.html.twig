@@ -9,8 +9,56 @@
             </header>
             <div>
                 <div class="widget-body">
-
-
+                    <div class="form-group form-group-sm">
+                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                        <div class="col-sm-11">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.codigoClienteFk) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombreCorto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                                <a class="btn btn-default btn-sm"
+                                                   href="javascript:abrirVentana3('{{ path('transporte_bus_cliente',
+                                                       { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Puesto:</label>
+                        <div class="col-sm-11">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="input-group">
+                                        {{ form_widget(form.codigoPuestoFk) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-10">
+                                    <div class="input-group">
+                                        <input id="form_txtNombrePuesto" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                                <a class="btn btn-default btn-sm"
+                                                   href="javascript:abrirVentana3('{{ path('turno_buscar_puesto',
+                                                       { 'campoCodigo': 'form_codigoPuestoFk', 'campoNombre': 'form_txtNombrePuesto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="" class="col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoPedidoDetallePk, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group form-group-sm">
                     <div class="col-sm-offset-2 col-sm-10">
@@ -46,7 +94,7 @@
             <th title="BASE IVA">BASE IVA</th>
             <th title="IVA">IVA</th>
             <th title="BASE PORCENTAJE IVA">PORCENTAJE IVA</th>
-            <th >SUBTOTAL</th>
+            <th>SUBTOTAL</th>
         </tr>
         </thead>
         <tbody>
@@ -64,17 +112,17 @@
                 <td>{{ arPedidosDetalle.sabado? "SI":"NO" }}</td>
                 <td>{{ arPedidosDetalle.domingo? "SI":"NO" }}</td>
                 <td>{{ arPedidosDetalle.festivo? "SI":"NO" }}</td>
-                <td>{{ arPedidosDetalle.horasProgramadas}}</td>
-                <td>{{ arPedidosDetalle.horasDiurnasProgramadas}}</td>
-                <td>{{ arPedidosDetalle.horasNocturnasProgramadas}}</td>
-                <td>{{ arPedidosDetalle.conceptoNombre}}</td>
-                <td>{{ arPedidosDetalle.modalidadNombre}}</td>
+                <td>{{ arPedidosDetalle.horasProgramadas }}</td>
+                <td>{{ arPedidosDetalle.horasDiurnasProgramadas }}</td>
+                <td>{{ arPedidosDetalle.horasNocturnasProgramadas }}</td>
+                <td>{{ arPedidosDetalle.conceptoNombre }}</td>
+                <td>{{ arPedidosDetalle.modalidadNombre }}</td>
                 <td class="numero">{{ arPedidosDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arPedidosDetalle.vrPrecioAjustado| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedidosDetalle.porcentajeBaseIva| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedidosDetalle.porcentajeIva| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedidosDetalle.vrIva| number_format(0, '.', ',')}}</td>
-                <td class="numero">{{ arPedidosDetalle.vrSubtotal| number_format(0, '.', ',')}}</td>
+                <td class="numero">{{ arPedidosDetalle.vrPrecioAjustado| number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPedidosDetalle.porcentajeBaseIva| number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPedidosDetalle.porcentajeIva| number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPedidosDetalle.vrIva| number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPedidosDetalle.vrSubtotal| number_format(0, '.', ',') }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -87,6 +135,9 @@
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arPedidosDetalles) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
     </div>
     <div class="btn-toolbar" style="float: right">
         <div class="btn-group">

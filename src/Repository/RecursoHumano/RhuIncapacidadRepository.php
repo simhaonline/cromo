@@ -289,6 +289,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $douVrDiaSalarioMinimo = $salario / 30;
             $salarioEmpleado = $douVrDia * 30;
             $douPorcentajePago = $arIncapacidad->getIncapacidadTipoRel()->getConceptoRel()->getPorcentaje();
+            $douPorcentajePagoEmpresa = $arIncapacidad->getIncapacidadTipoRel()->getConceptoEmpresaRel()->getPorcentaje();
             $arIncapacidad->setPorcentajePago($douPorcentajePago);
             if ($arIncapacidad->getIncapacidadTipoRel()->getCodigoIncapacidadTipoPk() == "GEN") {
                 if ($salarioEmpleado <= $salario) {
@@ -312,7 +313,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                         $douVrDia = $douVrDiaSalarioMinimo;
                     }
                 }
-                if ($salarioEmpleado > ($salario * 1.5) || $arConfiguracion->getLiquidarIncapacidadSinBase()) {
+                if ($salarioEmpleado > ($salario * 1.5)) {
                     $floVrIncapacidad = $intDiasCobro * $douVrDia;
                     $floVrIncapacidad = ($floVrIncapacidad * $douPorcentajePago) / 100;
                     $floVrIncapacidadEmpleado = $intDias * $douVrDia;
@@ -330,6 +331,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $floVrIncapacidadEmpleado = round($floVrIncapacidadEmpleado);
             $douVrHora = ($floVrIncapacidadEmpleado / $intDias) / 8;
             $douVrHoraEmpresa = (($intDias * $douVrDia) / $intDias) / 8;
+            $douVrHoraEmpresa = $douVrHoraEmpresa * $douPorcentajePagoEmpresa / 100;
             $arIncapacidad->setVrHora($douVrHora);
             $arIncapacidad->setVrHoraEmpresa($douVrHoraEmpresa);
             $arIncapacidad->setVrCobro($floVrIncapacidad);

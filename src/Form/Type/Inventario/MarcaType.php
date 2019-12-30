@@ -27,22 +27,4 @@ class MarcaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoMarcaPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"}                
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoMarcaPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"}                                         
-        ]';
-        return $campos;
-    }
 }

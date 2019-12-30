@@ -17,4 +17,17 @@ class TteCostoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteCosto::class);
     }
 
+    public function lista(){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteCosto::class, 't')
+            ->select('t.codigoCostoPk')
+            ->addSelect('t.vrPeso')
+            ->addSelect('co.nombre as ciududOrigen')
+            ->addSelect('cd.nombre as ciuduadDestino')
+            ->leftJoin('t.ciudadDestinoRel', 'cd')
+            ->leftJoin('t.ciudadOrigenRel', 'co');
+
+        $queryBuilder->addOrderBy('t.codigoCostoPk', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

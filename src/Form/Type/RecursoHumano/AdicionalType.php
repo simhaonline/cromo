@@ -50,35 +50,4 @@ class AdicionalType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAdicionalPk","tipo":"pk"    ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
-            {"campo":"codigoConceptoFk", "tipo":"texto" ,"ayuda":"Codigo del concepto" ,"titulo":"CODIGO"},
-            {"campo":"conceptoRel.nombre", "tipo":"texto" ,"ayuda":"Codigo del concepto" ,"titulo":"CONCEPTO", "relacion":"SI"},
-            {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto"  ,"ayuda":"Numero de identificacion del empleado" ,"titulo":"IDENTIFICACION" ,"relacion":"SI"},
-            {"campo":"empleadoRel.nombreCorto"         ,"tipo":"texto"  ,"ayuda":"Nombre del empleado"                   ,"titulo":"EMPLEADO"         ,"relacion":"SI"},             
-            {"campo":"detalle",          "tipo":"texto" ,"ayuda":"Detalle del registro","titulo":"DETALLE"},
-            {"campo":"fecha",            "tipo":"fecha" ,"ayuda":"Fecha"               ,"titulo":"FECHA"},
-            {"campo":"vrValor",          "tipo":"moneda","ayuda":"Valor del anticipo"  ,"titulo":"VALOR"},
-            {"campo":"permanente",       "tipo":"bool"  ,"ayuda":"Permanente"          ,"titulo":"PER"},
-            {"campo":"aplicaNomina", "tipo":"bool"  ,"ayuda":"Aplica para nominas"   ,"titulo":"NOM"},                     
-            {"campo":"aplicaPrima",   "tipo":"bool"  ,"ayuda":"Aplica para primas"     ,"titulo":"PRI"},                     
-            {"campo":"estadoInactivo",    "tipo":"bool"  ,"ayuda":"Estado anulado"      ,"titulo":"INA"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoAdicionalPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"codigoConceptoFk",  "tipo":"EntityType", "propiedades":{"class":"RhuConcepto","choice_label":"nombre","label":"Concepto"}},
-            {"child":"codigoEmpleadoFk",  "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
-            {"child":"estadoInactivo",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}}
-            
-        ]';
-
-        return $campos;
-    }
 }

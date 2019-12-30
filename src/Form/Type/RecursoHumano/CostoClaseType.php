@@ -30,25 +30,4 @@ class CostoClaseType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoCostoClasePk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"operativo",          "tipo":"bool",  "ayuda":"Operativo",           "titulo":"OP"},
-            {"campo":"orden",              "tipo":"texto", "ayuda":"Orden",               "titulo":"ORDEN"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoCostoClasePk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"operativo",          "tipo":"bool",  "ayuda":"Operativo",           "titulo":"OP"},
-            {"campo":"orden",              "tipo":"texto", "ayuda":"Orden",               "titulo":"ORDEN"}
-        ]';
-        return $campos;
-    }
 }

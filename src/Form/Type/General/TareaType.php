@@ -50,17 +50,4 @@ class TareaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoTareaPk",           "tipo":"pk"    ,"ayuda":"Codigo del registro"           ,"titulo":"ID"},
-            {"campo":"codigoTareaPrioridadFk",       "tipo":"texto" ,"ayuda":"Prioridad"            ,"titulo":"PRIORIDAD"},
-            {"campo":"titulo",                  "tipo":"texto" ,"ayuda":"Titulo de la tarea"            ,"titulo":"TITULO"},
-            {"campo":"fecha",                   "tipo":"fecha" ,"ayuda":"Fecha de registro de la tarea" ,"titulo":"FECHA"},
-            {"campo":"descripcion",             "tipo":"texto" ,"ayuda":"Descripción de la tarea"       ,"titulo":"DESCRIPCION"},
-            {"campo":"usuarioAsigna",           "tipo":"texto" ,"ayuda":"Usuario que asgina la tarea"   ,"titulo":"ASIGNA"},
-            {"campo":"usuarioRecibe",           "tipo":"texto" ,"ayuda":"Usuario que recibe la tarea"   ,"titulo":"RECIBE"}
-        ]';
-        return $campos;
-    }
 }

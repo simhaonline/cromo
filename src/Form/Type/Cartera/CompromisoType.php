@@ -29,21 +29,4 @@ class CompromisoType extends AbstractType
         ]);
     }
 
-
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoClienteFk",    "tipo":"TextType",  "propiedades":{"label":"Cliente"}},
-            {"child":"codigoCompromisoPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"fechaCompromisoDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaCompromisoHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",     "tipo":"ChoiceType","propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",      "tipo":"ChoiceType","propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

@@ -27,23 +27,4 @@ class EgresoTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoEgresoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaFk",     "tipo":"texto", "ayuda":"Numero de cuenta a la que esta asociada","titulo":"CUENTA"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoEgresoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaFk",     "tipo":"texto", "ayuda":"Numero de cuenta a la que esta asociada","titulo":"CUENTA"}
-        ]';
-        return $campos;
-    }
 }

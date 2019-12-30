@@ -47,26 +47,4 @@ class SubgrupoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSubgrupoPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"GRUPO", "relacion":""},
-            {"campo":"lineaRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre de la linea",         "titulo":"LINEA", "relacion":""},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                     
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoSubgrupoPk",      "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"grupoRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"GRUPO", "relacion":""},
-            {"campo":"lineaRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre de la linea",         "titulo":"LINEA", "relacion":""},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                                            
-        ]';
-        return $campos;
-    }
 }

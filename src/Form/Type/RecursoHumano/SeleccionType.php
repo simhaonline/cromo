@@ -140,28 +140,4 @@ class SeleccionType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSeleccionPk",     "tipo":"pk"      ,"ayuda":"Codigo del aspirante",                  "titulo":"ID"},
-            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del aspirante","titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del aspirante",                  "titulo":"NOMBRE"},
-            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del aspirante",                "titulo":"TELEFONO"},
-            {"campo":"celular",               "tipo":"texto"   ,"ayuda":"Celular del aspirante",                 "titulo":"TELEFONO"},
-            {"campo":"correo",                "tipo":"texto"   ,"ayuda":"Correo del aspirante",                  "titulo":"CORREO"},
-            {"campo":"direccion",             "tipo":"texto"   ,"ayuda":"Direccion de residencia del aspirante", "titulo":"DIRECCION"}             
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoSeleccionPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"nombreCorto",       "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}, "operador":"like"},
-            {"child":"estadoAutorizado",  "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",    "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}}
-        ]';
-        return $campos;
-    }
 }

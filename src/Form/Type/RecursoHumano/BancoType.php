@@ -39,32 +39,4 @@ class BancoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoBancoPk","tipo":"pk"    ,"ayuda":"Codigo del banco" ,"titulo":"ID"},
-            {"campo":"nombre", "tipo":"texto" ,"ayuda":"Nombre del banco" ,"titulo":"NOMBRE"},
-            {"campo":"codigoGeneral", "tipo":"texto" ,"ayuda":"Codigo general del banco" ,"titulo":"CODIGO_GENERAL"},
-            {"campo":"codigoGeneralBancolombia", "tipo":"texto" ,"ayuda":"Codigo general de bancolombia" ,"titulo":"CODIGO GENERAL BANCOLOMBIA"},                
-            {"campo":"direccion",          "tipo":"texto" ,"ayuda":"Direccion de la entidad","titulo":"DIRECCION"},
-            {"campo":"telefono",          "tipo":"texto" ,"ayuda":"Telefono de la entidad","titulo":"TELEFONO"},
-            {"campo":"numeroDigitos",          "tipo":"texto" ,"ayuda":"Numero de digitos de la cuenta","titulo":"NUMERO DIGITOS"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoAdicionalPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"codigoConceptoFk",  "tipo":"EntityType", "propiedades":{"class":"RhuConcepto","choice_label":"nombre","label":"Concepto"}},
-            {"child":"codigoEmpleadoFk",  "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
-            {"child":"fechaDesde",        "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",        "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoInactivo",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"permanente",        "tipo":"ChoiceType", "propiedades":{"label":"permanente",     "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

@@ -44,6 +44,4 @@ class ConfiguracionType extends AbstractType {
         return 'App_cartera';
     }
 
-
-
 }

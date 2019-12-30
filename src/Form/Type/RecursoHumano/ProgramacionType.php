@@ -59,36 +59,4 @@ class ProgramacionType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoProgramacionPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                       ,"titulo":"ID"},
-            {"campo":"pagoTipoRel.nombre",    "tipo":"texto"   ,"ayuda":"Nombre del tipo de pago"                   ,"titulo":"TIPO" ,"relacion":""},
-            {"campo":"nombre",                "tipo":"texto"   ,"ayuda":"Nombre dado a la programación"             ,"titulo":"NOMBRE"},
-            {"campo":"grupoRel.nombre",       "tipo":"texto"   ,"ayuda":"Nombre del grupo"                          ,"titulo":"GRUPO","relacion":""},
-            {"campo":"fechaDesde",            "tipo":"fecha"   ,"ayuda":"Fecha en que inicia el periodo"            ,"titulo":"DESDE"},
-            {"campo":"fechaHasta",            "tipo":"fecha"   ,"ayuda":"Fecha en que termina el periodo"           ,"titulo":"HASTA"},
-            {"campo":"dias",                  "tipo":"moneda"   ,"ayuda":"Numero de dias que compone el perdiodo"   ,"titulo":"DIAS"},
-            {"campo":"cantidad",              "tipo":"moneda"   ,"ayuda":"Cantidad de registros en la programacion" ,"titulo":"#"},
-            {"campo":"estadoAutorizado"                 ,"tipo":"bool"  ,"ayuda":"Estado autorizado"                            ,"titulo":"AUT"},
-            {"campo":"estadoAprobado"                 ,"tipo":"bool"  ,"ayuda":"Estado aprobado"                            ,"titulo":"APR"},
-            {"campo":"estadoContabilizado"                 ,"tipo":"bool"  ,"ayuda":"Estado contabilizado"                            ,"titulo":"CON"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoProgramacionPk", "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"codigoPagoTipoFk",     "tipo":"EntityType","propiedades":{"class":"RhuPagoTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"nombre",               "tipo":"TextType",  "propiedades":{"label":"Nombre"}},
-            {"child":"codigoGrupoFk",        "tipo":"EntityType","propiedades":{"class":"RhuGrupo","choice_label":"nombre","label":"Grupo"}},
-            {"child":"fechaDesdeDesde",      "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHastaHasta",      "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}}
-        ]';
-
-        return $campos;
-    }
 }

@@ -28,23 +28,4 @@ class ClasificacionRiesgoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoClasificacionRiesgoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"porcentaje",                  "tipo":"texto", "ayuda":"Porcentaje",          "titulo":"%"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoClasificacionRiesgoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"porcentaje",                  "tipo":"texto", "ayuda":"Porcentaje",          "titulo":"%"}
-        ]';
-        return $campos;
-    }
 }

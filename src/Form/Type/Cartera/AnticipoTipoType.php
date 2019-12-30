@@ -44,26 +44,4 @@ class AnticipoTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAnticipoTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                       "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"CONSECUTIVO"},
-            {"campo":"codigoComprobanteFk",                     "tipo":"texto"  ,"ayuda":"Comprobante contable",     "titulo":"COMPROBANTE"},
-            {"campo":"prefijo",                     "tipo":"texto"  ,"ayuda":"Prefijo para contabilidad",     "titulo":"PREFIJO"}          
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoAnticipoTipoPk",    "tipo":"pk"     ,"ayuda":"Codigo del registro",             "titulo":"ID"},
-            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"CONSECUTIVO"}                                         
-        ]';
-        return $campos;
-    }
 }

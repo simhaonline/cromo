@@ -27,22 +27,4 @@ class LineaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoLineaPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                     
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoLineaPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                                       
-        ]';
-        return $campos;
-    }
 }

@@ -33,33 +33,4 @@ class AsesorType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAsesorPk",                 "tipo":"pk", "ayuda":"codigo del registro",                   "titulo":"ID"},
-            {"campo":"numeroIdentificacion",           "tipo":"texto", "ayuda":"numero identificacion",              "titulo":"IDENTIFICACION"},
-            {"campo":"nombre",                         "tipo":"texto", "ayuda":"Nombre del asesor",                  "titulo":"NOMBRE"},
-            {"campo":"direccion",                      "tipo":"texto", "ayuda":"Direccion",                          "titulo":"DIRECCION"},
-            {"campo":"telefono",                       "tipo":"texto", "ayuda":"Telefono",                           "titulo":"TELEFONO"},
-            {"campo":"celular",                        "tipo":"texto", "ayuda":"Celular",                            "titulo":"CELULAR"},
-            {"campo":"email",                          "tipo":"texto", "ayuda":"Email",                              "titulo":"EMAIL"},
-            {"campo":"usuario",                          "tipo":"texto", "ayuda":"Usuario",                              "titulo":"USUARIO"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"campo":"numeroIdentificacion",           "tipo":"texto", "ayuda":"numero identificacion",              "titulo":"IDENTIFICACION"},
-            {"campo":"nombre",                         "tipo":"texto", "ayuda":"Nombre del asesor",                  "titulo":"NOMBRE"},
-            {"campo":"direccion",                      "tipo":"texto", "ayuda":"Direccion",                          "titulo":"DIRECCION"},
-            {"campo":"telefono",                       "tipo":"texto", "ayuda":"Telefono",                           "titulo":"TELEFONO"},
-            {"campo":"celular",                        "tipo":"texto", "ayuda":"Celular",                            "titulo":"CELULAR"},
-            {"campo":"email",                          "tipo":"texto", "ayuda":"Email",                              "titulo":"EMAIL"}
-        ]';
-
-        return $campos;
-    }
 }

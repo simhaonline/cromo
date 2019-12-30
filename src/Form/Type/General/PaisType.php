@@ -27,12 +27,4 @@ class PaisType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoPaisPk",    "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}            
-        ]';
-        return $campos;
-    }
 }

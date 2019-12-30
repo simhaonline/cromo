@@ -92,22 +92,4 @@ class PuestoType  extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoPuestoPk",  "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
-            {"campo":"nombre",          "tipo":"texto"   ,"ayuda":"Nombre del puesto"                       ,"titulo":"NOMBRE"}
-
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoPuestoPk",      "tipo":"TextType",    "propiedades":{"label":"codigoPuestoPk"}},
-            {"child":"nombre",      "tipo":"TextType",    "propiedades":{"label":"nombre"}}
-        ]';
-        return $campos;
-    }
 }

@@ -26,24 +26,4 @@ class ServicioTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoServicioTipoPk",                                        "tipo":"pk",         "ayuda":"Codigo control tipo",                 "titulo":"ID"},
-            {"campo":"nombre",                                                      "tipo":"texto",      "ayuda":"Nombre",                              "titulo":"Nombre"}
-        ]';
-        return $campos;
-
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoServicioTipoPk",                "tipo":"TextType",      "propiedades":{"label":"Codigo"},     "operador":"like"},
-            {"child":"nombre",                              "tipo":"TextType",      "propiedades":{"label":"Nombre"},     "operador":"like"}
-        ]';
-
-        return $campos;
-    }
 }

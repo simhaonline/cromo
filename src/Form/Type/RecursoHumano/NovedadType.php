@@ -52,32 +52,4 @@ class NovedadType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-        {"campo":"codigoNovedadPk",                 "tipo":"pk"    ,"ayuda":"Codigo del registro"        ,"titulo":"ID"},
-        {"campo":"novedadTipoRel.nombre",           "tipo":"texto" ,"ayuda":"Nombre del tipo de novedad" ,"titulo":"TIPO", "relacion":""},
-        {"campo":"fecha",                           "tipo":"fecha" ,"ayuda":"Fecha del registro"         ,"titulo":"FECHA"},
-        {"campo":"codigoEmpleadoFk",                "tipo":"texto" ,"ayuda":"Codigo del empleado"        ,"titulo":"EMPLEADO"},
-        {"campo":"empleadoRel.nombreCorto",         "tipo":"texto" ,"ayuda":"Nombre del empleado"        ,"titulo":"NOMBRE", "relacion":""},
-        {"campo":"empleadoRel.numeroIdentificacion","tipo":"texto" ,"ayuda":"Identificacion del empleado","titulo":"IDENTIFICACION", "relacion":""},
-        {"campo":"codigoContratoFk",                "tipo":"texto" ,"ayuda":"Codigo del contrato"        ,"titulo":"CONTRATO"},
-        {"campo":"fechaDesde",                      "tipo":"fecha" ,"ayuda":"Fecha desde"                ,"titulo":"DESDE"},                     
-        {"campo":"fechaHasta",                      "tipo":"fecha" ,"ayuda":"Fecha hasta"                ,"titulo":"HASTA"}]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoNovedadPk",     "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"codigoNovedadTipoFk", "tipo":"EntityType", "propiedades":{"class":"RhuNovedadTipo","choice_label":"nombre","label":"Novedad tipo"}},
-            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
-            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}}
-        ]';
-
-        return $campos;
-    }
-
 }

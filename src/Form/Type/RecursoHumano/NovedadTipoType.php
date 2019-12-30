@@ -47,27 +47,4 @@ class NovedadTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"subTipo",             "tipo":"texto", "ayuda":"Subtipo del registro L = LICENCIA, I = INCAPACIDAD", "titulo":"SUBTIPO"},
-            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"},
-            {"campo":"abreviatura",         "tipo":"texto", "ayuda":"Abreviatura del nombre del registro ",    "titulo":"ABR"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"subTipo",             "tipo":"texto", "ayuda":"Subtipo del registro L = LICENCIA, I = INCAPACIDAD", "titulo":"SUBTIPO"},
-            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"},
-            {"campo":"abreviatura",         "tipo":"texto", "ayuda":"Abreviatura del nombre del registro ",    "titulo":"ABR"}
-        ]';
-        return $campos;
-    }
 }

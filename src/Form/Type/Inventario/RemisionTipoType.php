@@ -34,25 +34,4 @@ class RemisionTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoRemisionTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las remisiones tipo",       "titulo":"NOMBRE"},   
-            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"CONSECUTIVO"},
-            {"campo":"operacionInventario",                "tipo":"numero"  ,"ayuda":"Operacion inventario",     "titulo":"OP"}             
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoRemisionTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las remisiones tipo",       "titulo":"NOMBRE"},   
-            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                                      
-        ]';
-        return $campos;
-    }
 }

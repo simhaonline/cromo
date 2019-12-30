@@ -27,22 +27,4 @@ class BodegaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoBodegaPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la bodega",           "titulo":"NOMBRE"}                     
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoBodegaPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la bodega",           "titulo":"NOMBRE"}                                             
-        ]';
-        return $campos;
-    }
 }

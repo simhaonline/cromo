@@ -47,20 +47,5 @@ class ContactoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoContactoPk",       "tipo":"pk"     ,"ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"numeroIdentificacion",   "tipo":"texto"  ,"ayuda":"Numero identificacion",   "titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",            "tipo":"texto"  ,"ayuda":"Nombre del contacto",     "titulo":"NOMBRE"},
-            {"campo":"direccion",              "tipo":"texto"  ,"ayuda":"Direccion del contacto",  "titulo":"DIRECCION"},
-            {"campo":"telefono",               "tipo":"texto"  ,"ayuda":"Telefono del contacto",   "titulo":"TELEFONO"},                                                                                      
-            {"campo":"saludo",               "tipo":"texto"  ,"ayuda":"Saludo del contacto",   "titulo":"SALUDO"},                                                                                      
-            {"campo":"cargo",               "tipo":"texto"  ,"ayuda":"cargo del contacto",   "titulo":"CARGO"},                                                                                      
-            {"campo":"especialidad",               "tipo":"texto"  ,"ayuda":"Especialidad del contacto",   "titulo":"ESPECIALIDAD"},                                                                                      
-            {"campo":"horarioVisita",               "tipo":"texto"  ,"ayuda":"Horario Visita del contacto",   "titulo":"HORARIO VISITA"},                                                                                      
-            {"campo":"secretaria",               "tipo":"texto"  ,"ayuda":"secretaria del contacto",   "titulo":"SECRETARIA"}                                                                                      
-        ]';
-        return $campos;
-    }
+
 }

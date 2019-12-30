@@ -51,38 +51,4 @@ class PedidoType extends AbstractType {
         return 'App_pedido';
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoPedidoPk",               "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"pedidoTipoRel.nombre",         "tipo":"texto",     "ayuda":"Tipo de pedido",                       "titulo":"PEDIDO TIPO",         "relacion":""},
-            {"campo":"terceroRel.nombreCorto",            "tipo":"texto",     "ayuda":"Tercero",                              "titulo":"TERCERO",         "relacion":""},
-            {"campo":"numero",                       "tipo":"texto",     "ayuda":"Numero del registro",                  "titulo":"NUMERO"},
-            {"campo":"fecha",                        "tipo":"fecha",     "ayuda":"Fecha del registro",                   "titulo":"FECHA"},
-            {"campo":"vrSubtotal",                   "tipo":"moneda",    "ayuda":"Subtotal",                             "titulo":"SUBTOTAL"},
-            {"campo":"vrIva",                        "tipo":"moneda",    "ayuda":"vrIva",                                "titulo":"IVA"},
-            {"campo":"vrNeto",                       "tipo":"moneda",    "ayuda":"vrNeto",                               "titulo":"NETO"},
-            {"campo":"vrTotal",                      "tipo":"moneda",    "ayuda":"Total",                                "titulo":"TOTAL"},
-            {"campo":"estadoAutorizado",             "tipo":"bool",      "ayuda":"Autorizado",                            "titulo":"AUT"},
-            {"campo":"estadoAprobado",               "tipo":"bool",      "ayuda":"Aprobado",                             "titulo":"APR"},
-            {"campo":"estadoAnulado",                "tipo":"bool",      "ayuda":"Anulado",                              "titulo":"ANU"}
-                                     
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"numero",                "tipo":"TextType",    "propiedades":{"label":"Numero"}},
-            {"child":"codigoPedidoPk",        "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-            {"child":"codigoTerceroFk",       "tipo":"TextType",    "propiedades":{"label":"Codigo cliente"}},
-            {"child":"codigoPedidoTipoFk",    "tipo":"EntityType",  "propiedades":{"class":"InvPedidoTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"estadoAutorizado",      "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",        "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",         "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
-        ]';
-        return $campos;
-    }
-
 }

@@ -31,22 +31,5 @@ class RequisitoCargoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoRequisitoCargoPk",              "tipo":"pk"      ,"ayuda":"Codigo del registro"                ,"titulo":"ID"},
-            {"campo":"cargoRel.nombre",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"CARGO", "relacion":""},
-            {"campo":"requisitoConceptoRel.nombre",         "tipo":"texto",   "ayuda":"",                                   "titulo":"REQUISITO", "relacion":""},
-            {"campo":"requisitoConceptoRel.general",        "tipo":"bool",   "ayuda":"",                                   "titulo":"GENERAL", "relacion":""}
-        ]';
-        return $campos;
-    }
 
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-          
-        ]';
-        return $campos;
-    }
 }

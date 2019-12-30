@@ -44,19 +44,4 @@ class NovedadTipoType extends AbstractType {
         return 'App_novedadTipo';
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[
-            {"campo":"codigoNovedadTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
-            {"campo":"interna",          "tipo":"bool",      "ayuda":"Interna",            "titulo":"INT"}
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar(){
-        return '[
-            {"campo":"codigoNovedadTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
-        ]';
-    }
-
 }

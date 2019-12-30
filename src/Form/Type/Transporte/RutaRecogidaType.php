@@ -39,19 +39,4 @@ class RutaRecogidaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[
-            {"campo":"codigoRutaRecogidaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"codigoOperacionFk",            "tipo":"texto",     "ayuda":"Codigo operacion",        "titulo":"CODIGO OPERACION"},
-            {"campo":"nombre",                       "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar(){
-        return '[
-            {"campo":"codigoRutaRecogidaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"codigoOperacionFk",            "tipo":"texto",     "ayuda":"Codigo operacion",        "titulo":"CODIGO OPERACION"},
-            {"campo":"nombre",                       "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
-        ]';
-    }
 }

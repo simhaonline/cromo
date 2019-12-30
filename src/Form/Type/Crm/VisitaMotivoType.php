@@ -27,13 +27,4 @@ class VisitaMotivoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoVisitaMotivoPk",       "tipo":"pk",        "ayuda":"Codigo",                      "titulo":"ID"},
-            {"campo":"nombre",                    "tipo":"texto",     "ayuda":"Nombre",                           "titulo":"MOTIVO"}
-        ]';
-        return $campos;
-
-    }
 }

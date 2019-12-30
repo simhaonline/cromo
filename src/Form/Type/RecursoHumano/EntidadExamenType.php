@@ -30,26 +30,4 @@ class EntidadExamenType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-        {"campo":"codigoEntidadExamenPk",        "tipo":"pk",                "ayuda":"Codigo del registro",            "titulo":"ID"},
-        {"campo":"nombre",                       "tipo":"texto",             "ayuda":"nombre",                         "titulo":"NOMBRE"},
-        {"campo":"nit",                          "tipo":"texto",             "ayuda":"Numero de identificacion tributaria", "titulo":"NIT"},
-        {"campo":"direccion",                    "tipo":"texto",             "ayuda":"Direccion de la entidad",        "titulo":"DIRECCION"},
-        {"campo":"telefono",                     "tipo":"texto",             "ayuda":"Telefono de la entidad",         "titulo":"TELEFONO"}
-        
-           
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"nombre",                "tipo":"TextType",          "propiedades":{"label":"nombre"}}
-
-        ]';
-        return $campos;
-    }
 }

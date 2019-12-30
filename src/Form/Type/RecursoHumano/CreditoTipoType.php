@@ -41,25 +41,4 @@ class CreditoTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoCreditoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"cupoMaximo",          "tipo":"moneda","ayuda":"Cupo maximo",          "titulo":"CUPO"},
-            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoCreditoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"cupoMaximo",          "tipo":"moneda","ayuda":"Cupo maximo",          "titulo":"CUPO"},
-            {"campo":"codigoConceptoFk",    "tipo":"texto", "ayuda":"Codigo concepto ",    "titulo":"CONCEPTO"}
-        ]';
-        return $campos;
-    }
 }

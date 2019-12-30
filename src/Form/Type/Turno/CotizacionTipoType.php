@@ -28,12 +28,4 @@ class CotizacionTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoCotizacionTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
 }

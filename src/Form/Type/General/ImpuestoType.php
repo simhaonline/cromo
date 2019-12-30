@@ -43,33 +43,4 @@ class ImpuestoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoImpuestoPk",                 "tipo":"pk", "ayuda":"codigo del registro",                   "titulo":"ID"},
-            {"campo":"nombre",                         "tipo":"texto", "ayuda":"Nombre del impuesto",                  "titulo":"NOMBRE"},
-            {"campo":"porcentaje",                      "tipo":"texto", "ayuda":"Direccion",                          "titulo":"DIRECCION"},
-            {"campo":"base",                       "tipo":"texto", "ayuda":"Telefono",                           "titulo":"TELEFONO"},
-            {"campo":"impuestoTipoRel.nombre",       "tipo":"texto"  ,"ayuda":"Tipo de impuesto",         "titulo":"IMPUESTO_TIPO", "relacion":""},
-            {"campo":"codigoCuentaFk",                        "tipo":"texto", "ayuda":"Celular",                            "titulo":"CELULAR"},
-            {"campo":"codigoCuentaDevolucionFk",                          "tipo":"texto", "ayuda":"Email",                              "titulo":"EMAIL"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"campo":"codigoImpuestoPk",                 "tipo":"pk", "ayuda":"codigo del registro",                   "titulo":"ID"},
-            {"campo":"nombre",                         "tipo":"texto", "ayuda":"Nombre del impuesto",                  "titulo":"NOMBRE"},
-            {"campo":"porcentaje",                      "tipo":"texto", "ayuda":"Direccion",                          "titulo":"DIRECCION"},
-            {"campo":"base",                       "tipo":"texto", "ayuda":"Telefono",                           "titulo":"TELEFONO"},
-            {"campo":"impuestoTipoRel.nombre",       "tipo":"texto"  ,"ayuda":"Tipo de impuesto",         "titulo":"IMPUESTO_TIPO", "relacion":""},
-            {"campo":"codigoCuentaFk",                        "tipo":"texto", "ayuda":"Celular",                            "titulo":"CELULAR"},
-            {"campo":"codigoCuentaDevolucionFk",                          "tipo":"texto", "ayuda":"Email",                              "titulo":"EMAIL"}
-        ]';
-
-        return $campos;
-    }
 }

@@ -58,10 +58,10 @@ class Factura extends  Controller
                 $arCliente = $em->getRepository(TurCliente::class)->find($form->get('txtCodigoCliente')->getData()??0);
                 $arCiudad = $em->getRepository(GenCiudad::class)->find($form->get('ciudad')->getData()??0);
 
-                if ($arCliente) {
+                if (is_object($arCliente)) {
                     $session->set('filtroTurInformeComercialFacturaClienteCodigo',  $arCliente->getCodigoClientePk());
                 }
-                if ($arCiudad) {
+                if (is_object($arCiudad)) {
                     $session->set('filtroTurInformeComercialFacturaCiudad',  $arCiudad->getCodigoCiudadPk());
                 }
                 $session->set('filtroTurInformeComercialFacturaFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);

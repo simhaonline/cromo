@@ -26,22 +26,4 @@ class RequisitoTipoType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoRequisitoTipoPk",            "tipo":"pk",    "ayuda":"Codigo del registro",             "titulo":"ID"},
-            {"campo":"nombre",                         "tipo":"texto", "ayuda":"Nombre",            "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoRequisitoTipoPk", "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"nombre",   "tipo":"TextType",  "propiedades":{"label":"nombre"}}
-        ]';
-
-        return $campos;
-    }
 }

@@ -53,30 +53,4 @@ class SucursalType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSucursalPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la sucursal",      "titulo":"NOMBRE"},
-            {"campo":"direccion",               "tipo":"texto"  ,"ayuda":"Direccion de la sucursal",   "titulo":"DIRECCION"},
-            {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"},
-            {"campo":"telefono",                "tipo":"texto"  ,"ayuda":"Telefono",                   "titulo":"TELEFONO"}                                                                     
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoSucursalPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre de la sucursal",      "titulo":"NOMBRE"}
-            {"campo":"direccion",               "tipo":"texto"  ,"ayuda":"Direccion de la sucursal",   "titulo":"DIRECCION"}
-            {"campo":"contacto",                "tipo":"texto"  ,"ayuda":"Contacto en la sucursal",    "titulo":"CONTACTO"}
-            {"campo":"terceroRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre del tercero",         "titulo":"TERCERO", "relacion":""},
-            {"campo":"ciudadRel.nombre",        "tipo":"texto"  ,"ayuda":"Ciudad de la sucursal",      "titulo":"CIUDAD", "relacion":""},  
-            {"campo":"telefono",                "tipo":"texto"  ,"ayuda":"Telefono",                   "titulo":"TELEFONO"}                                   
-        ]';
-        return $campos;
-    }
-
 }

@@ -28,22 +28,4 @@ class FaseType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoFasePk",    "tipo":"pk",        "ayuda":"Codigo",               "titulo":"ID"},
-            {"campo":"nombre",          "tipo":"texto",     "ayuda":"Nombre",               "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"nombre",      "tipo":"TextType",   "propiedades":{"label":"Nombre"},   "operador":"like"},
-            {"child":"codigoFasePk",      "tipo":"TextType",   "propiedades":{"label":"Identificacion"},   "operador":"like"}
-        ]';
-
-        return $campos;
-    }
 }

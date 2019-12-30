@@ -53,22 +53,4 @@ class NegocioType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoNegocioPk", "tipo":"pk",        "ayuda":"Codigo",           "titulo":"ID"},
-            {"campo":"fecha",           "tipo":"fecha",     "ayuda":"Fecha",            "titulo":"FECHA"},
-            {"campo":"fechaCierre",     "tipo":"fecha",     "ayuda":"FECHA CIERRE",     "titulo":"F.C"},
-            {"campo":"fechaNegocio",    "tipo":"fecha",     "ayuda":"FECHA NEGOCIO",    "titulo":"F.N   "}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-              {"child":"codigoClienteFk", "tipo":"TextType",   "propiedades":{"label":"Cliente"}}
-        ]';
-        return $campos;
-    }
 }

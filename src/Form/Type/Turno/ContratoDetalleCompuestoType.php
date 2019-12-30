@@ -50,6 +50,7 @@ class ContratoDetalleCompuestoType extends AbstractType
             ->add('DiasReales', CheckboxType::class, array('required'  => false))
             ->add('guardar', SubmitType::class);
     }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

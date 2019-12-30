@@ -65,22 +65,5 @@ class AnticipoType extends AbstractType
     }
 
 
-    public function getEstructuraPropiedadesFiltro()
-    {
 
-        $campos = '[
-            {"child":"codigoClienteFk",    "tipo":"TextType",  "propiedades":{"label":"Cliente"}},
-            {"child":"numero",             "tipo":"TextType",  "propiedades":{"label":"Numero"}},
-            {"child":"codigoAnticipoPk",     "tipo":"TextType",  "propiedades":{"label":"Codigo"}},
-            {"child":"codigoAnticipoTipoFk", "tipo":"EntityType","propiedades":{"class":"CarReciboTipo","choice_label":"nombre", "label":"TODOS"}},
-            {"child":"codigoAsesorFk",     "tipo":"EntityType","propiedades":{"class":"GenAsesor","choice_label":"nombre", "label":"TODOS"}},
-            {"child":"fechaDesde",         "tipo":"DateType",  "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",         "tipo":"DateType",  "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoAutorizado",   "tipo":"ChoiceType","propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",     "tipo":"ChoiceType","propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",      "tipo":"ChoiceType","propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

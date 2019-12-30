@@ -30,28 +30,4 @@ class CostoTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoCostoTipoPk",          "tipo":"pk",        "ayuda":"Codigo del registro",         "titulo":"ID"},
-            {"campo":"nombre",                     "tipo":"texto",     "ayuda":"Nombre del costo tipo",       "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                "tipo":"texto"  ,   "ayuda":"Consecutivo del registro",    "titulo":"CONSECUTIVO"},
-            {"campo":"codigoComprobanteFk",        "tipo":"texto"  ,   "ayuda":"Codigo del comprobante",      "titulo":"CONSECUTIVO"},
-            {"campo":"prefijo",        "tipo":"texto"  ,   "ayuda":"Prefijo del tipo",      "titulo":"PREFIJO"}    
-                                     
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[            
-            {"campo":"codigoCostoTipoPk",          "tipo":"pk",        "ayuda":"Codigo del registro",         "titulo":"ID"},
-            {"campo":"nombre",                     "tipo":"texto",     "ayuda":"Nombre del costo tipo",       "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                "tipo":"texto"  ,   "ayuda":"Consecutivo del registro",    "titulo":"CONSECUTIVO"},
-            {"campo":"codigoComprobanteFk",        "tipo":"texto"  ,   "ayuda":"Codigo del comprobante",      "titulo":"CONSECUTIVO"},
-            {"campo":"prefijo",        "tipo":"texto"  ,   "ayuda":"Prefijo del tipo",      "titulo":"PREFIJO"}    
-        ]';
-        return $campos;
-    }
 }

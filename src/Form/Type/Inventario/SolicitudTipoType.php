@@ -30,24 +30,4 @@ class SolicitudTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSolicitudTipoPk",       "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre de la solicitud tipo",           "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                 "tipo":"texto"  ,"ayuda":"Consecutivo para el tipo de solicitud",           "titulo":"NOMBRE"}                  
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoSolicitudTipoPk",       "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre de la solicitud tipo",           "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                 "tipo":"texto"  ,"ayuda":"Consecutivo para el tipo de solicitud",           "titulo":"NOMBRE"}                                             
-        ]';
-        return $campos;
-    }
 }

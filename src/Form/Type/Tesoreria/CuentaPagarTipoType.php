@@ -45,26 +45,4 @@ class CuentaPagarTipoType extends AbstractType {
         return 'App_tesoreria';
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoCuentaPagarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"prefijo",            "tipo":"texto"  ,"ayuda":"prefijo",     "titulo":"PREFIJO"},
-            {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaProveedorFk",                           "tipo":"texto"  ,"ayuda":"Cuenta proveedor",   "titulo":"CTA PRO"},
-            {"campo":"saldoInicial",            "tipo":"bool"  ,"ayuda":"Saldo inicial",     "titulo":"SI"}      
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoCuentaPagarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"}                                       
-        ]';
-        return $campos;
-    }
-
 }

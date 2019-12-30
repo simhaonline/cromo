@@ -36,26 +36,5 @@ class ConceptoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoConceptoPk",       "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
-            {"campo":"nombre",                 "tipo":"texto"   ,"ayuda":"",                                         "titulo":"NOMBRE"},            
-            {"campo":"horas",                  "tipo":"texto"   ,"ayuda":"Horas"                                         ,"titulo":"H"},
-            {"campo":"horasDiurnas",           "tipo":"texto"   ,"ayuda":"Horas diurnas"                                         ,"titulo":"HD"},
-            {"campo":"horasNocturnas",         "tipo":"texto"   ,"ayuda":"Horas nocturnas"                                         ,"titulo":"HN"},
-            {"campo":"porcentajeIva",          "tipo":"texto"   ,"ayuda":"Porcentaje IVA"                           ,"titulo":"IVA"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoConceptoPk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-            {"child":"nombre",               "tipo":"TextType",    "propiedades":{"label":"Nombre"}}
-        ]';
-        return $campos;
-    }
 }
 

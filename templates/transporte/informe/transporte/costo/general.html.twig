@@ -5,21 +5,17 @@
         <tr>
             <th>ID</th>
             <th>PES</th>
-            <th>VOL</th>
-            <th>COSTO</th>
-            <th>PRECIO</th>
-            <th>RENTABILIDAD</th>
+            <th>ORI</th>
+            <th>DES</th>
         </tr>
         </thead>
         <tbody>
         {% for arCosto in arCostos %}
             <tr>
                 <td>{{ arCosto.codigoCostoPk }}</td>
-                <td class="numero">{{ arCosto.vrCostoPeso | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCosto.vrCostoVolumen | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCosto.vrCosto | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCosto.vrPrecio | number_format(0, '.', ',') }}</td>
-                <td class="numero">{{ arCosto.vrRentabilidad | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arCosto.vrPeso | number_format(0, '.', ',') }}</td>
+                <td>{{ arCosto.ciududOrigen }}</td>
+                <td>{{ arCosto.ciuduadDestino }}</td>
             </tr>
         {% endfor %}
         </tbody>

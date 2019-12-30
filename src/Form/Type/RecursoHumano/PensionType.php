@@ -43,27 +43,4 @@ class PensionType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        return '[
-            {"campo":"codigoPensionPk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",  "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},
-            {"campo":"porcentajeEmpleado",  "tipo":"texto"  ,"ayuda":"Porcentaje empleado",  "titulo":"P_E"},
-            {"campo":"porcentajeEmpleador", "tipo":"texto"  ,"ayuda":"Porcentaje empleador", "titulo":"P_ER"},
-            {"campo":"conceptoRel.nombre",  "tipo":"texto"  ,"ayuda":"Orden",                "titulo":"CONCEPTO", "relacion":""},
-            {"campo":"orden",               "tipo":"texto"  ,"ayuda":"Abreviatura",          "titulo":"ORDEN"}                                  
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        return '[
-            {"campo":"codigoPensionPk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",  "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto"  ,"ayuda":"Nombre del registro",  "titulo":"NOMBRE"},
-            {"campo":"porcentajeEmpleado",  "tipo":"texto"  ,"ayuda":"Porcentaje empleado",  "titulo":"P_E"},
-            {"campo":"porcentajeEmpleador", "tipo":"texto"  ,"ayuda":"Porcentaje empleador", "titulo":"P_ER"},
-            {"campo":"conceptoRel.nombre",  "tipo":"texto"  ,"ayuda":"Orden",                "titulo":"CONCEPTO", "relacion":""},
-            {"campo":"orden",               "tipo":"texto"  ,"ayuda":"Abreviatura",          "titulo":"ORDEN"}                                  
-        ]';
-    }
 }

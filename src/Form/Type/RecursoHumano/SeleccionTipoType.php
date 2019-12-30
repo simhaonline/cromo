@@ -26,19 +26,4 @@ class SeleccionTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"nombre",        "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
 }

@@ -32,21 +32,4 @@ class ProductoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[
-            {"campo":"codigoProductoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
-            {"campo":"codigoTransporte",            "tipo":"texto",     "ayuda":"Codigo transporte",       "titulo":"CODIGO TRANSPORTE"},
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Numero",                  "titulo":"NUMERO"}
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar(){
-        return '[
-            {"campo":"codigoProductoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
-            {"campo":"codigoTransporte",            "tipo":"texto",     "ayuda":"Codigo transporte",       "titulo":"CODIGO TRANSPORTE"},
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Numero",                  "titulo":"NUMERO"}
-        ]';
-    }
 }

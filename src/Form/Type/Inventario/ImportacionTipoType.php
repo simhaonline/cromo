@@ -32,26 +32,4 @@ class ImportacionTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoImportacionTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                          "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                     "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"},
-            {"campo":"codigoComprobanteFk",                     "tipo":"texto"  ,"ayuda":"Comprobante contabilidad",     "titulo":"COMPROBANTE"},
-            {"campo":"prefijo",                     "tipo":"texto"  ,"ayuda":"Prefijo contabilidad",     "titulo":"PREFIJO"}                
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoImportacionTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre de la importacion tipo",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                                           
-        ]';
-        return $campos;
-    }
 }

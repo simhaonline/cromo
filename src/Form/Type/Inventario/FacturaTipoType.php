@@ -39,38 +39,4 @@ class FacturaTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoFacturaTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                 "tipo":"texto"  ,"ayuda":"Consecutivo de la factura",     "titulo":"CONSECUTIVO"},
-            {"campo":"prefijo",                     "tipo":"texto"  ,"ayuda":"Prefijo de facturacion",     "titulo":"PREFIJO"},
-            {"campo":"fechaDesdeVigencia",          "tipo":"fecha"  ,"ayuda":"Fecha desde que inicia la vigencia de la resolucion",     "titulo":"FECHA DESDE"},
-            {"campo":"fechaHastaVigencia",          "tipo":"fecha"  ,"ayuda":"Fecha hasta que finaliza la vigencia de la resolucion",     "titulo":"FECHA_HASTA"},
-            {"campo":"numeracionDesde",             "tipo":"texto"  ,"ayuda":"Numero en que inicia la resolucion",     "titulo":"NUMERACION DESDE"},
-            {"campo":"numeracionHasta",             "tipo":"texto"  ,"ayuda":"Numero en que finaliza la resolucion",     "titulo":"NUMERACION HASTA"},
-            {"campo":"numeroResolucionDianFactura",             "tipo":"texto"  ,"ayuda":"Numero de la resolucion",     "titulo":"NUMERACION RESOLUCION"},
-            {"campo":"informacionCuentaPago",             "tipo":"texto"  ,"ayuda":"Informacion de la cuenta de pago",     "titulo":"INFORMACION CUENTA PAGO"}                            
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoFacturaTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre de la factura tipo",     "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                 "tipo":"texto"  ,"ayuda":"Consecutivo de la factura",     "titulo":"CONSECUTIVO"},
-            {"campo":"prefijo",                     "tipo":"texto"  ,"ayuda":"Prefijo de facturacion",     "titulo":"PREFIJO"},
-            {"campo":"fechaDesdeVigencia",          "tipo":"fecha"  ,"ayuda":"Fecha desde que inicia la vigencia de la resolucion",     "titulo":"FECHA DESDE"},
-            {"campo":"fechaHastaVigencia",          "tipo":"fecha"  ,"ayuda":"Fecha hasta que finaliza la vigencia de la resolucion",     "titulo":"FECHA_HASTA"},
-            {"campo":"numeracionDesde",             "tipo":"texto"  ,"ayuda":"Numero en que inicia la resolucion",     "titulo":"NUMERACION DESDE"},
-            {"campo":"numeracionHasta",             "tipo":"texto"  ,"ayuda":"Numero en que finaliza la resolucion",     "titulo":"NUMERACION HASTA"},
-            {"campo":"numeroResolucionDianFactura",             "tipo":"texto"  ,"ayuda":"Numero de la resolucion",     "titulo":"NUMERACION RESOLUCION"},
-            {"campo":"informacionCuentaPago",             "tipo":"texto"  ,"ayuda":"Informacion de la cuenta de pago",     "titulo":"INFORMACION CUENTA PAGO"}                                         
-        ]';
-        return $campos;
-    }
 }

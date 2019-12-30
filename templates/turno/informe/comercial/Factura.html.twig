@@ -111,8 +111,8 @@
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFactura.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arFactura.plazoPago }}</td>
-                <td>{{ arFactura.clienteRel.nombreCorto }}</td>
-                <td>{{ arFactura.clienteRel.ciudadRel.nombre }}</td>
+                <td>{{ arFactura.nombreCorto }}</td>
+                <td>{{ arFactura.ciudad | default('') }}</td>
                 <td>{{ arFactura.soporte }}</td>
                 <td class="numero">{{ arFactura.vrIva| number_format(0, '.', ',')}}</td>
                 <td class="numero">{{ arFactura.vrSubtotal| number_format(0, '.', ',')}}</td>

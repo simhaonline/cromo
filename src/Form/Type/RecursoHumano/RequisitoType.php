@@ -53,25 +53,4 @@ class RequisitoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoRequisitoPk",              "tipo":"pk"      ,"ayuda":"Codigo del registro"                ,"titulo":"ID"},
-            {"campo":"requisitoTipoRel.nombre",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"TIPO", "relacion":""},
-            {"campo":"numeroIdentificacion",                "tipo":"texto"  ,"ayuda":"Identificacion del aspirante",           "titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",                "tipo":"texto"  ,"ayuda":"Nombre del aspirante",           "titulo":"NOMBRE CORTO"},          
-            {"campo":"cargoRel.nombre",                     "tipo":"texto"   ,"ayuda":""                     ,              "titulo":"CARGO", "relacion":""}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"numeroIdentificacion",      "tipo":"TextType",   "propiedades":{"label":"Numero identificacion"},   "operador":"like"},
-            {"child":"nombreCorto",                              "tipo":"TextType",      "propiedades":{"label":"Nombre"},     "operador":"like"}
-
-        ]';
-        return $campos;
-    }
 }

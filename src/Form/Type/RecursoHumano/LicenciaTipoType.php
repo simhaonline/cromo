@@ -41,18 +41,4 @@ class LicenciaTipoType extends AbstractType
         ;
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"nombre",              "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
-            {"campo":"afectaSalud",    "tipo":"bool",  "ayuda":"Afecta salud",    "titulo":"SALUD"},
-            {"campo":"ausentismo",    "tipo":"bool",  "ayuda":"Ausentismo",    "titulo":"AUSENTISMO"},
-            {"campo":"maternidad",    "tipo":"bool",  "ayuda":"Maternidad",    "titulo":"MATERNIDAD"},
-            {"campo":"paternidad",    "tipo":"bool",  "ayuda":"Paternidad",    "titulo":"PATERNIDAD"},
-            {"campo":"remunerada",    "tipo":"bool",  "ayuda":"Remunerada",    "titulo":"RENUN"},
-            {"campo":"suspensionContratoTrabajo",    "tipo":"bool",  "ayuda":"Suspension Contrato trabajo",    "titulo":"SCT"}
-
-        ]';
-        return $campos;
-    }
 }

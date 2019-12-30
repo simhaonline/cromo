@@ -40,23 +40,4 @@ class DescuentoConceptoType extends AbstractType {
         return 'App_cartera';
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoDescuentoConceptoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaFk",             "tipo":"texto", "ayuda":"Cuenta",                    "titulo":"CUENTA"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoDescuentoConceptoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"},
-            {"campo":"codigoCuentaFk",             "tipo":"texto", "ayuda":"Cuenta",                    "titulo":"CUENTA"}
-        ]';
-        return $campos;
-    }
 }

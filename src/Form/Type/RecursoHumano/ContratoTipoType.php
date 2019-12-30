@@ -40,23 +40,4 @@ class ContratoTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoContratoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",            "titulo":"ID"},
-            {"campo":"nombre",               "tipo":"texto", "ayuda":"Nombre del registro",            "titulo":"NOMBRE"},
-            {"campo":"codigoContratoClaseFk","tipo":"texto", "ayuda":"Codigo de la clase de contrato", "titulo":"CLASE"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoContratoTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",            "titulo":"ID"},
-            {"campo":"nombre",               "tipo":"texto", "ayuda":"Nombre del registro",            "titulo":"NOMBRE"},
-            {"campo":"codigoContratoClaseFk","tipo":"texto", "ayuda":"Codigo de la clase de contrato", "titulo":"CLASE"}
-        ]';
-        return $campos;
-    }
 }

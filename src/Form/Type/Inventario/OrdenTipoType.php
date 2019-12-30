@@ -30,24 +30,4 @@ class OrdenTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoOrdenTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las ordenes tipo",       "titulo":"NOMBRE"},   
-            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}             
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoOrdenTipoPk",          "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                     "tipo":"texto"  ,"ayuda":"Nombre de las ordenes tipo",       "titulo":"NOMBRE"},   
-            {"campo":"consecutivo",                "tipo":"texto"  ,"ayuda":"Consecutivo del registro",     "titulo":"NOMBRE"}                                      
-        ]';
-        return $campos;
-    }
 }

@@ -81,39 +81,4 @@ class EmbargoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoEmbargoPk", "tipo":"pk"   ,"ayuda":"Codigo del registro","titulo":"ID"},
-            {"campo":"embargoTipoRel.nombre", "tipo":"texto"   ,"ayuda":"Tipo de embargo","titulo":"TIPO","relacion":""},
-            {"campo":"numero", "tipo":"texto"   ,"ayuda":"Numero","titulo":"NUMERO"},
-            {"campo":"empleadoRel.numeroIdentificacion", "tipo":"texto" ,"ayuda":"Numero de identificación del empleado","titulo":"IDENTIFICACIÓN", "relacion":""},
-            {"campo":"empleadoRel.nombreCorto", "tipo":"texto" ,"ayuda":"Nombre del empleado", "titulo":"EMPLEADO","relacion":""},
-            {"campo":"fecha",              "tipo":"fecha","ayuda":"Fecha de registro"  ,"titulo":"FECHA"},
-            {"campo":"vrValor",            "tipo":"moneda", "ayuda":"Valor del embargo"  ,"titulo":"VALOR"},
-            {"campo":"porcentajeDevengado","tipo":"bool", "ayuda":"Porcentaje devengado"  ,"titulo":"%DEV"},
-            {"campo":"porcentajeDevengadoPrestacional","tipo":"bool", "ayuda":"Porcentaje devengado prestacional","titulo":"%DEV (PRES)"},
-            {"campo":"porcentajeExcedaSalarioMinimo","tipo":"bool"  ,"ayuda":"Porcentaje exceda salario minimo","titulo":"%EXEDA SAL.MIN"},
-            {"campo":"porcentaje"                 ,"tipo":"moneda","ayuda":"Porcentaje","titulo":"%"},
-            {"campo":"partesExcedaSalarioMinimo"    ,"tipo":"bool"  ,"ayuda":"Partes que excedan salario minimo" ,"titulo":"PARTES"},
-            {"campo":"partes"                       ,"tipo":"texto" ,"ayuda":"Numero de partes"                  ,"titulo":"N.PARTES"},
-            {"campo":"estadoActivo"                 ,"tipo":"bool"  ,"ayuda":"Estado activo"                            ,"titulo":"ACT"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoEmbargoPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"codigoEmbargoTipoFk",       "tipo":"EntityType", "propiedades":{"class":"RhuEmbargoTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"numero",              "tipo":"TextType",   "propiedades":{"label":"Numero"}},
-            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
-            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoActivo",    "tipo":"ChoiceType", "propiedades":{"label":"Activo",     "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

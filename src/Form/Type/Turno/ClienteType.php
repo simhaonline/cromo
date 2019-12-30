@@ -155,26 +155,5 @@ class ClienteType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoClientePk",       "tipo":"pk"      ,"ayuda":"Codigo del registro"                      ,"titulo":"ID"},
-            {"campo":"numeroIdentificacion",  "tipo":"texto"   ,"ayuda":"Numero de identificacion del cliente"     ,"titulo":"IDENTIFICACION"},
-            {"campo":"nombreCorto",           "tipo":"texto"   ,"ayuda":"Nombre del cliente"                       ,"titulo":"NOMBRE"},
-            {"campo":"telefono",              "tipo":"texto"   ,"ayuda":"Telefono del cliente"                     ,"titulo":"TELEFONO"},
-            {"campo":"plazoPago",             "tipo":"texto"   ,"ayuda":"Plazo de pago del cliente"                ,"titulo":"PLAZO_PAGO"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoClientePk",     "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-            {"child":"numeroIdentificacion",     "tipo":"TextType",    "propiedades":{"label":"Nit"}},
-            {"child":"nombreCorto", "tipo":"TextType",    "propiedades":{"label":"Nombre"},   "operador":"like"}
-        ]';
-        return $campos;
-    }
 }
 

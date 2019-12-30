@@ -76,7 +76,7 @@ class TurCostoServicioRepository extends ServiceEntityRepository
             ->addSelect('c.nombreCorto as clienteNombreCorto')
             ->addSelect('cs.codigoPuestoFk')
             ->addSelect('p.nombre as puestoNombre')
-            ->addSelect('cs.vrCostoRecurso')
+            ->addSelect('cs.vrCosto')
             ->addSelect('cs.vrTotal')
             ->addSelect('co.nombre as conceptoNombre')
             ->addSelect('m.nombre as modalidadNombre')

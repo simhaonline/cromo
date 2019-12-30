@@ -67,15 +67,6 @@ class ReciboType extends AbstractType
         ]);
     }
 
-    public function getOrdenamiento(){
-        $campos ='[
-            {"campo":"estadoAprobado","tipo":"ASC"},
-            {"campo":"fecha","tipo":"DESC"},
-            {"campo":"codigoReciboPk","tipo":"DESC"}
-        ]';
-        return $campos;
-    }
-
     /**
      * {@inheritdoc}
      */

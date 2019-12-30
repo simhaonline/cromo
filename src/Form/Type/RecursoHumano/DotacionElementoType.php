@@ -28,22 +28,4 @@ class DotacionElementoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoDotacionElementoPk", "tipo":"pk"     ,"ayuda":"Codigo del empleado" ,"titulo":"ID"},
-            {"campo":"nombre",                   "tipo":"texto"  ,"ayuda":"nombre"              ,"titulo":"nombre"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"nombre",    "tipo":"TextType",   "propiedades":{"label":"nombre"}}
-
-        ]';
-        return $campos;
-    }
-
 }

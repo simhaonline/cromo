@@ -140,27 +140,4 @@ class SolicitudType extends AbstractType
         ]);
     }
 
-
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSolicitudPk",   "tipo":"pk"      ,"ayuda":"Codigo de la solicitud", "titulo":"ID"},
-            {"campo":"cantidadSolicitada", "tipo":"texto"   ,"ayuda":"Cantidad solicitdad",    "titulo":"CANTIDAD"},
-            {"campo":"nombre",              "tipo":"texto"   ,"ayuda":"Nombre de la seleccion", "titulo":"NOMBRE"},
-            {"campo":"salarioFijo",         "tipo":"texto"   ,"ayuda":"Salario fijo",           "titulo":"S_FIJO"},
-            {"campo":"salarioVariable",     "tipo":"texto"   ,"ayuda":"Salario variable",       "titulo":"S_VARIABLE"},
-            {"campo":"edadMinima",          "tipo":"texto"   ,"ayuda":"Edad minima",            "titulo":"E_MIN"},
-            {"campo":"edadMaxima",          "tipo":"texto"   ,"ayuda":"Edad maxima",            "titulo":"E_MAX"}            
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoSolicitudPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"nombre",            "tipo":"TextType",   "propiedades":{"label":"Nombre corto"}, "operador":"like"}
-        ]';
-        return $campos;
-    }
 }

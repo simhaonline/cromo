@@ -397,20 +397,32 @@ class TurFacturaRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
-            ->select('f')
-            ->leftJoin("f.clienteRel", "c");
+            ->select('f.codigoFacturaPk')
+            ->addSelect( 'f.numero')
+            ->addSelect( 'f.fecha')
+            ->addSelect('f.fechaVence')
+            ->addSelect('f.plazoPago')
+            ->addSelect('f.soporte')
+            ->addSelect('f.vrIva')
+            ->addSelect( 'f.vrSubtotal')
+            ->addSelect('f.vrDescuento')
+            ->addSelect('f.vrNeto')
+            ->addSelect('f.vrTotal')
+            ->addSelect('f.vrRetencionFuente')
+            ->addSelect('f.vrRetencionIva')
+            ->addSelect('f.vrAutoretencion')
+            ->addSelect('f.usuario')
+            ->addSelect('f.estadoAutorizado')
+            ->addSelect('f.estadoAprobado')
+            ->addSelect('f.estadoAnulado')
+            ->addSelect('cl.nombreCorto')
+            ->addSelect('ci.nombre as ciudad')
+            ->leftJoin("f.clienteRel", "cl")
+            ->leftJoin("cl.ciudadRel", "ci");
         if ($session->get('filtroTurInformeComercialFacturaClienteCodigo') != null) {
-            $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTurInformeComercialFacturaClienteCodigo')}");
+            $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTurInformeComercialFacturaClienteCodigo')}");
         }
-        if ($session->get('filtroTurInformeComercialFacturaAutorizado') != null) {
-            $queryBuilder->andWhere("f.estadoAutorizado = {$session->get('filtroTurInformeComercialFacturaAutorizado')}");
-        }
-        if ($session->get('filtroTurInformeComercialFacturaAnulado') != null) {
-            $queryBuilder->andWhere("f.estadoAnulado = {$session->get('filtroTurInformeComercialFacturaAnulado ')}");
-        }
-        if ($session->get('filtroTurInformeComercialFacturaAprobado') != null) {
-            $queryBuilder->andWhere("f.estadoAprobado = {$session->get('filtroTurInformeComercialFacturaAprobado')}");
-        }
+
         if ($session->get('filtroTurInformeComercialFacturaFechaDesde') != null) {
             $queryBuilder->andWhere("f.fecha >= '{$session->get('filtroTurInformeComercialFacturaFechaDesde')} 00:00:00'");
         }
@@ -418,10 +430,35 @@ class TurFacturaRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("f.fecha <= '{$session->get('filtroTurInformeComercialFacturaFechaHasta')} 23:59:59'");
         }
         if ($session->get('filtroTurInformeComercialFacturaCiudad') != null) {
-            $queryBuilder->andWhere("c.codigoCiudadFk = {$session->get('filtroTurInformeComercialFacturaCiudad')}");
+            $queryBuilder->andWhere("ci.codigoCiudadPk = {$session->get('filtroTurInformeComercialFacturaCiudad')}");
         }
-        return $queryBuilder;
-    }
+        switch ( $session->get('filtroTurInformeComercialFacturaAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAutorizado = 1");
+                break;
+        }
+        switch ( $session->get('filtroTurInformeComercialFacturaAnulado')) {
+
+            case '0':
+                $queryBuilder->andWhere("f.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAnulado = 1");
+                break;
+        }
+        switch ( $session->get('filtroTurInformeComercialFacturaAprobado')) {
+            case '0':
+                $queryBuilder->andWhere("f.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("f.estadoAprobado = 1");
+                break;
+        }
+        return $queryBuilder->getQuery()->getResult();
+        }
 
     /**
      * @param $arFactura TurFactura

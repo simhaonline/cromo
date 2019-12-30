@@ -27,22 +27,4 @@ class AnticipoConceptoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoAnticipoConceptoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
-            {"campo":"nombre",                          "tipo":"texto"  ,"ayuda":"Nombre del concepto de anticipo",     "titulo":"NOMBRE"}                      
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoAnticipoConceptoPk",    "tipo":"pk"     ,"ayuda":"Codigo del registro",             "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto"  ,"ayuda":"Nombre del concepto de anticipo", "titulo":"NOMBRE"}                                         
-        ]';
-        return $campos;
-    }
 }

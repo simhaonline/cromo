@@ -38,24 +38,4 @@ class GrupoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoGrupoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"lineaRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre de la linea",         "titulo":"LINEA", "relacion":""},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                     
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoGrupoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",        "titulo":"ID"},
-            {"campo":"lineaRel.nombre",       "tipo":"texto"  ,"ayuda":"Nombre de la linea",         "titulo":"LINEA", "relacion":""},
-            {"campo":"nombre",                "tipo":"texto"  ,"ayuda":"Nombre del grupo",           "titulo":"NOMBRE"}                                        
-        ]';
-        return $campos;
-    }
 }

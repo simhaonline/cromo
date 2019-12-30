@@ -54,33 +54,4 @@ class SolicitudType extends AbstractType
         return 'App_solicitud';
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSolicitudPk",               "tipo":"pk",        "ayuda":"Codigo del registro",                  "titulo":"ID"},
-            {"campo":"solicitudTipoRel.nombre",         "tipo":"texto",     "ayuda":"Tipo de solicitud",                    "titulo":"SOLICITUD TIPO",         "relacion":""},
-            {"campo":"numero",                          "tipo":"texto",     "ayuda":"Numero del registro",                  "titulo":"NUMERO"},
-            {"campo":"fecha",                           "tipo":"fecha",     "ayuda":"Fecha del registro",                   "titulo":"FECHA"},
-            {"campo":"usuario",                         "tipo":"texto",     "ayuda":"Usuario",                              "titulo":"USUARIO"},
-            {"campo":"estadoAutorizado",                "tipo":"bool",      "ayuda":"Autorizdo",                            "titulo":"AUT"},
-            {"campo":"estadoAprobado",                  "tipo":"bool",      "ayuda":"Aprobado",                             "titulo":"APR"},
-            {"campo":"estadoAnulado",                   "tipo":"bool",      "ayuda":"Anulado",                              "titulo":"ANU"}
-                                     
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"numero",                  "tipo":"TextType",    "propiedades":{"label":"Numero"}},
-            {"child":"codigoSolicitudPk",           "tipo":"TextType",    "propiedades":{"label":"Codigo"}},
-            {"child":"codigoSolicitudTipoFk",       "tipo":"EntityType",  "propiedades":{"class":"InvOrdenTipo","choice_label":"nombre","label":"Tipo"}},
-            {"child":"estadoAutorizado",        "tipo":"ChoiceType",  "propiedades":{"label":"Autorizado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",          "tipo":"ChoiceType",  "propiedades":{"label":"Aprobado",    "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",           "tipo":"ChoiceType",  "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}
-        ]';
-        return $campos;
-    }
-
 }

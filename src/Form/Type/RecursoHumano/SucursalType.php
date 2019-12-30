@@ -34,24 +34,4 @@ class SucursalType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoSucursalPk",    "tipo":"pk"      ,"ayuda":"Codigo de la sucursal", "titulo":"ID"},
-            {"campo":"nombre",              "tipo":"texto"   ,"ayuda":"Nombre sucursal",    "titulo":"nombre"},
-            {"campo":"estadoActivo",                           "tipo":"bool",      "ayuda":"Activo",  "titulo":"ACT"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoSucursalPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"nombre",            "tipo":"TextType",   "propiedades":{"label":"Nombre"}},
-            {"child":"estadoActivo",                  "tipo":"ChoiceType",    "propiedades":{"label":"Activo",       "choices":{"SI":true,"NO":false}}}
-
-        ]';
-        return $campos;
-    }
 }

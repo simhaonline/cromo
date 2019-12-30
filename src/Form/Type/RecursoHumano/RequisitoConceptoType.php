@@ -28,20 +28,6 @@ class RequisitoConceptoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoRequisitoConceptoPk"}
-            
-        ]';
-        return $campos;
-    }
 
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-        ]';
-        return $campos;
-    }
 }
 

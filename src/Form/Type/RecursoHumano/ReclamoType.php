@@ -42,36 +42,4 @@ class ReclamoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoReclamoPk",        "tipo":"pk"     ,"ayuda":"Codigo del registro" ,"titulo":"ID"},
-            {"campo":"codigoReclamoConceptoFk","tipo":"texto"  ,"ayuda":"Tipo de reclamo"     ,"titulo":"TIPO"},
-            {"campo":"empleadoRel.numeroIdentificacion",       "tipo":"texto"  ,"ayuda":"Identificacion del empleado" ,"titulo":"IDENTIFICACION", "relacion":""},
-            {"campo":"empleadoRel.nombreCorto",       "tipo":"texto"  ,"ayuda":"Codigo del empleado" ,"titulo":"EMPLEADO", "relacion":"" },
-            {"campo":"fecha",                  "tipo":"fecha"  ,"ayuda":"Fecha"               ,"titulo":"FECHA"},                     
-            {"campo":"fechaCierre",            "tipo":"fecha"  ,"ayuda":"Fecha de cierre"     ,"titulo":"F.CIERRE"},                     
-            {"campo":"responsable",            "tipo":"texto"  ,"ayuda":"Responable"          ,"titulo":"RESPONSABLE"},                     
-            {"campo":"estadoAutorizado",       "tipo":"bool"   ,"ayuda":"Estado autorizado"   ,"titulo":"AUT"},                     
-            {"campo":"estadoAprobado",         "tipo":"bool"   ,"ayuda":"Estado aprobado"     ,"titulo":"APR"},                                          
-            {"campo":"estadoAnulado",          "tipo":"bool"   ,"ayuda":"Estado anulado"      ,"titulo":"ANU"}                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[
-            {"child":"codigoReclamoPk", "tipo":"TextType",   "propiedades":{"label":"Codigo"}},
-            {"child":"codigoReclamoConceptoFk",       "tipo":"EntityType", "propiedades":{"class":"RhuReclamoConcepto","choice_label":"nombre","label":"Grupo"}},
-            {"child":"codigoEmpleadoFk",    "tipo":"TextType",   "propiedades":{"label":"Empleado"}},
-            {"child":"fechaDesde",          "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
-            {"child":"fechaHasta",          "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
-            {"child":"estadoAutorizado",    "tipo":"ChoiceType", "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAprobado",      "tipo":"ChoiceType", "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},
-            {"child":"estadoAnulado",       "tipo":"ChoiceType", "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}}
-        ]';
-
-        return $campos;
-    }
 }

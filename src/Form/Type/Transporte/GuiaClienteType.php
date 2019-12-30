@@ -51,22 +51,4 @@ class GuiaClienteType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[
-            {"campo":"codigoGuiaClientePk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"guiaTipoRel.nombre",                  "tipo":"texto",     "ayuda":"Tipo de guia",                           "titulo":"TIPO",         "relacion":""},
-            {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre cliente",                           "titulo":"CLIENTE",         "relacion":""},            
-            {"campo":"desde",                        "tipo":"entero",    "ayuda":"numero desde",                        "titulo":"DESDE"},
-            {"campo":"hasta",                        "tipo":"entero",    "ayuda":"numero hasta",                        "titulo":"HASTA"},
-            {"campo":"estadoActivo",                           "tipo":"bool",      "ayuda":"Activo",                                  "titulo":"ACT"}
-            
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar(){
-        return '[
-            {"{"campo":"codigoFacturaConceptoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
-        ]';
-    }
 }

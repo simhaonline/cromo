@@ -25,24 +25,4 @@ class VisitaTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoVisitaTipoPk",                                           "tipo":"pk",         "ayuda":"Codigo control tipo",                 "titulo":"ID"},
-            {"campo":"nombre",                                                      "tipo":"texto",      "ayuda":"Nombre",                              "titulo":"Nombre"}
-        ]';
-        return $campos;
-
-    }
-
-    public function getEstructuraPropiedadesFiltro()
-    {
-
-        $campos = '[
-            {"child":"codigoVisitaTipoPk",                   "tipo":"TextType",      "propiedades":{"label":"Codigo"},     "operador":"like"},
-            {"child":"nombre",                              "tipo":"TextType",      "propiedades":{"label":"Nombre"},     "operador":"like"}
-        ]';
-
-        return $campos;
-    }
 }

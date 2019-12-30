@@ -33,7 +33,7 @@ class TurClienteRepository extends ServiceEntityRepository
         if ($session->get('filtroTurClienteNombre') != '') {
             $queryBuilder->andWhere("c.nombreCorto LIKE '%{$session->get('filtroTurClienteNombre')}%' ");
         }
-        if ($session->get('filtroTurClienteNit') != '') {
+        if ($session->get('filtroTurClienteIdentificacion') != '') {
             $queryBuilder->andWhere("c.numeroIdentificacion = {$session->get('filtroTurClienteIdentificacion')} ");
         }
         if ($session->get('filtroTurClienteCodigo') != '') {

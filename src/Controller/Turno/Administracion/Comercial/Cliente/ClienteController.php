@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ClienteController extends ControllerListenerGeneral
 {
-    protected $clase= TurCliente::class;
+    protected $clase = TurCliente::class;
     protected $claseNombre = "TurCliente";
     protected $modulo = "Turno";
     protected $funcion = "Administracion";
@@ -39,39 +39,40 @@ class ClienteController extends ControllerListenerGeneral
      */
     public function lista(Request $request)
     {
-        $session = new Session();
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $session = new Session();
+        $paginator = $this->get('knp_paginator');
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoCliente', TextType::class, array('required' => false, 'data' => $session->get('filtroTurClienteCodigo')))
+            ->add('txtNumeroIdentificacion', TextType::class, array('required' => false, 'data' => $session->get('filtroTurClienteIdentificacion')))
+            ->add('txtNombre', TextType::class, array('required' => false, 'data' => $session->get('filtroTurClienteNombre')))
+            ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn-sm btn btn-danger']])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtro'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTurClienteCodigo', $form->get('txtCodigoCliente')->getData());
+                $session->set('filtroTurClienteIdentificacion', $form->get('txtNumeroIdentificacion')->getData());
+                $session->set('filtroTurClienteNombre', $form->get('txtNombre')->getData());
             }
         }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TurCliente::class)->lista(), "Clientes");
             }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arData = $request->request->get('ChkSeleccionar');
                 $this->get("UtilidadesModelo")->eliminar(TurCliente::class, $arData);
             }
-            if ($formBotonera->get('btnFiltrar')){
-                $session->set('filtroTurCodigoCliente', $formBotonera->get('txtCodigoCliente')->getData());
-                $session->set('filtroTurNombreCliente', $formBotonera->get('txtNombreCorto')->getData());
-            }
         }
 
+        $arClientes = $paginator->paginate($em->getRepository(TurCliente::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('turno/administracion/comercial/cliente/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
-
+            'arClientes' => $arClientes,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -115,7 +116,7 @@ class ClienteController extends ControllerListenerGeneral
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($form->get('btnEliminar')->isClicked()){
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $this->get('UtilidadesModelo')->eliminar(TurPuesto::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_detalle', ['id' => $id]));
@@ -124,7 +125,7 @@ class ClienteController extends ControllerListenerGeneral
         $arPuestos = $em->getRepository(TurPuesto::class)->cliente($id);
         return $this->render('turno/administracion/comercial/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
-            'arPuestos'=>$arPuestos,
+            'arPuestos' => $arPuestos,
             'form' => $form->createView()
 
         ));

@@ -427,7 +427,7 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("c.codigoClientePk = '{$codigoCliente}'");
         }
         if ($numero) {
-            $queryBuilder->andWhere("p.$numero = '{$numero}'");
+            $queryBuilder->andWhere("p.numero = {$numero}");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("p.fecha >= '{$fechaDesde} 00:00:00'");
@@ -445,10 +445,10 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         }
         switch ($estadoProgramado) {
             case '0':
-                $queryBuilder->andWhere("p.$estadoProgramado = 0");
+                $queryBuilder->andWhere("p.estadoProgramado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("p.$estadoProgramado = 1");
+                $queryBuilder->andWhere("p.estadoProgramado = 1");
                 break;
         }
         switch ($estadoFacturado) {
@@ -461,10 +461,10 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         }
         switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("i.estadoAnulado = 0");
+                $queryBuilder->andWhere("p.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("i.estadoAnulado = 1");
+                $queryBuilder->andWhere("p.estadoAnulado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('p.codigoClienteFk, pd.codigoGrupoFk, pd.codigoPuestoFk');

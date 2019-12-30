@@ -158,8 +158,6 @@ class PendiendeFacturaraController extends AbstractController
         }
     }
 
-
-
     public function getFiltros($form)
     {
         $filtro = [

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_administracion_nomina_novedadTipo_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arNovedadTipo.codigoNovedadTipoPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arNovedadTipo.nombre }}</td>
+            <td class="titulo">CONCEPTO:</td>
+            <td class="td-in-well">{{ arNovedadTipo.conceptoRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">SUB TIPO:</td>
+            <td class="td-in-well">{{ arNovedadTipo.subTipo }}</td>
+            <td class="titulo">ABREVIATURA:</td>
+            <td class="td-in-well">{{ arNovedadTipo.abreviatura }}</td>
+
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

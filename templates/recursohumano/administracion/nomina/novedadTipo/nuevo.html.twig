@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoNovedadTipoPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoNovedadTipoPk) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.nombre) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Tipo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.subTipo, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.subTipo) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Concepto</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.conceptoRel, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.conceptoRel) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Abreviatura</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.abreviatura, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.abreviatura) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_administracion_nomina_contratoTipo_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

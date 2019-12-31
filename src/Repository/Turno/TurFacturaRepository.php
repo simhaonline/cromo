@@ -405,8 +405,9 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.fechaVence')
             ->addSelect('f.plazoPago')
             ->addSelect('f.soporte')
-            ->addSelect('f.vrIva')
             ->addSelect( 'f.vrSubtotal')
+            ->addSelect('f.vrBaseAiu')
+            ->addSelect('f.vrIva')
             ->addSelect('f.vrDescuento')
             ->addSelect('f.vrNeto')
             ->addSelect('f.vrTotal')
@@ -459,6 +460,7 @@ class TurFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.estadoAprobado = 1");
                 break;
         }
+        $queryBuilder->addOrderBy('f.fecha', 'DESC');
         return $queryBuilder->getQuery()->getResult();
         }
 

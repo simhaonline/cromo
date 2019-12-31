@@ -9,8 +9,11 @@ use App\Entity\Transporte\TteCiudad;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurFactura;
 
+use App\General\General;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -20,16 +23,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class Factura extends  Controller
+class Factura extends  AbstractController
 {
     /**
      * @Route("/turno/informe/comercial/factura/lista", name="turno_informe_comercial_factura_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class,['required' => false])
             ->add('ciudad', EntityType::class, [
@@ -50,7 +52,7 @@ class Factura extends  Controller
             ->add('autorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTurInformeComercialFacturaAutorizado'), 'required' => false])
             ->add('anulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTurInformeComercialFacturaAnulado'), 'required' => false])
             ->add('aprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTurInformeComercialFacturaAutorizado'), 'required' => false])
-
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -69,6 +71,9 @@ class Factura extends  Controller
                 $session->set('filtroTurInformeComercialFacturaAutorizado', $form->get('autorizado')->getData());
                 $session->set('filtroTurInformeComercialFacturaAnulado', $form->get('anulado')->getData());
                 $session->set('filtroTurInformeComercialFacturaAprobado', $form->get('aprobado')->getData());
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                General::get()->setExportar($em->getRepository(TurFactura::class)->informe(), "Factura");
             }
         }
         $arFacturas = $paginator->paginate($em->getRepository(TurFactura::class)->informe(), $request->query->getInt('page', 1), 30);

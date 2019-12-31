@@ -344,8 +344,8 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         if ($numero) {
             $queryBuilder->andWhere("p.numero = {$numero}");
         }
-        $queryBuilder->orderBy('pd.anio', 'DESC');
-        $queryBuilder->addOrderBy('pd.mes', 'DESC');
+        $queryBuilder->orderBy('pd.anio', 'ASC');
+        $queryBuilder->addOrderBy('pd.mes', 'ASC');
         return $queryBuilder->getQuery()->getResult();
     }
 

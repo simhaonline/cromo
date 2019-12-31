@@ -2320,7 +2320,8 @@ class MigracionController extends Controller
                 codigo_cobertura_fk,
                 codigo_dimension_fk,
                 codigo_origen_capital_fk,
-                codigo_sector_economico_fk
+                codigo_sector_economico_fk,
+                codigo_ciudad_fk
                  FROM tur_cliente 
                  ORDER BY codigo_cliente_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -2333,6 +2334,9 @@ class MigracionController extends Controller
                 $arCliente->setEstrato($row['estrato']);
                 $arCliente->setDireccion(utf8_encode($row['direccion']));
                 $arCliente->setTelefono($row['telefono']);
+                if($row['codigo_ciudad_fk']) {
+                    $arCliente->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
                 if ($row['codigo_sector_comercial_fk']) {
                     $arCliente->setSectorComercialRel($em->getReference(GenSectorComercial::class, $row['codigo_sector_comercial_fk']));
                 }
@@ -3112,6 +3116,7 @@ class MigracionController extends Controller
                 }
                 $arFactura->setEstadoAnulado($row['estado_anulado']);
                 $arFactura->setComentarios(utf8_encode($row['comentarios']));
+
                 $em->persist($arFactura);
                 $metadata = $em->getClassMetaData(get_class($arFactura));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

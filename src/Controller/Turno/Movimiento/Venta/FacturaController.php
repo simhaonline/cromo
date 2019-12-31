@@ -79,7 +79,6 @@ class FacturaController extends AbstractController
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -243,7 +242,7 @@ class FacturaController extends AbstractController
         }
         $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));
         $arImpuestosRetencion = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'R'));
-        $arFacturaDetalles = $paginator->paginate($em->getRepository(TurFacturaDetalle::class)->lista($id), $request->query->getInt('page', 1), 50);
+        $arFacturaDetalles = $paginator->paginate($em->getRepository(TurFacturaDetalle::class)->lista($id), $request->query->getInt('page', 1), 500);
         return $this->render('turno/movimiento/venta/factura/detalle.html.twig', [
             'form' => $form->createView(),
             'arFacturaDetalles' => $arFacturaDetalles,
@@ -352,7 +351,7 @@ class FacturaController extends AbstractController
                         $arFacturaDetalle->setItemRel($arPedidoDetalle->getItemRel());
                         $arFacturaDetalle->setCodigoImpuestoIvaFk($arPedidoDetalle->getItemRel()->getCodigoImpuestoIvaVentaFk());
                         $arFacturaDetalle->setPorcentajeIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
-                        $arFacturaDetalle->setPorcentajeBaseIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getBase());
+                        $arFacturaDetalle->setPorcentajeBaseIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
                         $arFacturaDetalle->setConceptoRel($arPedidoDetalle->getConceptoRel());
                         $arFacturaDetalle->setPuestoRel($arPedidoDetalle->getPuestoRel());
                         $arFacturaDetalle->setCantidad($arPedidoDetalle->getCantidad());

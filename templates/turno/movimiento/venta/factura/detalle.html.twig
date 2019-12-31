@@ -191,12 +191,11 @@
                     {% if arFactura.estadoAutorizado == 0 %}
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo</a>
                         </div>
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 600, 900)">Nuevo
-                                pedido</a>
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo desde pedido</a>
                         </div>
                     {% endif %}
                     <div class="btn-group">

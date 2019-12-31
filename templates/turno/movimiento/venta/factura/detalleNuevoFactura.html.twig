@@ -1,0 +1,58 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4> Filtros de búsqueda</h4>
+        </div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Numero</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.txtNumero) }}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            {{ form_widget(form.btnFiltrar,{'attr':{'style':'float: right;'}}) }}
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>CODIGO</th>
+                <th>NUMERO</th>
+                <th>PUESTO</th>
+                <th>FECHA</th>
+                <th>VALOR</th>
+                <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arFacturaDetalles in arFacturaDetalles %}
+                <tr>
+                    <td>{{ arFacturaDetalles.codigoFacturaDetallePk  }}</td>
+                    <td>{{ arFacturaDetalles.facturaRel.numero  }}</td>
+                    <td>{{ arFacturaDetalles.puestoRel.nombre | default('')  }}</td>
+                    <td>{{ arFacturaDetalles.facturaRel.fecha |date("Y/m/d")  }}</td>
+                    <td style="text-align: right">{{ arFacturaDetalles.vrSubtotal | number_format(0, '.', ',') }}</td>
+                    <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arFacturaDetalles.codigoFacturaDetallePk }}" /></td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="btn-group" style="float: left">
+            <div class="btn btn-default btn-sm">
+                <span class="badge">{{ arFacturaDetalles.getTotalItemCount }}</span>
+            </div>
+        </div>
+    </div>
+    {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+    {{ form_end(form) }}
+    <br/><br/><br/>
+{% endblock %}

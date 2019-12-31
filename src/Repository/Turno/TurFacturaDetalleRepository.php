@@ -215,4 +215,18 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
         return $arrCuentas;
     }
 
+    public function listaCliente($codigoCliente, $codigoFactura = "", $tipo = "")
+    {
+        $session = new Session();
+        $dql = "SELECT fd FROM App\Entity\Turno\TurFacturaDetalle fd JOIN fd.facturaRel f JOIN f.facturaTipoRel ft WHERE f.codigoClienteFk =  " . $codigoCliente . " AND f.estadoAutorizado = 1 AND f.numero > 0 AND f.estadoAnulado = 0";
+        if ($session->get('filtroCodigoFactura') != '') {
+            $dql .= " AND fd.codigoFacturaFk = " . $session->get('filtroCodigoFactura'). " ";
+        }
+        if ($session->get('filtroNumeroFactura') != ''){
+            $dql .= " AND f.numero = " . $session->get('filtroNumeroFactura'). " ";
+        }
+        $dql .= " ORDER BY fd.codigoFacturaDetallePk DESC";
+        return $dql;
+    }
+
 }

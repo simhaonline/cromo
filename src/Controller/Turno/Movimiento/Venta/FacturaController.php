@@ -254,6 +254,62 @@ class FacturaController extends AbstractController
     }
 
     /**
+     * @Route("/turno/movimiento/comercial/factura/detalle/factura/nuevo/{id}", name="turno_movimiento_venta_factura_detalle_factura_nuevo")
+     */
+    public function detalleNuevoFactura(Request $request, PaginatorInterface $paginator, $id)
+    {
+        $session = new session;
+        $em = $this->getDoctrine()->getManager();
+        $arFactura = $em->getRepository(TurFactura::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('txtNumero', TextType::class, ['required' => false])
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar',))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                if ($form->get('btnGuardar')->isClicked()) {
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    if ($arrSeleccionados) {
+                        foreach ($arrSeleccionados AS $codigo) {
+                            $arFacturaDetalle = $em->getRepository(TurFacturaDetalle::class)->find($codigo);
+                            $arFacturaDetalleNueva = new TurFacturaDetalle();
+                            $arFacturaDetalleNueva->setFacturaRel($arFactura);
+                            $arFacturaDetalleNueva->setConceptoRel($arFacturaDetalle->getConceptoRel());
+                            $arFacturaDetalleNueva->setItemRel($arFacturaDetalle->getItemRel());
+                            $arFacturaDetalleNueva->setPuestoRel($arFacturaDetalle->getPuestoRel());
+                            $arFacturaDetalleNueva->setPedidoDetalleRel($arFacturaDetalle->getPedidoDetalleRel());
+                            $arFacturaDetalleNueva->setFacturaDetalleRel($arFacturaDetalle);
+                            $arFacturaDetalleNueva->setCantidad($arFacturaDetalle->getCantidad());
+                            $arFacturaDetalleNueva->setVrPrecio($arFacturaDetalle->getVrPrecio());
+                            $arFacturaDetalleNueva->setCodigoImpuestoIvaFk($arFacturaDetalle->getCodigoImpuestoIvaFk());
+                            $arFacturaDetalleNueva->setCodigoImpuestoRetencionFk($arFacturaDetalle->getCodigoImpuestoRetencionFk());
+                            $arFacturaDetalleNueva->setPorcentajeIva($arFacturaDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
+                            $arFacturaDetalleNueva->setPorcentajeBaseIva($arFacturaDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
+                            $arFacturaDetalleNueva->setDetalle($arFacturaDetalle->getDetalle());
+                            $em->persist($arFacturaDetalleNueva);
+                        }
+                    }
+                    $em->flush();
+                    $em->getRepository(TurFactura::class)->liquidar($arFactura);
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+                if ($form->get('BtnFiltrar')->isClicked()) {
+                    $session->set('filtroCodigoFactura', $form->get('txtCodigo')->getData());
+                    $session->set('filtroNumeroFactura', $form->get('txtNumero')->getData());
+                }
+            }
+        }
+        $dql = $em->getRepository(TurFacturaDetalle::class)->listaCliente($arFactura->getCodigoClienteFk(), "");
+        $arFacturaDetalles = $paginator->paginate($em->createQuery($dql), $request->query->get('page', 1), 1000);
+        return $this->render('turno/movimiento/venta/factura/detalleNuevoFactura.html.twig', array(
+            'arFactura' => $arFactura,
+            'arFacturaDetalles' => $arFacturaDetalles,
+            'form' => $form->createView()));
+    }
+
+    /**
      * @param Request $request
      * @param $id
      * @return Response

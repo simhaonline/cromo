@@ -46,8 +46,8 @@
             <td class="td-in-well" style="text-align: right;">{{ arFactura.vrIva | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo">ASESOR:</td>
-            <td class="td-in-well">{{ arFactura.asesorRel.nombre | default('') }}</td>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well">{{ arFactura.facturaTipoRel.nombre | default('') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well" style="text-transform: uppercase;"></td>
             <td class="titulo">BRUTO:</td>
@@ -196,6 +196,10 @@
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
                                href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo desde pedido</a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_factura_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo desde factura</a>
                         </div>
                     {% endif %}
                     <div class="btn-group">

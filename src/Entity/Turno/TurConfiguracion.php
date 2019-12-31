@@ -39,6 +39,11 @@ class TurConfiguracion
     private $codigoFormatoFactura;
 
     /**
+     * @ORM\Column(name="redondear_valor_factura", type="boolean", nullable=true)
+     */
+    private $redondearValorFactura = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -116,6 +121,22 @@ class TurConfiguracion
     public function setCodigoFormatoFactura($codigoFormatoFactura): void
     {
         $this->codigoFormatoFactura = $codigoFormatoFactura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRedondearValorFactura()
+    {
+        return $this->redondearValorFactura;
+    }
+
+    /**
+     * @param mixed $redondearValorFactura
+     */
+    public function setRedondearValorFactura($redondearValorFactura): void
+    {
+        $this->redondearValorFactura = $redondearValorFactura;
     }
 
 

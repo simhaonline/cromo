@@ -92,7 +92,9 @@
             <th title="HORAS">H</th>
             <th title="HORAS DIURNAS">HD</th>
             <th title="HORAS NOCTURNAS">HN</th>
-            <th title="Despachada">TOTAL</th>
+            <th>SUBTOTAL</th>
+            <th>IVA</th>
+            <th>TOTAL</th>
             <th title="Entregada">USUARIO</th>
             <th title="Autorizado">AUT</th>
             <th title="Aprobado">APR</th>
@@ -116,6 +118,8 @@
                 <td class="numero">{{ arPedido.horas | number_format }}</td>
                 <td class="numero">{{ arPedido.horasDiurnas | number_format }}</td>
                 <td class="numero">{{ arPedido.horasNocturnas | number_format }}</td>
+                <td class="numero">{{ arPedido.vrSubtotal | number_format(0, '.', ',') }}</td>
+                <td class="numero">{{ arPedido.vrIva | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arPedido.vrTotal | number_format(0, '.', ',') }}</td>
                 <td>{{ arPedido.usuario }}</td>
                 <td>{{ arPedido.estadoAutorizado? "SI":"NO" }}</td>

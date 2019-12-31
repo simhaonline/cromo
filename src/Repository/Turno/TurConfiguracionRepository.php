@@ -24,4 +24,13 @@ class TurConfiguracionRepository extends ServiceEntityRepository
 
     }
 
+    public function liquidarPedido(): array
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurConfiguracion::class, 'c')
+            ->select('c.redondearValorFactura')
+            ->where('c.codigoConfiguracionPk = 1');
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
+
 }

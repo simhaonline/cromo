@@ -5,6 +5,7 @@ namespace App\Repository\Turno;
 
 use App\Entity\Crm\CrmVisita;
 use App\Entity\Turno\TurConcepto;
+use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContratoDetalle;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurPedido;
@@ -81,7 +82,7 @@ class TurPedidoRepository extends ServiceEntityRepository
     public function liquidar($arPedido)
     {
         $em = $this->getEntityManager();
-        //$arConfiguracion = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
+        $arConfiguracionTurno = $em->getRepository(TurConfiguracion::class)->liquidarPedido();
         //$arConfiguracionTurno = $em->getRepository('BrasaTurnoBundle:TurConfiguracion')->find(1);
         $intCantidad = 0;
         $douTotalHoras = 0;
@@ -256,16 +257,21 @@ class TurPedidoRepository extends ServiceEntityRepository
                 } else {
                     $floVrServicio = $floVrMinimoServicio * $arPedidoDetalle->getCantidad();
                 }
-
                 $subTotalDetalle = $floVrServicio;
-                $subtotalGeneral += $subTotalDetalle;
                 $baseAiuDetalle = $subTotalDetalle * ($arPedidoDetalle->getPorcentajeBaseIva() / 100);
                 $ivaDetalle = $baseAiuDetalle * $arPedidoDetalle->getPorcentajeIva() / 100;
-                $ivaGeneral += $ivaDetalle;
-                $totalDetalle = $subTotalDetalle + $ivaDetalle;
-
                 $vrTotalDetalleAfectado = $arPedidoDetalle->getVrAfectado();
                 $vrTotalDetalleDevolucion = $arPedidoDetalle->getVrDevolucion();
+                if ($arConfiguracionTurno['redondearValorFactura']) {
+                    $subTotalDetalle = round($subTotalDetalle);
+                    $vrTotalDetalleAfectado = round($vrTotalDetalleAfectado);
+                    $vrTotalDetalleDevolucion = round($vrTotalDetalleDevolucion);
+                }
+                $totalDetalle = $subTotalDetalle + $ivaDetalle;
+
+
+                $subtotalGeneral += $subTotalDetalle;
+                $ivaGeneral += $ivaDetalle;
                 $baseAuiGeneral += $baseAiuDetalle;
                 $totalGeneral += $totalDetalle;
 
@@ -512,6 +518,8 @@ class TurPedidoRepository extends ServiceEntityRepository
             ->addSelect('p.estadoAutorizado')
             ->addSelect('p.estadoAprobado')
             ->addSelect('p.estadoAnulado')
+            ->addSelect('p.vrSubtotal')
+            ->addSelect('p.vrIva')
             ->addSelect('p.vrTotal')
             ->addSelect('p.usuario')
             ->addSelect('pt.nombre as pedidoTipoNombre')

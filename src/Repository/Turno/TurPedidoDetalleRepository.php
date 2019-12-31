@@ -197,17 +197,16 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             if ($arrDetallesSeleccionados) {
                 if (count($arrDetallesSeleccionados)) {
                     foreach ($arrDetallesSeleccionados as $codigo) {
-                        $ar = $this->getEntityManager()->getRepository(TurPedidoDetalle::class)->find($codigo);
+                        $arPedidoDetalleCompuestos =$em->getRepository(TurPedidoDetalleCompuesto::class)->findBy(array('codigoPedidoDetalleFk' => $codigo));
+                        foreach ($arPedidoDetalleCompuestos as $arPedidoDetalleCompuesto) {
+                            $em->remove($arPedidoDetalleCompuesto);
+                        }
+                        $ar = $em->getRepository(TurPedidoDetalle::class)->find($codigo);
                         if ($ar) {
-                            $this->getEntityManager()->remove($ar);
-                            $this->getEntityManager()->flush();
+                            $em->remove($ar);
                         }
                     }
-                    try {
-                        $this->getEntityManager()->flush();
-                    } catch (\Exception $e) {
-                        Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
-                    }
+                    $em->flush();
                 }
             }
         } else {

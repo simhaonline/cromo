@@ -549,7 +549,7 @@ class TurContratoRepository extends ServiceEntityRepository
                                         $arPedidoDetalleCompuesto->setFestivo($arContratoDetalleCompuesto->getFestivo());
                                         $arPedidoDetalleCompuesto->setCantidad($arContratoDetalleCompuesto->getCantidad());
                                         $arPedidoDetalleCompuesto->setVrPrecioAjustado($arContratoDetalleCompuesto->getVrPrecioAjustado());
-                                        $arPedidoDetalleCompuesto->setPorcentajeIva($arContratoDetalleCompuesto->getPorcentajeIva());
+                                        //$arPedidoDetalleCompuesto->setPorcentajeIva($arContratoDetalleCompuesto->getPorcentajeIva());
                                         $strAnioMes = $arPedido->getFecha()->format('Y/m/');
                                         $dateFechaDesde = date_create($strAnioMes . "1");
                                         $strUltimoDiaMes = date("d", (mktime(0, 0, 0, $dateFechaDesde->format('m') + 1, 1, $dateFechaDesde->format('Y')) - 1));

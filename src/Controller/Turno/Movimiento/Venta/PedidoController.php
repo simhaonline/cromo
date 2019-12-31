@@ -79,7 +79,6 @@ class PedidoController extends AbstractController
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -95,7 +94,7 @@ class PedidoController extends AbstractController
                 $this->exportarExcelPersonalizado($arPedidos);
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurPedido::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_venta_pedido_lista'));
             }
@@ -382,7 +381,7 @@ class PedidoController extends AbstractController
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('Pedidos');
             $j = 0;
-            $arrColumnas=['ID','TIPO','NÚMERO','FECHA','CLIENTE','SECTOR','H','HD','HN','TOTAL','USUARIO','AUT','APR','ANU'];
+            $arrColumnas=['ID','TIPO','NÚMERO','FECHA','CLIENTE','SECTOR','H','HD','HN','SUBTOTAL','IVA','TOTAL','USUARIO','AUT','APR','ANU'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
@@ -402,16 +401,18 @@ class PedidoController extends AbstractController
                 $hoja->setCellValue('G' . $j, $arPedido['horas']);
                 $hoja->setCellValue('H' . $j, $arPedido['horasDiurnas']);
                 $hoja->setCellValue('I' . $j, $arPedido['horasNocturnas']);
-                $hoja->setCellValue('J' . $j, number_format($arPedido['vrTotal'], 0,'.', ','));
-                $hoja->setCellValue('K' . $j, $arPedido['usuario']);
-                $hoja->setCellValue('L' . $j, $arPedido['estadoAutorizado']?"SI":"NO");
-                $hoja->setCellValue('M' . $j, $arPedido['estadoAprobado']?"SI":"NO");
-                $hoja->setCellValue('N' . $j, $arPedido['estadoAnulado']?"SI":"NO");
+                $hoja->setCellValue('J' . $j, $arPedido['vrSubtotal']);
+                $hoja->setCellValue('K' . $j, $arPedido['vrIva']);
+                $hoja->setCellValue('L' . $j, $arPedido['vrTotal']);
+                $hoja->setCellValue('M' . $j, $arPedido['usuario']);
+                $hoja->setCellValue('N' . $j, $arPedido['estadoAutorizado']?"SI":"NO");
+                $hoja->setCellValue('O' . $j, $arPedido['estadoAprobado']?"SI":"NO");
+                $hoja->setCellValue('P' . $j, $arPedido['estadoAnulado']?"SI":"NO");
                 $j++;
             }
             $libro->setActiveSheetIndex(0);
             header('Content-Type: application/vnd.ms-excel');
-            header("Content-Disposition: attachment;filename=soportes.xls");
+            header("Content-Disposition: attachment;filename=pedidos.xls");
             header('Cache-Control: max-age=0');
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
             $writer->save('php://output');

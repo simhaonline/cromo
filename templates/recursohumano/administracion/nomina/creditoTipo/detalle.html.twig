@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_administracion_nomina_creditoTipo_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arCreditoTipo.codigoCreditoTipoPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arCreditoTipo.nombre }}</td>
+            <td class="titulo">CONCEPTO:</td>
+            <td class="td-in-well">{{ arCreditoTipo.conceptoRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CUPO MAXIMO:</td>
+            <td class="td-in-well">{{ arCreditoTipo.cupoMaximo }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

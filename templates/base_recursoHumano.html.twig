@@ -142,7 +142,7 @@
                     <a href="#">Nomina <span class="fa arrow"></span></a>
                     <ul>
                         <li>
-                            <a href="{{ path('recursohumano_administracion_nomina_contratoTipo_lista')}}">Contrato
+                            <a href="{{ path('recursohumano_administracion_nomina_contratoTipo_lista') }}">Contrato
                                 tipo</a></li>
                         <li>
                             <a href="{{ path('recursohumano_administracion_nomina_novedadTipo_lista') }}">Novedad
@@ -150,7 +150,7 @@
                         <li>
                             <a href="{{ path('recursohumano_administracion_nomina_pagotipo_lista') }}">Pago tipo</a>
                         <li>
-                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'creditoTipo'}) }}">Credito
+                            <a href="{{ path('recursohumano_administracion_nomina_creditoTipo_lista') }}">Credito
                                 tipo</a></li>
                         <li>
                             <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'embargoTipo'}) }}">Embargo
@@ -159,7 +159,8 @@
                             <a href="{{ path('recursohumano_administracion_nomina_concepto_lista') }}">Concepto</a>
                         </li>
                         <li>
-                            <a href="{{ path('recursohumano_administracion_nomina_vacaciontipo_lista') }}">Vacacion tipo</a>
+                            <a href="{{ path('recursohumano_administracion_nomina_vacaciontipo_lista') }}">Vacacion
+                                tipo</a>
                         </li>
                         <li>
                             <a href="{{ path('recursohumano_administracion_nomina_embargojuzgado_lista') }}">Juzgado</a>
@@ -170,8 +171,11 @@
                         </li>
                         <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'tiempo'}) }}">Tiempo</a>
                         </li>
-                        <li><a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'licenciaTipo'}) }}">Licencia tipo</a></li>
-                        <li><a href="{{ path('recursohumano_administracion_nomina_liquidaciontipo_lista') }}">Liquidación tipo</a></li>
+                        <li>
+                            <a href="{{ path('administracion_lista',{'modulo':'recursoHumano','entidad':'licenciaTipo'}) }}">Licencia
+                                tipo</a></li>
+                        <li><a href="{{ path('recursohumano_administracion_nomina_liquidaciontipo_lista') }}">Liquidación
+                                tipo</a></li>
 
                     </ul>
                 </li>
@@ -268,13 +272,16 @@
                 <li>
                     <a href="#">Embargo <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('recursohumano_utilidad_embargo_bancoAgrario_lista') }}">Banco Agrario</a><li>
+                        <li><a href="{{ path('recursohumano_utilidad_embargo_bancoAgrario_lista') }}">Banco Agrario</a>
+                        <li>
                     </ul>
                 </li>
                 <li>
                     <a href="#">Cerficados <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('recursohumano_utilidad__certificadoIngreso_lista') }}">Ingreso y retencion</a><li>
+                        <li><a href="{{ path('recursohumano_utilidad__certificadoIngreso_lista') }}">Ingreso y
+                                retencion</a>
+                        <li>
                     </ul>
                 </li>
             </ul>
@@ -304,7 +311,8 @@
                 <li>
                     <a href="#">Contrato <span class="fa arrow"></span></a>
                     <ul>
-                        <li><a href="{{ path('recursohumano_informe_contrato_fecha_ingreso_lista') }}">Fecha ingreso</a></li>
+                        <li><a href="{{ path('recursohumano_informe_contrato_fecha_ingreso_lista') }}">Fecha ingreso</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -333,7 +341,8 @@
                     <a href="{{ path('recursohumano_administracion_configuracion_configuracion_lista', {'id': 1}) }}">Configuracion</a>
                 <li>
                 <li>
-                    <a href="{{ path('recursohumano_administracion_configuracion_configuracionprovision_lista') }}">Configuracion provision</a>
+                    <a href="{{ path('recursohumano_administracion_configuracion_configuracionprovision_lista') }}">Configuracion
+                        provision</a>
                 <li>
             </ul>
         </li>

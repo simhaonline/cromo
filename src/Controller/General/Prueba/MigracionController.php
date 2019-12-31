@@ -67,6 +67,7 @@ use App\Entity\Turno\TurContratoDetalleCompuesto;
 use App\Entity\Turno\TurContratoTipo;
 use App\Entity\Turno\TurFactura;
 use App\Entity\Turno\TurFacturaDetalle;
+use App\Entity\Turno\TurFacturaTipo;
 use App\Entity\Turno\TurGrupo;
 use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
@@ -3084,19 +3085,21 @@ class MigracionController extends Controller
                 vr_total,
                 usuario,
                 comentarios,
-                estado_autorizado
+                estado_autorizado,
+                estado_anulado,
+                codigo_factura_tipo_fk
                  FROM tur_factura ORDER BY codigo_factura_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 $arFactura = new TurFactura();
                 $arFactura->setCodigoFacturaPk($row['codigo_factura_pk']);
                 $arFactura->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
-//            $arFactura->setSectorRel($em->getReference(TurSector::class, $row['codigo_sector_externo']));
-//            $arFactura->setPedidoTipoRel($em->getReference(TurPedidoTipo::class, 'CON'));
+                $arFactura->setFacturaTipoRel($em->getReference(TurFacturaTipo::class, $row['codigo_factura_tipo_fk']));
                 $arFactura->setFecha(date_create($row['fecha']));
                 $arFactura->setFechaVence(date_create($row['fecha_vence']));
                 $arFactura->setPlazoPago($row['plazo_pago']);
                 $arFactura->setNumero($row['numero']);
                 $arFactura->setVrIva($row['vr_iva']);
+                $arFactura->setVrBaseAiu($row['vr_base_aiu']);
                 $arFactura->setVrTotal($row['vr_total']);
                 $arFactura->setVrNeto($row['vr_total_neto']);
                 $arFactura->setVrSubtotal($row['vr_subtotal']);
@@ -3104,6 +3107,10 @@ class MigracionController extends Controller
                 $arFactura->setVrRetencionIva($row['vr_retencion_iva']);
                 $arFactura->setUsuario($row['usuario']);
                 $arFactura->setEstadoAutorizado($row['estado_autorizado']);
+                if($row['estado_autorizado'] == 1) {
+                    $arFactura->setEstadoAprobado(1);
+                }
+                $arFactura->setEstadoAnulado($row['estado_anulado']);
                 $arFactura->setComentarios(utf8_encode($row['comentarios']));
                 $em->persist($arFactura);
                 $metadata = $em->getClassMetaData(get_class($arFactura));

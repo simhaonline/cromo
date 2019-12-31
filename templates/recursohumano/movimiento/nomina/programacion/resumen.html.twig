@@ -16,7 +16,7 @@
                 </tr>
                 <tr>
                     <td class="titulo">EMPLEADO:</td>
-                    <td class="td-in-well">{{ arProgramacionDetalle.empleadoRel.nombreCorto }}</td>
+                    <td class="td-in-well">{{ arProgramacionDetalle.codigoEmpleadoFk }} - {{ arProgramacionDetalle.empleadoRel.numeroIdentificacion }} - {{ arProgramacionDetalle.empleadoRel.nombreCorto }}</td>
                     <td class="titulo">TIEMPO:</td>
                     <td class="td-in-well">{{ arPago.tiempoRel.nombre | default() }}</td>
                     <td class="titulo">SALARIO:</td>
@@ -33,11 +33,10 @@
                             / {{ arProgramacionDetalle.fechaHastaContrato | date('Y-m-d') }}
                         {% endif %}
                     </td>
+                    <td class="titulo">CARGO:</td>
+                    <td class="td-in-well" style="text-transform: uppercase;">{{ arProgramacionDetalle.contratoRel.cargoRel.nombre | default('') }}</td>
                     <td class="titulo"></td>
                     <td class="td-in-well"></td>
-                    <td class="titulo">CARGO:</td>
-                    <td class="td-in-well"
-                        style="text-transform: uppercase;">{{ arProgramacionDetalle.contratoRel.cargoRel.nombre | default('') }}</td>
                 </tr>
                 <tr>
                     <td class="titulo">PERIODO:</td>
@@ -173,7 +172,8 @@
             <th>RFD</th>
             <th>RFN</th>
             <th>R</th>
-            <th></th>
+            <th>FIJAS</th>
+            <th>SOPORTE</th>
         </thead>
         <tbody>
             <tr>
@@ -234,6 +234,7 @@
                            style="text-align: right; width:40px" onkeypress="return validarNumeros(event)"
                            onclick="this.select()"/></td>
                 <td>{{ form_widget(form.BtnActualizarHoras, { 'attr': {'class': 'btn btn-default btn-xs', 'style': 'margin:2px'} }) }}</td>
+                <td>{{ form_widget(form.BtnActualizarHorasSoporte, { 'attr': {'class': 'btn btn-default btn-xs', 'style': 'margin:2px'} }) }}</td>
             </tr>
         </tbody>
     </table>

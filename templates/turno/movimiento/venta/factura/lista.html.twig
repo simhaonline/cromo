@@ -89,16 +89,17 @@
     <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
         <thead>
         <tr>
-            <th title="Codigo del registro"> ID</th>
-            <th title="Consecutivo de aprobación"> NUMERO</th>
-            <th title="Fecha"> FECHA</th>
-            <th title="Nombre del cliente"> NOMBRE</th>
-            <th title="Subtotal"> SUBTOTAL</th>
-            <th title="Base Aiu">AIU</th>
-            <th title="Iva">IVA</th>
-            <th title="Neto">NETO</th>
-            <th title="Total">TOTAL</th>
-            <th title="Usuario">USU</th>
+            <th>ID</th>
+            <th>TIPO</th>
+            <th>NUMERO</th>
+            <th>FECHA</th>
+            <th>CLIENTE</th>
+            <th>SUBTOTAL</th>
+            <th>AIU</th>
+            <th>IVA</th>
+            <th>NETO</th>
+            <th>TOTAL</th>
+            <th>USU</th>
             <th title="Autorizado">AUT</th>
             <th title="Aprobado">APR</th>
             <th title="Anulado">ANU</th>
@@ -114,6 +115,7 @@
         {% for arFactura in arFacturas %}
             <tr>
                 <td>{{ arFactura.codigoFacturaPk }}</td>
+                <td>{{ arFactura.facturaTipoNombre }}</td>
                 <td>{{ arFactura.numero }}</td>
                 <td>{{ arFactura.fecha | date('Y-m-d') }}</td>
                 <td>{{ arFactura.cliente }}</td>

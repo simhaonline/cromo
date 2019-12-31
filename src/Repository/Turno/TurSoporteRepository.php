@@ -359,7 +359,13 @@ class TurSoporteRepository extends ServiceEntityRepository
                     $arrayResultado[$i]['dias'] = $arSoportePagoPeriodoActualizar->getDiasPeriodo();
                 }*/
                 //Quite esta validacion porque en estelar cuando tenia induccion le pagaba mas dias
-                $diasTransporte = $arrayResultado[$i]['dias'] + $arrayResultado[$i]['induccion'];
+                $turnosNovedadEspeciales = $arrayResultado[$i]['novedad'] + $arrayResultado[$i]['induccion'];
+                if($turnosNovedadEspeciales <= $arSoporte->getDias()) {
+                    $diasTransporte = $arrayResultado[$i]['dias'] + $arrayResultado[$i]['induccion'];
+                } else {
+                    $diasTransporte = $arrayResultado[$i]['dias'];
+                }
+
                 if ($diasTransporte > $arSoporte->getDias()) {
                     $diasTransporte = $arSoporte->getDias();
                 }
@@ -370,6 +376,8 @@ class TurSoporteRepository extends ServiceEntityRepository
                         $diasTransporte = 0;
                     }
                 }
+
+
                 $intHoras = $arrayResultado[$i]['horasDescanso'] + $arrayResultado[$i]['horasNovedad'] + $arrayResultado[$i]['horasDiurnas'] + $arrayResultado[$i]['horasNocturnas'] + $arrayResultado[$i]['horasFestivasDiurnas'] + $arrayResultado[$i]['horasFestivasNocturnas'];
                 $arSoporteContrato->setDias($arrayResultado[$i]['dias']?? 0);
                 $arSoporteContrato->setDiasTransporte($diasTransporte);

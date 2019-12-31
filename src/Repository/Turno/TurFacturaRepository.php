@@ -78,7 +78,9 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoAnulado')
             ->addSelect('f.estadoContabilizado')
-            ->leftJoin('f.clienteRel', 'c');
+            ->addSelect('ft.nombre as facturaTipoNombre')
+            ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('f.facturaTipoRel', 'ft');
 
         if ($codigoFacturaPk) {
             $queryBuilder->andWhere("f.codigoFacturaPk = {$codigoFacturaPk}");

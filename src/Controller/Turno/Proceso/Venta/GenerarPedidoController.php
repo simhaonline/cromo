@@ -19,6 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
 class GenerarPedidoController extends Controller
 {
     /**
@@ -69,8 +72,9 @@ class GenerarPedidoController extends Controller
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurContrato::class)->generarPedido($arrSeleccionados, $fecha, $this->getUser()->getUserName());
             }
-            if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TurContrato::class)->listaGenerarPedido($fecha), "Contratos");
+            if ($form->get('btnExcel')->isClicked()){
+                $arPedidos = $em->getRepository(TurContrato::class)->listaGenerarPedido($fecha);
+                $this->exportarExcelPersonalizado($arPedidos);
             }
         }
         $arContratos = $paginator->paginate($em->getRepository(TurContrato::class)->listaGenerarPedido($fecha), $request->query->getInt('page', 1),1000);
@@ -79,5 +83,58 @@ class GenerarPedidoController extends Controller
             'form' => $form->createView()));
     }
 
+    public function exportarExcelPersonalizado($arMovimientos){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arMovimientos) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Movimientos');
+            $j = 0;
+            $arrColumnas=[
+                'ID',
+                'TIPO',
+                'NIT',
+                'CLIENTE',
+                'SECTOR',
+                'F_GENERACION',
+                'H',
+                'HD',
+                'HN',
+                'TOTAL',
+                'AUT',
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arMovimientos as $arMovimiento) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arMovimiento['codigoContratoPk']);
+                $hoja->setCellValue('C' . $j, $arMovimiento['contratoTipoNombre']);
+                $hoja->setCellValue('B' . $j, $arMovimiento['clienteNumeroIdentificacion']);
+                $hoja->setCellValue('E' . $j, $arMovimiento['clienteNombreCorto']);
+                $hoja->setCellValue('D' . $j, $arMovimiento['sectorNombre']);
+                $hoja->setCellValue('F' . $j, $arMovimiento['fechaGeneracion']->format('Y/m/d'));
+                $hoja->setCellValue('G' . $j, $arMovimiento['horas']);
+                $hoja->setCellValue('H' . $j, $arMovimiento['horasDiurnas']);
+                $hoja->setCellValue('I' . $j, $arMovimiento['horasNocturnas']);
+                $hoja->setCellValue('J' . $j, $arMovimiento['vrTotal']);
+                $hoja->setCellValue('K' . $j, $arMovimiento['estadoAutorizado']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=Contratos.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
+    }
 }
 

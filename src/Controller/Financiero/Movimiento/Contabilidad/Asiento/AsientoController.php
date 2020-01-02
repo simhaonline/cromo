@@ -263,11 +263,10 @@ class AsientoController extends AbstractController
     /**
      * @Route("/financiero/buscar/cuenta/asiento/{campoCodigo}", name="financiero_buscar_cuenta_asiento")
      */
-    public function buscarCuenta(Request $request, $campoCodigo)
+    public function buscarCuenta(Request $request, PaginatorInterface $paginator,$campoCodigo)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaCodigo')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaNombre')])
@@ -294,11 +293,10 @@ class AsientoController extends AbstractController
     /**
      * @Route("/financiero/buscar/centrocosto/asiento/{campoCodigo}", name="financiero_buscar_centrocosto_asiento")
      */
-    public function buscarCentroCosto(Request $request, $campoCodigo)
+    public function buscarCentroCosto(Request $request, PaginatorInterface $paginator, $campoCodigo)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCentroCostoCodigo')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCentroCostoNombre')])
@@ -325,11 +323,10 @@ class AsientoController extends AbstractController
     /**
      * @Route("/financiero/buscar/asiento/tercero/{campoCodigo}", name="financiero_buscar_tercero_asiento")
      */
-    public function buscarTercero(Request $request, $campoCodigo)
+    public function buscarTercero(Request $request, PaginatorInterface $paginator, $campoCodigo)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaCodigo')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroFinBuscarCuentaNombre')])

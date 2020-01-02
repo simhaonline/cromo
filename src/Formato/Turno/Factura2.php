@@ -59,6 +59,7 @@ class Factura2 extends \FPDF
         $this->Text(15, 80, "Direccion");
         $this->SetXY(44, 77);
         $this->MultiCell(90, 4, $arFactura->getClienteRel()->getDireccion(), 0, 'L');
+        $this->Text(135, 80, "Telefono");
         $this->Text(170, 80, $arFactura->getClienteRel()->getTelefono());
         $this->SetXY(110, 75);
         $this->SetMargins(10, 1, 10);
@@ -318,7 +319,7 @@ class Factura2 extends \FPDF
         $this->SetFont('Arial', 'B', 12);
         $this->ln(5);
         $this->SetFont('Arial', 'B', 10);
-        $this->Text(21, 35, "NIT " . $arConfiguracion->getNit() . "-" . $arConfiguracion->getDigitoVerificacion());
+        //$this->Text(21, 35, "NIT " . $arConfiguracion->getNit() . "-" . $arConfiguracion->getDigitoVerificacion());
         $this->SetXY(258, 18);
     }
 }

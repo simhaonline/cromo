@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+<div class="btn-toolbar" style="float:left">
+    <div class="btn-group">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_administracion_nomina_pension_lista') }}">Volver</a> &nbsp;&nbsp;
+    </div>
+</div>
+<br><br>
+<table width="100%" class="table table-condensed table-bordered tabla-informacion">
+    <tbody>
+    <tr>
+        <td class="titulo">ID:</td>
+        <td class="td-in-well">{{ arPension.codigoPensionPk }}</td>
+        <td class="titulo">NOMBRE:</td>
+        <td class="td-in-well">{{ arPension.nombre }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">PORCENTAJE EMPLEADO:</td>
+        <td class="td-in-well">{{ arPension.porcentajeEmpleado }}</td>
+        <td class="titulo">PORCENTAJE EMPLEADOR:</td>
+        <td class="td-in-well">{{ arPension.porcentajeEmpleador }}</td>
+    </tr>
+    <tr>
+        <td class="titulo">ORDEN:</td>
+        <td class="td-in-well">{{ arPension.orden }}</td>
+        <td class="titulo">CONCEPTO:</td>
+        <td class="td-in-well">{{ arPension.concepto | default('') }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endblock  %}

@@ -63,4 +63,43 @@ class DespachoRecogidaTipoType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista(){
+        return '[	
+            {"campo":"codigoDespachoRecogidaTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                              "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
+            {"campo":"consecutivo",                         "tipo":"numero",     "ayuda":"Consecutivo",             "titulo":"CONS"},	
+            {"campo":"generaMonitoreo",                     "tipo":"texto",     "ayuda":"Genera monitoreo",         "titulo":"MON"},	
+            {"campo":"generaCuentaPagar",               "tipo":"bool",     "ayuda":"Genera cuenta pagar",       "titulo":"GEN(CXP)"},	
+            {"campo":"codigoCuentaPagarTipoFk",         "tipo":"text",     "ayuda":"Codigo cuenta pagar tipo",    "titulo":"CXP"},	
+            {"campo":"codigoCuentaPagarTipoAnticipoFk",         "tipo":"text",     "ayuda":"Codigo cuenta pagar tipo anticipo",    "titulo":"CXP_ANT"},	
+            {"campo":"codigoComprobanteFk",                 "tipo":"texto",     "ayuda":"Codigo comprobante",       "titulo":"COMP"},	
+            {"campo":"codigoCuentaFleteFk",                 "tipo":"texto",     "ayuda":"Codigo cuenta flete",      "titulo":"CTA FLETE"},	
+            {"campo":"codigoCuentaRetencionFuenteFk",       "tipo":"texto",     "ayuda":"Codigo cuenta retencion fuente","titulo":"CTA RTE FTE"},	
+            {"campo":"codigoCuentaIndustriaComercioFk",     "tipo":"texto",     "ayuda":"Codigo cuenta industria comercio","titulo":"CTA ICA"},	
+            {"campo":"codigoCuentaSeguridadFk",             "tipo":"texto",     "ayuda":"Codigo cuenta seguridad",   "titulo":"CTA SEG"},	
+            {"campo":"codigoCuentaCargueFk",                "tipo":"texto",     "ayuda":"Codigo cuenta cargue",     "titulo":"CTA CAR"},	
+            {"campo":"codigoCuentaEstampillaFk",            "tipo":"texto",     "ayuda":"Codigo cuenta estampilla",  "titulo":"CTA EST"},	
+            {"campo":"codigoCuentaPapeleriaFk",             "tipo":"texto",     "ayuda":"Codigo cuenta papeleria",  "titulo":"CTA PAP"},	
+            {"campo":"codigoCuentaAnticipoFk",             "tipo":"texto",     "ayuda":"Codigo cuenta anticipo",  "titulo":"CTA ANT"},	
+            {"campo":"codigoCuentaPagarFk",                 "tipo":"texto",     "ayuda":"Codigo cuenta pagar",  "titulo":"CTA PAG"}	
+        ]';
+    }
+    public function getEstructuraPropiedadesExportar(){
+        return '[	
+            {"campo":"codigoDespachoRecogidaTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                              "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
+            {"campo":"consecutivo",                         "tipo":"numero",     "ayuda":"Consecutivo",             "titulo":"CONSECUTIVO"},	
+            {"campo":"generaMonitoreo",                     "tipo":"texto",     "ayuda":"Genera monitoreo",         "titulo":"GENERA MONITOREO"},	
+            {"campo":"codigoComprobanteFk",                 "tipo":"texto",     "ayuda":"Codigo comprobante",       "titulo":"CODIGO COMPROBANTE"},	
+            {"campo":"codigoCuentaFleteFk",                 "tipo":"texto",     "ayuda":"Codigo cuenta flete",      "titulo":"CODIGO CUENTA FLETE"},	
+            {"campo":"codigoCuentaRetencionFuenteFk",       "tipo":"texto",     "ayuda":"Codigo cuenta retencion fuente","titulo":"CODIGO CUENTA RETENCION FUENTE"},	
+            {"campo":"codigoCuentaIndustriaComercioFk",     "tipo":"texto",     "ayuda":"Codigo cuenta industria comercio","titulo":"CODIGO CUENTA INDUSTRIA COMERCIO"},	
+            {"campo":"codigoCuentaSeguridadFk",             "tipo":"texto",     "ayuda":"Codigo cuenta seguridad",   "titulo":"CODIGO CUENTA SEGURIDAD"},	
+            {"campo":"codigoCuentaCargueFk",                "tipo":"texto",     "ayuda":"Codigo cuenta cargue",     "titulo":"CODIGO CUENTA CARGUE"},	
+            {"campo":"codigoCuentaEstampillaFk",            "tipo":"texto",     "ayuda":"Codigo cuenta estampilla",  "titulo":"CODIGO CUENTA ESTAMPILLA"},	
+            {"campo":"codigoCuentaPapeleriaFk",             "tipo":"texto",     "ayuda":"Codigo cuenta papeleria",  "titulo":"CODIGO CUENTA PAPELERIA"},	
+            {"campo":"codigoCuentaAnticipoFk",             "tipo":"texto",     "ayuda":"Codigo cuenta anticipo",  "titulo":"CODIGO CUENTA ANTICIPO"},	
+            {"campo":"codigoCuentaPagarFk",                 "tipo":"texto",     "ayuda":"Codigo cuenta pagar",  "titulo":"CODIGO CUENTA PAGAR"}	
+        ]';
+    }
 }

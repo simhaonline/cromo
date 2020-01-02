@@ -50,4 +50,20 @@ class FacturaConceptoDetalleType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista(){
+        return '[	
+            {"campo":"codigoFacturaConceptoDetallePk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
+            {"campo":"codigoImpuestoRetencionFk",                      "tipo":"texto",     "ayuda":"RETENCION",     "titulo":"RET"},	
+            {"campo":"codigoImpuestoIvaVentaFk",                      "tipo":"texto",     "ayuda":"Iva",     "titulo":"IVA"},	
+            {"campo":"codigoCuentaFk",                      "tipo":"texto",     "ayuda":"Cuenta",     "titulo":"CUENTA"}	
+        ]';
+    }
+    public function getEstructuraPropiedadesExportar(){
+        return '[	
+            {"{"campo":"codigoFacturaConceptoDetallePk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
+        ]';
+    }
+
 }

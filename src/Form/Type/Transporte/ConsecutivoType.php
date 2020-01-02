@@ -29,4 +29,18 @@ class ConsecutivoType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista(){
+        return '[	
+            {"campo":"codigoConsecutivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"intermediacion",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"INTERMEDIACION"},	
+            {"campo":"guia",                      "tipo":"texto",     "ayuda":"Guia",     "titulo":"GUIA"}	
+        ]';
+    }
+    public function getEstructuraPropiedadesExportar(){
+        return '[	
+            {"campo":"codigoConsecutivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"intermediacion",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"INTERMEDIACION"},	
+            {"campo":"guia",                      "tipo":"texto",     "ayuda":"Guia",     "titulo":"GUIA"}	
+        ]';
+    }
 }

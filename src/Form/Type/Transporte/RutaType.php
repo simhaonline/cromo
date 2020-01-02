@@ -46,4 +46,20 @@ class RutaType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        return '[	
+            {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
+            {"campo":"codigoDespachoClaseFk",                      "tipo":"texto",     "ayuda":"V: viajaes - R: reparto",     "titulo":"CLASE"},	
+            {"campo":"operacionRel.nombre","tipo":"texto",     "ayuda":"Codigo operacin",     "titulo":"OPERACION","relacion":""}	
+        ]';
+    }
+    public function getEstructuraPropiedadesExportar()
+    {
+        return '[	
+            {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
+        ]';
+    }
 }

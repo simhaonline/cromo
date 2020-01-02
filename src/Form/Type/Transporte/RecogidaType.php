@@ -88,4 +88,57 @@ class   RecogidaType extends AbstractType {
         return 'App_recogida';
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoRecogidaPk",                        "tipo":"pk",        "ayuda":"Codigo de recogida",                       "titulo":"ID"},
+            {"campo":"codigoOperacionFk",                       "tipo":"texto",     "ayuda":"Operacion",                                "titulo":"OP"},
+            {"campo":"fechaRegistro",                           "tipo":"fecha",     "ayuda":"Fecha registro",                           "titulo":"REG"},
+            {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},
+            {"campo":"fecha",                                   "tipo":"hora",      "ayuda":"Hora",                                     "titulo":"HORA"},
+            {"campo":"rutaRecogidaRel.nombre",                  "tipo":"texto",     "ayuda":"Ruta",                       "titulo":"RUTA",             "relacion":""},
+            {"campo":"clienteRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Nombre del cliente",                       "titulo":"CLIENTE",             "relacion":""},
+            {"campo":"anunciante",                              "tipo":"texto",     "ayuda":"Anunciante",                               "titulo":"ANUNCIANTE"},
+            {"campo":"direccion",                               "tipo":"texto",     "ayuda":"Direccion",                                "titulo":"DIRECCION"},
+            {"campo":"ciudadRel.nombre",                        "tipo":"texto",     "ayuda":"Ciudad",                                   "titulo":"CIUDAD",              "relacion":""},
+            {"campo":"telefono",                               "tipo":"texto",     "ayuda":"Telefono",                                 "titulo":"TELEFONO"},
+            {"campo":"unidades",                                "tipo":"entero",    "ayuda":"Unidades",                                 "titulo":"UND"},
+            {"campo":"pesoReal",                                "tipo":"entero",    "ayuda":"Peso real",                                "titulo":"PES"},
+            {"campo":"pesoVolumen",                             "tipo":"entero",    "ayuda":"Peso volumen",                             "titulo":"VOL"},
+            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},
+            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},
+            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"},
+            {"campo":"estadoProgramado",                        "tipo":"bool",      "ayuda":"Programado",                               "titulo":"PRO"},
+            {"campo":"estadoRecogido",                          "tipo":"bool",      "ayuda":"Recogido",                                 "titulo":"REC"},
+            {"campo":"estadoDescargado",                        "tipo":"bool",      "ayuda":"",                               "titulo":""},
+            {"campo":"comentario",                               "tipo":"texto",     "ayuda":"Comentario",                                 "titulo":"COMENTARIO"}
+        ]';
+        return $campos;
+
+    }
+
+    public function getEstructuraPropiedadesFiltro()
+    {
+
+        $campos = '[
+            {"child":"codigoClienteFk", "tipo":"TextType",  "propiedades":{"label":"Cliente"}},
+            {"child":"codigoRecogidaPk","tipo":"TextType",  "propiedades":{"label":"Codigo"}},
+            {"child":"fechaDesde",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Desde"}},
+            {"child":"fechaHasta",                      "tipo":"DateType",   "propiedades":{"label":"Fecha Hasta"}},
+            {"child":"estadoProgramado","tipo":"ChoiceType","propiedades":{"label":"Programado", "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAutorizado","tipo":"ChoiceType","propiedades":{"label":"Autorizado", "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAprobado",  "tipo":"ChoiceType","propiedades":{"label":"Aprobado",   "choices":{"SI":true,"NO":false}}},
+            {"child":"estadoAnulado",   "tipo":"ChoiceType","propiedades":{"label":"Anulado",    "choices":{"SI":true,"NO":false}}}
+        ]';
+
+        return $campos;
+    }
+
+
+    public function getOrdenamiento(){
+        $campos ='[	
+            {"campo":"fecha","tipo":"DESC"}	
+        ]';
+        return $campos;
+    }
 }

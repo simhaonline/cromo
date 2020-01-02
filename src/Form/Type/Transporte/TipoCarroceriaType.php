@@ -28,4 +28,16 @@ class TipoCarroceriaType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista(){
+        return '[	
+            {"campo":"codigoTipoCarroceriaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                         "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
+        ]';
+    }
+    public function getEstructuraPropiedadesExportar(){
+        return '[	
+            {"campo":"codigoTipoCarroceriaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"nombre",                         "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
+        ]';
+    }
 }

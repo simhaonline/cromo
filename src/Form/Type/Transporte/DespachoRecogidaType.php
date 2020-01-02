@@ -66,4 +66,20 @@ class DespachoRecogidaType extends AbstractType {
         return 'App_despacho_recogida';
     }
 
+    public function getEstructuraPropiedadesFiltro()
+    {
+        $campos = '[	
+            {"child":"codigoVehiculoFk",                "tipo":"TextType",      "propiedades":{"label":"Vehiculo"}},	
+            {"child":"codigoDespachoRecogidaPk",        "tipo":"TextType",      "propiedades":{"label":"Codigo"}},	
+            {"child":"numero",                          "tipo":"TextType",      "propiedades":{"label":"Numero"}},	
+            {"child":"codigoOperacionFk",               "tipo":"EntityType",    "propiedades":{"class":"TteOperacion",   "choice_label":"nombre","label":"TODOS"}},	
+            {"child":"estadoAutorizado",                "tipo":"ChoiceType",    "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},	
+            {"child":"estadoAprobado",                  "tipo":"ChoiceType",    "propiedades":{"label":"Aprobado",       "choices":{"SI":true,"NO":false}}},	
+            {"child":"estadoAnulado",                   "tipo":"ChoiceType",    "propiedades":{"label":"Anulado",        "choices":{"SI":true,"NO":false}}},	
+            {"child":"fechaDesde",                      "tipo":"DateType",      "propiedades":{"label":"Fecha Desde"}},	
+            {"child":"fechaHasta",                      "tipo":"DateType",      "propiedades":{"label":"Fecha Hasta"}}	
+        ]';
+        return $campos;
+    }
+
 }

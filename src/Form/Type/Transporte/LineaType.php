@@ -43,4 +43,20 @@ class LineaType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista(){
+        return '[	
+            {"campo":"codigoLineaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"codigoMarcaFk",         "tipo":"texto",     "ayuda":"Codigo marca",            "titulo":"CODIGO MARCA"},	
+            {"campo":"linea",                 "tipo":"texto",     "ayuda":"Linea",                   "titulo":"LINEA"},	
+            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
+        ]';
+    }
+    public function getEstructuraPropiedadesExportar(){
+        return '[	
+            {"campo":"codigoLineaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
+            {"campo":"codigoMarcaFk",         "tipo":"texto",     "ayuda":"Codigo marca",            "titulo":"CODIGO MARCA"},	
+            {"campo":"linea",                 "tipo":"texto",     "ayuda":"Linea",                   "titulo":"LINEA"},	
+            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
+        ]';
+    }
 }

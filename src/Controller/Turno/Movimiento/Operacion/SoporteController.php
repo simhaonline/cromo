@@ -179,6 +179,9 @@ class SoporteController extends ControllerListenerGeneral
         }
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->add('btnEliminarDetalle', SubmitType::class, $arrBtnEliminar);
+        $form->add('identificacion', TextType::class,array('required' => false));
+        $form->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar']);
+        $raw = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnAutorizar')->isClicked()) {
@@ -198,12 +201,16 @@ class SoporteController extends ControllerListenerGeneral
                 $respuesta = $this->getDoctrine()->getRepository(TurSoporteContrato::class)->retirarDetalle($arrDetalles);
             }
             if ($form->get('btnExcel')->isClicked()){
-                $arSoportes = $em->getRepository(TurSoporteContrato::class)->lista($id)->getQuery()->execute();
+                $raw['filtros'] = $this->getFiltrosDetalle($form);
+                $arSoportes = $em->getRepository(TurSoporteContrato::class)->lista($raw, $id);
                 $this->exportarExcel($arSoportes);
             }
-            return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
+            if ($form->get('btnFiltrar')->isClicked()){
+                $raw['filtros'] = $this->getFiltrosDetalle($form);
+            }
+            //return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
-        $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($id), $request->query->getInt('page', 1), 500);
+        $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($raw, $id), $request->query->getInt('page', 1), 500);
 
         return $this->render('turno/movimiento/operacion/soporte/detalle.html.twig', [
             'form' => $form->createView(),
@@ -388,5 +395,13 @@ class SoporteController extends ControllerListenerGeneral
             }
         }
         return $boolFestivo;
+    }
+
+    public function getFiltrosDetalle($form)
+    {
+        $filtro = [
+            'identificacion' => $form->get('identificacion')->getData(),
+        ];
+        return $filtro;
     }
 }

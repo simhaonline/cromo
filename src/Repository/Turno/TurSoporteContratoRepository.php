@@ -24,9 +24,15 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         parent::__construct($registry, TurSoporteContrato::class);
     }
 
-    public function lista($id)
+    public function lista($raw, $id)
     {
-        $session = new Session();
+        $filtros = $raw['filtros'] ?? null;
+        $identificacion = null;
+        if ($filtros) {
+            $identificacion = $filtros['identificacion'] ?? null;
+        }
+
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSoporteContrato::class, 'sc');
         $queryBuilder
             ->select('sc.codigoSoporteContratoPk')
@@ -80,7 +86,11 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             ->leftJoin('sc.empleadoRel', 'e')
             ->where('sc.codigoSoporteFk = ' . $id);
 
-        return $queryBuilder;
+        if ($identificacion) {
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$identificacion}'");
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function listaHoras($codigoSoporte, $codigoSoporteContrato)

@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Financiero\FinTercero;
+use App\Entity\General\GenAsesor;
 use App\Entity\General\GenIdentificacion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
@@ -167,6 +168,7 @@ class TteClienteRepository extends ServiceEntityRepository
                     $arCliente->setDireccion($raw['direccion']);
                     $arCliente->setCorreo($raw['correo']);
                     $arCliente->setCiudadRel($em->getReference(TteCiudad::class, $raw['codigoCiudadFk']));
+                    $arCliente->setAsesorRel($em->getReference(GenAsesor::class, $raw['codigoAsesorFk']));
                     $arCliente->setCondicionRel($em->getReference(TteCondicion::class, $raw['codigoCondicionFk']));
                     $arCliente->setOperacionRel($em->getReference(TteOperacion::class, $raw['codigoOperacionFk']));
                     $arCliente->setGuiaPagoContado(1);

@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+        {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoCostoGrupoPk) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Nombre:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.nombre) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th title="Codigo del registro">ID</th>
+            <th title="Nombre del registro">NOMBRE</th>
+            <th title="Codigo centro costo ">CENTRO COSTO</th>
+            <th></th>
+            <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arCostoGrupo in arCostoGrupos %}
+            <tr>
+                <td>{{ arCostrosClase.codigoCostoGrupoPk }}</td>
+                <td>{{ arCostrosClase.nombre }}</td>
+                <td>{{ arCostrosClase.centroCostro }}</td>
+                <td class="text-center">
+                    <a href="{{ path('recursohumano_administracion_costo_grupo_nuevo',{'id': arCostrosClase.codigoCostoGrupoPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('recursohumano_administracion_costo_clase_detalle',{'id' :  arCostrosClase.codigoCostoGrupoPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arCostrosClase.codigoCostoGrupoPk }}" />
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arCostoGrupos.getTotalItemCount }}
+                    </span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arCostoGrupos) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_administracion_costo_grupo_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+    <br /><br /><br />
+{% endblock %}

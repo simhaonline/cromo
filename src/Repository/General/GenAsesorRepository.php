@@ -3,6 +3,7 @@
 namespace App\Repository\General;
 
 use App\Entity\General\GenAsesor;
+use App\Entity\General\GenIdentificacion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -37,5 +38,14 @@ class GenAsesorRepository extends ServiceEntityRepository
             $array['data'] = $this->getEntityManager()->getReference(GenAsesor::class, $session->get('filtroGenAsesor'));
         }
         return $array;
+    }
+
+    public function apiWindowsLista($raw) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(GenAsesor::class, 'a')
+            ->select('a.codigoAsesorPk')
+            ->addSelect('a.nombre');
+        $ar = $queryBuilder->getQuery()->getResult();
+        return $ar;
     }
 }

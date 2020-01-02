@@ -9,7 +9,7 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
-            {{ form_widget(form.btnCerrar) }}
+            {{ form_widget(form.btnTerminar) }}
         </div>
     </div>
     <div style="float:right">
@@ -152,7 +152,7 @@
                     </div>
                     <div class="btn-toolbar" style="float: right">
                         <div class="btn-group">
-                            {{ form_widget(form.btnCerrarDetalle) }}
+                            {{ form_widget(form.btnTerminarDetalle) }}
                         </div>
                         <div class="btn-group">
                             {% if arContrato.estadoAutorizado == true %}

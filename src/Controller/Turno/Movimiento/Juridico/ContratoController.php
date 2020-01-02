@@ -159,8 +159,8 @@ class ContratoController extends AbstractController
         $arrBtnLiquidar = ['label' => 'Liquidar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCerrar = ['label' => 'Cerrar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCerrarDetalle = ['label' => 'Cerrar detalle', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnTerminar = ['label' => 'Terminar', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnTerminarDetalle = ['label' => 'Terminar detalle', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAbrirDetalle = ['label' => 'Abrir detalle', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arContrato->getEstadoAutorizado()) {
@@ -169,24 +169,24 @@ class ContratoController extends AbstractController
             $arrBtnActualizar['disabled'] = true;
             $arrBtnLiquidar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
-            $arrBtnCerrar['disabled'] = false;
-            $arrBtnCerrarDetalle['disabled'] = true;
+            $arrBtnTerminar['disabled'] = false;
+            $arrBtnTerminarDetalle['disabled'] = true;
             $arrBtnAbrirDetalle['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
         }
         if ($arContrato->getEstadoAprobado()) {
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
-            $arrBtnCerrarDetalle['disabled'] = true;
+            $arrBtnTerminarDetalle['disabled'] = true;
             $arrBtnAbrirDetalle['disabled'] = true;
         }
         if ($arContrato->getEstadoTerminado()) {
-            $arrBtnCerrar['disabled'] = true;
+            $arrBtnTerminar['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
         }
-        $form->add('btnCerrar', SubmitType::class, $arrBtnCerrar);
-        $form->add('btnCerrarDetalle', SubmitType::class, $arrBtnCerrarDetalle);
+        $form->add('btnTerminar', SubmitType::class, $arrBtnTerminar);
+        $form->add('btnTerminarDetalle', SubmitType::class, $arrBtnTerminarDetalle);
         $form->add('btnAbrirDetalle', SubmitType::class, $arrBtnAbrirDetalle);
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         //$form->add('btnLiquidar', SubmitType::class, $arrBtnLiquidar);
@@ -223,7 +223,7 @@ class ContratoController extends AbstractController
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(TurContratoDetalle::class)->actualizarDetalles($arrControles, $form, $arContrato);
             }
-            if ($form->get('btnCerrarDetalle')->isClicked()) {
+            if ($form->get('btnTerminarDetalle')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurContratoDetalle::class)->cerrarSeleccionados($arrSeleccionados);
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
@@ -235,8 +235,8 @@ class ContratoController extends AbstractController
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
                 return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_detalle', ['id' => $id]));
             }
-            if ($form->get('btnCerrar')->isClicked()) {
-                if ($arContrato->isEstadoAutorizado() == 1) {
+            if ($form->get('btnTerminar')->isClicked()) {
+                if ($arContrato->getEstadoAutorizado() == 1) {
                     $arContrato->setEstadoAprobado(1);
                     $arContrato->setEstadoTerminado(1);
                     $arContrato->setCodigoUsuarioCierre($this->getUser()->getUsername());

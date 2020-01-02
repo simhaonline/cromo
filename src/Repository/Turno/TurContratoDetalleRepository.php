@@ -195,8 +195,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             $em = $this->getEntityManager();
             foreach ($arrSeleccionados AS $codigo) {
                 $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigo);
-                if ($arContratoDetalle->getEstadoCerrado() == 0) {
-                    $arContratoDetalle->setEstadoCerrado(1);
+                if ($arContratoDetalle->getEstadoTerminado() == 0) {
+                    $arContratoDetalle->setEstadoTerminado(1);
                 }
             }
             $em->flush();

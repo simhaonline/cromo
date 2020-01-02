@@ -214,6 +214,27 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param $arrDetallesSeleccionados
+     * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function descartar($arrDetalles)
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetalles) {
+            foreach ($arrDetalles as $codigo) {
+                $ar = $em->getRepository(TurPedidoDetalle::class)->find($codigo);
+                if ($ar) {
+                    $ar->setEstadoProgramado(1);
+                    $em->persist($ar);
+                }
+            }
+            $em->flush();
+        }
+    }
+
     public function informe($raw)
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;

@@ -55,7 +55,8 @@ class ProgramacionController extends AbstractController
             ->add('anio', TextType::class, array('required' => false, 'data'=>$strAnio))
             ->add('mes', TextType::class, array('required' => false, 'data'=>$strMes))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
-            ->setMethod('GET')
+            ->add('btnDescartar', SubmitType::class, array('label' => 'Descartar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->getForm();
         $form->handleRequest($request);
         $raw = [];
@@ -63,8 +64,14 @@ class ProgramacionController extends AbstractController
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
+            if ($form->get('btnDescartar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(TurPedidoDetalle::class)->descartar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion'));
+            }
         }
-        $arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->pendienteProgramar($raw);
+        //$arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->pendienteProgramar($raw);
+        $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteProgramar($raw), $request->query->getInt('page', 1), 500);
         return $this->render('turno/utilidad/operacion/programacion/lista.html.twig', [
             'arPedidoDetalles' => $arPedidoDetalles,
             'form' => $form->createView()

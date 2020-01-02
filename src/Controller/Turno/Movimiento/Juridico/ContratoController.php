@@ -70,7 +70,7 @@ class ContratoController extends AbstractController
                 General::get()->setExportar($em->getRepository(TurContrato::class)->lista($raw), "Contratos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurContrato::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_lista'));
             }

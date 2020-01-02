@@ -275,7 +275,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 if ($arIncapacidad->getIncapacidadTipoRel()->getGeneraPago() == 0) {
                     $pagoDetalle = 0;
                 }
-                if ($arProgramacionDetalle->getEmpleadoRel()->getPagadoEntidad() == 1) {
+                if ($arProgramacionDetalle->getContratoRel()->getPagadoEntidad() == 1) {
                     $pagoDetalle = 0;
                 }
                 $pagoDetalle = round($pagoDetalle);
@@ -326,7 +326,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 if ($arIncapacidad->getIncapacidadTipoRel()->getGeneraPago() == 0) {
                     $pagoDetalle = 0;
                 }
-                if ($arProgramacionDetalle->getEmpleadoRel()->getPagadoEntidad() == 1) {
+                if ($arProgramacionDetalle->getContratoRel()->getPagadoEntidad() == 1) {
                     $pagoDetalle = 0;
                 }
                 $pagoDetalle = round($pagoDetalle);

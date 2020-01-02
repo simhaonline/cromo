@@ -254,6 +254,7 @@ class ContratoType extends AbstractType
             ->add('codigoCostoTipoFk',ChoiceType::class,['required' => true, 'choices' => ['FIJO' => 'FIJ', 'FIJO DISTRIBUIDO' => 'DIS', 'OPERATIVO' => 'OPE']])
             ->add('salarioIntegral',CheckboxType::class,['required' => false, 'label' => 'Salario integral'])
             ->add('auxilioTransporte',CheckboxType::class,['required' => false, 'label' => 'Auxilio transporte'])
+            ->add('pagadoEntidad',CheckboxType::class,['required' => false, 'label' => 'Pagado entidad'])
             ->add('vrDevengadoPactado',NumberType::class,['required' => false])
             ->add('habilitadoTurno',CheckboxType::class,['required' => false, 'label' => 'Habilitado turno'])
             ->add('turnoFijo',CheckboxType::class,['required' => false, 'label' => 'Turno fijo'])

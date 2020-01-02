@@ -264,12 +264,6 @@ class RhuEmpleado
     private $codigoCargoFk;
 
     /**
-     * Empleado pagado por la entidad de externa
-     * @ORM\Column(name="pagado_entidad", type="boolean", nullable=true, options={"default":false})
-     */
-    private $pagadoEntidad = false;
-
-    /**
      * @ORM\Column(name="permiso_especial", type="string", length=15, nullable=true)
      * * @Assert\Length(
      *     max=15,
@@ -1193,22 +1187,6 @@ class RhuEmpleado
     public function setCodigoCargoFk($codigoCargoFk): void
     {
         $this->codigoCargoFk = $codigoCargoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPagadoEntidad()
-    {
-        return $this->pagadoEntidad;
-    }
-
-    /**
-     * @param mixed $pagadoEntidad
-     */
-    public function setPagadoEntidad($pagadoEntidad): void
-    {
-        $this->pagadoEntidad = $pagadoEntidad;
     }
 
     /**

@@ -288,6 +288,12 @@ class RhuContrato
     private $codigoClienteFk;
 
     /**
+     * Empleado pagado por la entidad de externa
+     * @ORM\Column(name="pagado_entidad", type="boolean", nullable=true, options={"default":false})
+     */
+    private $pagadoEntidad = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuSalarioTipo", inversedBy="contratosSalarioTipoRel")
      * @ORM\JoinColumn(name="codigo_salario_tipo_fk", referencedColumnName="codigo_salario_tipo_pk")
      */
@@ -2094,6 +2100,22 @@ class RhuContrato
     public function setClienteRel($clienteRel): void
     {
         $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagadoEntidad()
+    {
+        return $this->pagadoEntidad;
+    }
+
+    /**
+     * @param mixed $pagadoEntidad
+     */
+    public function setPagadoEntidad($pagadoEntidad): void
+    {
+        $this->pagadoEntidad = $pagadoEntidad;
     }
 
 

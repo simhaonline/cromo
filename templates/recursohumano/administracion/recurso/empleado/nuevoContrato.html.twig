@@ -74,13 +74,10 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <div class="col-sm-offset-1 col-sm-3">
-                        {{ form_widget(form.auxilioTransporte) }}
-                        {{ form_errors(form.auxilioTransporte) }}
-                    </div>
-                    <div class="col-sm-2">
-                        {{ form_widget(form.salarioIntegral) }}
-                        {{ form_errors(form.salarioIntegral) }}
+                    <label class="col-sm-2 control-label">Cliente:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.clienteRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
+                        {{ form_errors(form.clienteRel) }}
                     </div>
                     <label class="col-sm-2 control-label">Adicional:</label>
                     <div class="col-sm-4">
@@ -89,10 +86,11 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Cliente:</label>
+                    <label class="col-sm-2 control-label"></label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.clienteRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                        {{ form_errors(form.clienteRel) }}
+                        {{ form_widget(form.auxilioTransporte) }}
+                        {{ form_widget(form.salarioIntegral) }}
+                        {{ form_widget(form.pagadoEntidad) }}
                     </div>
                     <label class="col-sm-2 control-label">Adicional prestacional:</label>
                     <div class="col-sm-4">

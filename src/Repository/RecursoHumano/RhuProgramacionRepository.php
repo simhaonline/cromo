@@ -315,7 +315,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 }*/
 
                 $aplicaPorcentaje = true;
-                if ($arContrato->getEmpleadoRel()->getPagadoEntidad()) {
+                if ($arContrato->getPagadoEntidad()) {
                     $salarioPromedioPrimas = $douSalario;
                     $aplicaPorcentaje = false;
                 }

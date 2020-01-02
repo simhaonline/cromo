@@ -3,7 +3,6 @@
 namespace App\Controller\RecursoHumano\Administracion\Examen;
 
 
-use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEntidadExamen;
 use App\Entity\RecursoHumano\RhuEntidadExamenDetalle;
@@ -11,11 +10,14 @@ use App\Entity\RecursoHumano\RhuExamenListaPrecio;
 use App\Entity\RecursoHumano\RhuExamenTipo;
 use App\Form\Type\RecursoHumano\EntidadExamenType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntidadExamenController extends ControllerListenerGeneral
+class EntidadExamenController extends AbstractController
 {
     protected $clase = RhuEntidadExamen::class;
     protected $claseFormulario = EntidadExamenType::class;
@@ -30,35 +32,40 @@ class EntidadExamenController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/recursohumano/administracion/examen/entidadexamen/lista", name="recursohumano_administracion_examen_entidadexamen_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = $this->botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
+        $form = $this->createFormBuilder()
+            ->add('codigoEntidadExamenPk', TextType::class, array('required' => false))
+            ->add('nombre', TextType::class, array('required' => false))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => $form->get('limiteRegistros')->getData()
+        ];
+        if ($form->isSubmitted() ) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->getFiltros($form);
+                General::get()->setExportar($em->getRepository(RhuEntidadExamen::class)->lista($raw), "Examenes");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $em->getRepository(RhuEntidadExamen::class)->eliminar($arrSeleccionados);
+            }
+        }
+        $arEntidadExamenes = $paginator->paginate($em->getRepository(RhuEntidadExamen::class)->lista($raw), $request->query->getInt('page', 1), 30);
 
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
-            }
-        }
-        $datos = $this->getDatosLista(true);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Examenes");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $this->get("UtilidadesModelo")->eliminar(RhuEntidadExamen::class, $arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_administracion_examen_entidadexamen_lista'));
-            }
-        }
         return $this->render('recursohumano/administracion/examen/entidadexamen/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView()
+            'arEntidadExamenes' => $arEntidadExamenes,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -199,5 +206,16 @@ class EntidadExamenController extends ControllerListenerGeneral
             'arEntidadExamen' => $arEntidadExamen,
             'arExamenTipos' => $arExamenTipos,
             'form' => $form->createView()));
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoEntidadExamen' => $form->get('codigoEntidadExamenPk')->getData(),
+            'nombre' => $form->get('nombre')->getData(),
+        ];
+
+        return $filtro;
+
     }
 }

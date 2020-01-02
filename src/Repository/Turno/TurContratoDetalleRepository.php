@@ -175,8 +175,37 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
     {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
-            ->select('cd')
-            ->leftJoin('cd.contratoRel', 'c');
+            ->select('cd.codigoContratoDetallePk')
+            ->addSelect('cli.nombreCorto as cliente')
+            ->addSelect('cd.periodo')
+            ->addSelect('cd.fechaDesde')
+            ->addSelect('cd.fechaHasta')
+            ->addSelect('cd.cantidad')
+            ->addSelect('cd.lunes')
+            ->addSelect('cd.martes')
+            ->addSelect('cd.miercoles')
+            ->addSelect('cd.jueves')
+            ->addSelect('cd.viernes')
+            ->addSelect('cd.sabado')
+            ->addSelect('cd.domingo')
+            ->addSelect('cd.festivo')
+            ->addSelect('cd.horas')
+            ->addSelect('cd.horasDiurnas')
+            ->addSelect('cd.horasNocturnas')
+            ->addSelect('cd.dias')
+            ->addSelect('cd.estadoTerminado')
+            ->addSelect('p.nombre as puesto')
+            ->addSelect('i.nombre as item')
+            ->addSelect('m.nombre as modalidad')
+            ->addSelect('co.estadoAutorizado')
+            ->leftJoin('cd.puestoRel', 'p')
+            ->leftJoin('cd.contratoRel', 'c')
+            ->leftJoin('cd.itemRel', 'i')
+            ->leftJoin('cd.modalidadRel', 'm')
+            ->leftJoin('cd.contratoRel', 'co')
+            ->leftJoin('co.clienteRel', 'cli')
+            ->addOrderBy('cli.nombreCorto');
+
         if ($session->get('filtroRhuInformeContratoDetalleCodigoCliente') != '') {
             $queryBuilder->andWhere("c.codigoClienteFk  = '{$session->get('filtroRhuInformeContratoDetalleCodigoCliente')}'");
         }
@@ -186,7 +215,25 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         if ($session->get('filtroRhuInformeContratoDetalleFechaHasta') != null) {
             $queryBuilder->andWhere("cd.fechaHasta <= '{$session->get('filtroRhuInformeContratoDetalleFechaHasta')} 23:59:59'");
         }
-        return $queryBuilder;
+
+        switch ($session->get('filtroRhuInformeContratoDetalleEstadoAutorizado')) {
+            case '0':
+                $queryBuilder->andWhere("co.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("co.estadoAutorizado = 1");
+                break;
+        }
+        switch ($session->get('filtroRhuInformeContratoDetalleEstadoTerminado')) {
+            case '0':
+                $queryBuilder->andWhere("cd.estadoTerminado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("cd.estadoTerminado = 1");
+                break;
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function cerrarSeleccionados($arrSeleccionados)

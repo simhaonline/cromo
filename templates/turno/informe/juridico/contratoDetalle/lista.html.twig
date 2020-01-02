@@ -10,7 +10,8 @@
             <div>
                 <div class="widget-body">
                     <div class="form-group form-group-sm">
-                        <label for="form_txtCodigoEmpleado" class="col-sm-offset-1 col-sm-1 control-label">Cliente:</label>
+                        <label for="form_txtCodigoEmpleado"
+                               class="col-sm-offset-1 col-sm-1 control-label">Cliente:</label>
                         <div class="col-sm-10">
                             <div class="row">
                                 <div class="col-lg-2">
@@ -22,7 +23,8 @@
                                     <div class="input-group">
                                         <input id="form_txtNombreCorto" class="form-control" readonly>
                                         <span class="input-group-btn">
-                                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_buscar_cliente', { 'campoCodigo': 'form_txtCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('turno_buscar_cliente', { 'campoCodigo': 'form_txtCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarEMpleado', 600, 900)">Buscar</a>
                                         </span>
                                     </div>
                                 </div>
@@ -86,30 +88,37 @@
         </tr>
         </thead>
         <tbody>
+        {% set nombreCliente = '' %}
         {% for arContratoDetalle in arContratoDetalles %}
             <tr>
-                <td>{{ arContratoDetalle.codigoContratoDetallePk }}</td>
-                <td>{{ arContratoDetalle.puestoRel.nombre | default('') }}</td>
-                <td>{{ arContratoDetalle.itemRel.nombre | default('') }}</td>
-                <td>{{ arContratoDetalle.modalidadRel.nombre | default('') }}</td>
-                <td>{{ arContratoDetalle.periodo }}</td>
-                <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
-                <td>{{ arContratoDetalle.fechaHasta | date('Y-m-d') }}</td>
-                <td>{{ arContratoDetalle.cantidad }}</td>
-                <td>{{ arContratoDetalle.lunes?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.martes?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.miercoles?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.jueves?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.viernes?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.sabado?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.domingo?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.festivo?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.horas }}</td>
-                <td>{{ arContratoDetalle.horasDiurnas }}</td>
-                <td>{{ arContratoDetalle.horasNocturnas }}</td>
-                <td>{{ arContratoDetalle.dias }}</td>
-                <td>{{ arContratoDetalle.contratoRel.estadoAutorizado?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.estadoTerminado?"SI":"NO" }}</td>
+            {% if nombreCliente != arContratoDetalle.cliente %}
+                <tr>
+                    <td colspan="22"><b> {{ arContratoDetalle.cliente }} </b></td>
+                </tr>
+                {% set nombreCliente =  arContratoDetalle.cliente %}
+            {% endif %}
+            <td>{{ arContratoDetalle.codigoContratoDetallePk }}</td>
+            <td>{{ arContratoDetalle.puesto | default('') }}</td>
+            <td>{{ arContratoDetalle.item | default('') }}</td>
+            <td>{{ arContratoDetalle.modalidad | default('') }}</td>
+            <td>{{ arContratoDetalle.periodo }}</td>
+            <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
+            <td>{{ arContratoDetalle.fechaHasta | date('Y-m-d') }}</td>
+            <td>{{ arContratoDetalle.cantidad }}</td>
+            <td>{{ arContratoDetalle.lunes?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.martes?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.miercoles?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.jueves?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.viernes?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.sabado?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.domingo?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.festivo?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.horas }}</td>
+            <td>{{ arContratoDetalle.horasDiurnas }}</td>
+            <td>{{ arContratoDetalle.horasNocturnas }}</td>
+            <td>{{ arContratoDetalle.dias }}</td>
+            <td>{{ arContratoDetalle.estadoAutorizado?"SI":"NO" }}</td>
+            <td>{{ arContratoDetalle.estadoTerminado?"SI":"NO" }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -123,7 +132,10 @@
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
         {{ knp_pagination_render(arContratoDetalles) }}
     </div>
-    <br /><br />
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <br/><br/>
     {{ form_end(form) }}
 {% endblock %}
 

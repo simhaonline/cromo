@@ -34,11 +34,19 @@
                         <div class="col-sm-4">
                             {{ form_widget(form.fechaDesde) }}
                         </div>
+                        <label for="" class="control-label col-sm-4">Autorizado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget((form.estadoAutorizado)) }}
+                        </div>
                     </div>
                     <div class="form-group form-group-sm">
                         <label class=" col-sm-2 control-label">Fecha desde:</label>
                         <div class="col-sm-4">
                             {{ form_widget(form.fechaHasta) }}
+                        </div>
+                        <label for="" class="control-label col-sm-4">Terminado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget((form.estadoTerminado)) }}
                         </div>
                     </div>
                 </div>
@@ -54,63 +62,40 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>CONTRATO</th>
-            <th>CONCEPTO</th>
-            <th>MODALIDAD</th>
             <th>PUESTO</th>
+            <th>ITEM</th>
+            <th>MODALIDAD</th>
             <th>PERIODO</th>
             <th>DESDE</th>
             <th>HASTA</th>
-            <th>COMPUESTO</th>
-            <th>DIAS</th>
-            <th>HORAS</th>
-            <th TITLE="Horas diurnas">HD</th>
-            <th  TITLE="Horas nocturnas">HN</th>
             <th>CANT</th>
-            <th>PRECIO</th>
-            <th>PRECIO MINIMO</th>
-            <th>SUBTOTAL</th>
-            <th>IVA</th>
-            <td>BASE AIU</td>
-            <td>SALARIO BASE</td>
-            <td>TOTAL DETALLE</td>
-            <td>LUNES</td>
-            <td>MARTES</td>
-            <td>MIERCOLES</td>
-            <td>JUEVES</td>
-            <td>VIERNES</td>
-            <td>SABADO</td>
-            <td>DOMINGO</td>
-            <td>FESTIVO</td>
-            <td>TER</td>
-            <td>% IVA</td>
-            <td>% IVA BASE</td>
+            <th>L</th>
+            <th>M</th>
+            <th>X</th>
+            <th>J</th>
+            <th>V</th>
+            <th>S</th>
+            <th>D</th>
+            <th>F</th>
+            <th>H</th>
+            <th>HD</th>
+            <th>HN</th>
+            <th>DIAS</th>
+            <th>AUT</th>
+            <th>TER</th>
         </tr>
         </thead>
         <tbody>
         {% for arContratoDetalle in arContratoDetalles %}
             <tr>
                 <td>{{ arContratoDetalle.codigoContratoDetallePk }}</td>
-                <td>{{ arContratoDetalle.codigoContratoFk }}</td>
-                <td>{{ arContratoDetalle.conceptoRel.nombre | default('') }}</td>
-                <td>{{ arContratoDetalle.modalidadRel.nombre | default('') }}</td>
                 <td>{{ arContratoDetalle.puestoRel.nombre | default('') }}</td>
+                <td>{{ arContratoDetalle.itemRel.nombre | default('') }}</td>
+                <td>{{ arContratoDetalle.modalidadRel.nombre | default('') }}</td>
                 <td>{{ arContratoDetalle.periodo }}</td>
                 <td>{{ arContratoDetalle.fechaDesde | date('Y-m-d') }}</td>
                 <td>{{ arContratoDetalle.fechaHasta | date('Y-m-d') }}</td>
-                <td>{{ arContratoDetalle.compuesto?"SI":"NO" }}</td>
-                <td>{{ arContratoDetalle.dias }}</td>
-                <td>{{ arContratoDetalle.horas }}</td>
-                <td>{{ arContratoDetalle.horasDiurnas }}</td>
-                <td>{{ arContratoDetalle.horasNocturnas }}</td>
                 <td>{{ arContratoDetalle.cantidad }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrPrecio | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrSubtotal | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrIva | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrBaseAiu | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.vrTotalDetalle | number_format(0, '.', ',') }}</td>
                 <td>{{ arContratoDetalle.lunes?"SI":"NO" }}</td>
                 <td>{{ arContratoDetalle.martes?"SI":"NO" }}</td>
                 <td>{{ arContratoDetalle.miercoles?"SI":"NO" }}</td>
@@ -119,9 +104,12 @@
                 <td>{{ arContratoDetalle.sabado?"SI":"NO" }}</td>
                 <td>{{ arContratoDetalle.domingo?"SI":"NO" }}</td>
                 <td>{{ arContratoDetalle.festivo?"SI":"NO" }}</td>
+                <td>{{ arContratoDetalle.horas }}</td>
+                <td>{{ arContratoDetalle.horasDiurnas }}</td>
+                <td>{{ arContratoDetalle.horasNocturnas }}</td>
+                <td>{{ arContratoDetalle.dias }}</td>
+                <td>{{ arContratoDetalle.contratoRel.estadoAutorizado?"SI":"NO" }}</td>
                 <td>{{ arContratoDetalle.estadoTerminado?"SI":"NO" }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.porcentajeIva }}</td>
-                <td CLASS="numero">{{ arContratoDetalle.porcentajeBaseIva }}</td>
             </tr>
         {% endfor %}
         </tbody>

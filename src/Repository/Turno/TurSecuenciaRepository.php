@@ -60,7 +60,8 @@ class TurSecuenciaRepository extends ServiceEntityRepository
             ->addSelect('s.sabado')
             ->addSelect('s.domingo')
             ->addSelect('s.festivo')
-            ->addSelect('s.domingoFestivo');
+            ->addSelect('s.domingoFestivo')
+        ->addSelect('s.homologar');
         if ($session->get('filtroTurSecuenciaCodigoSecuencia') != '') {
             $queryBuilder->andWhere("s.codigoSecuenciaPk LIKE '%{$session->get('filtroTurSecuenciaCodigoSecuencia')}%'");
 

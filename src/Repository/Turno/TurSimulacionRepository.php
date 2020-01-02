@@ -23,6 +23,8 @@ class TurSimulacionRepository extends ServiceEntityRepository
         if($codigoPedidoDetalle) {
             $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurSimulacion::class, 's')
                 ->select('s.codigoSimulacionPk')
+                ->addSelect('s.codigoEmpleadoFk')
+                ->addSelect('s.nombreCorto')
                 ->addSelect('s.anio')
                 ->addSelect('s.mes')
                 ->addSelect('s.dia1')

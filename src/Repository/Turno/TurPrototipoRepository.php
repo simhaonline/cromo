@@ -39,7 +39,8 @@ class TurPrototipoRepository extends ServiceEntityRepository
                 ->addSelect('p.turnoE')
                 ->addSelect('p.codigoSecuenciaFk')
                 ->leftJoin('p.empleadoRel', 'e')
-                ->where("p.codigoContratoDetalleFk = {$codigoContratoDetalle}");
+                ->where("p.codigoContratoDetalleFk = {$codigoContratoDetalle}")
+            ->orderBy('p.posicion', 'ASC');
             $arPrototipos = $queryBuilder->getQuery()->getResult();
         }
         return $arPrototipos;
@@ -62,7 +63,8 @@ class TurPrototipoRepository extends ServiceEntityRepository
             $arSimulacion->setPedidoDetalleRel($arPedidoDetalle);
             $arSimulacion->setAnio($fechaProgramacion->format('Y'));
             $arSimulacion->setMes($fechaProgramacion->format('m'));
-
+            $arSimulacion->setCodigoEmpleadoFk($arPrototipo->getCodigoEmpleadoFk());
+            $arSimulacion->setNombreCorto($arPrototipo->getEmpleadoRel()->getNombreCorto());
             //$arSimulacionDetalle->setRecursoRel($arServicioDetalleRecurso->getRecursoRel());
             //$arSimulacionDetalle->setUsuario($usuario);
             $fechaInicial = $arPrototipo->getFechaInicioSecuencia()->format('Y-m-d');

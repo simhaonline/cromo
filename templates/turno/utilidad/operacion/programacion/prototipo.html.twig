@@ -118,6 +118,8 @@
         <tr>
             <th>AÑO</th>
             <th>MES</th>
+            <th>COD</th>
+            <th>EMPLEADO</th>
             {% for arrDiaSemana in arrDiaSemana %}
                 <th {{ arrDiaSemana.festivo? 'class="dia-festivo"' : '' }}>{{ arrDiaSemana.dia }}{{ arrDiaSemana.diaSemana }}</th>
             {% endfor %}
@@ -128,6 +130,8 @@
             <tr>
                 <td>{{ arSimulacion.anio }}</td>
                 <td>{{ arSimulacion.mes }}</td>
+                <td>{{ arSimulacion.codigoEmpleadoFk }}</td>
+                <td>{{ arSimulacion.nombreCorto }}</td>
                 <td>{{ arSimulacion.dia1 }}</td>
                 <td>{{ arSimulacion.dia2 }}</td>
                 <td>{{ arSimulacion.dia3 }}</td>

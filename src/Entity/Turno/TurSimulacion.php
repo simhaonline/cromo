@@ -7,14 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurSimulacionRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TurSimulacion
 {
-    public $infoLog = [
-        "primaryKey" => "codigoSimulacionPk",
-        "todos"     => true,
-    ];
 
     /**
      * @ORM\Id
@@ -27,6 +22,16 @@ class TurSimulacion
      * @ORM\Column(name="codigo_pedido_detalle_fk", type="integer")
      */
     private $codigoPedidoDetalleFk;
+
+    /**
+     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoFk;
+
+    /**
+     * @ORM\Column(name="nombre_corto", type="string", length=80, nullable=true)
+     */
+    private $nombreCorto;
 
     /**
      * @ORM\Column(name="anio", type="integer")
@@ -836,6 +841,38 @@ class TurSimulacion
     public function setPedidoDetalleRel($pedidoDetalleRel): void
     {
         $this->pedidoDetalleRel = $pedidoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNombreCorto()
+    {
+        return $this->nombreCorto;
+    }
+
+    /**
+     * @param mixed $nombreCorto
+     */
+    public function setNombreCorto($nombreCorto): void
+    {
+        $this->nombreCorto = $nombreCorto;
     }
 
 

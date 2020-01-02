@@ -126,9 +126,9 @@
                 <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
                 <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
                 <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
-                <td>{{ arPedidoDetalle.horas }}({{ arPedidoDetalle.horasProgramadas }})</td>
-                <td>{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})</td>
-                <td>{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }})</td>
+                <td class="numero">{{ arPedidoDetalle.horas }}({{ arPedidoDetalle.horasProgramadas }})</td>
+                <td class="numero">{{ arPedidoDetalle.horasDiurnas }}({{ arPedidoDetalle.horasDiurnasProgramadas }})</td>
+                <td class="numero">{{ arPedidoDetalle.horasNocturnas }}({{ arPedidoDetalle.horasNocturnasProgramadas }})</td>
                 <td class="numero">{{ arPedidoDetalle.codigoContratoDetalleFk }}</td>
                 <td style="text-align: center;">
                     {% if arPedidoDetalle.codigoContratoDetalleFk is not null %}

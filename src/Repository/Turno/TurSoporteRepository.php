@@ -189,16 +189,15 @@ class TurSoporteRepository extends ServiceEntityRepository
 
                         if ($numeroContratos > 1) {
                             $arSoporte->setContratoMultiple(1);
-                            if ($arContrato->getFechaDesde() > $arSoporte->getFechaDesde()) {
+                            if ($arContrato['fechaDesde'] > $arSoporte->getFechaDesde()) {
                                 $arSoporteContrato->setFechaDesde($arContrato['fechaDesde']);
                             } else {
                                 $arSoporteContrato->setFechaDesde($arSoporte->getFechaDesde());
                             }
-
-                            if ($arContrato->getIndefinido() == 1) {
+                            if ($arContrato['indefinido'] == 1) {
                                 $arSoporteContrato->setFechaHasta($arSoporte->getFechaHasta());
                             } else {
-                                if ($arContrato->getFechaHasta() < $arSoporte->getFechaHasta()) {
+                                if ($arContrato['fechaHasta'] < $arSoporte->getFechaHasta()) {
                                     $arSoporteContrato->setFechaHasta($arContrato['fechaHasta']);
                                 } else {
                                     $arSoporteContrato->setFechaHasta($arSoporte->getFechaHasta());

@@ -167,6 +167,7 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('c.codigoDistribucionFk')
             ->addSelect('c.auxilioTransporte')
             ->addSelect('c.turnoFijo')
+            ->addSelect('c.indefinido')
             ->where("c.codigoEmpleadoFk = {$codigoEmpleado}")
             ->andWhere("c.fechaUltimoPago < '{$fechaHasta}'")
             ->andWhere("c.fechaDesde <= '{$fechaHasta}'")

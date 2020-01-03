@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FacturaController extends AbstractController
 {
@@ -78,6 +80,8 @@ class FacturaController extends AbstractController
             ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('BtnInterfazTrade', SubmitType::class, array('label' => 'TRADE',))
+            ->add('BtnInterfazMvTrade', SubmitType::class, array('label' => 'MVTRADE',))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
@@ -100,6 +104,20 @@ class FacturaController extends AbstractController
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_lista'));
+            }
+            if ($form->get('BtnInterfazTrade')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $raw['filtros'] = $this->getFiltros($form);
+                $arfacturas = $em->getRepository(TurFactura::class)->lista($raw);
+                $this->generarInterfazOfimaticaTrade($arfacturas);
+            }
+            if ($form->get('BtnInterfazMvTrade')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $raw['filtros'] = $this->getFiltros($form);
+                $arfacturas = $em->getRepository(TurFactura::class)->lista($raw);
+                $this->generarInterfazOfimaticaMvTrade($arfacturas);
             }
         }
 
@@ -455,5 +473,261 @@ class FacturaController extends AbstractController
         return $fitro;
     }
 
+    private function generarInterfazOfimaticaTrade($arfacturas)
+    {
+        /**
+         * @var TurFactura $arFactura
+         * @var \PHPExcel $objPhpExcel
+         */
+        ob_clean();
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        $em = $this->getDoctrine()->getManager();
+        $libro = new Spreadsheet();
+        $hoja = $libro->getActiveSheet();
+        $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+//        $hoja->setTitle('Movimientos');
+        // Set document properties
+        for ($col = 'A'; $col !== 'O'; $col++) {
+            $hoja->getColumnDimension($col)->setAutoSize(true);
+        }
+        $hoja->getStyle('G')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+        $hoja->getStyle('H')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+        $hoja
+            ->setCellValue('A1', 'TRADE')
+            ->setCellValue('A2', 'ORIGEN')//Tipo de movimiento de la factura
+            ->setCellValue('B2', 'TIPODCTO')//Tipo de movimiento de la factura
+            ->setCellValue('C2', 'NRODCTO')//Numero de documento de la factura
+            ->setCellValue('D2', 'NIT')//Nit del cliente
+            ->setCellValue('E2', 'DIR')//Direccion del cliente o de la factura
+            ->setCellValue('F2', 'CIUDADCLI')//Ciudad del cliente
+            ->setCellValue('G2', 'FECHA')//Fecha de la factura
+            ->setCellValue('H2', 'FECHA1')//Fecha de vencimiento de la factura
+            ->setCellValue('I2', 'RESPRETE')
+            ->setCellValue('J2', 'CALRETE')
+            ->setCellValue('K2', 'CALRETICA')
+            ->setCellValue('L2', 'CTRTOPES')
+            ->setCellValue('M2', 'PGIVA')
+            ->setCellValue('N2', 'PRETIVA')
+            ->setCellValue('O2', 'NOTA')
+            ->setCellValue('P2', 'CODIGOCTA')
+            ->setCellValue('Q2', 'TIPOMVTO')
+            ->setCellValue('R2', 'CODINT')
+            ->setCellValue('S2', 'CONTADO')
+            ->setCellValue("T2", "MEDIOPAG")
+            ->setCellValue("U2", "DECIMALES");
+        $libro->setActiveSheetIndex(0);
+
+//        $i = 3;
+//        $dql = $em->getRepository("BrasaTurnoBundle:TurFactura")->listaPendienteExportarOfimaticaDql($session->get('filtroFacturaNumero'), $session->get('filtroTurCodigoCliente'), $session->get('filtroFacturaEstadoAutorizado'), $session->get('filtroFacturaFiltrarFecha') ? $session->get('filtroFacturaFechaDesde') : "", $session->get('filtroFacturaFiltrarFecha') ? $session->get('filtroFacturaFechaHasta') : "", $session->get('filtroFacturaEstadoAnulado'), $session->get('filtroTurnosCodigoFacturaTipo'));
+//        $query = $em->createQuery($dql);
+//        $arFacturas = new \Brasa\TurnoBundle\Entity\TurFactura();
+//        $arFacturas = $query->getResult();
+//        foreach ($arFacturas as $arFactura) {
+//            $objPHPExcel->setActiveSheetIndex(0)
+//                ->setCellValue('A' . $i, 'FAC')//Tipo de movimiento de la factura
+//                ->setCellValue('B' . $i, $arFactura->getFacturaTipoRel()->getAbreviatura())//Tipo de movimiento de la factura
+//                ->setCellValue('C' . $i, $arFactura->getNumero())//Numero de documento de la factura
+//                ->setCellValue('D' . $i, $arFactura->getClienteRel()->getNit() . "" . ($arFactura->getCodigoClienteDireccionFk() ? "S" . $arFactura->getCodigoClienteDireccionFk() : "") . "-" . $arFactura->getClienteRel()->getDigitoVerificacion())//Nit del cliente
+//                ->setCellValue('E' . $i, $arFactura->getCodigoClienteDireccionFk() ? $arFactura->getClienteDireccionRel()->getDireccion() : $arFactura->getClienteRel()->getDireccion())//Direccion del cliente o de la factura
+//                ->setCellValue('F' . $i, $arFactura->getClienteRel()->getCiudadRel()->getCodigoInterface())//Fecha de la factura
+//                ->setCellValue('G' . $i, PHPExcel_Shared_Date::PHPToExcel($arFactura->getFecha()))//Fecha de la factura
+//                ->setCellValue('H' . $i, PHPExcel_Shared_Date::PHPToExcel($arFactura->getFechaVence()))//Fecha de la factura//Fecha de vencimiento de la factura
+//                ->setCellValue('I' . $i, $arFactura->getVrRetencionFuente() > 0 ? "1" : 0)//Si el encabezado maneja retencion en la fuente los detalles van en 1
+//                ->setCellValue('J' . $i, $arFactura->getVrRetencionFuente() > 0 ? 1 : 0)//Si el encabezado maneja retencion en la renta los detalles van en 1
+//                ->setCellValue('K' . $i, 0)//CALRETICA reteica PENDIENTE VALIDAR CUANDO SE CALCULE LA RETENCION DEL ICA
+//                ->setCellValue('L' . $i, "1")//CTRTOPES Siempre va 1
+//                ->setCellValue('M' . $i, "19")//Porcentaje del iva
+//                ->setCellValue('N' . $i, $arFactura->getVrRetencionIva() > 0 ? "15" : 0)//CTRTOPES Siempre va 1
+//                ->setCellValue('O' . $i, $arFactura->getDescripcion())//Descripcion del encabezado
+//                ->setCellValue('P' . $i, "13050501")//Siempre ese valor
+//                ->setCellValue('Q' . $i, "2001")//Siempre ese valor
+//                ->setCellValue('R' . $i, $arFactura->getFacturaTipoRel()->getTipo() == 2 ? 402 : 401)//Siempre ese valor
+//                ->setCellValue('S' . $i, 0)//Siempre va 0
+//                ->setCellValue('T' . $i, 01)//Siempre va 05
+//                ->setCellValue('U' . $i, 9)//Siempre va 9
+//            ;
+//            $i++;
+//        }
+//        //Aunque la columna diga bruto EXPORTAR el valor neto.
+//        $objPHPExcel->getActiveSheet()->setTitle('Facturas');
+//        $objPHPExcel->setActiveSheetIndex(0);
+
+        $libro->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;filename=Trade.xls");
+        header('Cache-Control: max-age=0');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+        $writer->save('php://output');
+    }
+
+    /**
+     * Funcion para generar los detalles de la factura para la interfaz de ofimatica
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Writer_Exception
+     */
+    private function generarInterfazOfimaticaMvTrade($arfacturas)
+    {
+//        /**
+//         * @var TurFacturaDetalle $arFacturaDetalle
+//         */
+//        ob_clean();
+//        $session = new session;
+//        $em = $this->getDoctrine()->getManager();
+//        $objPHPExcel = new \PHPExcel();
+//        // Set document properties
+//        $objPHPExcel->getProperties()->setCreator("EMPRESA")
+//            ->setLastModifiedBy("EMPRESA")
+//            ->setTitle("Office 2007 XLSX Test Document")
+//            ->setSubject("Office 2007 XLSX Test Document")
+//            ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+//            ->setKeywords("office 2007 openxml php")
+//            ->setCategory("Test result file");
+//        $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize(9);
+//        $objPHPExcel->getActiveSheet()->getStyle('1')->getFont()->setBold(true);
+//        for ($col = 'A'; $col !== 'O'; $col++) {
+//            $objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+//        }
+//        $objPHPExcel->getActiveSheet()->getStyle('Y')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+//        $objPHPExcel->getActiveSheet()->getStyle('Z')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+//        $objPHPExcel->getActiveSheet()->getStyle('AA')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+//        $objPHPExcel->getActiveSheet()->getStyle('AB')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+//        $objPHPExcel->getActiveSheet()->getStyle('AG')->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+//        $objPHPExcel->setActiveSheetIndex(0)
+//            ->setCellValue('A1', 'MVTRADE')
+//            ->setCellValue('A2', 'ORIGEN')//Tipo de movimiento de la factura
+//            ->setCellValue('B2', 'TIPODCTO')//Tipo de movimiento de la factura
+//            ->setCellValue('C2', 'NRODCTO')//Numero de documento de la factura
+//            ->setCellValue('D2', 'BODEGA')//Bodega
+//            ->setCellValue('E2', 'PRODUCTO')//codigo de interfaz del concepto de servicio
+//            ->setCellValue('F2', 'NOMBRE')//Nombre del concepto de servicio
+//            ->setCellValue('G2', 'CANTIDAD')//Cantidad unitaria
+//            ->setCellValue('H2', 'CANTORIG')//Cantidad unitaria
+//            ->setCellValue('I2', 'CANVENTA')//Cantidad unitaria
+//            ->setCellValue('J2', 'VALORUNIT')//Valor unitario del producto
+//            ->setCellValue('K2', 'VLRVENTA')//Valor unitario del producto
+//            ->setCellValue('L2', 'ZVALORUNIT')//Valor unitario del producto
+//            ->setCellValue('M2', 'CODCC')//Codigo del centro de costo del puesto por cada copncepto de servicio
+//            ->setCellValue('N2', 'ITEMIVA')//Si tiene iva 1 sino 0
+//            ->setCellValue('O2', 'TARIVA')//Se debe concater SG con el porcentaje del iva
+//            ->setCellValue('P2', 'IVA')//Porcentaje del iva
+//            ->setCellValue('Q2', 'ITEMRETE')//Si lleva retencion
+//            ->setCellValue('R2', 'CODRETE')//Se debe concatenar SG y el porcentaje de la retencion
+//            ->setCellValue('S2', 'PORETE')//Pocentaje de la retencion
+//            ->setCellValue('T2', 'ITEMICA')//SI maneja reteica 1 sino 0
+//            ->setCellValue('U2', 'CODRETICA')//Se debe concatenar SG y el porcentaje del reteica
+//            ->setCellValue('V2', 'PORICA')//Porcentaje del reteica
+//            ->setCellValue('W2', 'TIPOMVTO')//Tipo de movimiento siempre 2001
+//            ->setCellValue('X2', 'TOPRETE')//Campo en servicio factura PENDIENTE DEFINIR
+//            ->setCellValue('Y2', 'FECENT')//Fecha del documento
+//            ->setCellValue('Z2', 'FECHA')//Fecha del documento
+//            ->setCellValue('AA2', 'FECING')//Fecha del documento
+//            ->setCellValue('AB2', 'FECMOD')//Siempre vacio
+//            ->setCellValue('AC2', 'CODINT')//Siempre 603
+//            ->setCellValue('AD2', 'CTAVTA')//Siempre 0
+//            ->setCellValue('AE2', 'NUMFACTNC')//Cuando sea una ND o una NC se deben llenar esos dos campos con el número de factura y el tipo de documento de la factura asociada. En el caso de una factura deben ir en blanco
+//            ->setCellValue('AF2', 'TIPODCTOFA')//Cuando sea una ND o una NC se deben llenar esos dos campos con el número de factura y el tipo de documento de la factura asociada. En el caso de una factura deben ir en blanco
+//            ->setCellValue('AG2', 'FECPEDIDO')
+//            ->setCellValue('AH2', 'NROPEDIDO')
+//            ->setCellValue('AI2', 'NOTA');
+//
+//
+//        $i = 3;
+//        $dql = $em->getRepository("BrasaTurnoBundle:TurFacturaDetalle")->listaPendienteExportarOfimaticaDql($session->get('filtroFacturaNumero'), $session->get('filtroTurCodigoCliente'), $session->get('filtroFacturaEstadoAutorizado'), $session->get('filtroFacturaFiltrarFecha') ? $session->get('filtroFacturaFechaDesde') : "", $session->get('filtroFacturaFiltrarFecha') ? $session->get('filtroFacturaFechaHasta') : "", $session->get('filtroFacturaEstadoAnulado'), $session->get('filtroTurnosCodigoFacturaTipo'));
+//        $query = $em->createQuery($dql);
+//        $arFacturaDetalles = new \Brasa\TurnoBundle\Entity\TurFacturaDetalle();
+//        $arFacturaDetalles = $query->getResult();
+//        foreach ($arFacturaDetalles as $arFacturaDetalle) {
+//            $strBodega = "";
+//            $codigoCentroCosto = $arFacturaDetalle->getCodigoPuestoFk() ? $arFacturaDetalle->getPuestoRel()->getCodigoCentroCostoContabilidadFk() : "";
+//            if (substr($codigoCentroCosto, 0, 1) == 1) {//Segun primer numero del centro de costo.
+//                $strBodega = "BBARRANQUILLA";
+//            }
+//            if (substr($codigoCentroCosto, 0, 1) == 2) {//Segun primer numero del centro de costo.
+//                $strBodega = "BMEDELLIN";
+//            }
+//            if (substr($codigoCentroCosto, 0, 1) == 3) {//Segun primer numero del centro de costo.
+//                $strBodega = "BMANIZALES";
+//            }
+//            if (substr($codigoCentroCosto, 0, 1) == 4) {//Segun primer numero del centro de costo.
+//                $strBodega = "BBOGOTA";
+//            }
+//            $porIva = $arFacturaDetalle->getPorBaseIva() > 0 ? ($arFacturaDetalle->getPorIva() * $arFacturaDetalle->getPorBaseIva()) / 100 : $arFacturaDetalle->getPorIva();
+//            $porReteFuente = $arFacturaDetalle->getPorBaseIva() > 0 ? $arFacturaDetalle->getConceptoServicioRel()->getPorRetencionFuente() * $arFacturaDetalle->getPorBaseIva() / 100 : $arFacturaDetalle->getFacturaRel()->getFacturaServicioRel()->getPorRetencionFuente();
+//
+//            $tarIca = 0;
+//            //Logica de negocio si el detalle maneja retencion ICA
+////            if ($arFacturaDetalle->getCodigoConceptoServicioFk() && $arFacturaDetalle->getFacturaRel()->getCodigoClienteFk() && $arFacturaDetalle->getCodigoPuestoFk() && $arFacturaDetalle->getPuestoRel()->getCodigoCiudadFk()) {//Validar si el detalle si tiene asociado un cliente y un concepto de servicio
+////                $arClienteIca = $em->getRepository("BrasaTurnoBundle:TurClienteIca")->findOneBy(array('codigoClienteFk' => $arFacturaDetalle->getFacturaRel()->getClienteRel()->getCodigoClientePk(),
+////                    'codigoDane' => $arFacturaDetalle->getPuestoRel()->getCiudadRel()->getCodigoInterface(), 'codigoServicioErp' => $arFacturaDetalle->getConceptoServicioRel()->getCodigoServicioErp()));
+////                if ($arClienteIca) {
+////                    $tarIca = $arClienteIca->getPorIca();
+////                }
+////            }
+//            if ($arFacturaDetalle->getPuestoRel() && $arFacturaDetalle->getPuestoRel()->getCiudadRel() && $arFacturaDetalle->getConceptoServicioRel()) {
+//                $tarIca = $em->getRepository("BrasaTurnoBundle:TurClienteIca")->tarifaIca($arFacturaDetalle->getFacturaRel()->getCodigoClienteFk(), $arFacturaDetalle->getPuestoRel()->getCodigoCiudadFk(), $arFacturaDetalle->getConceptoServicioRel()->getCodigoServicioErp(), $arFacturaDetalle->getConceptoServicioRel()->getCodigoConceptoServicioPk());
+//            }
+//            if ($arFacturaDetalle->getPorBaseIva() > 0 && $tarIca > 0) {
+//                $tarIca = ($tarIca * $arFacturaDetalle->getPorBaseIva()) / 1000;//Se valida si el detalle maneja porcentaje de base.
+//            }
+//
+//            $objPHPExcel->setActiveSheetIndex(0)
+//                ->setCellValue('A' . $i, 'FAC')//Tipo de movimiento de la factura
+//                ->setCellValue('B' . $i, $arFacturaDetalle->getFacturaRel()->getFacturaTipoRel()->getAbreviatura())//Tipo de movimiento de la factura
+//                ->setCellValue('C' . $i, $arFacturaDetalle->getFacturaRel()->getNumero())//Numero de documento de la factura
+//                ->setCellValue('D' . $i, $strBodega)//Nombre de bodega
+//                ->setCellValue('E' . $i, $arFacturaDetalle->getConceptoServicioRel()->getCodigoServicioErp() . "" . $arFacturaDetalle->getCodigoModalidadServicioFk())//Codigo del producto
+//                ->setCellValue('F' . $i, $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacion())//Nombre de facturacion del servicio
+//                ->setCellValue('G' . $i, $arFacturaDetalle->getCantidad())//Cantidad
+//                ->setCellValue('H' . $i, $arFacturaDetalle->getCantidad())//Cantidad
+//                ->setCellValue('I' . $i, $arFacturaDetalle->getCantidad())//Cantidad
+//                ->setCellValue('J' . $i, $arFacturaDetalle->getVrPrecio())//Valor unitario
+//                ->setCellValue('K' . $i, $arFacturaDetalle->getVrPrecio())//Valor unitario
+//                ->setCellValue('L' . $i, $arFacturaDetalle->getVrPrecio())//Valor unitario
+//                ->setCellValue('M' . $i, $codigoCentroCosto)//Centro de costo contabilidad
+//                ->setCellValue('N' . $i, $arFacturaDetalle->getIva() > 0 ? 1 : 0)//Si el item maneja iva 1 sino 0
+//                ->setCellValue('O' . $i, str_replace('.', '_', $porIva))//Porcentaje del iva, si el iva tiene punto se pone _ validar
+//                ->setCellValue('P' . $i, $porIva)//Porcentaje del iva
+//                ->setCellValue('Q' . $i, $arFacturaDetalle->getFacturaRel()->getVrRetencionFuente() > 0 ? "1" : 0)//Si el encabezado maneja retencion en la fuenta va 1
+//                ->setCellValue('R' . $i, str_replace('.', '_', $porReteFuente))//Porcentaje de retencion en la fuente
+//                ->setCellValue('S' . $i, $porReteFuente)//Porcentaje de retencion
+//                ->setCellValue('T' . $i, $tarIca > 0 ? 1 : 0)//Si tiene ica de retencion ica, PENDIENTE VALIDAR CUANDO LA FACTURA MANEJE VALOR DE RETENCION ICA.
+//                ->setCellValue('U' . $i, str_replace('.', '_', $tarIca))//Porcentaje de retencion ica
+//                ->setCellValue('V' . $i, $tarIca)//Porcentaje de retencion ica
+//                ->setCellValue('W' . $i, 2001)//Siempre ese valor
+//                ->setCellValue('X' . $i, 1)//Siempre va en 1
+//                ->setCellValue('Y' . $i, PHPExcel_Shared_Date::PHPToExcel($arFacturaDetalle->getFacturaRel()->getFecha()->format('Y-m-d')))//Fecha del movimiento
+//                ->setCellValue('Z' . $i, PHPExcel_Shared_Date::PHPToExcel($arFacturaDetalle->getFacturaRel()->getFecha()->format('Y-m-d')))//Fecha del movimiento
+//                ->setCellValue('AA' . $i, PHPExcel_Shared_Date::PHPToExcel($arFacturaDetalle->getFacturaRel()->getFecha()->format('Y-m-d')))//Fecha del movimiento
+//                ->setCellValue('AB' . $i, PHPExcel_Shared_Date::PHPToExcel($arFacturaDetalle->getFacturaRel()->getFecha()->format('Y-m-d')))//Fecha del movimiento
+//                ->setCellValue('AC' . $i, 603)//Siempre 603
+//                ->setCellValue('AD' . $i, 0)//Siempre 0
+//                ->setCellValue('AE' . $i, $arFacturaDetalle->getCodigoFacturaDetalleFk() != null ? $arFacturaDetalle->getFacturaDetalleRel()->getFacturaRel()->getNumero() : "")//Cuando sea una ND o una NC se deben llenar esos dos campos con el número de factura y el tipo de documento de la factura asociada. En el caso de una factura deben ir en blanco
+//                ->setCellValue('AF' . $i, $arFacturaDetalle->getCodigoFacturaDetalleFk() != null ? $arFacturaDetalle->getFacturaRel()->getFacturaTipoRel()->getAbreviatura() : "")//Cuando sea una ND o una NC se deben llenar esos dos campos con el número de factura y el tipo de documento de la factura asociada. En el caso de una factura deben ir en blanco
+//                ->setCellValue('AG' . $i, $arFacturaDetalle->getCodigoPedidoDetalleFk() != null ? $arFacturaDetalle->getPedidoDetalleRel()->getPedidoRel()->getFecha()->format('Y-m-d') : "")//Si la factura detalle proviene de un pedido capturar la fecha del pedido
+//                ->setCellValue('AH' . $i, $arFacturaDetalle->getCodigoPedidoDetalleFk() != null ? $arFacturaDetalle->getPedidoDetalleRel()->getPedidoRel()->getNumero() : "")//Si la factura detalle proviene de un pedido capturar el numero de pedido
+//                ->setCellValue('AI' . $i, $arFacturaDetalle->getPuestoRel()->getNombre() . "/" . ($arFacturaDetalle->getPedidoDetalleRel() != null ? $arFacturaDetalle->getPedidoDetalleRel()->getModalidadServicioRel()->getNombre() : ""));//Nota
+//
+//            $i++;
+//        }
+//        //Aunque la columna diga bruto EXPORTAR el valor neto.
+//        $objPHPExcel->getActiveSheet()->setTitle('Facturas');
+//        $objPHPExcel->setActiveSheetIndex(0);
+//
+//        // Redirect output to a client’s web browser (Excel2007)
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header('Content-Disposition: attachment;filename="MVTRADE_SOGA_OFI.xlsx"');
+//        header('Cache-Control: max-age=0');
+//        // If you're serving to IE 9, then the following may be needed
+//        header('Cache-Control: max-age=1');
+//        // If you're serving to IE over SSL, then the following may be needed
+//        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+//        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+//        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+//        header('Pragma: public'); // HTTP/1.0
+//        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+//        $objWriter->save('php://output');
+//        exit;
+    }
 }
 

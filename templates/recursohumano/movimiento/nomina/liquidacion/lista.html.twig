@@ -84,8 +84,10 @@
                 <td>{{ arLiquidacion.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arLiquidacion.estadoAnulado ? 'SI':'NO' }}</td>
                 <td style="text-align: center;">
+                    {% if arLiquidacion.estadoAutorizado == 0 %}
                     <a href="{{ path('recursohumano_movimiento_nomina_liquidacion_nuevo',{'id': arLiquidacion.codigoLiquidacionPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    {% endif %}
                 </td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_nomina_liquidacion_detalle',{'id' : arLiquidacion.codigoLiquidacionPk }) }}">

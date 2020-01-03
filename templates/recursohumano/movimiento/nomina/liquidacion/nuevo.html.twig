@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_errors(form) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="control-label col-sm-2">Fecha hasta:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHasta) }}
+                </div>
+                <label for="form_nombre" class="control-label col-sm-2"></label>
+                <div class="col-sm-4">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_nomina_liquidacion_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

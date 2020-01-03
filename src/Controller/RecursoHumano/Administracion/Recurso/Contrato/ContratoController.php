@@ -19,6 +19,7 @@ use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuLiquidacionTipo;
 use App\Entity\RecursoHumano\RhuParametroPrestacion;
+use App\Form\Type\RecursoHumano\ContratoActualizarTerminadoType;
 use App\Form\Type\RecursoHumano\ContratoParametrosInicialesType;
 use App\Form\Type\RecursoHumano\ContratoType;
 use App\Formato\RecursoHumano\Contrato;
@@ -209,6 +210,31 @@ class ContratoController extends AbstractController
             }
         }
         return $this->render('recursohumano/administracion/recurso/contrato/parametrosIniciales.html.twig', [
+            'arContrato' => $arContrato,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/administracion/recurso/contrato/detalle/actualizarterminado/{id}", name="recursohumano_administracion_recurso_contrato_detalle_actualizarterminado")
+     */
+    public function actualizarTerminado(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arContrato = $em->getRepository(RhuContrato::class)->find($id);
+        $form = $this->createForm(ContratoActualizarTerminadoType::class, $arContrato);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $em->persist($arContrato);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursohumano/administracion/recurso/contrato/actualizarTerminado.html.twig', [
             'arContrato' => $arContrato,
             'form' => $form->createView()
         ]);

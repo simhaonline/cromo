@@ -48,7 +48,6 @@ class ProgramacionType extends AbstractType
             ->add('nombre', TextType::class, ['required' => false,'attr' => ['placeholder' => 'Opcional']])
             ->add('mensajePago', TextareaType::class, ['required' => false])
             ->add('aplicarTransporte', CheckboxType::class, array('required' => false, 'data'=>true))
-
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

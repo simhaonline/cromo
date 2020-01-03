@@ -92,7 +92,27 @@ class LiquidacionController extends AbstractController
      */
     public function nuevo(Request $request, $id)
     {
-        return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_lista'));
+        $em = $this->getDoctrine()->getManager();
+        $arLiquidacion = new RhuLiquidacion();
+        if ($id != 0) {
+            $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($id);
+            if (!$arLiquidacion) {
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_lista'));
+            }
+        }
+        $form = $this->createForm(LiquidacionType::class, $arLiquidacion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                    $em->persist($arLiquidacion);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', ['id' => $arLiquidacion->getCodigoLiquidacionPk()]));
+            }
+        }
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/nuevo.html.twig', [
+            'form' => $form->createView()
+        ]);
+
     }
 
     /**

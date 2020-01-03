@@ -7,9 +7,10 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botoneraAdministracion.html.twig' %}
-            <a class="btn btn-sm btn-default abrir-modal"
-               href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros
-                iniciales</a>
+            <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros iniciales</a>
+            {% if arContrato.estadoTerminado %}
+                <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_actualizarterminado',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Actualizar terminado</a>
+            {% endif %}
         </div>
         {% if arContrato.estadoTerminado == false %}
             <div class="btn-group">

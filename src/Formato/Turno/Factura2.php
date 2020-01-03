@@ -133,8 +133,8 @@ class Factura2 extends \FPDF
                     $pdf->Cell(10, 4, number_format($arFacturaDetalle->getCantidad(), 0, '.', ','), 0, 0, 'C');
                     $pdf->SetFont('Arial', 'B', 9);
                     $modalidad = "";
-                    if ($arFacturaDetalle->getCodigoModalidadServicioFk()) {
-                        $modalidad = "-" . utf8_decode($arFacturaDetalle->getModalidadServicioRel()->getNombre());
+                    if ($arFacturaDetalle->getCodigoModalidadFk()) {
+                        $modalidad = "-" . utf8_decode($arFacturaDetalle->getModalidadRel()->getNombre());
                     }
                     $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle->getPuestoRel()->getNombre()) . $modalidad, 0, 61), 0, 0, 'L');
                     $pdf->Cell(124, 4, substr(utf8_decode('') , 0, 61), 0, 0, 'L');
@@ -144,11 +144,11 @@ class Factura2 extends \FPDF
                     $pdf->Ln();
                     $pdf->SetX(15);
                     $pdf->Cell(10, 4, '', 0, 0, 'R');
-                    if ($arFacturaDetalle->getTipoPedido() == 'FIJO') {
-                        $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacion() . " " . $arFacturaDetalle->getDetalle();
-                    } else {
-                        $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacionAdicional() . " " . $arFacturaDetalle->getDetalle();
-                    }
+                    //if ($arFacturaDetalle->getTipoPedido() == 'FIJO') {
+                        $strCampo = $arFacturaDetalle->getConceptoRel()->getNombreFacturacion() . " " . $arFacturaDetalle->getDetalle();
+                    //} else {
+                    //    $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacionAdicional() . " " . $arFacturaDetalle->getDetalle();
+                    //}
 
                     $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
                     $pdf->MultiCell(124, 4, $arFacturaDetalle->getItemRel()->getNombre(), 0, 'L');

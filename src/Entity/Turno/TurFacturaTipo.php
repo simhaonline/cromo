@@ -22,6 +22,11 @@ class TurFacturaTipo
     private $codigoFacturaTipoPk;
 
     /**
+     * @ORM\Column(name="codigo_factura_clase_pk", type="string", length=10)
+     */
+    private $codigoFacturaClasePk;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaCobrarTipoFk;
@@ -892,6 +897,24 @@ class TurFacturaTipo
     {
         $this->codigoCuentaAiuFk = $codigoCuentaAiuFk;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaClasePk()
+    {
+        return $this->codigoFacturaClasePk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaClasePk
+     */
+    public function setCodigoFacturaClasePk($codigoFacturaClasePk): void
+    {
+        $this->codigoFacturaClasePk = $codigoFacturaClasePk;
+    }
+
+
 
 
 }

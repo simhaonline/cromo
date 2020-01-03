@@ -22,9 +22,9 @@ class TurFacturaTipo
     private $codigoFacturaTipoPk;
 
     /**
-     * @ORM\Column(name="codigo_factura_clase_pk", type="string", length=10)
+     * @ORM\Column(name="codigo_factura_clase_fk", type="string", length=10)
      */
-    private $codigoFacturaClasePk;
+    private $codigoFacturaClaseFk;
 
     /**
      * @ORM\Column(name="codigo_cuenta_cobrar_tipo_fk", type="string", length=20, nullable=true)
@@ -35,11 +35,6 @@ class TurFacturaTipo
      * @ORM\Column(name="nombre", type="string", length=50)
      */
     private $nombre;
-
-    /**
-     * @ORM\Column(name="tipo", type="integer")
-     */
-    private $tipo = 0;
 
     /**
      * @ORM\Column(name="operacion", type="integer")
@@ -227,22 +222,6 @@ class TurFacturaTipo
     protected $facturasFacturaTipoRel;
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoFacturaTipoPk()
@@ -256,6 +235,22 @@ class TurFacturaTipo
     public function setCodigoFacturaTipoPk($codigoFacturaTipoPk): void
     {
         $this->codigoFacturaTipoPk = $codigoFacturaTipoPk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaClaseFk()
+    {
+        return $this->codigoFacturaClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaClaseFk
+     */
+    public function setCodigoFacturaClaseFk($codigoFacturaClaseFk): void
+    {
+        $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
     }
 
     /**
@@ -288,22 +283,6 @@ class TurFacturaTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTipo()
-    {
-        return $this->tipo;
-    }
-
-    /**
-     * @param mixed $tipo
-     */
-    public function setTipo($tipo): void
-    {
-        $this->tipo = $tipo;
     }
 
     /**
@@ -789,6 +768,22 @@ class TurFacturaTipo
     /**
      * @return mixed
      */
+    public function getNotaCredito()
+    {
+        return $this->notaCredito;
+    }
+
+    /**
+     * @param mixed $notaCredito
+     */
+    public function setNotaCredito($notaCredito): void
+    {
+        $this->notaCredito = $notaCredito;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getNumeroResolucionDianFactura()
     {
         return $this->numeroResolucionDianFactura;
@@ -837,38 +832,6 @@ class TurFacturaTipo
     /**
      * @return mixed
      */
-    public function getFacturasFacturaTipoRel()
-    {
-        return $this->facturasFacturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturasFacturaTipoRel
-     */
-    public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
-    {
-        $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNotaCredito()
-    {
-        return $this->notaCredito;
-    }
-
-    /**
-     * @param mixed $notaCredito
-     */
-    public function setNotaCredito($notaCredito): void
-    {
-        $this->notaCredito = $notaCredito;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoCuentaIngresoFk()
     {
         return $this->codigoCuentaIngresoFk;
@@ -901,19 +864,18 @@ class TurFacturaTipo
     /**
      * @return mixed
      */
-    public function getCodigoFacturaClasePk()
+    public function getFacturasFacturaTipoRel()
     {
-        return $this->codigoFacturaClasePk;
+        return $this->facturasFacturaTipoRel;
     }
 
     /**
-     * @param mixed $codigoFacturaClasePk
+     * @param mixed $facturasFacturaTipoRel
      */
-    public function setCodigoFacturaClasePk($codigoFacturaClasePk): void
+    public function setFacturasFacturaTipoRel($facturasFacturaTipoRel): void
     {
-        $this->codigoFacturaClasePk = $codigoFacturaClasePk;
+        $this->facturasFacturaTipoRel = $facturasFacturaTipoRel;
     }
-
 
 
 

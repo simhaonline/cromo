@@ -78,6 +78,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->addSelect('f.estadoAprobado')
             ->addSelect('f.estadoAnulado')
             ->addSelect('f.estadoContabilizado')
+            ->addSelect('f.codigoFacturaClaseFk')
             ->addSelect('ft.nombre as facturaTipoNombre')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('f.facturaTipoRel', 'ft');

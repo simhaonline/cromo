@@ -195,17 +195,19 @@
                 <div class="btn-toolbar" style="float: right">
                     {% if arFactura.estadoAutorizado == 0 %}
                         <div class="btn-group">
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo</a>
                         </div>
+                        {% if arFactura.codigoFacturaClaseFk == 'FA' %}
                         <div class="btn-group">
-                            <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo desde pedido</a>
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_pedido_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo desde pedido</a>
                         </div>
+                        {% endif %}
+                        {% if arFactura.codigoFacturaClaseFk == 'NC' %}
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
                                href="javascript:abrirVentana3('{{ path('turno_movimiento_venta_factura_detalle_factura_nuevo', {'id':arFactura.codigoFacturaPk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo desde factura</a>
                         </div>
+                        {% endif %}
                     {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizar) }}

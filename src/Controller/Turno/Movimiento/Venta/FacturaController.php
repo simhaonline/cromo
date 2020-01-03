@@ -111,9 +111,9 @@ class FacturaController extends AbstractController
     }
 
     /**
-     * @Route("/turno/movimiento/comercial/factura/nuevo/{id}", name="turno_movimiento_venta_factura_nuevo")
+     * @Route("/turno/movimiento/comercial/factura/nuevo/{id}/{clase}", name="turno_movimiento_venta_factura_nuevo")
      */
-    public function nuevo(Request $request, $id)
+    public function nuevo(Request $request, $id, $clase)
     {
         $em = $this->getDoctrine()->getManager();
         $arFactura = new TurFactura();
@@ -121,6 +121,7 @@ class FacturaController extends AbstractController
         if ($id != 0) {
             $arFactura = $em->getRepository(TurFactura::class)->find($id);
         } else {
+            $arFactura->setCodigoFacturaClaseFk($clase);
             $arFactura->setUsuario($this->getUser()->getUserName());
             $arFactura->setFecha(new \DateTime('now'));
         }
@@ -136,9 +137,7 @@ class FacturaController extends AbstractController
                         $arFactura->setFechaVence($arFactura->getPlazoPago() == 0 ? $fecha : $objFunciones->sumarDiasFecha($fecha, $arFactura->getPlazoPago()));
                         $arFactura->setClienteRel($arCliente);
                         $arFactura->setFecha(new \DateTime('now'));
-                        if ($id == 0) {
-                            $arFactura->setUsuario($this->getUser()->getUserName());
-                        }
+                        $arFactura->setCodigoFacturaClaseFk($arFactura->getFacturaTipoRel()->getCodigoFacturaClaseFk());
                         $em->persist($arFactura);
                         $em->flush();
                         return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_detalle', ['id' => $arFactura->getCodigoFacturaPk()]));

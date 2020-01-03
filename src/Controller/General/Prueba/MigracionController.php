@@ -3162,7 +3162,7 @@ class MigracionController extends Controller
                 $arFacturaDetalle = new TurFacturaDetalle();
                 $arFacturaDetalle->setCodigoFacturaDetallePk($row['codigo_factura_detalle_pk']);
                 $arFacturaDetalle->setFacturaRel($em->getReference(TurFactura::class, $row['codigo_factura_fk']));
-                $arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $row['codigo_concepto_servicio_fk']));
+                //$arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $row['codigo_concepto_servicio_fk']));
                 if ($row['codigo_pedido_detalle_fk']) {
                     $arFacturaDetalle->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
                 } else {

@@ -28,6 +28,11 @@ class TurFactura
     private $codigoFacturaTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_factura_clase_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoFacturaClaseFk;
+
+    /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
@@ -204,6 +209,22 @@ class TurFactura
     public function setCodigoFacturaTipoFk($codigoFacturaTipoFk): void
     {
         $this->codigoFacturaTipoFk = $codigoFacturaTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFacturaClaseFk()
+    {
+        return $this->codigoFacturaClaseFk;
+    }
+
+    /**
+     * @param mixed $codigoFacturaClaseFk
+     */
+    public function setCodigoFacturaClaseFk($codigoFacturaClaseFk): void
+    {
+        $this->codigoFacturaClaseFk = $codigoFacturaClaseFk;
     }
 
     /**
@@ -529,70 +550,6 @@ class TurFactura
     /**
      * @return mixed
      */
-    public function getFacturasDetallesFacturaRel()
-    {
-        return $this->facturasDetallesFacturaRel;
-    }
-
-    /**
-     * @param mixed $facturasDetallesFacturaRel
-     */
-    public function setFacturasDetallesFacturaRel($facturasDetallesFacturaRel): void
-    {
-        $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturaTipoRel()
-    {
-        return $this->facturaTipoRel;
-    }
-
-    /**
-     * @param mixed $facturaTipoRel
-     */
-    public function setFacturaTipoRel($facturaTipoRel): void
-    {
-        $this->facturaTipoRel = $facturaTipoRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEstadoContabilizado()
     {
         return $this->estadoContabilizado;
@@ -685,6 +642,56 @@ class TurFactura
     {
         $this->imprimirAgrupada = $imprimirAgrupada;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturaTipoRel()
+    {
+        return $this->facturaTipoRel;
+    }
+
+    /**
+     * @param mixed $facturaTipoRel
+     */
+    public function setFacturaTipoRel($facturaTipoRel): void
+    {
+        $this->facturaTipoRel = $facturaTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesFacturaRel()
+    {
+        return $this->facturasDetallesFacturaRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesFacturaRel
+     */
+    public function setFacturasDetallesFacturaRel($facturasDetallesFacturaRel): void
+    {
+        $this->facturasDetallesFacturaRel = $facturasDetallesFacturaRel;
+    }
+
+
 
 
 

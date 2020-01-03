@@ -26,10 +26,12 @@ class FacturaType extends AbstractType
                 'class' => 'App\Entity\Turno\TurFacturaTipo',
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('ft')
-                        ->orderBy('ft.nombre', 'ASC');
+                        ->orderBy('ft.nombre', 'ASC')
+                        ->andWhere("ft.codigoFacturaClaseFk = '". $options['data']->getCodigoFacturaClaseFk() ."'");
                 },
                 'choice_label' => 'nombre'
             ])
+
             ->add('plazoPago', NumberType::class, ['label' => 'Plazo pago', 'required' => false])
             ->add('soporte', TextType::class, ['label' => 'Soporte', 'required' => false])
             ->add('imprimirAgrupada', CheckboxType::class, array('required' => false))

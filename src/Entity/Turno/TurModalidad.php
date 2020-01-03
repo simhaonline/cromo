@@ -59,6 +59,11 @@ class TurModalidad
     protected $pedidosDetallesCompuestosModalidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurFacturaDetalle", mappedBy="modalidadRel")
+     */
+    protected $facturasDetallesModalidadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoModalidadPk()
@@ -184,6 +189,22 @@ class TurModalidad
     public function setPedidosDetallesCompuestosModalidadRel($pedidosDetallesCompuestosModalidadRel): void
     {
         $this->pedidosDetallesCompuestosModalidadRel = $pedidosDetallesCompuestosModalidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacturasDetallesModalidadRel()
+    {
+        return $this->facturasDetallesModalidadRel;
+    }
+
+    /**
+     * @param mixed $facturasDetallesModalidadRel
+     */
+    public function setFacturasDetallesModalidadRel($facturasDetallesModalidadRel): void
+    {
+        $this->facturasDetallesModalidadRel = $facturasDetallesModalidadRel;
     }
 
 

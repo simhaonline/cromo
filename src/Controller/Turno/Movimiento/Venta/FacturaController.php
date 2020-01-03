@@ -412,6 +412,9 @@ class FacturaController extends AbstractController
                         $arFacturaDetalle->setPuestoRel($arPedidoDetalle->getPuestoRel());
                         $arFacturaDetalle->setCantidad($arPedidoDetalle->getCantidad());
                         $arFacturaDetalle->setVrPrecio($arPedidoDetalle->getVrPendiente());
+                        $arFacturaDetalle->setFechaOperacion($arPedidoDetalle->getPedidoRel()->getFecha());
+                        $arFacturaDetalle->setModalidadRel($arPedidoDetalle->getModalidadRel());
+                        $arFacturaDetalle->setGrupoRel($arPedidoDetalle->getGrupoRel());
                         $em->persist($arFacturaDetalle);
                     }
                     $em->flush();

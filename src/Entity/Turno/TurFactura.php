@@ -133,9 +133,29 @@ class TurFactura
     private $estadoContabilizado = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="facturaRel")
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
-    protected $facturasDetallesFacturaRel;
+    private $descripcion;
+
+    /**
+     * @ORM\Column(name="titulo_relacion", type="text", nullable=true)
+     */
+    private $tituloRelacion;
+
+    /**
+     * @ORM\Column(name="detalle_relacion", type="text", nullable=true)
+     */
+    private $detalleRelacion;
+
+    /**
+     * @ORM\Column(name="imprimir_relacion", type="boolean")
+     */
+    private $imprimirRelacion = false;
+
+    /**
+     * @ORM\Column(name="imprimir_agrupada", type="boolean")
+     */
+    private $imprimirAgrupada = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="facturasClienteRel")
@@ -148,6 +168,11 @@ class TurFactura
      * @ORM\JoinColumn(name="codigo_factura_tipo_fk", referencedColumnName="codigo_factura_tipo_pk")
      */
     protected $facturaTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="facturaRel")
+     */
+    protected $facturasDetallesFacturaRel;
 
     /**
      * @return mixed
@@ -579,6 +604,86 @@ class TurFactura
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * @param mixed $descripcion
+     */
+    public function setDescripcion($descripcion): void
+    {
+        $this->descripcion = $descripcion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTituloRelacion()
+    {
+        return $this->tituloRelacion;
+    }
+
+    /**
+     * @param mixed $tituloRelacion
+     */
+    public function setTituloRelacion($tituloRelacion): void
+    {
+        $this->tituloRelacion = $tituloRelacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDetalleRelacion()
+    {
+        return $this->detalleRelacion;
+    }
+
+    /**
+     * @param mixed $detalleRelacion
+     */
+    public function setDetalleRelacion($detalleRelacion): void
+    {
+        $this->detalleRelacion = $detalleRelacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImprimirRelacion()
+    {
+        return $this->imprimirRelacion;
+    }
+
+    /**
+     * @param mixed $imprimirRelacion
+     */
+    public function setImprimirRelacion($imprimirRelacion): void
+    {
+        $this->imprimirRelacion = $imprimirRelacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImprimirAgrupada()
+    {
+        return $this->imprimirAgrupada;
+    }
+
+    /**
+     * @param mixed $imprimirAgrupada
+     */
+    public function setImprimirAgrupada($imprimirAgrupada): void
+    {
+        $this->imprimirAgrupada = $imprimirAgrupada;
     }
 
 

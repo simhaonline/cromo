@@ -117,6 +117,16 @@ class TurFacturaDetalle
     private $codigoGrupoFk;
 
     /**
+     * @ORM\Column(name="fecha_operacion", type="date", nullable=true)
+     */
+    private $fechaOperacion;
+
+    /**
+     * @ORM\Column(name="codigo_modalidad_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoModalidadFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurFactura", inversedBy="facturasDetallesFacturaRel")
      * @ORM\JoinColumn(name="codigo_factura_fk", referencedColumnName="codigo_factura_pk")
      */
@@ -157,6 +167,12 @@ class TurFacturaDetalle
      * @ORM\JoinColumn(name="codigo_factura_detalle_fk", referencedColumnName="codigo_factura_detalle_pk")
      */
     protected $facturaDetalleRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurModalidad", inversedBy="facturasDetallesModalidadRel")
+     * @ORM\JoinColumn(name="codigo_modalidad_fk", referencedColumnName="codigo_modalidad_pk")
+     */
+    protected $modalidadRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TurFacturaDetalle", mappedBy="facturaDetalleRel")
@@ -627,6 +643,55 @@ class TurFacturaDetalle
     {
         $this->facturasDetallesFacturaDetalleRel = $facturasDetallesFacturaDetalleRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaOperacion()
+    {
+        return $this->fechaOperacion;
+    }
+
+    /**
+     * @param mixed $fechaOperacion
+     */
+    public function setFechaOperacion($fechaOperacion): void
+    {
+        $this->fechaOperacion = $fechaOperacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoModalidadFk()
+    {
+        return $this->codigoModalidadFk;
+    }
+
+    /**
+     * @param mixed $codigoModalidadFk
+     */
+    public function setCodigoModalidadFk($codigoModalidadFk): void
+    {
+        $this->codigoModalidadFk = $codigoModalidadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModalidadRel()
+    {
+        return $this->modalidadRel;
+    }
+
+    /**
+     * @param mixed $modalidadRel
+     */
+    public function setModalidadRel($modalidadRel): void
+    {
+        $this->modalidadRel = $modalidadRel;
+    }
+
 
 
 }

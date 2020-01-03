@@ -40,8 +40,11 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('fd.detalle')
             ->addSelect('fd.porcentajeBaseIva')
             ->addSelect('fd.vrBaseIva')
+            ->addSelect('fd.codigoGrupoFk')
+            ->addSelect('m.nombre as modalidadNombre')
             ->leftJoin('fd.itemRel', 'i')
             ->leftJoin('fd.puestoRel', 'p')
+            ->leftJoin('fd.modalidadRel', 'm')
             ->where('fd.codigoFacturaFk = ' . $id);
 
         return $queryBuilder;

@@ -2410,6 +2410,7 @@ class MigracionController extends Controller
                 $arGrupo->setCodigoGrupoPk($row['codigo_grupo_facturacion_pk']);
                 $arGrupo->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
                 $arGrupo->setNombre(utf8_encode($row['nombre']));
+                $arGrupo->setConcepto(utf8_encode($row['concepto']));
                 $arGrupo->setAbreviatura($row['abreviatura']);
                 $em->persist($arGrupo);
                 $metadata = $em->getClassMetaData(get_class($arGrupo));
@@ -2489,6 +2490,7 @@ class MigracionController extends Controller
         $datos = $conn->query("SELECT
                 codigo_concepto_servicio_pk,
                 nombre,
+                nombre_facturacion,
                 horas,
                 horas_diurnas,
                 horas_nocturnas,
@@ -2498,6 +2500,7 @@ class MigracionController extends Controller
             $arConcepto = new TurConcepto();
             $arConcepto->setCodigoConceptoPk($row['codigo_concepto_servicio_pk']);
             $arConcepto->setNombre(utf8_encode($row['nombre']));
+            $arConcepto->setNombreFacturacion(utf8_encode($row['nombre_facturacion']));
             $arConcepto->setHoras($row['horas']);
             $arConcepto->setHorasDiurnas($row['horas_diurnas']);
             $arConcepto->setHorasNocturnas($row['horas_nocturnas']);
@@ -2797,7 +2800,7 @@ class MigracionController extends Controller
                 usuario,
                 tur_pedido.comentarios,
                 vr_salario_base,
-                estrato 
+                estrato                 
                  FROM tur_pedido
                  left join tur_sector on tur_pedido.codigo_sector_fk = tur_sector.codigo_sector_pk 
                  ORDER BY codigo_pedido_pk limit {$lote},{$rango}");
@@ -3149,9 +3152,11 @@ class MigracionController extends Controller
                     vr_precio,
                     subtotal,
                     total,
-                    codigo_grupo_facturacion_fk
+                    codigo_grupo_facturacion_fk,
+                    tur_modalidad_servicio.codigo_externo as codigo_modalidad_servicio_externo
                  FROM tur_factura_detalle
                  left join tur_concepto_servicio on codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk 
+                 left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
                  ORDER BY codigo_factura_detalle_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 $arFacturaDetalle = new TurFacturaDetalle();
@@ -3165,6 +3170,9 @@ class MigracionController extends Controller
                 }
                 if($row['codigo_grupo_facturacion_fk']) {
                     $arFacturaDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
+                }
+                if($row['codigo_modalidad_servicio_externo']) {
+                    $arFacturaDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
                 }
                 $arFacturaDetalle->setCantidad($row['cantidad']);
                 $arFacturaDetalle->setVrPrecio($row['vr_precio']);

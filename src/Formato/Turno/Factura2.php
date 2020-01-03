@@ -100,43 +100,43 @@ class Factura2 extends \FPDF
         $pdf->Rect(177, 96, 28, 100);
         $arFactura = self::$em->getRepository(TurFactura::class)->find(self::$codigoFactura);
         $arFacturaDetalles = self::$em->getRepository(TurFacturaDetalle::class)->findBy(array('codigoFacturaFk' => self::$codigoFactura));
-//        $arrMeses = array();
-//        foreach ($arFacturaDetalles as $arFacturaDetalle) {
-//            $strMes = FuncionesController::devuelveMes($arFacturaDetalle->getFechaProgramacion()->format('m')) . $arFacturaDetalle->getFechaProgramacion()->format('/Y');
-//            $nuevo = true;
-//            foreach ($arrMeses as $mes) {
-//                if ($mes['mes'] == $strMes) {
-//                    $nuevo = false;
-//                }
-//            }
-//            if ($nuevo == true) {
-//                $arrMeses[] = array('mes' => $strMes);
-//            }
-//        }
-//        $strMeses = "";
-//        foreach ($arrMeses as $mes) {
-//            $strMeses .= $mes['mes'];
-//        }
+        $arrMeses = array();
+        foreach ($arFacturaDetalles as $arFacturaDetalle) {
+            $strMes = FuncionesController::devuelveMes($arFacturaDetalle->getFechaOperacion()->format('m')) . $arFacturaDetalle->getFechaOperacion()->format('/Y');
+            $nuevo = true;
+            foreach ($arrMeses as $mes) {
+                if ($mes['mes'] == $strMes) {
+                    $nuevo = false;
+                }
+            }
+            if ($nuevo == true) {
+                $arrMeses[] = array('mes' => $strMes);
+            }
+        }
+        $strMeses = "";
+        foreach ($arrMeses as $mes) {
+            $strMeses .= $mes['mes'];
+        }
         $pdf->SetX(15);
         $pdf->Cell(10, 4, '', 0, 0, 'R');
         $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(120, 4, utf8_decode($arFactura->getComentarios()), 0, 0, 'L');
+        $pdf->Cell(120, 4, utf8_decode($arFactura->getDescripcion()), 0, 0, 'L');
         $pdf->SetFont('Arial', '', 9);
         $pdf->Cell(30, 4, '', 0, 0, 'R');
         $pdf->Cell(30, 4, '', 0, 0, 'R');
         $pdf->Ln(6);
         $pdf->SetFont('Arial', '', 9);
-//        if ($arFactura->getImprimirRelacion() == false) {
-//            if ($arFactura->getImprimirAgrupada() == 0) {
+        if ($arFactura->getImprimirRelacion() == false) {
+            if ($arFactura->getImprimirAgrupada() == 0) {
                 foreach ($arFacturaDetalles as $arFacturaDetalle) {
                     $pdf->SetX(15);
                     $pdf->Cell(10, 4, number_format($arFacturaDetalle->getCantidad(), 0, '.', ','), 0, 0, 'C');
                     $pdf->SetFont('Arial', 'B', 9);
-//                    $modalidad = "";
-//                    if ($arFacturaDetalle->getCodigoModalidadServicioFk()) {
-//                        $modalidad = "-" . utf8_decode($arFacturaDetalle->getModalidadServicioRel()->getNombre());
-//                    }
-//                    $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle->getPuestoRel()->getNombre()) . $modalidad, 0, 61), 0, 0, 'L');
+                    $modalidad = "";
+                    if ($arFacturaDetalle->getCodigoModalidadServicioFk()) {
+                        $modalidad = "-" . utf8_decode($arFacturaDetalle->getModalidadServicioRel()->getNombre());
+                    }
+                    $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle->getPuestoRel()->getNombre()) . $modalidad, 0, 61), 0, 0, 'L');
                     $pdf->Cell(124, 4, substr(utf8_decode('') , 0, 61), 0, 0, 'L');
                     $pdf->SetFont('Arial', '', 9);
                     $pdf->Cell(28, 4, number_format($arFacturaDetalle->getVrPrecio(), 0, '.', ','), 0, 0, 'R');
@@ -144,106 +144,106 @@ class Factura2 extends \FPDF
                     $pdf->Ln();
                     $pdf->SetX(15);
                     $pdf->Cell(10, 4, '', 0, 0, 'R');
-//                    if ($arFacturaDetalle->getTipoPedido() == 'FIJO') {
-//                        $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacion() . " " . $arFacturaDetalle->getDetalle();
-//                    } else {
-//                        $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacionAdicional() . " " . $arFacturaDetalle->getDetalle();
-//                    }
+                    if ($arFacturaDetalle->getTipoPedido() == 'FIJO') {
+                        $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacion() . " " . $arFacturaDetalle->getDetalle();
+                    } else {
+                        $strCampo = $arFacturaDetalle->getConceptoServicioRel()->getNombreFacturacionAdicional() . " " . $arFacturaDetalle->getDetalle();
+                    }
 
-//                    $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
+                    $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
                     $pdf->MultiCell(124, 4, $arFacturaDetalle->getItemRel()->getNombre(), 0, 'L');
                     $pdf->Cell(28, 4, '', 0, 0, 'R');
                     $pdf->Cell(28, 4, '', 0, 0, 'R');
                     $pdf->Ln(2);
                     $pdf->SetAutoPageBreak(true, 15);
                 }
-//            } else {
-//                $strSql = "SELECT tur_puesto.nombre AS puesto, tur_modalidad_servicio.nombre AS modalidadServicio, tur_concepto_servicio.nombre_facturacion AS conceptoServicio, cantidad  AS cantidad, vr_precio AS precio
-//                            FROM
-//                            tur_factura_detalle
-//                            LEFT JOIN tur_puesto ON tur_factura_detalle.codigo_puesto_fk = tur_puesto.codigo_puesto_pk
-//                            LEFT JOIN tur_modalidad_servicio ON tur_factura_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk
-//                            LEFT JOIN tur_concepto_servicio ON tur_factura_detalle.codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk
-//                            WHERE codigo_factura_fk = " . self::$codigoFactura . " AND codigo_grupo_facturacion_fk IS NULL";
-//                $connection = self::$em->getConnection();
-//                $statement = $connection->prepare($strSql);
-//                $statement->execute();
-//                $results = $statement->fetchAll();
-//                foreach ($results as $arFacturaDetalle) {
-//                    $pdf->SetX(15);
-//                    $pdf->Cell(10, 4, number_format($arFacturaDetalle['cantidad'], 0, '.', ','), 0, 0, 'C');
-//                    $pdf->SetFont('Arial', 'B', 9);
-//                    $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle['puesto']) . '-' . $arFacturaDetalle['modalidadServicio'], 0, 61), 0, 0, 'L');
-//                    $pdf->SetFont('Arial', '', 9);
-//
-//                    $pdf->Cell(28, 4, number_format($arFacturaDetalle['precio'], 0, '.', ','), 0, 0, 'R');
-//                    $pdf->Cell(28, 4, number_format($arFacturaDetalle['precio'], 0, '.', ','), 0, 0, 'R');
-//                    $pdf->Ln();
-//                    $pdf->SetX(15);
-//                    $pdf->Cell(10, 4, '', 0, 0, 'R');
-//                    $strCampo = $arFacturaDetalle['conceptoServicio'];
-//                    $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
-//                    //$pdf->Cell(110, 4, $strCampo, 0, 0, 'L');
-//                    $pdf->Cell(28, 4, '', 0, 0, 'R');
-//                    $pdf->Cell(28, 4, '', 0, 0, 'R');
-//                    $pdf->Ln(2);
-//                    $pdf->SetAutoPageBreak(true, 15);
-//                }
-//
-//                $strSql = "SELECT tur_grupo_facturacion.nombre as puesto, tur_grupo_facturacion.concepto as conceptoServicio, SUM(cantidad)  AS cantidad, SUM(vr_precio) AS precio
-//                            FROM
-//                            tur_factura_detalle
-//                            LEFT JOIN tur_puesto ON tur_factura_detalle.codigo_puesto_fk = tur_puesto.codigo_puesto_pk
-//                            LEFT JOIN tur_modalidad_servicio ON tur_factura_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk
-//                            LEFT JOIN tur_concepto_servicio ON tur_factura_detalle.codigo_concepto_servicio_fk = tur_concepto_servicio.codigo_concepto_servicio_pk
-//                            LEFT JOIN tur_grupo_facturacion ON tur_factura_detalle.codigo_grupo_facturacion_fk = tur_grupo_facturacion.codigo_grupo_facturacion_pk
-//                            WHERE codigo_factura_fk = " . self::$codigoFactura . "  AND codigo_grupo_facturacion_fk IS NOT NULL
-//                        GROUP BY tur_factura_detalle.codigo_grupo_facturacion_fk ";
-//                $connection = self::$em->getConnection();
-//                $statement = $connection->prepare($strSql);
-//                $statement->execute();
-//                $results = $statement->fetchAll();
-//                foreach ($results as $arFacturaDetalle) {
-//                    $pdf->SetX(15);
-//                    $pdf->Cell(10, 4, number_format($arFacturaDetalle['cantidad'], 0, '.', ','), 0, 0, 'C');
-//                    $pdf->SetFont('Arial', 'B', 9);
-//                    $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle['puesto']), 0, 61), 0, 0, 'L');
-//                    $pdf->SetFont('Arial', '', 9);
-//                    $precioUnitario = $arFacturaDetalle['precio'];
-//                    if ($arFacturaDetalle['cantidad'] > 0) {
-//                        $precioUnitario = $arFacturaDetalle['precio'] / $arFacturaDetalle['cantidad'];
-//                    }
-//                    $pdf->Cell(28, 4, number_format($precioUnitario, 0, '.', ','), 0, 0, 'R');
-//                    $pdf->Cell(28, 4, number_format($arFacturaDetalle['precio'], 0, '.', ','), 0, 0, 'R');
-//                    $pdf->Ln();
-//                    $pdf->SetX(15);
-//                    $pdf->Cell(10, 4, '', 0, 0, 'R');
-//                    $strCampo = $arFacturaDetalle['conceptoServicio'];
-//                    $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
-//                    //$pdf->Cell(110, 4, $strCampo, 0, 0, 'L');
-//                    $pdf->Cell(28, 4, '', 0, 0, 'R');
-//                    $pdf->Cell(28, 4, '', 0, 0, 'R');
-//                    $pdf->Ln(2);
-//                    $pdf->SetAutoPageBreak(true, 15);
-//                }
-//            }
-//        } else {
-//            $pdf->SetX(15);
-//            $pdf->Cell(10, 4, number_format(1, 0, '.', ','), 0, 0, 'C');
-//            $pdf->SetFont('Arial', 'B', 9);
-//            $pdf->Cell(124, 4, utf8_decode($arFactura->getTituloRelacion()), 0, 0, 'L');
-//            $pdf->SetFont('Arial', '', 9);
-//            $pdf->Cell(28, 4, number_format($arFactura->getVrSubtotal(), 0, '.', ','), 0, 0, 'R');
-//            $pdf->Cell(28, 4, number_format($arFactura->getVrSubtotal(), 0, '.', ','), 0, 0, 'R');
-//            $pdf->Ln();
-//            $pdf->SetX(15);
-//            $pdf->Cell(10, 4, '', 0, 0, 'R');
-//            $pdf->MultiCell(124, 4, utf8_decode($arFactura->getDetalleRelacion()), 0, 'L');
-//            //$pdf->Cell(110, 4, $strCampo, 0, 0, 'L');
-//            $pdf->Cell(28, 4, '', 0, 0, 'R');
-//            $pdf->Cell(28, 4, '', 0, 0, 'R');
-//            $pdf->Ln(2);
-//        }
+            } else {
+                $strSql = "SELECT tur_puesto.nombre AS puesto, tur_modalidad.nombre AS modalidadServicio, tur_concepto.nombre_facturacion AS conceptoServicio, cantidad  AS cantidad, vr_precio AS precio
+                            FROM
+                            tur_factura_detalle
+                            LEFT JOIN tur_puesto ON tur_factura_detalle.codigo_puesto_fk = tur_puesto.codigo_puesto_pk
+                            LEFT JOIN tur_modalidad ON tur_factura_detalle.codigo_modalidad_fk = tur_modalidad.codigo_modalidad_pk
+                            LEFT JOIN tur_concepto ON tur_factura_detalle.codigo_concepto_fk = tur_concepto.codigo_concepto_pk
+                            WHERE codigo_factura_fk = " . self::$codigoFactura . " AND codigo_grupo_fk IS NULL";
+                $connection = self::$em->getConnection();
+                $statement = $connection->prepare($strSql);
+                $statement->execute();
+                $results = $statement->fetchAll();
+                foreach ($results as $arFacturaDetalle) {
+                    $pdf->SetX(15);
+                    $pdf->Cell(10, 4, number_format($arFacturaDetalle['cantidad'], 0, '.', ','), 0, 0, 'C');
+                    $pdf->SetFont('Arial', 'B', 9);
+                    $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle['puesto']) . '-' . $arFacturaDetalle['modalidadServicio'], 0, 61), 0, 0, 'L');
+                    $pdf->SetFont('Arial', '', 9);
+
+                    $pdf->Cell(28, 4, number_format($arFacturaDetalle['precio'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(28, 4, number_format($arFacturaDetalle['precio'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Ln();
+                    $pdf->SetX(15);
+                    $pdf->Cell(10, 4, '', 0, 0, 'R');
+                    $strCampo = $arFacturaDetalle['conceptoServicio'];
+                    $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
+                    //$pdf->Cell(110, 4, $strCampo, 0, 0, 'L');
+                    $pdf->Cell(28, 4, '', 0, 0, 'R');
+                    $pdf->Cell(28, 4, '', 0, 0, 'R');
+                    $pdf->Ln(2);
+                    $pdf->SetAutoPageBreak(true, 15);
+                }
+
+                $strSql = "SELECT tur_grupo.nombre as puesto, tur_grupo.concepto as conceptoServicio, SUM(cantidad)  AS cantidad, SUM(vr_precio) AS precio
+                            FROM
+                            tur_factura_detalle
+                            LEFT JOIN tur_puesto ON tur_factura_detalle.codigo_puesto_fk = tur_puesto.codigo_puesto_pk
+                            LEFT JOIN tur_modalidad ON tur_factura_detalle.codigo_modalidad_fk = tur_modalidad.codigo_modalidad_pk
+                            LEFT JOIN tur_concepto ON tur_factura_detalle.codigo_concepto_fk = tur_concepto.codigo_concepto_pk
+                            LEFT JOIN tur_grupo ON tur_factura_detalle.codigo_grupo_fk = tur_grupo.codigo_grupo_pk
+                            WHERE codigo_factura_fk = " . self::$codigoFactura . "  AND codigo_grupo_fk IS NOT NULL
+                        GROUP BY tur_factura_detalle.codigo_grupo_fk ";
+                $connection = self::$em->getConnection();
+                $statement = $connection->prepare($strSql);
+                $statement->execute();
+                $results = $statement->fetchAll();
+                foreach ($results as $arFacturaDetalle) {
+                    $pdf->SetX(15);
+                    $pdf->Cell(10, 4, number_format($arFacturaDetalle['cantidad'], 0, '.', ','), 0, 0, 'C');
+                    $pdf->SetFont('Arial', 'B', 9);
+                    $pdf->Cell(124, 4, substr(utf8_decode($arFacturaDetalle['puesto']), 0, 61), 0, 0, 'L');
+                    $pdf->SetFont('Arial', '', 9);
+                    $precioUnitario = $arFacturaDetalle['precio'];
+                    if ($arFacturaDetalle['cantidad'] > 0) {
+                        $precioUnitario = $arFacturaDetalle['precio'] / $arFacturaDetalle['cantidad'];
+                    }
+                    $pdf->Cell(28, 4, number_format($precioUnitario, 0, '.', ','), 0, 0, 'R');
+                    $pdf->Cell(28, 4, number_format($arFacturaDetalle['precio'], 0, '.', ','), 0, 0, 'R');
+                    $pdf->Ln();
+                    $pdf->SetX(15);
+                    $pdf->Cell(10, 4, '', 0, 0, 'R');
+                    $strCampo = $arFacturaDetalle['conceptoServicio'];
+                    $pdf->MultiCell(124, 4, $strCampo, 0, 'L');
+                    //$pdf->Cell(110, 4, $strCampo, 0, 0, 'L');
+                    $pdf->Cell(28, 4, '', 0, 0, 'R');
+                    $pdf->Cell(28, 4, '', 0, 0, 'R');
+                    $pdf->Ln(2);
+                    $pdf->SetAutoPageBreak(true, 15);
+                }
+            }
+        } else {
+            $pdf->SetX(15);
+            $pdf->Cell(10, 4, number_format(1, 0, '.', ','), 0, 0, 'C');
+            $pdf->SetFont('Arial', 'B', 9);
+            $pdf->Cell(124, 4, utf8_decode($arFactura->getTituloRelacion()), 0, 0, 'L');
+            $pdf->SetFont('Arial', '', 9);
+            $pdf->Cell(28, 4, number_format($arFactura->getVrSubtotal(), 0, '.', ','), 0, 0, 'R');
+            $pdf->Cell(28, 4, number_format($arFactura->getVrSubtotal(), 0, '.', ','), 0, 0, 'R');
+            $pdf->Ln();
+            $pdf->SetX(15);
+            $pdf->Cell(10, 4, '', 0, 0, 'R');
+            $pdf->MultiCell(124, 4, utf8_decode($arFactura->getDetalleRelacion()), 0, 'L');
+            //$pdf->Cell(110, 4, $strCampo, 0, 0, 'L');
+            $pdf->Cell(28, 4, '', 0, 0, 'R');
+            $pdf->Cell(28, 4, '', 0, 0, 'R');
+            $pdf->Ln(2);
+        }
 
     }
 

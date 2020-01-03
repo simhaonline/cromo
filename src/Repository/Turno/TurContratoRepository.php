@@ -512,6 +512,7 @@ class TurContratoRepository extends ServiceEntityRepository
                         $arPedidoDetalle->setVrSalarioBase($arContratoDetalle->getVrSalarioBase());
                         $arPedidoDetalle->setModalidadRel($arContratoDetalle->getModalidadRel());
                         $arPedidoDetalle->setPuestoRel($arContratoDetalle->getPuestoRel());
+                        $arPedidoDetalle->setGrupoRel($arContratoDetalle->getGrupoRel());
                         $arPedidoDetalle->setLunes($arContratoDetalle->getLunes());
                         $arPedidoDetalle->setMartes($arContratoDetalle->getMartes());
                         $arPedidoDetalle->setMiercoles($arContratoDetalle->getMiercoles());

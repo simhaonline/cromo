@@ -7,6 +7,7 @@ use App\Entity\Turno\TurPedido;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -31,6 +32,11 @@ class FacturaType extends AbstractType
             ])
             ->add('plazoPago', NumberType::class, ['label' => 'Plazo pago', 'required' => false])
             ->add('soporte', TextType::class, ['label' => 'Soporte', 'required' => false])
+            ->add('imprimirAgrupada', CheckboxType::class, array('required' => false))
+            ->add('imprimirRelacion', CheckboxType::class, array('required' => false))
+            ->add('tituloRelacion', TextType::class, ['label' => 'Titulo relacion', 'required' => false])
+            ->add('descripcion', TextType::class, ['label' => 'Descripcion', 'required' => false])
+            ->add('detalleRelacion', TextType::class, ['label' => 'Detalle relacion', 'required' => false])
             ->add('comentarios', TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class);
     }

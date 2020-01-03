@@ -43,6 +43,11 @@ class TurSoporte
     private $contratoTerminado = false;
 
     /**
+     * @ORM\Column(name="contrato_multiple", type="boolean", options={"default":false})
+     */
+    private $contratoMultiple = false;
+
+    /**
      * @ORM\Column(name="dias", type="integer", nullable=true)
      */
     private $dias;
@@ -395,6 +400,23 @@ class TurSoporte
     {
         $this->festivos = $festivos;
     }
+
+    /**
+     * @return bool
+     */
+    public function getContratoMultiple()
+    {
+        return $this->contratoMultiple;
+    }
+
+    /**
+     * @param bool $contratoMultiple
+     */
+    public function setContratoMultiple(bool $contratoMultiple): void
+    {
+        $this->contratoMultiple = $contratoMultiple;
+    }
+
 
 
 

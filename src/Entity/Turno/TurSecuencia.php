@@ -971,7 +971,7 @@ class TurSecuencia
     /**
      * @return bool
      */
-    public function isHomologar(): bool
+    public function getHomologar()
     {
         return $this->homologar;
     }

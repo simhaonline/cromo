@@ -96,7 +96,7 @@ class TurPrototipoRepository extends ServiceEntityRepository
                 }
 
                 # Si la secuencia es homologada obtenemos el turno que le corresponde.
-                if ($arSecuencia->isHomologar()) {
+                if ($arSecuencia->getHomologar()) {
                     $nombreMetodo = "getTurno{$turno}";
                     if (method_exists($arPrototipo, $nombreMetodo)) {
                         $turno = call_user_func_array([$arPrototipo, $nombreMetodo], []);

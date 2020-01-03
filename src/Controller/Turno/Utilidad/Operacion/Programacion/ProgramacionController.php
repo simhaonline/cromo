@@ -33,8 +33,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProgramacionController extends AbstractController
 {
@@ -113,6 +113,7 @@ class ProgramacionController extends AbstractController
                 return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if($form->get('btnSimular')->isClicked()) {
+                $em->getRepository(TurSimulacion::class)->limpiar($id);
                 $em->getRepository(TurPrototipo::class)->actualizar($arrControles);
                 $fechaProgramacion = $form->get('fechaSimulacion')->getData();
                 $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle, $fechaProgramacion);
@@ -158,7 +159,6 @@ class ProgramacionController extends AbstractController
         ]);
     }
 
-
     private function devuelveDiaSemanaEspaniol($dateFecha)
     {
         $strDia = "";
@@ -188,6 +188,37 @@ class ProgramacionController extends AbstractController
 
         return $strDia;
     }
+
+    /**
+     * @Route("turno/utilidad/operacion/programacion/consultarSecuencia", name="turno_utilidad_operacion_programacion_consultarSecuencia")
+     */
+    public function ajaxConsultarSecuencia(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->get('id-secuencia');
+        $secuencia = $em->getRepository(TurSecuencia::class)->find($id);
+        $infoSecuencia = [
+            'lunes' => $secuencia->getLunes(),
+            'martes' => $secuencia->getMartes(),
+            'miercoles' => $secuencia->getMiercoles(),
+            'jueves' => $secuencia->getJueves(),
+            'viernes' => $secuencia->getViernes(),
+            'sabado' => $secuencia->getSabado(),
+            'domingo' => $secuencia->getDomingo(),
+            'festivo' => $secuencia->getFestivo(),
+            'domFestivo' => $secuencia->getDomingoFestivo(),
+            'horas' => $secuencia->getHoras(),
+            'dias' => $secuencia->getDias(),
+            'homologa' => $secuencia->getHomologar(),
+        ];
+        for ($i = 1; $i <= 31; $i++) {
+            $infoSecuencia["dia" . $i] = call_user_func_array([$secuencia, "getDia{$i}"], []);
+        }
+        $response = new JsonResponse($infoSecuencia);
+        return $response;
+
+    }
+
 
     public function getFiltros($form)
     {

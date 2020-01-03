@@ -48,6 +48,16 @@ class InvMovimiento
     private $codigoSucursalFk;
 
     /**
+     * @ORM\Column(name="codigo_movimiento_fk", type="integer", nullable=true)
+     */
+    private $codigoMovimientoFk;
+
+    /**
+     * @ORM\Column(name="prefijo", type="string",length=5, nullable=true)
+     */
+    private $prefijo;
+
+    /**
      * @ORM\Column(name="numero", type="integer", nullable=true)
      */
     private $numero = 0;
@@ -198,6 +208,11 @@ class InvMovimiento
     private $codigoResolucionFk;
 
     /**
+     * @ORM\Column(name="cue", type="string", length=200, nullable=true)
+     */
+    private $cue;
+
+    /**
      * @internal Para saber si el documento genera costo promedio
      * @ORM\Column(name="genera_costo_promedio", type="boolean", options={"default":false})
      */
@@ -246,15 +261,26 @@ class InvMovimiento
     protected $resolucionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="InvSucursal", inversedBy="movimientosSucursalRel")
+     * @ORM\JoinColumn(name="codigo_sucursal_fk", referencedColumnName="codigo_sucursal_pk")
+     */
+    protected $sucursalRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inventario\InvMovimiento", inversedBy="movimientosMovimientoRel")
+     * @ORM\JoinColumn(name="codigo_movimiento_fk", referencedColumnName="codigo_movimiento_pk")
+     */
+    protected $movimientoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvMovimientoDetalle", mappedBy="movimientoRel")
      */
     protected $movimientosDetallesMovimientoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InvSucursal", inversedBy="movimientosSucursalRel")
-     * @ORM\JoinColumn(name="codigo_sucursal_fk", referencedColumnName="codigo_sucursal_pk")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inventario\InvMovimiento", mappedBy="movimientoRel")
      */
-    protected $sucursalRel;
+    protected $movimientosMovimientoRel;
 
     /**
      * @return mixed
@@ -1022,6 +1048,86 @@ class InvMovimiento
     public function setResolucionRel($resolucionRel): void
     {
         $this->resolucionRel = $resolucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoMovimientoFk()
+    {
+        return $this->codigoMovimientoFk;
+    }
+
+    /**
+     * @param mixed $codigoMovimientoFk
+     */
+    public function setCodigoMovimientoFk($codigoMovimientoFk): void
+    {
+        $this->codigoMovimientoFk = $codigoMovimientoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientoRel()
+    {
+        return $this->movimientoRel;
+    }
+
+    /**
+     * @param mixed $movimientoRel
+     */
+    public function setMovimientoRel($movimientoRel): void
+    {
+        $this->movimientoRel = $movimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovimientosMovimientoRel()
+    {
+        return $this->movimientosMovimientoRel;
+    }
+
+    /**
+     * @param mixed $movimientosMovimientoRel
+     */
+    public function setMovimientosMovimientoRel($movimientosMovimientoRel): void
+    {
+        $this->movimientosMovimientoRel = $movimientosMovimientoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrefijo()
+    {
+        return $this->prefijo;
+    }
+
+    /**
+     * @param mixed $prefijo
+     */
+    public function setPrefijo($prefijo): void
+    {
+        $this->prefijo = $prefijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCue()
+    {
+        return $this->cue;
+    }
+
+    /**
+     * @param mixed $cue
+     */
+    public function setCue($cue): void
+    {
+        $this->cue = $cue;
     }
 
 

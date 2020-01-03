@@ -1591,13 +1591,16 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $queryBuilder = $em->createQueryBuilder()->from(InvMovimiento::class, 'm')
             ->select('m.codigoMovimientoPk')
             ->addSelect('m.numero')
+            ->addSelect('m.prefijo')
             ->addSelect('m.fecha')
             ->addSelect('m.fechaVence')
             ->addSelect('m.vrSubtotal')
             ->addSelect('m.vrIva')
-            ->addSelect('m.vrTotal')
+            ->addSelect('m.vrTotalBruto')
             ->addSelect('m.estadoAprobado')
-            ->addSelect('m.estadoFacturaElectronica')
+            ->addSelect('m.estadoElectronico')
+            ->addSelect('m.codigoDocumentoFk')
+            ->addSelect('m.cue')
             ->addSelect('i.codigoEntidad as tipoIdentificacion')
             ->addSelect('t.numeroIdentificacion as numeroIdentificacion')
             ->addSelect('t.digitoVerificacion as digitoVerificacion')
@@ -1616,17 +1619,27 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('rf.fechaHasta as resolucionFechaHasta')
             ->addSelect('rf.numeroDesde as resolucionNumeroDesde')
             ->addSelect('rf.numeroHasta as resolucionNumeroHasta')
+            ->addSelect('rf.prueba as resolucionPrueba')
+            ->addSelect('rf.pin as resolucionPin')
+            ->addSelect('rf.claveTecnica as resolucionClaveTecnica')
+            ->addSelect('rf.ambiente as resolucionAmbiente')
+            ->addSelect('rf.setPruebas as resolucionSetPruebas')
             ->addSelect('ciu.nombre as ciudadNombre')
             ->addSelect('ciu.codigoDaneCompleto as ciudadCodigoDaneCompleto')
             ->addSelect('dep.nombre as departamentoNombre')
             ->addSelect('dep.codigoDaneMascara as departamentoCodigoDaneMascara')
+            ->addSelect('mr.cue as referenciaCue')
+            ->addSelect('mr.numero as referenciaNumero')
+            ->addSelect('mr.prefijo as referenciaPrefijo')
+            ->addSelect('mr.fecha as referenciaFecha')
             ->leftJoin('m.terceroRel', 't')
             ->leftJoin('t.identificacionRel', 'i')
             ->leftJoin('t.tipoPersonaRel', 'tp')
             ->leftJoin('t.regimenRel', 'r')
-            ->leftJoin('m.resolucionFacturaRel', 'rf')
+            ->leftJoin('m.resolucionRel', 'rf')
             ->leftJoin('t.ciudadRel', 'ciu')
             ->leftJoin('ciu.departamentoRel', 'dep')
+            ->leftJoin('m.movimientoRel', 'mr')
             ->where("m.codigoMovimientoPk = {$codigoMovimiento} ");
         $arrMovimiento = $queryBuilder->getQuery()->getResult();
         if($arrMovimiento) {
@@ -1697,16 +1710,21 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $baseIvaTotal = 0;
                     $arrFactura = [
                         'dat_nitFacturador' => $arrConfiguracion['nit'],
-                        'dat_claveTecnica' => $arrConfiguracion['feToken'],
-                        'dat_claveTecnicaCadena' => 'fc8eac422eba16e22ffd8c6f94b3f40a6e38162c',
-                        'dat_tipoAmbiente' => '2',
+                        'dat_claveTecnica' => $arFactura['resolucionClaveTecnica'],
+                        'dat_setPruebas' => $arFactura['resolucionSetPruebas'],
+                        'dat_pin' => $arFactura['resolucionPin'],
+                        'dat_tipoAmbiente' => $arFactura['resolucionAmbiente'],
                         'res_numero' => $arFactura['resolucionNumero'],
                         'res_prefijo' => $arFactura['resolucionPrefijo'],
-                        'res_fechaDesde' => $arFactura['resolucionFechaDesde']->format('Y-m-d'),
-                        'res_fechaHasta' => $arFactura['resolucionFechaHasta']->format('Y-m-d'),
+                        'res_fechaDesde' => $arFactura['resolucionFechaDesde']?$arFactura['resolucionFechaDesde']->format('Y-m-d'):null,
+                        'res_fechaHasta' => $arFactura['resolucionFechaHasta']?$arFactura['resolucionFechaHasta']->format('Y-m-d'):null,
                         'res_desde' => $arFactura['resolucionNumeroDesde'],
                         'res_hasta' => $arFactura['resolucionNumeroHasta'],
+                        'res_prueba' => $arFactura['resolucionPrueba'],
                         'doc_codigo' => $arFactura['codigoMovimientoPk'],
+                        'doc_codigoDocumento' => $arFactura['codigoDocumentoFk'],
+                        'doc_cue' => $arFactura['cue'],
+                        'doc_prefijo' => $arFactura['prefijo'],
                         'doc_numero' => $arFactura['numero'],
                         'doc_fecha' => $arFactura['fecha']->format('Y-m-d'),
                         'doc_fecha_vence' => $arFactura['fechaVence']->format('Y-m-d'),
@@ -1715,8 +1733,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         'doc_iva' => number_format($arFactura['vrIva'], 2, '.', ''),
                         'doc_inc' => number_format(0, 2, '.', ''),
                         'doc_ica' => number_format(0, 2, '.', ''),
-                        'doc_total' => number_format($arFactura['vrTotal'], 2, '.', ''),
-                        'em_tipoPersona' => $arrConfiguracion['codigoTipoPersonaFk'],
+                        'doc_total' => number_format($arFactura['vrTotalBruto'], 2, '.', ''),
+                        'ref_cue' => $arFactura['referenciaCue'],
+                        'ref_numero' => $arFactura['referenciaNumero'],
+                        'ref_prefijo' => $arFactura['referenciaPrefijo'],
+                        'ref_fecha' => $arFactura['referenciaFecha']?$arFactura['referenciaFecha']->format('Y-m-d'):null,
+                        'em_tipoPersona' => $arrConfiguracion['tipoPersona'],
                         'em_numeroIdentificacion' => $arrConfiguracion['nit'],
                         'em_digitoVerificacion' => $arrConfiguracion['digitoVerificacion'],
                         'em_nombreCompleto' => $arrConfiguracion['nombre'],
@@ -1757,14 +1779,14 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         }
                         $arrItem[] = [
                             "item_id" => $cantidadItemes,
-                            "item_codigo" => $arFacturaDetalle->getCodigoItemFk(),
-                            "item_nombre" => $arFacturaDetalle->getItemRel()->getNombre(),
-                            "item_cantidad" => number_format($arFacturaDetalle->getCantidad(), 2, '.', ''),
-                            "item_precio" => number_format($arFacturaDetalle->getVrPrecio(), 2, '.', ''),
-                            "item_subtotal" => number_format($arFacturaDetalle->getVrSubtotal(), 2, '.', ''),
+                            "item_codigo" => $arFacturaDetalle['codigoItemFk'],
+                            "item_nombre" => $arFacturaDetalle['itemNombre'],
+                            "item_cantidad" => number_format($arFacturaDetalle['cantidad'], 2, '.', ''),
+                            "item_precio" => number_format($arFacturaDetalle['vrPrecio'], 2, '.', ''),
+                            "item_subtotal" => number_format($arFacturaDetalle['vrSubtotal'], 2, '.', ''),
                             "item_base_iva" => number_format($baseIva, 2, '.', ''),
-                            "item_iva" => number_format($arFacturaDetalle->getVrIva(), 2, '.', ''),
-                            "item_porcentaje_iva" => number_format($arFacturaDetalle->getPorcentajeIva(), 2, '.', '')
+                            "item_iva" => number_format($arFacturaDetalle['vrIva'], 2, '.', ''),
+                            "item_porcentaje_iva" => number_format($arFacturaDetalle['porcentajeIva'], 2, '.', '')
                         ];
                         $baseIvaTotal += $baseIva;
                     }

@@ -216,12 +216,11 @@
         $(function () {
             {#	 Capturamos el evento click del botón de ver la secuencia.   #}
             botonVer.click(function () {
+
                 var contenedor = $(this).closest(".contenedor-secuencia");
                 var combo = contenedor.find("select");
                 if (combo.val() != "") {
                     ajaxConsultarSecuencia(combo.val());
-                } else {
-                    contenedorTabla.slideUp();
                 }
                 return false;
             });
@@ -244,6 +243,12 @@
                 if (data.length == 0) {
                     return false;
                 } else {
+                    if (contenedorTabla.is(':visible')) {
+                        contenedorTabla.fadeOut();
+                        contenedorTabla.fadeIn();
+                    } else {
+                        contenedorTabla.fadeIn();
+                    }
                     // Solo nos interesa actualizar el cuerpo de la tabla, por lo que es lo
                     // unico que seleccionamos
                     var tabla = $("#tabla-visualizar-secuencia tbody");
@@ -266,7 +271,6 @@
                     fila.append($("<td/>").html(data.domFestivo));
                     fila.append($("<td/>").html(data.festivo));
                     tabla.append(fila);
-                    contenedorTabla.slideDown();
                 }
             });
         };

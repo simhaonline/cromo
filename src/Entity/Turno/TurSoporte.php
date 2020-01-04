@@ -33,6 +33,11 @@ class TurSoporte
     private $fechaHasta;
 
     /**
+     * @ORM\Column(name="fecha_hasta_periodo", type="date", nullable=true)
+     */
+    private $fechaHastaPeriodo;
+
+    /**
      * @ORM\Column(name="codigo_grupo_fk", type="string", length=10)
      */
     private $codigoGrupoFk;
@@ -415,6 +420,22 @@ class TurSoporte
     public function setContratoMultiple(bool $contratoMultiple): void
     {
         $this->contratoMultiple = $contratoMultiple;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHastaPeriodo()
+    {
+        return $this->fechaHastaPeriodo;
+    }
+
+    /**
+     * @param mixed $fechaHastaPeriodo
+     */
+    public function setFechaHastaPeriodo($fechaHastaPeriodo): void
+    {
+        $this->fechaHastaPeriodo = $fechaHastaPeriodo;
     }
 
 

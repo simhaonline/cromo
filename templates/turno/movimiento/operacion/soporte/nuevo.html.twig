@@ -24,6 +24,11 @@
                     {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.fechaHasta) }}
                 </div>
+                <label class="col-sm-2 control-label">Hasta (periodo):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaHastaPeriodo, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.fechaHastaPeriodo) }}
+                </div>
             </div>
             <div class="form-group">
                 <label for="form_comentarios" class="col-sm-2 control-label">Comentarios:</label>

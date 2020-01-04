@@ -457,8 +457,8 @@ class ContratoController extends AbstractController
             $hoja->setTitle('Movimientos');
             $j = 0;
             $arrColumnas=[
-                'ID','FECHA DESDE','NUMERO','EMPLEADO','NUMEROIDENTIFICACION','FECHAHASTA', 'TIPO','NOMBRE GRUPO',
-                'TIEMPO', 'FECHA PAGO','FECHA CESANTIAS','FECHAS PRIMAS', 'FECHA VACACIONES','SALARIO',
+                'ID','DESDE','NUMERO','EMPLEADO','IDENT','HASTA', 'TIPO','GRUPO',
+                'TIEMPO', 'ULT_PAGO','ULT_CESANTIAS','ULT_PRIMAS', 'ULT_VACACIONES','SALARIO',
                 'NOMBRE', 'CODIGOEMPLEADO','TERMINADO','CAJA', 'SALUD', 'PENSION'
             ];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
@@ -481,8 +481,8 @@ class ContratoController extends AbstractController
                 $hoja->setCellValue('G' . $j, $arContrato['tipo']);
                 $hoja->setCellValue('H' . $j, $arContrato['nombreGrupo']);
                 $hoja->setCellValue('I' . $j, $arContrato['tiempo']);
-                $hoja->setCellValue('K' . $j, $arContrato['fechaUltimoPago']->format('Y/m/d'));
-                $hoja->setCellValue('J' . $j, $arContrato['fechaUltimoPagoCesantias']->format('Y/m/d'));
+                $hoja->setCellValue('J' . $j, $arContrato['fechaUltimoPago']->format('Y/m/d'));
+                $hoja->setCellValue('K' . $j, $arContrato['fechaUltimoPagoCesantias']->format('Y/m/d'));
                 $hoja->setCellValue('L' . $j, $arContrato['fechaUltimoPagoPrimas']->format('Y/m/d'));
                 $hoja->setCellValue('M' . $j, $arContrato['fechaUltimoPagoVacaciones']->format('Y/m/d'));
                 $hoja->setCellValue('N' . $j, $arContrato['vrSalario']);

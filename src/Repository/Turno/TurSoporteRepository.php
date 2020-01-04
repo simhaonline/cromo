@@ -154,13 +154,14 @@ class TurSoporteRepository extends ServiceEntityRepository
         $arrConfiguracionRecursoHumano = $em->getRepository(RhuConfiguracion::class)->autorizarProgramacion();
         $dateFechaDesde = $arSoporte->getFechaDesde();
         $dateFechaHasta = $arSoporte->getFechaHasta();
+        $dateFechaHastaPeriodo = $arSoporte->getFechaHastaPeriodo();
         $intDiaInicial = $dateFechaDesde->format('j');
         $intDiaFinal = $dateFechaHasta->format('j');
         //Genera los recursos del soporte pago
         $arEmpleadosResumen = $em->getRepository(TurProgramacion::class)->listaEmpleadoSoporte($arSoporte->getFechaDesde()->format('Y'), $arSoporte->getFechaDesde()->format('m'));
         $contratoTerminado = $arSoporte->getContratoTerminado();
         foreach ($arEmpleadosResumen as $arEmpleadoResumen) {
-            $arContratos = $em->getRepository(RhuContrato::class)->soportePago($arEmpleadoResumen['codigoEmpleadoFk'], $dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $contratoTerminado, $arSoporte->getCodigoGrupoFk());
+            $arContratos = $em->getRepository(RhuContrato::class)->soportePago($arEmpleadoResumen['codigoEmpleadoFk'], $dateFechaDesde->format('Y-m-d'), $dateFechaHastaPeriodo->format('Y-m-d'), $contratoTerminado, $arSoporte->getCodigoGrupoFk());
             $numeroContratos = count($arContratos);
             foreach ($arContratos as $arContrato) {
                 if ($arContrato['estadoTerminado'] == 0 || $arContrato['fechaHasta'] >= $arSoporte->getFechaDesde()) {

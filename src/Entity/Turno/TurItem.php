@@ -30,6 +30,11 @@ class TurItem
     private $nombre;
 
     /**
+     * @ORM\Column(name="porcentaje_iva", type="integer", nullable=true)
+     */
+    private $porcentajeIva = 0;
+
+    /**
      * @ORM\Column(name="codigo_servicio_erp", type="string", length=20, nullable=true)
      */
     private $codigoServicioErp;
@@ -289,6 +294,24 @@ class TurItem
     {
         $this->codigoServicioErp = $codigoServicioErp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIva()
+    {
+        return $this->porcentajeIva;
+    }
+
+    /**
+     * @param mixed $porcentajeIva
+     */
+    public function setPorcentajeIva($porcentajeIva): void
+    {
+        $this->porcentajeIva = $porcentajeIva;
+    }
+
+
 
 }
 

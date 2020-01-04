@@ -24,6 +24,7 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->select('c.codigoContratoPk')
             ->addSelect('c.fechaDesde')
             ->addSelect('c.numero')
+            ->addSelect('c.codigoEmpleadoFk')
             ->addSelect('e.nombreCorto as empleado')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('c.fechaDesde')

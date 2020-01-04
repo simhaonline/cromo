@@ -222,7 +222,10 @@ class EmpleadoController extends AbstractController
                     $arContrato->setAuxilioTransporte(false);
                 }
                 if ($id == 0) {
-                    $arContrato->setFechaUltimoPago($arContrato->getFechaDesde());
+                    $dateFechaUltimoPago = $arContrato->getFechaDesde()->format('Y-m-d');
+                    $dateFechaUltimoPago = date("Y-m-d", strtotime("$dateFechaUltimoPago -1 day"));
+                    $dateFechaUltimoPago = date_create_from_format('Y-m-d H:i', $dateFechaUltimoPago . "00:00");
+                    $arContrato->setFechaUltimoPago($dateFechaUltimoPago);
                     $arContrato->setFechaUltimoPagoCesantias($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoPrimas($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoVacaciones($arContrato->getFechaDesde());

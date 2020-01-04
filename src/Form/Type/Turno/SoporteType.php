@@ -31,6 +31,7 @@ class SoporteType extends AbstractType
             ])
             ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
+            ->add('fechaHastaPeriodo', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('contratoTerminado', CheckboxType::class, array('required' => false))
             ->add('dia31SoloExtra', CheckboxType::class, ['required' => false])
             ->add('comentario', TextareaType::class, array('required' => false))

@@ -248,8 +248,8 @@ class TurContratoRepository extends ServiceEntityRepository
                             $diasFestivos = 2;
                         }
                         $totalDias = $diasOrdinarios + $diasSabados + $diasDominicales + $diasFestivos;
-                        $horasRealesDiurnas = $arConcepto->getHorasDiurnas() * $totalDias;
-                        $horasRealesNocturnas = $arConcepto->getHorasNocturnas() * $totalDias;
+                        $horasRealesDiurnas = $arContratoDetalle->getHorasDiurnas() * $totalDias;
+                        $horasRealesNocturnas = $arContratoDetalle->getHorasNocturnas() * $totalDias;
                     } else {
                         $arFestivos = $em->getRepository(TurFestivo::class)->fecha($arContratoDetalle->getFechaDesde()->format('Y-m-d'), $arContratoDetalle->getFechaHasta()->format('Y-m-d'));
                         $fecha = $arContratoDetalle->getFechaDesde()->format('Y-m-j');

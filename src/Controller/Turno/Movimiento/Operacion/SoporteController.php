@@ -186,19 +186,24 @@ class SoporteController extends ControllerListenerGeneral
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->autorizar($arSoporte);
+                return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->desAutorizar($arSoporte);
+                return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
             }
             if($form->get('btnAprobar')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->aprobar($arSoporte);
+                return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
             }
             if($form->get('btnCargarContratos')->isClicked()) {
                 $em->getRepository(TurSoporte::class)->cargarContratos($arSoporte);
+                return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
             }
             if ($form->get('btnEliminarDetalle')->isClicked()) {
                 $arrDetalles = $request->request->get('ChkSeleccionar');
                 $respuesta = $this->getDoctrine()->getRepository(TurSoporteContrato::class)->retirarDetalle($arrDetalles);
+                return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
             }
             if ($form->get('btnExcel')->isClicked()){
                 $raw['filtros'] = $this->getFiltrosDetalle($form);
@@ -208,7 +213,6 @@ class SoporteController extends ControllerListenerGeneral
             if ($form->get('btnFiltrar')->isClicked()){
                 $raw['filtros'] = $this->getFiltrosDetalle($form);
             }
-            //return $this->redirect($this->generateUrl('turno_movimiento_operacion_soporte_detalle', ['id' => $id]));
         }
         $arSoporteContratos = $paginator->paginate($em->getRepository(TurSoporteContrato::class)->lista($raw, $id), $request->query->getInt('page', 1), 500);
 

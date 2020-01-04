@@ -43,12 +43,6 @@ class TurClienteIca
 
     /**
      * @ORM\Column(name="codigo_dane", type="string", length=5)
-     * @Assert\Length(
-     *      min = 1,
-     *      max = 5,
-     *      minMessage = "El campo no puede contener menos de  {{ limit }}",
-     *      maxMessage = "El campo no puede contener mas de {{ limit }} caracteres")
-     */
     private $codigoDane;
 
     /**
@@ -61,24 +55,24 @@ class TurClienteIca
      */
     private $porIca = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="clientesIcaClienteRel")
-     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
-     */
-    protected $clienteRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Brasa\GeneralBundle\Entity\GenCiudad", inversedBy="turClientesIcaCiudadRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
-     * @Assert\NotNull(message="Seleccione un elemento")
-     */
-    protected $ciudadRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="clientesIcaConceptoServicioRel")
-     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_servicio_pk")
-     */
-    protected $conceptoRel;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="clientesIcaClienteRel")
+//     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+//     */
+//    protected $clienteRel;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Brasa\GeneralBundle\Entity\GenCiudad", inversedBy="turClientesIcaCiudadRel")
+//     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+//     * @Assert\NotNull(message="Seleccione un elemento")
+//     */
+//    protected $ciudadRel;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="clientesIcaConceptoServicioRel")
+//     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_servicio_pk")
+//     */
+//    protected $conceptoRel;
 
     /**
      * @return int

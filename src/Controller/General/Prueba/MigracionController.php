@@ -16,6 +16,7 @@ use App\Entity\General\GenPais;
 use App\Entity\General\GenRegimen;
 use App\Entity\General\GenSectorComercial;
 use App\Entity\General\GenSectorEconomico;
+use App\Entity\General\GenSegmento;
 use App\Entity\General\GenSexo;
 use App\Entity\General\GenTipoPersona;
 use App\Entity\RecursoHumano\RhuAdicional;
@@ -2321,7 +2322,8 @@ class MigracionController extends Controller
                 codigo_dimension_fk,
                 codigo_origen_capital_fk,
                 codigo_sector_economico_fk,
-                codigo_ciudad_fk
+                codigo_ciudad_fk,
+                codigo_segmento_fk
                  FROM tur_cliente 
                  ORDER BY codigo_cliente_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -2336,6 +2338,9 @@ class MigracionController extends Controller
                 $arCliente->setTelefono($row['telefono']);
                 if($row['codigo_ciudad_fk']) {
                     $arCliente->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
+                if($row['codigo_segmento_fk']) {
+                    $arCliente->setSegmentoRel($em->getReference(GenSegmento::class, $row['codigo_segmento_fk']));
                 }
                 if ($row['codigo_sector_comercial_fk']) {
                     $arCliente->setSectorComercialRel($em->getReference(GenSectorComercial::class, $row['codigo_sector_comercial_fk']));
@@ -2673,6 +2678,7 @@ class MigracionController extends Controller
                 $arContratoDetalle->setHoraHasta(date_create($row['hora_fin']));
                 $arContratoDetalle->setPeriodo('M');
                 $arContratoDetalle->setCompuesto($row['compuesto']);
+                $arContratoDetalle->setProgramable(1);
                 $em->persist($arContratoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

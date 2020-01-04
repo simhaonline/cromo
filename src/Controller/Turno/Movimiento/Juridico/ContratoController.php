@@ -292,11 +292,13 @@ class ContratoController extends AbstractController
             $arContratoDetalle->setFechaHasta(new \DateTime('now'));
             $arContratoDetalle->setVrSalarioBase($arContrato->getVrSalarioBase());
             $arContratoDetalle->setPeriodo('M');
+            $arContratoDetalle->setProgramar(true);
         }
         $form = $this->createForm(ContratoDetalleType::class, $arContratoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
+                $horas = $this->horaServicio($arContratoDetalle->getHoraDesde(), $arContratoDetalle->getHoraHasta());
                 $em->persist($arContratoDetalle);
                 $em->flush();
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);
@@ -307,6 +309,49 @@ class ContratoController extends AbstractController
             'arContrato' => $arContrato,
             'form' => $form->createView()
         ]);
+    }
+
+    private function horaServicio($horaInicio, $horaFinal)
+    {
+        $arrHoras = array(
+            'horasDiurnas' => 0,
+            'horasNocturnas' => 0);
+
+        $intMinutoInicio = (($horaInicio->format('i') * 100) / 60) / 100;
+        $intHoraInicio = $horaInicio->format('G');
+        $intHoraInicio += $intMinutoInicio;
+        $intMinutoFinal = (($horaFinal->format('i') * 100) / 60) / 100;
+        $intHoraFinal = $horaFinal->format('G');
+        $intHoraFinal += $intMinutoFinal;
+
+        $intHorasNocturnasDia = $this->calcularTiempo($intHoraInicio, $intHoraFinal, 0, 6);
+        $intHorasDiurnas = $this->calcularTiempo($intHoraInicio, $intHoraFinal, 6, 21);
+        $intHorasNocturnasNoche = $this->calcularTiempo($intHoraInicio, $intHoraFinal, 21, 24);
+        return $arrHoras;
+    }
+
+    private function calcularTiempo($intInicial, $intFinal, $intParametroInicio, $intParametroFinal)
+    {
+        if ($intInicial < $intParametroInicio) {
+            $intHoraIniciaTemporal = $intParametroInicio;
+        } else {
+            $intHoraIniciaTemporal = $intInicial;
+        }
+        if ($intFinal > $intParametroFinal) {
+            if ($intInicial > $intParametroFinal) {
+                $intHoraTerminaTemporal = $intInicial;
+            } else {
+                $intHoraTerminaTemporal = $intParametroFinal;
+            }
+        } else {
+            if ($intFinal > $intParametroInicio) {
+                $intHoraTerminaTemporal = $intFinal;
+            } else {
+                $intHoraTerminaTemporal = $intParametroInicio;
+            }
+        }
+        $intHoras = $intHoraTerminaTemporal - $intHoraIniciaTemporal;
+        return $intHoras;
     }
 
     /**

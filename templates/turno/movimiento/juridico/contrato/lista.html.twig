@@ -65,6 +65,7 @@
             <th title="Cliente del contrato">CLIENTE</th>
             <th title="Sector al que pertenece el cliente">SECTOR</th>
             <th title="Ultima fecha de generacion de un pedido con base en el contrato">GENERADO</th>
+            <th title="Segmento">SEG</th>
             <th title="Horas totales del contrato">H</th>
             <th title="Horas diurnas">HD</th>
             <th title="Horas nocturnas">HN</th>
@@ -87,6 +88,7 @@
                 <td>{{ arContrato.nombreCorto }}</td>
                 <td>{{ arContrato.sector }}</td>
                 <td>{{ arContrato.fechaGeneracion | date('Y-m-d') }}</td>
+                <td>{{ arContrato.clienteCodigoSegmentoFk }}</td>
                 <td class="numero">{{ arContrato.horas | number_format }}</td>
                 <td class="numero">{{ arContrato.horasDiurnas | number_format }}</td>
                 <td class="numero">{{ arContrato.horasNocturnas | number_format }}</td>

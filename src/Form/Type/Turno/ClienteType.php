@@ -129,6 +129,16 @@ class ClienteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Regimen:'
             ])
+            ->add('segmentoRel', EntityType::class, [
+                'required' => false,
+                'class' => 'App\Entity\General\GenSegmento',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Segmento:'
+            ])
             ->add('codigoCIUU',TextType::class,['required' => false,'label' => 'CIUU:'])
             ->add('numeroIdentificacion', NumberType::class)
             ->add('digitoVerificacion', NumberType::class)

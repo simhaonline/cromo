@@ -40,6 +40,9 @@
             <th>IDENTIFICACION</th>
             <th>DIRECCION</th>
             <th>TELEFONO</th>
+            <th title="Estrato">EST</th>
+            <th>SECTOR</th>
+            <th>SEG</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -55,6 +58,9 @@
                 <td>{{ arCliente.numeroIdentificacion  }}</td>
                 <td>{{ arCliente.direccion  }}</td>
                 <td>{{ arCliente.telefono  }}</td>
+                <td>{{ arCliente.estrato  }}</td>
+                <td>{{ arCliente.sectorComercialNombre  }}</td>
+                <td>{{ arCliente.codigoSegmentoFk  }}</td>
                 <td class="text-center">
                     <a href="{{ path('turno_administracion_comercial_cliente_nuevo',{'id': arCliente.codigoClientePk  }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

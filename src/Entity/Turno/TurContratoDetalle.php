@@ -208,6 +208,11 @@ class TurContratoDetalle
     private $codigoGrupoFk;
 
     /**
+     * @ORM\Column(name="programar", type="boolean", options={"default":false})
+     */
+    private $programar = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurContrato", inversedBy="contratosDetallesContratoRel")
      * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
      */
@@ -853,6 +858,38 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramar()
+    {
+        return $this->programar;
+    }
+
+    /**
+     * @param mixed $programar
+     */
+    public function setProgramar($programar): void
+    {
+        $this->programar = $programar;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getContratoRel()
     {
         return $this->contratoRel;
@@ -933,6 +970,22 @@ class TurContratoDetalle
     /**
      * @return mixed
      */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPrototiposContratoDetalleRel()
     {
         return $this->prototiposContratoDetalleRel;
@@ -977,40 +1030,6 @@ class TurContratoDetalle
     {
         $this->contratoDetallesCompuestosContratoDetalleRel = $contratoDetallesCompuestosContratoDetalleRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoGrupoFk()
-    {
-        return $this->codigoGrupoFk;
-    }
-
-    /**
-     * @param mixed $codigoGrupoFk
-     */
-    public function setCodigoGrupoFk($codigoGrupoFk): void
-    {
-        $this->codigoGrupoFk = $codigoGrupoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrupoRel()
-    {
-        return $this->grupoRel;
-    }
-
-    /**
-     * @param mixed $grupoRel
-     */
-    public function setGrupoRel($grupoRel): void
-    {
-        $this->grupoRel = $grupoRel;
-    }
-
-
 
 
 

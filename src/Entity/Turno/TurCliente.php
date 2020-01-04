@@ -168,6 +168,11 @@ class TurCliente
     private $codigoCIUU;
 
     /**
+     * @ORM\Column(name="codigo_segmento_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSegmentoFk;
+
+    /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
     private $comentario;
@@ -197,34 +202,10 @@ class TurCliente
     protected $asesorRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="clienteRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSegmento", inversedBy="turClientesSegmentoRel")
+     * @ORM\JoinColumn(name="codigo_segmento_fk", referencedColumnName="codigo_segmento_pk")
      */
-    protected $facturasClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
-     */
-    protected $contratosClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="TurPuesto", mappedBy="clienteRel")
-     */
-    protected $PuestosClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="clienteRel")
-     */
-    protected $costosEmpleadosServiciosClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="clienteRel")
-     */
-    protected $costosServiciosClienteRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurGrupo", mappedBy="clienteRel")
-     */
-    protected $gruposClienteRel;
+    protected $segmentoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSectorComercial", inversedBy="turClientesSectorComercialRel")
@@ -267,6 +248,37 @@ class TurCliente
      * @ORM\JoinColumn(name="codigo_tipo_persona_fk", referencedColumnName="codigo_tipo_persona_pk")
      */
     private $tipoPersonaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurFactura", mappedBy="clienteRel")
+     */
+    protected $facturasClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurContrato", mappedBy="clienteRel")
+     */
+    protected $contratosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurPuesto", mappedBy="clienteRel")
+     */
+    protected $PuestosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoEmpleadoServicio", mappedBy="clienteRel")
+     */
+    protected $costosEmpleadosServiciosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCostoServicio", mappedBy="clienteRel")
+     */
+    protected $costosServiciosClienteRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurGrupo", mappedBy="clienteRel")
+     */
+    protected $gruposClienteRel;
+
 
     /**
      * @return array
@@ -1050,6 +1062,38 @@ class TurCliente
     public function setGruposClienteRel($gruposClienteRel): void
     {
         $this->gruposClienteRel = $gruposClienteRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSegmentoFk()
+    {
+        return $this->codigoSegmentoFk;
+    }
+
+    /**
+     * @param mixed $codigoSegmentoFk
+     */
+    public function setCodigoSegmentoFk($codigoSegmentoFk): void
+    {
+        $this->codigoSegmentoFk = $codigoSegmentoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSegmentoRel()
+    {
+        return $this->segmentoRel;
+    }
+
+    /**
+     * @param mixed $segmentoRel
+     */
+    public function setSegmentoRel($segmentoRel): void
+    {
+        $this->segmentoRel = $segmentoRel;
     }
 
 

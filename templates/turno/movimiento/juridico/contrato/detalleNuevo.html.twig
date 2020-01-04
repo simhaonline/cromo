@@ -14,15 +14,15 @@
             <div class="panel-heading">Informacion</div>
             <div class="panel-body">
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Concepto:</label>
-                    <div class="col-sm-4">
-                        {{ form_widget(form.conceptoRel) }}
-                        {{ form_errors(form.conceptoRel) }}
-                    </div>
                     <label class="col-sm-2 control-label">Item:</label>
                     <div class="col-sm-4">
                         {{ form_widget(form.itemRel) }}
                         {{ form_errors(form.itemRel) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Modalidad:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.modalidadRel) }}
+                        {{ form_errors(form.modalidadRel) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -34,10 +34,10 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Modalidad:</label>
+                    <label class="col-sm-2 control-label">Fecha desde:</label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.modalidadRel) }}
-                        {{ form_errors(form.modalidadRel) }}
+                        {{ form_widget(form.fechaDesde) }}
+                        {{ form_errors(form.fechaDesde) }}
                     </div>
                     <label class="col-sm-2 control-label"></label>
                     <div class="col-sm-1">
@@ -58,10 +58,10 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Fecha desde:</label>
+                    <label class="col-sm-2 control-label">Fecha hasta:</label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.fechaDesde) }}
-                        {{ form_errors(form.fechaDesde) }}
+                        {{ form_widget(form.fechaHasta) }}
+                        {{ form_errors(form.fechaHasta) }}
 
                     </div>
                     <label class="col-sm-2 control-label">Salario (Liquidacion):</label>
@@ -72,11 +72,9 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Fecha hasta:</label>
+                    <label class="col-sm-2 control-label">Hora desde:</label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.fechaHasta) }}
-                        {{ form_errors(form.fechaHasta) }}
-
+                        {{ form_widget(form.horaDesde) }}
                     </div>
                     <label class="col-sm-2 control-label">Precio (Ajustado):</label>
                     <div class="col-sm-4">
@@ -85,43 +83,24 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Hora desde:</label>
-                    <div class="col-sm-2">
-                        {{ form_widget(form.horaDesde) }}
-                    </div>
-                    <label class="col-sm-2 control-label">Hora hasta:</label>
-                    <div class="col-sm-2">
+                    <label class="col-sm-2 control-label">Hora hassta:</label>
+                    <div class="col-sm-4">
                         {{ form_widget(form.horaHasta) }}
                     </div>
                     <label class="col-sm-2 control-label"></label>
-                    <div class="col-sm-4">
-
+                    <div class="col-sm-2">
+                        {{ form_widget(form.lunes) }}
+                        {{ form_widget(form.martes) }}
+                        {{ form_widget(form.miercoles) }}
+                        {{ form_widget(form.jueves) }}
+                        {{ form_widget(form.viernes) }}
+                        {{ form_widget(form.sabado) }}
+                        {{ form_widget(form.domingo) }}
+                        {{ form_widget(form.festivo) }}
                     </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <div class="col-sm-offset-2 col-sm-9">
-                        <div class="col-sm-4">{{ form_widget(form.lunes) }}
-                            {{ form_errors(form.lunes) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.martes) }}
-                            {{ form_errors(form.martes) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.miercoles) }}
-                            {{ form_errors(form.miercoles) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.jueves) }}
-                            {{ form_errors(form.jueves) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.viernes) }}
-                            {{ form_errors(form.viernes) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.sabado) }}
-                            {{ form_errors(form.sabado) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.domingo) }}
-                            {{ form_errors(form.domingo) }}</div>
-                        <div class="col-sm-4">{{ form_widget(form.festivo) }}
-                            {{ form_errors(form.festivo) }}</div>
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label"></label>
-                    <div class="col-sm-4">
-                        <div class="col-sm-4">{{ form_widget(form.compuesto) }}</div>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.compuesto) }}
+                        {{ form_widget(form.programar) }}
                     </div>
                 </div>
             </div>

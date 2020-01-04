@@ -58,6 +58,8 @@
                             <th title="Iva">IVA</th>
                             <th>SUBTOTAL</th>
                             <th title="Compuesto">CP</th>
+                            <th title="Grupo facturacion">GF</th>
+                            <th title="Programable">PR</th>
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -83,9 +85,9 @@
                             <td>{{ arContratoDetalle.sabado  ? 'S':'N' }}</td>
                             <td>{{ arContratoDetalle.domingo ? 'S':'N' }}</td>
                             <td>{{ arContratoDetalle.festivo ? 'S':'N' }}</td>
-                            <td>{{ arContratoDetalle.horas }}</td>
-                            <td>{{ arContratoDetalle.horasDiurnas }}</td>
-                            <td>{{ arContratoDetalle.horasNocturnas }}</td>
+                            <td class="numero">{{ arContratoDetalle.horas | number_format}}</td>
+                            <td class="numero">{{ arContratoDetalle.horasDiurnas | number_format}}</td>
+                            <td class="numero">{{ arContratoDetalle.horasNocturnas | number_format}}</td>
                             <td class="numero">{{ arContratoDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
                             <td class="numero">{{ arContratoDetalle.vrPrecioMinimo | number_format(0, '.', ',') }}</td>
                             {% if arContrato.estadoAutorizado %}
@@ -128,7 +130,8 @@
                             {% else %}
                                 <td class="text-center">NO</td>
                             {% endif %}
-
+                            <td>{{ arContratoDetalle.codigoGrupoFk}}</td>
+                            <td>{{ arContratoDetalle.programar? 'SI':'NO'}}</td>
                             <td style="text-align: center;">
                                 {% if arContrato.estadoAutorizado == 0 %}
                                     <a href="javascript:abrirVentana3('{{ path('turno_movimiento_juridico_contrato_detalle_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'id': arContratoDetalle.codigoContratoDetallePk }) }}', 'contratoDetalle', 600, 1200)"><i

@@ -52,6 +52,7 @@ class TurContratoRepository extends ServiceEntityRepository
             ->addSelect('ct.nombre as contratoTipo')
             ->addSelect('cl.numeroIdentificacion')
             ->addSelect('cl.nombreCorto ')
+            ->addSelect('cl.codigoSegmentoFk as clienteCodigoSegmentoFk')
             ->addSelect('s.nombre as  sector')
             ->leftJoin('c.contratoTipoRel', 'ct')
             ->leftJoin('c.clienteRel', 'cl')

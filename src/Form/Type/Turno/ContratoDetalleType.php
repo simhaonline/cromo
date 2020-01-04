@@ -24,17 +24,6 @@ class ContratoDetalleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conceptoRel', EntityType::class, [
-                'required' => true,
-                'class' => TurConcepto::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'nombre:',
-                'attr' => ['class' => 'form-control to-select-2']
-            ])
             ->add('itemRel', EntityType::class, [
                 'required' => true,
                 'class' => TurItem::class,
@@ -82,6 +71,7 @@ class ContratoDetalleType extends AbstractType
             ->add('domingo', CheckboxType::class, array('required' => false))
             ->add('festivo', CheckboxType::class, array('required' => false))
             ->add('compuesto', CheckboxType::class, array('required' => false))
+            ->add('programar', CheckboxType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])

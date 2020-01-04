@@ -48,6 +48,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.horaDesde')
             ->addSelect('cd.horaHasta')
             ->addSelect('cd.compuesto')
+            ->addSelect('cd.codigoGrupoFk')
+            ->addSelect('cd.programar')
             ->addSelect('con.nombre as conceptoNombre')
             ->addSelect('i.nombre as itemNombre')
             ->addSelect('mod.nombre as modalidadNombre')

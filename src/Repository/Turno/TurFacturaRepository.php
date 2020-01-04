@@ -401,12 +401,12 @@ class TurFacturaRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
             ->select('f.codigoFacturaPk')
-            ->addSelect( 'f.numero')
-            ->addSelect( 'f.fecha')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
             ->addSelect('f.fechaVence')
             ->addSelect('f.plazoPago')
             ->addSelect('f.soporte')
-            ->addSelect( 'f.vrSubtotal')
+            ->addSelect('f.vrSubtotal')
             ->addSelect('f.vrBaseAiu')
             ->addSelect('f.vrIva')
             ->addSelect('f.vrDescuento')
@@ -436,7 +436,7 @@ class TurFacturaRepository extends ServiceEntityRepository
         if ($session->get('filtroTurInformeComercialFacturaCiudad') != null) {
             $queryBuilder->andWhere("ci.codigoCiudadPk = {$session->get('filtroTurInformeComercialFacturaCiudad')}");
         }
-        switch ( $session->get('filtroTurInformeComercialFacturaAutorizado')) {
+        switch ($session->get('filtroTurInformeComercialFacturaAutorizado')) {
             case '0':
                 $queryBuilder->andWhere("f.estadoAutorizado = 0");
                 break;
@@ -444,7 +444,7 @@ class TurFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.estadoAutorizado = 1");
                 break;
         }
-        switch ( $session->get('filtroTurInformeComercialFacturaAnulado')) {
+        switch ($session->get('filtroTurInformeComercialFacturaAnulado')) {
 
             case '0':
                 $queryBuilder->andWhere("f.estadoAnulado = 0");
@@ -453,7 +453,7 @@ class TurFacturaRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("f.estadoAnulado = 1");
                 break;
         }
-        switch ( $session->get('filtroTurInformeComercialFacturaAprobado')) {
+        switch ($session->get('filtroTurInformeComercialFacturaAprobado')) {
             case '0':
                 $queryBuilder->andWhere("f.estadoAprobado = 0");
                 break;
@@ -463,7 +463,7 @@ class TurFacturaRepository extends ServiceEntityRepository
         }
         $queryBuilder->addOrderBy('f.fecha', 'DESC');
         return $queryBuilder->getQuery()->getResult();
-        }
+    }
 
     /**
      * @param $arFactura TurFactura
@@ -802,5 +802,72 @@ class TurFacturaRepository extends ServiceEntityRepository
 
         }
         return true;
+    }
+
+    public function listaPendienteExportarOfimatica($raw)
+    {
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoIncidente = null;
+        $codigoEmpleado = null;
+        $incidenteTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+        if ($filtros) {
+            $codigoFacturaPk = $filtros['codigoFacturaPk'] ?? null;
+            $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoFacturaTipoFk = $filtros['codigoPedidoTipoFk'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFactura::class, 'f')
+            ->select('f.codigoFacturaPk')
+            ->addSelect('f.numero')
+            ->addSelect("f.fecha")
+            ->addSelect("f.fechaVence")
+            ->addSelect('f.vrRetencionFuente')
+            ->addSelect('f.vrRetencionIva')
+            ->addSelect('f.descripcion')
+            ->addSelect('f.codigoFacturaClaseFk')
+            ->addSelect('ft.abreviatura')
+            ->addSelect('c.numeroIdentificacion')
+            ->addSelect('c.direccion')
+            ->addSelect('c.digitoVerificacion')
+            ->addSelect('ci.codigoDane')
+            ->where('f.estadoAutorizado = 1')
+            ->andWhere('f.numero != 0')
+            ->leftJoin('f.clienteRel', 'c')
+            ->leftJoin('c.ciudadRel', 'ci')
+            ->leftJoin('f.facturaTipoRel', 'ft');
+
+        if ($codigoFacturaPk) {
+            $queryBuilder->andWhere("f.codigoFacturaPk = {$codigoFacturaPk}");
+        }
+        if ($codigoClienteFk) {
+            $queryBuilder->andWhere("f.codigoClienteFk  = '{$codigoClienteFk}'");
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("f.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("f.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        if ($numero) {
+            $queryBuilder->andWhere("f.numero  = '{$numero}'");
+        }
+
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("f.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("f.fecha <= '{$fechaHasta} 23:59:59'");
+        }
+        if ($codigoFacturaTipoFk) {
+            $queryBuilder->andWhere("f.codigoFacturaTipoFk  = '{$codigoFacturaTipoFk}'");
+        }
+        return $queryBuilder->getQuery()->getResult();
     }
 }

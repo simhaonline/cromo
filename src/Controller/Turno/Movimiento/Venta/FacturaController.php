@@ -109,8 +109,8 @@ class FacturaController extends AbstractController
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
                 $raw['filtros'] = $this->getFiltros($form);
-                $arfacturas = $em->getRepository(TurFactura::class)->lista($raw);
-                $this->generarInterfazOfimaticaTrade($arfacturas);
+                $arFacturas = $em->getRepository(TurFactura::class)->listaPendienteExportarOfimatica($raw);
+                $this->generarInterfazOfimaticaTrade($arFacturas);
             }
             if ($form->get('BtnInterfazMvTrade')->isClicked()) {
                 set_time_limit(0);
@@ -473,7 +473,7 @@ class FacturaController extends AbstractController
         return $fitro;
     }
 
-    private function generarInterfazOfimaticaTrade($arfacturas)
+    private function generarInterfazOfimaticaTrade($arFacturas)
     {
         /**
          * @var TurFactura $arFactura
@@ -518,41 +518,34 @@ class FacturaController extends AbstractController
             ->setCellValue("U2", "DECIMALES");
         $libro->setActiveSheetIndex(0);
 
-//        $i = 3;
-//        $dql = $em->getRepository("BrasaTurnoBundle:TurFactura")->listaPendienteExportarOfimaticaDql($session->get('filtroFacturaNumero'), $session->get('filtroTurCodigoCliente'), $session->get('filtroFacturaEstadoAutorizado'), $session->get('filtroFacturaFiltrarFecha') ? $session->get('filtroFacturaFechaDesde') : "", $session->get('filtroFacturaFiltrarFecha') ? $session->get('filtroFacturaFechaHasta') : "", $session->get('filtroFacturaEstadoAnulado'), $session->get('filtroTurnosCodigoFacturaTipo'));
-//        $query = $em->createQuery($dql);
-//        $arFacturas = new \Brasa\TurnoBundle\Entity\TurFactura();
-//        $arFacturas = $query->getResult();
-//        foreach ($arFacturas as $arFactura) {
-//            $objPHPExcel->setActiveSheetIndex(0)
-//                ->setCellValue('A' . $i, 'FAC')//Tipo de movimiento de la factura
-//                ->setCellValue('B' . $i, $arFactura->getFacturaTipoRel()->getAbreviatura())//Tipo de movimiento de la factura
-//                ->setCellValue('C' . $i, $arFactura->getNumero())//Numero de documento de la factura
-//                ->setCellValue('D' . $i, $arFactura->getClienteRel()->getNit() . "" . ($arFactura->getCodigoClienteDireccionFk() ? "S" . $arFactura->getCodigoClienteDireccionFk() : "") . "-" . $arFactura->getClienteRel()->getDigitoVerificacion())//Nit del cliente
-//                ->setCellValue('E' . $i, $arFactura->getCodigoClienteDireccionFk() ? $arFactura->getClienteDireccionRel()->getDireccion() : $arFactura->getClienteRel()->getDireccion())//Direccion del cliente o de la factura
-//                ->setCellValue('F' . $i, $arFactura->getClienteRel()->getCiudadRel()->getCodigoInterface())//Fecha de la factura
-//                ->setCellValue('G' . $i, PHPExcel_Shared_Date::PHPToExcel($arFactura->getFecha()))//Fecha de la factura
-//                ->setCellValue('H' . $i, PHPExcel_Shared_Date::PHPToExcel($arFactura->getFechaVence()))//Fecha de la factura//Fecha de vencimiento de la factura
-//                ->setCellValue('I' . $i, $arFactura->getVrRetencionFuente() > 0 ? "1" : 0)//Si el encabezado maneja retencion en la fuente los detalles van en 1
-//                ->setCellValue('J' . $i, $arFactura->getVrRetencionFuente() > 0 ? 1 : 0)//Si el encabezado maneja retencion en la renta los detalles van en 1
-//                ->setCellValue('K' . $i, 0)//CALRETICA reteica PENDIENTE VALIDAR CUANDO SE CALCULE LA RETENCION DEL ICA
-//                ->setCellValue('L' . $i, "1")//CTRTOPES Siempre va 1
-//                ->setCellValue('M' . $i, "19")//Porcentaje del iva
-//                ->setCellValue('N' . $i, $arFactura->getVrRetencionIva() > 0 ? "15" : 0)//CTRTOPES Siempre va 1
-//                ->setCellValue('O' . $i, $arFactura->getDescripcion())//Descripcion del encabezado
-//                ->setCellValue('P' . $i, "13050501")//Siempre ese valor
-//                ->setCellValue('Q' . $i, "2001")//Siempre ese valor
-//                ->setCellValue('R' . $i, $arFactura->getFacturaTipoRel()->getTipo() == 2 ? 402 : 401)//Siempre ese valor
-//                ->setCellValue('S' . $i, 0)//Siempre va 0
-//                ->setCellValue('T' . $i, 01)//Siempre va 05
-//                ->setCellValue('U' . $i, 9)//Siempre va 9
-//            ;
-//            $i++;
-//        }
-//        //Aunque la columna diga bruto EXPORTAR el valor neto.
-//        $objPHPExcel->getActiveSheet()->setTitle('Facturas');
-//        $objPHPExcel->setActiveSheetIndex(0);
-
+        $i = 3;
+        foreach ($arFacturas as $arFactura) {
+            $hoja->getStyle($i)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setCellValue('A' . $i, 'FAC')//Tipo de movimiento de la factura
+                ->setCellValue('B' . $i, $arFactura['abreviatura'])//Tipo de movimiento de la factura
+                ->setCellValue('C' . $i, $arFactura['numero'])//Numero de documento de la factura
+                ->setCellValue('D' . $i,  $arFactura['numeroIdentificacion']. "" . ( $arFactura['direccion'] ? "S" : "") . "-" . $arFactura['digitoVerificacion'] )//Nit del cliente
+                ->setCellValue('E' . $i, $arFactura['direccion'])//Direccion del cliente o de la factura
+                ->setCellValue('F' . $i, $arFactura['codigoDane'])// dane
+                ->setCellValue('G' . $i, $arFactura['fecha']->format('Y/m/d'))//Fecha de la factura
+                ->setCellValue('H' . $i, $arFactura['fechaVence']->format('Y/m/d'))//Fecha de la factura//Fecha de vencimiento de la factura
+                ->setCellValue('I' . $i, $arFactura['vrRetencionFuente'] > 0 ? "1" : 0)//Si el encabezado maneja retencion en la fuente los detalles van en 1
+                ->setCellValue('J' . $i, $arFactura['vrRetencionFuente'] > 0 ? 1 : 0)//Si el encabezado maneja retencion en la renta los detalles van en 1
+                ->setCellValue('K' . $i, 0)//CALRETICA reteica PENDIENTE VALIDAR CUANDO SE CALCULE LA RETENCION DEL ICA
+                ->setCellValue('L' . $i, "1")//CTRTOPES Siempre va 1
+                ->setCellValue('M' . $i, "19")//Porcentaje del iva
+                ->setCellValue('N' . $i, $arFactura['vrRetencionIva'] > 0 ? "15" : 0)//CTRTOPES Siempre va 1
+                ->setCellValue('O' . $i, $arFactura['descripcion'])//Descripcion del encabezado
+                ->setCellValue('P' . $i, "13050501")//Siempre ese valor
+                ->setCellValue('Q' . $i, "2001")//Siempre ese valor
+                ->setCellValue('R' . $i,  $arFactura['codigoFacturaClaseFk'] == "NC" ? 402 : 401)//Siempre ese valor
+                ->setCellValue('S' . $i, 0)//Siempre va 0
+                ->setCellValue('T' . $i, 01)//Siempre va 05
+                ->setCellValue('U' . $i, 9)//Siempre va 9
+            ;
+            $i++;
+        }
+        $hoja->setTitle('Facturas');
         $libro->setActiveSheetIndex(0);
         header('Content-Type: application/vnd.ms-excel');
         header("Content-Disposition: attachment;filename=Trade.xls");

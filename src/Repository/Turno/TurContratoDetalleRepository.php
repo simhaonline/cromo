@@ -20,8 +20,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
     public function lista($id)
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd');
-        $queryBuilder
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
             ->select('cd.codigoContratoDetallePk')
             ->addSelect('p.nombre AS puesto')
             ->addSelect('cd.cantidad')
@@ -58,7 +57,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('cd.modalidadRel', 'mod')
             ->leftJoin('cd.puestoRel', 'p')
             ->where("cd.codigoContratoFk = {$id}")
-            ->andWhere('cd.estadoTerminado = 0');
+            ->andWhere('cd.estadoTerminado = 0')
+            ->orderBy('cd.codigoPuestoFk');
 
         return $queryBuilder->getQuery()->getResult();
     }

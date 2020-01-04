@@ -120,6 +120,7 @@ class SoporteController extends ControllerListenerGeneral
         } else {
             $arSoporte->setFechaDesde(new \DateTime('now'));
             $arSoporte->setFechaHasta(new \DateTime('now'));
+            $arSoporte->setFechaHastaPeriodo(new \DateTime('now'));
         }
         $form = $this->createForm(SoporteType::class, $arSoporte);
         $form->handleRequest($request);

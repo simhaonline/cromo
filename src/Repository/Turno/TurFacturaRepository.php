@@ -841,7 +841,8 @@ class TurFacturaRepository extends ServiceEntityRepository
             ->andWhere('f.numero != 0')
             ->leftJoin('f.clienteRel', 'c')
             ->leftJoin('c.ciudadRel', 'ci')
-            ->leftJoin('f.facturaTipoRel', 'ft');
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->orderBy('f.numero', 'DESC');
 
         if ($codigoFacturaPk) {
             $queryBuilder->andWhere("f.codigoFacturaPk = {$codigoFacturaPk}");

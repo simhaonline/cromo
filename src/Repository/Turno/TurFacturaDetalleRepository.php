@@ -232,4 +232,40 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
         return $dql;
     }
 
+    public function listaPendienteExportarOfimatica($raw)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurFacturaDetalle::class, 'fd')
+            ->select("fd.codigoFacturaDetallePk")
+            ->addSelect("fd.vrIva")
+            ->addSelect("fd.cantidad")
+            ->addSelect("fd.vrPrecio")
+            ->addSelect("fd.vrBaseIva")
+            ->addSelect("fd.codigoFacturaDetalleFk")
+            ->addSelect("fd.porcentajeBaseIva")
+            ->addSelect("fd.vrRetencionFuente")
+            ->addSelect("fd.porcentajeBaseIva")
+            ->addSelect('ft.abreviatura')
+            ->addSelect('f.numero')
+            ->addSelect('f.fecha')
+            ->addSelect('f.codigoClienteFk')
+            ->addSelect('c.nombre')
+            ->addSelect("pd.codigoPuestoFk")
+            ->addSelect("p.codigoCentroCostoFk")
+            ->addSelect("p.codigoCiudadFk")
+            ->addSelect('p.nombre as puestoNombre')
+            ->addSelect('pe.numero as pedidoNumero')
+            ->addSelect('m.nombre as modalidadNombre')
+            ->leftJoin("fd.puestoRel", "p")
+            ->leftJoin("p.ciudadRel", "ci")
+            ->leftJoin( "fd.facturaRel", "f")
+            ->leftJoin('f.facturaTipoRel', 'ft')
+            ->leftJoin('fd.conceptoRel', 'c')
+            ->leftJoin('fd.pedidoDetalleRel', 'pd')
+            ->leftJoin('pd.pedidoRel', 'pe')
+            ->leftJoin('fd.modalidadRel', 'm')
+
+        ;
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

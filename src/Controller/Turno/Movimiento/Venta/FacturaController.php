@@ -649,15 +649,15 @@ class FacturaController extends AbstractController
 //                    $tarIca = $arClienteIca->getPorIca();
 //                }
 //            }
-//            if ($arFacturaDetalle->getPuestoRel() && $arFacturaDetalle->getPuestoRel()->getCiudadRel() && $arFacturaDetalle['co']getConceptoServicioRel()) {
-//                $tarIca = $em->getRepository(TurClienteIca::class)->tarifaIca($arFacturaDetalle['codigoClienteFk'],
-//                                                                                        $arFacturaDetalle['codigoCiudadFk'],
-//                                                                                        $arFacturaDetalle->getConceptoServicioRel()->getCodigoServicioErp(),
-//                                                                                        $arFacturaDetalle->getConceptoServicioRel()->getCodigoConceptoServicioPk());
-//            }
-//            if ($arFacturaDetalle['porcentajeBaseIva'] > 0 && $tarIca > 0) {
-//                $tarIca = ($tarIca * $arFacturaDetalle['porcentajeBaseIva']) / 1000;//Se valida si el detalle maneja porcentaje de base.
-//            }
+            if ($arFacturaDetalle['codigoPuestoFk'] && $arFacturaDetalle['codigoCiudadFk'] && $arFacturaDetalle['codigoItemFk']) {
+                $tarIca = $em->getRepository(TurClienteIca::class)->tarifaIca($arFacturaDetalle['codigoClienteFk'],
+                                                                                        $arFacturaDetalle['codigoCiudadFk'],
+                                                                                        $arFacturaDetalle['codigoServicioErp'],
+                                                                                        $arFacturaDetalle['codigoConceptoPk']);
+            }
+            if ($arFacturaDetalle['porcentajeBaseIva'] > 0 && $tarIca > 0) {
+                $tarIca = ($tarIca * $arFacturaDetalle['porcentajeBaseIva']) / 1000;//Se valida si el detalle maneja porcentaje de base.
+            }
             $hoja
                 ->setCellValue('A' . $i, 'FAC')//Tipo de movimiento de la factura
                 ->setCellValue('B' . $i, $arFacturaDetalle['abreviatura'])//Tipo de movimiento de la factura

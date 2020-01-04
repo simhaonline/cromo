@@ -29,7 +29,7 @@ class TurClienteIcaRepository extends ServiceEntityRepository
             $query->andWhere("ci.codigoCiudadFk = {$codigoCiudad}");
         }
         if ($codigoServicioErp != "" || $codigoConceptoServicio != "") {
-            $query->andWhere("ci.codigoServicioErp = '{$codigoServicioErp}' OR ci.codigoConceptoServicioFk = {$codigoConceptoServicio}");
+            $query->andWhere("ci.codigoServicioErp = '{$codigoServicioErp}' OR ci.codigoConceptoFk = {$codigoConceptoServicio}");
         }
 
         $arrResult = $query->getQuery()->getResult();

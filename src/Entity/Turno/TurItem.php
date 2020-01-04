@@ -30,6 +30,11 @@ class TurItem
     private $nombre;
 
     /**
+     * @ORM\Column(name="codigo_servicio_erp", type="string", length=20, nullable=true)
+     */
+    private $codigoServicioErp;
+
+    /**
      * @ORM\Column(name="codigo_cuenta_venta_fk", type="string", length=20, nullable=true)
      */
     private $codigoCuentaVentaFk;
@@ -269,7 +274,21 @@ class TurItem
         $this->CotizacionesDetallesItemRel = $CotizacionesDetallesItemRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCodigoServicioErp()
+    {
+        return $this->codigoServicioErp;
+    }
 
+    /**
+     * @param mixed $codigoServicioErp
+     */
+    public function setCodigoServicioErp($codigoServicioErp): void
+    {
+        $this->codigoServicioErp = $codigoServicioErp;
+    }
 
 }
 

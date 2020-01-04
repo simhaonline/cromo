@@ -244,10 +244,12 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect("fd.porcentajeBaseIva")
             ->addSelect("fd.vrRetencionFuente")
             ->addSelect("fd.porcentajeBaseIva")
+            ->addSelect("fd.codigoItemFk")
             ->addSelect('ft.abreviatura')
             ->addSelect('f.numero')
             ->addSelect('f.fecha')
             ->addSelect('f.codigoClienteFk')
+            ->addSelect('c.codigoConceptoPk')
             ->addSelect('c.nombre')
             ->addSelect("pd.codigoPuestoFk")
             ->addSelect("p.codigoCentroCostoFk")
@@ -255,6 +257,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->addSelect('p.nombre as puestoNombre')
             ->addSelect('pe.numero as pedidoNumero')
             ->addSelect('m.nombre as modalidadNombre')
+            ->addSelect('i.codigoServicioErp')
             ->leftJoin("fd.puestoRel", "p")
             ->leftJoin("p.ciudadRel", "ci")
             ->leftJoin( "fd.facturaRel", "f")
@@ -263,6 +266,7 @@ class TurFacturaDetalleRepository extends ServiceEntityRepository
             ->leftJoin('fd.pedidoDetalleRel', 'pd')
             ->leftJoin('pd.pedidoRel', 'pe')
             ->leftJoin('fd.modalidadRel', 'm')
+            ->leftJoin('fd.itemRel', 'i')
 
         ;
         return $queryBuilder->getQuery()->getResult();

@@ -55,24 +55,23 @@ class TurClienteIca
      */
     private $porIca = 0;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="clientesIcaClienteRel")
-//     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
-//     */
-//    protected $clienteRel;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Brasa\GeneralBundle\Entity\GenCiudad", inversedBy="turClientesIcaCiudadRel")
-//     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
-//     * @Assert\NotNull(message="Seleccione un elemento")
-//     */
-//    protected $ciudadRel;
-//
-//    /**
-//     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="clientesIcaConceptoServicioRel")
-//     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_servicio_pk")
-//     */
-//    protected $conceptoRel;
+    /**
+     * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="clientesIcaClienteRel")
+     * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
+     */
+    protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="turClientesIcaCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="clientesIcaConceptoRel")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_servicio_pk")
+     */
+    protected $conceptoRel;
 
     /**
      * @return int

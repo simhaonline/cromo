@@ -279,6 +279,10 @@ class TurCliente
      */
     protected $gruposClienteRel;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurClienteIca", mappedBy="clienteRel")
+     */
+    protected $clientesIcaClienteRel;
 
     /**
      * @return array
@@ -1094,6 +1098,22 @@ class TurCliente
     public function setSegmentoRel($segmentoRel): void
     {
         $this->segmentoRel = $segmentoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesIcaClienteRel()
+    {
+        return $this->clientesIcaClienteRel;
+    }
+
+    /**
+     * @param mixed $clientesIcaClienteRel
+     */
+    public function setClientesIcaClienteRel($clientesIcaClienteRel): void
+    {
+        $this->clientesIcaClienteRel = $clientesIcaClienteRel;
     }
 
 

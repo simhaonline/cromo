@@ -189,6 +189,11 @@ class GenCiudad
     protected $ttePoseedorCiuidadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurClienteIca", mappedBy="ciudadRel")
+     */
+    protected $turClientesIcaCiudadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -748,7 +753,21 @@ class GenCiudad
         $this->codigoDaneDivision = $codigoDaneDivision;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTurClientesIcaCiudadRel()
+    {
+        return $this->turClientesIcaCiudadRel;
+    }
 
+    /**
+     * @param mixed $turClientesIcaCiudadRel
+     */
+    public function setTurClientesIcaCiudadRel($turClientesIcaCiudadRel): void
+    {
+        $this->turClientesIcaCiudadRel = $turClientesIcaCiudadRel;
+    }
 
 }
 

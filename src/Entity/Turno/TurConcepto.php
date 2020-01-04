@@ -80,6 +80,11 @@ class TurConcepto
     protected $pedidosDetallesCompuestosConceptoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurClienteIca", mappedBy="conceptoRel")
+     */
+    protected $clientesIcaConceptoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()
@@ -269,6 +274,22 @@ class TurConcepto
     public function setNombreFacturacion($nombreFacturacion): void
     {
         $this->nombreFacturacion = $nombreFacturacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientesIcaConceptoRel()
+    {
+        return $this->clientesIcaConceptoRel;
+    }
+
+    /**
+     * @param mixed $clientesIcaConceptoRel
+     */
+    public function setClientesIcaConceptoRel($clientesIcaConceptoRel): void
+    {
+        $this->clientesIcaConceptoRel = $clientesIcaConceptoRel;
     }
 
 

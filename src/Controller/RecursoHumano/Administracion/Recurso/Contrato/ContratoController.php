@@ -2,7 +2,6 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
-
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
@@ -39,6 +38,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ContratoController extends AbstractController
 {
@@ -97,7 +98,8 @@ class ContratoController extends AbstractController
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            General::get()->setExportar($em->getRepository(RhuContrato::class)->lista(), "Contratos");
+            $arContratos  = $em->getRepository(RhuContrato::class)->lista();
+            $this->exportarExcelPersonalizado($arContratos);
         }
         $arContratos = $paginator->paginate($em->getRepository(RhuContrato::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('recursohumano/administracion/recurso/contrato/lista.html.twig',
@@ -443,6 +445,62 @@ class ContratoController extends AbstractController
         }
 
         return $mesEspañol;
+    }
+
+    public function exportarExcelPersonalizado($arContratos){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arContratos) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Movimientos');
+            $j = 0;
+            $arrColumnas=[
+                'ID','FECHA DESDE','NUMERO','EMPLEADO','NUMEROIDENTIFICACION','FECHAHASTA', 'TIPO','NOMBRE GRUPO',
+                'TIEMPO', 'FECHA PAGO','FECHA CESANTIAS','FECHAS PRIMAS', 'FECHA VACACIONES','SALARIO',
+                'NOMBRE', 'CODIGOEMPLEADO','TERMINADO','CAJA', 'SALUD', 'PENSION'
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arContratos as $arContrato) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+
+                $hoja->setCellValue('A' . $j, $arContrato['codigoContratoPk']);
+                $hoja->setCellValue('C' . $j, $arContrato['fechaDesde']->format('Y/m/d'));
+                $hoja->setCellValue('B' . $j, $arContrato['numero']);
+                $hoja->setCellValue('E' . $j, $arContrato['empleado']);
+                $hoja->setCellValue('D' . $j, $arContrato['numeroIdentificacion']);
+                $hoja->setCellValue('F' . $j, $arContrato['fechaHasta']->format('Y/m/d'));
+                $hoja->setCellValue('G' . $j, $arContrato['tipo']);
+                $hoja->setCellValue('H' . $j, $arContrato['nombreGrupo']);
+                $hoja->setCellValue('I' . $j, $arContrato['tiempo']);
+                $hoja->setCellValue('K' . $j, $arContrato['fechaUltimoPago']->format('Y/m/d'));
+                $hoja->setCellValue('J' . $j, $arContrato['fechaUltimoPagoCesantias']->format('Y/m/d'));
+                $hoja->setCellValue('L' . $j, $arContrato['fechaUltimoPagoPrimas']->format('Y/m/d'));
+                $hoja->setCellValue('M' . $j, $arContrato['fechaUltimoPagoVacaciones']->format('Y/m/d'));
+                $hoja->setCellValue('N' . $j, $arContrato['vrSalario']);
+                $hoja->setCellValue('O' . $j, $arContrato['nombre']);
+                $hoja->setCellValue('P' . $j, $arContrato['codigoEmpleadoFk']);
+                $hoja->setCellValue('Q' . $j, $arContrato['estadoTerminado']);
+                $hoja->setCellValue('R' . $j, $arContrato['caja']);
+                $hoja->setCellValue('S' . $j, $arContrato['salud']);
+                $hoja->setCellValue('T' . $j, $arContrato['pension']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=contratos.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 
 }

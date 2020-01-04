@@ -69,7 +69,7 @@ class TurClienteIca
 
     /**
      * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="clientesIcaConceptoRel")
-     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_servicio_pk")
+     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
      */
     protected $conceptoRel;
 

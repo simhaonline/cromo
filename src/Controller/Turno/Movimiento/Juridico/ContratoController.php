@@ -302,8 +302,8 @@ class ContratoController extends AbstractController
                 $arContratoDetalle->setHoras($horas['horas']);
                 $arContratoDetalle->setHorasDiurnas($horas['horasDiurnas']);
                 $arContratoDetalle->setHorasNocturnas($horas['horasNocturnas']);
-                $arContratoDetalle->setPorcentajeBaseIva();
-                $arContratoDetalle->setPorcentajeIva();
+                $arContratoDetalle->setPorcentajeBaseIva($arContratoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
+                $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
                 $em->persist($arContratoDetalle);
                 $em->flush();
                 $em->getRepository(TurContrato::class)->liquidar($arContrato);

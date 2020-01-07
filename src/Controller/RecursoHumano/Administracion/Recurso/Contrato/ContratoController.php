@@ -68,8 +68,8 @@ class ContratoController extends AbstractController
             ->add('txtNombreEmpleado', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNombreEmpleado')])
             ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroRhuNumeroIdentificacionEmpleado')])
             ->add('chkEstadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuContratoEstadoTerminado'), 'required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('cboGrupo', EntityType::class, $em->getRepository(RhuGrupo::class)->llenarCombo())
             ->add('cboContratoTipo', EntityType::class, $em->getRepository(RhuContratoTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -98,7 +98,7 @@ class ContratoController extends AbstractController
             }
         }
         if ($form->get('btnExcel')->isClicked()) {
-            $arContratos  = $em->getRepository(RhuContrato::class)->lista();
+            $arContratos = $em->getRepository(RhuContrato::class)->lista();
             $this->exportarExcelPersonalizado($arContratos);
         }
         $arContratos = $paginator->paginate($em->getRepository(RhuContrato::class)->lista(), $request->query->getInt('page', 1), 50);
@@ -130,7 +130,7 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->get('btnCartaLaboral')->isClicked()) {
-                $fechaActual =$dateNow = new \DateTime('now');
+                $fechaActual = $dateNow = new \DateTime('now');
                 $salarioLetras = $em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
                 $formato = New Formato($em);
                 $formato->generarFormatoCarta(4, [
@@ -141,15 +141,15 @@ class ContratoController extends AbstractController
                     '#5' => $arContrato->getContratoTipoRel()->getNombre(),
                     '#6' => $arContrato->getCargoRel()->getNombre(),
                     '#7' => number_format($arContrato->getVrSalario(), 0, '.', ','),
-                    '#8' =>strftime("%d de " . $this->MesesEspañol($fechaActual->format('m')) . " de %Y", strtotime($fechaActual->format('Y/m/d'))),
+                    '#8' => strftime("%d de " . $this->MesesEspañol($fechaActual->format('m')) . " de %Y", strtotime($fechaActual->format('Y/m/d'))),
                     '#9' => $salarioLetras]);
             }
-            if($form->get('btnPdf')->isClicked()){
+            if ($form->get('btnPdf')->isClicked()) {
                 $arConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
 
                 $interval = $arContrato->getFechaDesde()->diff($arContrato->getFechaHasta());
                 $interval = round($interval->format('%a%') / 30);
-                $salarioLetras =$em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
+                $salarioLetras = $em->getRepository(RhuContrato::class)->numtoletras($arContrato->getVrSalario());
                 $formato = New Formato($em);
                 $formato->generarFormatoContrato(5, [
                     '#1' => $arContrato->getEmpleadoRel()->getNumeroIdentificacion(),
@@ -405,49 +405,51 @@ class ContratoController extends AbstractController
         return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
     }
 
-    public static function MesesEspañol($mes) {
+    public static function MesesEspañol($mes)
+    {
 
-        if ($mes == '01'){
+        if ($mes == '01') {
             $mesEspañol = "Enero";
         }
-        if ($mes == '02'){
+        if ($mes == '02') {
             $mesEspañol = "Febrero";
         }
-        if ($mes == '03'){
+        if ($mes == '03') {
             $mesEspañol = "Marzo";
         }
-        if ($mes == '04'){
+        if ($mes == '04') {
             $mesEspañol = "Abril";
         }
-        if ($mes == '05'){
+        if ($mes == '05') {
             $mesEspañol = "Mayo";
         }
-        if ($mes == '06'){
+        if ($mes == '06') {
             $mesEspañol = "Junio";
         }
-        if ($mes == '07'){
+        if ($mes == '07') {
             $mesEspañol = "Julio";
         }
-        if ($mes == '08'){
+        if ($mes == '08') {
             $mesEspañol = "Agosto";
         }
-        if ($mes == '09'){
+        if ($mes == '09') {
             $mesEspañol = "Septiembre";
         }
-        if ($mes == '10'){
+        if ($mes == '10') {
             $mesEspañol = "Octubre";
         }
-        if ($mes == '11'){
+        if ($mes == '11') {
             $mesEspañol = "Noviembre";
         }
-        if ($mes == '12'){
+        if ($mes == '12') {
             $mesEspañol = "Diciembre";
         }
 
         return $mesEspañol;
     }
 
-    public function exportarExcelPersonalizado($arContratos){
+    public function exportarExcelPersonalizado($arContratos)
+    {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         if ($arContratos) {
@@ -456,10 +458,14 @@ class ContratoController extends AbstractController
             $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
             $hoja->setTitle('Movimientos');
             $j = 0;
-            $arrColumnas=[
-                'ID','FECHADESDE','NUMERO','EMPLEADO','NUMEROIDENTIFICACION','FECHAHASTA', 'TIPO','NOMBREGRUPO',
-                'TIEMPO', 'ULT_PAGO','ULT_CESANTIAS','ULT_PRIMAS', 'ULT_VACACIONES','SALARIO',
-                'NOMBRE', 'CODIGOEMPLEADO','ESTADOTERMINADO','CAJA', 'SALUD', 'PENSION'
+            $arrColumnas = [
+                'ID', 'COD EMP', 'DOCUMENTO', 'TIPO COMPENSACION', 'EMPLEADO', 'TIPO', 'FECHA', 'GRUPO DE PAGO', 'ENTIDAD SALUD',
+                'ENTIDAD PENSIÓN', 'ENTIDAD CAJA', 'ENTIDAD CESANTIA', 'COTIZANTE', 'SUBCOTIZANTE', 'TIEMPO', 'DESDE', 'HASTA',
+                'SALARIO', 'TIPO SALARIO', 'DEVENGADO PACTADO', 'CARGO', 'CARGO DESCRIPCION', 'RIESGO', 'ULT. PAGO', 'ULT.PAGO PRIMAS',
+                'ULT. CESANTIAS', 'ULT. PAGO VACACIONES', 'TERMINADO', 'LHE', 'IBP_CESANTIAS INICIAL',
+                'IBP_PRIMAS INICIAL', 'CENTRO DE TRABAJO', 'GENERO', 'ZONA', 'CIUDAD', 'MOTIVO TERMINACION', 'COMENTARIOS',
+                'SALARIO INTEGRAL', 'AUX TRANSPORTE', 'CAUSA', 'PRIMER NOMBRE', 'SEGUNDO NOMBRE', 'PRIMER APELLIDO', 'SEGUNDO APELLIDO',
+                'LIQUIDADO'
             ];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
@@ -473,25 +479,50 @@ class ContratoController extends AbstractController
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
 
                 $hoja->setCellValue('A' . $j, $arContrato['codigoContratoPk']);
-                $hoja->setCellValue('B' . $j, $arContrato['fechaDesde']->format('Y/m/d'));
-                $hoja->setCellValue('C' . $j, $arContrato['numero']);
+                $hoja->setCellValue('B' . $j, $arContrato['codigoEmpleadoFk']);
+                $hoja->setCellValue('C' . $j, $arContrato['numeroIdentificacion']);
+                $hoja->setCellValue('D' . $j, $arContrato['distribucion']);
                 $hoja->setCellValue('E' . $j, $arContrato['empleado']);
-                $hoja->setCellValue('D' . $j, $arContrato['numeroIdentificacion']);
-                $hoja->setCellValue('F' . $j, $arContrato['fechaHasta']->format('Y/m/d'));
-                $hoja->setCellValue('G' . $j, $arContrato['tipo']);
+                $hoja->setCellValue('F' . $j, $arContrato['tipo']);
+                $hoja->setCellValue('G' . $j, $arContrato['fecha']->format('Y/m/d'));
                 $hoja->setCellValue('H' . $j, $arContrato['nombreGrupo']);
-                $hoja->setCellValue('I' . $j, $arContrato['tiempo']);
-                $hoja->setCellValue('J' . $j, $arContrato['fechaUltimoPago']->format('Y/m/d'));
-                $hoja->setCellValue('K' . $j, $arContrato['fechaUltimoPagoCesantias']->format('Y/m/d'));
-                $hoja->setCellValue('L' . $j, $arContrato['fechaUltimoPagoPrimas']->format('Y/m/d'));
-                $hoja->setCellValue('M' . $j, $arContrato['fechaUltimoPagoVacaciones']->format('Y/m/d'));
-                $hoja->setCellValue('N' . $j, $arContrato['vrSalario']);
-                $hoja->setCellValue('O' . $j, $arContrato['nombre']);
-                $hoja->setCellValue('P' . $j, $arContrato['codigoEmpleadoFk']);
-                $hoja->setCellValue('Q' . $j, $arContrato['estadoTerminado']);
-                $hoja->setCellValue('R' . $j, $arContrato['caja']);
-                $hoja->setCellValue('S' . $j, $arContrato['salud']);
-                $hoja->setCellValue('T' . $j, $arContrato['pension']);
+                $hoja->setCellValue('I' . $j, $arContrato['salud']);
+                $hoja->setCellValue('J' . $j, $arContrato['pension']);
+                $hoja->setCellValue('K' . $j, $arContrato['caja']);
+                $hoja->setCellValue('L' . $j, $arContrato['cesantia']);
+                $hoja->setCellValue('M' . $j, $arContrato['cotizante']);
+                $hoja->setCellValue('N' . $j, $arContrato['subCotizante']);
+                $hoja->setCellValue('O' . $j, $arContrato['tiempo']);
+                $hoja->setCellValue('P' . $j, $arContrato['fechaDesde']->format('Y/m/d'));
+                $hoja->setCellValue('Q' . $j, $arContrato['fechaHasta']->format('Y/m/d'));
+                $hoja->setCellValue('R' . $j, $arContrato['vrSalario']);
+                $hoja->setCellValue('S' . $j, $arContrato['salarioTipo']);
+                $hoja->setCellValue('T' . $j, $arContrato['vrDevengadoPactado']);
+                $hoja->setCellValue('U' . $j, $arContrato['cargo']);
+                $hoja->setCellValue('V' . $j, $arContrato['cargoDescripcion']);
+                $hoja->setCellValue('W' . $j, $arContrato['riesgo']);
+                $hoja->setCellValue('X' . $j, $arContrato['fechaUltimoPago']->format('Y/m/d'));
+                $hoja->setCellValue('Y' . $j, $arContrato['fechaUltimoPagoPrimas']->format('Y/m/d'));
+                $hoja->setCellValue('Z' . $j, $arContrato['fechaUltimoPagoCesantias']->format('Y/m/d'));
+                $hoja->setCellValue('AA' . $j, $arContrato['fechaUltimoPagoVacaciones']->format('Y/m/d'));
+                $hoja->setCellValue('AB' . $j, $arContrato['estadoTerminado']);
+                $hoja->setCellValue('AC' . $j, ""); //LHE
+                $hoja->setCellValue('AD' . $j, $arContrato['ibpCesantiasInicial']);
+                $hoja->setCellValue('AE' . $j, $arContrato['ibpPrimasInicial']);
+                $hoja->setCellValue('AF' . $j, $arContrato['centroTrabajo']);
+                $hoja->setCellValue('AG' . $j, $arContrato['sexo']);
+                $hoja->setCellValue('AH' . $j, "");//zona
+                $hoja->setCellValue('AI' . $j, $arContrato['ciudadContrato']);
+                $hoja->setCellValue('AJ' . $j, $arContrato['motivo']);
+                $hoja->setCellValue('AK' . $j, $arContrato['comentarioTerminacion']);
+                $hoja->setCellValue('AL' . $j, $arContrato['salarioIntegral']);
+                $hoja->setCellValue('AM' . $j, $arContrato['auxilioTransporte']);
+                $hoja->setCellValue('AN' . $j, ""); //causa
+                $hoja->setCellValue('AO' . $j, $arContrato['nombre1']);
+                $hoja->setCellValue('AP' . $j, $arContrato['nombre2']);
+                $hoja->setCellValue('AQ' . $j, $arContrato['apellido1']);
+                $hoja->setCellValue('AR' . $j, $arContrato['apellido2']);
+                $hoja->setCellValue('AS' . $j, $arContrato['liquidado']);
                 $j++;
             }
             $libro->setActiveSheetIndex(0);

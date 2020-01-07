@@ -6,9 +6,21 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_nombre" class="col-sm-2 control-label">Nombre:</label>
-                <div class="col-sm-8">
+                <div class="col-sm-4">
                     {{ form_widget(form.nombre,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.nombre) }}
+                </div>
+                <label for="form_nombre" class="col-sm-2 control-label">Orden:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.orden,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.orden) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Codigo interface:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoInterface,{'attr':{'class':'form-control'}}) }}
+                    {{ form_errors(form.codigoInterface) }}
                 </div>
             </div>
         </div>
@@ -18,14 +30,14 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_lineaRel" class="col-sm-2 control-label">Iva(Venta):</label>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     {{ form_widget(form.impuestoIvaVentaRel,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.impuestoIvaVentaRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_lineaRel" class="col-sm-2 control-label">Retencion:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     {{ form_widget(form.impuestoRetencionRel,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.impuestoRetencionRel) }}
                 </div>
@@ -38,7 +50,7 @@
         <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_lineaRel" class="col-sm-2 control-label">Codigo cuenta venta fk:</label>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     {{ form_widget(form.codigoCuentaVentaFk,{'attr':{'class':'form-control'}}) }}
                     {{ form_errors(form.codigoCuentaVentaFk) }}
                 </div>

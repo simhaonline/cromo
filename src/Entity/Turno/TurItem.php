@@ -35,9 +35,9 @@ class TurItem
     private $porcentajeIva = 0;
 
     /**
-     * @ORM\Column(name="codigo_servicio_erp", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_interface", type="string", length=20, nullable=true)
      */
-    private $codigoServicioErp;
+    private $codigoInterface;
 
     /**
      * @ORM\Column(name="codigo_cuenta_venta_fk", type="string", length=20, nullable=true)
@@ -91,7 +91,6 @@ class TurItem
      */
     protected $CotizacionesDetallesItemRel;
 
-
     /**
      * @return mixed
      */
@@ -122,6 +121,54 @@ class TurItem
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPorcentajeIva()
+    {
+        return $this->porcentajeIva;
+    }
+
+    /**
+     * @param mixed $porcentajeIva
+     */
+    public function setPorcentajeIva($porcentajeIva): void
+    {
+        $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoInterface()
+    {
+        return $this->codigoInterface;
+    }
+
+    /**
+     * @param mixed $codigoInterface
+     */
+    public function setCodigoInterface($codigoInterface): void
+    {
+        $this->codigoInterface = $codigoInterface;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCuentaVentaFk()
+    {
+        return $this->codigoCuentaVentaFk;
+    }
+
+    /**
+     * @param mixed $codigoCuentaVentaFk
+     */
+    public function setCodigoCuentaVentaFk($codigoCuentaVentaFk): void
+    {
+        $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
     }
 
     /**
@@ -159,6 +206,22 @@ class TurItem
     /**
      * @return mixed
      */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getImpuestoRetencionRel()
     {
         return $this->impuestoRetencionRel;
@@ -186,38 +249,6 @@ class TurItem
     public function setImpuestoIvaVentaRel($impuestoIvaVentaRel): void
     {
         $this->impuestoIvaVentaRel = $impuestoIvaVentaRel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFacturasDetallesItemRel()
-    {
-        return $this->facturasDetallesItemRel;
-    }
-
-    /**
-     * @param mixed $facturasDetallesItemRel
-     */
-    public function setFacturasDetallesItemRel($facturasDetallesItemRel): void
-    {
-        $this->facturasDetallesItemRel = $facturasDetallesItemRel;
     }
 
     /**
@@ -255,17 +286,17 @@ class TurItem
     /**
      * @return mixed
      */
-    public function getCodigoCuentaVentaFk()
+    public function getFacturasDetallesItemRel()
     {
-        return $this->codigoCuentaVentaFk;
+        return $this->facturasDetallesItemRel;
     }
 
     /**
-     * @param mixed $codigoCuentaVentaFk
+     * @param mixed $facturasDetallesItemRel
      */
-    public function setCodigoCuentaVentaFk($codigoCuentaVentaFk): void
+    public function setFacturasDetallesItemRel($facturasDetallesItemRel): void
     {
-        $this->codigoCuentaVentaFk = $codigoCuentaVentaFk;
+        $this->facturasDetallesItemRel = $facturasDetallesItemRel;
     }
 
     /**
@@ -284,53 +315,6 @@ class TurItem
         $this->CotizacionesDetallesItemRel = $CotizacionesDetallesItemRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoServicioErp()
-    {
-        return $this->codigoServicioErp;
-    }
-
-    /**
-     * @param mixed $codigoServicioErp
-     */
-    public function setCodigoServicioErp($codigoServicioErp): void
-    {
-        $this->codigoServicioErp = $codigoServicioErp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPorcentajeIva()
-    {
-        return $this->porcentajeIva;
-    }
-
-    /**
-     * @param mixed $porcentajeIva
-     */
-    public function setPorcentajeIva($porcentajeIva): void
-    {
-        $this->porcentajeIva = $porcentajeIva;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrden()
-    {
-        return $this->orden;
-    }
-
-    /**
-     * @param mixed $orden
-     */
-    public function setOrden($orden): void
-    {
-        $this->orden = $orden;
-    }
 
 
 

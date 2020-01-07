@@ -2,6 +2,7 @@
 
 namespace App\Controller\Turno\Movimiento\Juridico;
 
+use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
@@ -298,16 +299,21 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $horas = $this->horaServicio($arContratoDetalle->getHoraDesde(), $arContratoDetalle->getHoraHasta());
-                $arContratoDetalle->setHoras($horas['horas']);
-                $arContratoDetalle->setHorasDiurnas($horas['horasDiurnas']);
-                $arContratoDetalle->setHorasNocturnas($horas['horasNocturnas']);
-                $arContratoDetalle->setPorcentajeBaseIva($arContratoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
-                $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
-                $em->persist($arContratoDetalle);
-                $em->flush();
-                $em->getRepository(TurContrato::class)->liquidar($arContrato);
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                if($arContratoDetalle->getHoraDesde() <= $arContratoDetalle->getHoraHasta()) {
+                    $horas = FuncionesController::horaServicio($arContratoDetalle->getHoraDesde(), $arContratoDetalle->getHoraHasta());
+                    $arContratoDetalle->setHorasUnidad($horas['horas']);
+                    $arContratoDetalle->setHorasDiurnasUnidad($horas['horasDiurnas']);
+                    $arContratoDetalle->setHorasNocturnasUnidad($horas['horasNocturnas']);
+                    $arContratoDetalle->setPorcentajeBaseIva($arContratoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
+                    $arContratoDetalle->setPorcentajeIva($arContratoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
+                    $em->persist($arContratoDetalle);
+                    $em->flush();
+                    $em->getRepository(TurContrato::class)->liquidar($arContrato);
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                } else {
+                    Mensajes::error("La hora desde no puede ser mayor a la hora hasta");
+                }
+
             }
         }
         return $this->render('turno/movimiento/juridico/contrato/detalleNuevo.html.twig', [
@@ -316,49 +322,6 @@ class ContratoController extends AbstractController
         ]);
     }
 
-    private function horaServicio($horaInicio, $horaFinal)
-    {
-        $arrHoras = array(
-            'horas' => 24,
-            'horasDiurnas' => 15,
-            'horasNocturnas' => 9);
-        $intMinutoInicio = (($horaInicio->format('i') * 100) / 60) / 100;
-        $intHoraInicio = $horaInicio->format('G');
-        $intHoraInicio += $intMinutoInicio;
-        $intMinutoFinal = (($horaFinal->format('i') * 100) / 60) / 100;
-        $intHoraFinal = $horaFinal->format('G');
-        $intHoraFinal += $intMinutoFinal;
-        if($intHoraInicio != 0 && $intHoraFinal !=0) {
-            $intHorasNocturnasDia = $this->calcularTiempo($intHoraInicio, $intHoraFinal, 0, 6);
-            $intHorasDiurnas = $this->calcularTiempo($intHoraInicio, $intHoraFinal, 6, 21);
-            $intHorasNocturnasNoche = $this->calcularTiempo($intHoraInicio, $intHoraFinal, 21, 24);
-        }
-        return $arrHoras;
-    }
-
-    private function calcularTiempo($intInicial, $intFinal, $intParametroInicio, $intParametroFinal)
-    {
-        if ($intInicial < $intParametroInicio) {
-            $intHoraIniciaTemporal = $intParametroInicio;
-        } else {
-            $intHoraIniciaTemporal = $intInicial;
-        }
-        if ($intFinal > $intParametroFinal) {
-            if ($intInicial > $intParametroFinal) {
-                $intHoraTerminaTemporal = $intInicial;
-            } else {
-                $intHoraTerminaTemporal = $intParametroFinal;
-            }
-        } else {
-            if ($intFinal > $intParametroInicio) {
-                $intHoraTerminaTemporal = $intFinal;
-            } else {
-                $intHoraTerminaTemporal = $intParametroInicio;
-            }
-        }
-        $intHoras = $intHoraTerminaTemporal - $intHoraIniciaTemporal;
-        return $intHoras;
-    }
 
     /**
      * @Route("/turno/movimiento/juridico/contrato/detalle/compuesto/{codigoContratoDetalle}", name="turno_movimiento_juridico_contrato_detalle_compuesto")

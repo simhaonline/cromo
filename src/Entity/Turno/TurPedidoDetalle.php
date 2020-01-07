@@ -84,17 +84,32 @@ class TurPedidoDetalle
     private $dias = 0;
 
     /**
-     * @ORM\Column(name="horas", type="float")
+     * @ORM\Column(name="horas_unidad", type="float", options={"default":0})
+     */
+    private $horasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas_diurnas_unidad", type="float", options={"default":0})
+     */
+    private $horasDiurnasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas_nocturnas_unidad", type="float", options={"default":0})
+     */
+    private $horasNocturnasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas", type="float", options={"default":0})
      */
     private $horas = 0;
 
     /**
-     * @ORM\Column(name="horas_diurnas", type="float")
+     * @ORM\Column(name="horas_diurnas", type="float", options={"default":0})
      */
     private $horasDiurnas = 0;
 
     /**
-     * @ORM\Column(name="horas_nocturnas", type="float")
+     * @ORM\Column(name="horas_nocturnas", type="float", options={"default":0})
      */
     private $horasNocturnas = 0;
 
@@ -282,6 +297,11 @@ class TurPedidoDetalle
      * @ORM\Column(name="codigo_grupo_fk", type="integer", nullable=true)
      */
     private $codigoGrupoFk;
+
+    /**
+     * @ORM\Column(name="programar", type="boolean", options={"default":false})
+     */
+    private $programar = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
@@ -1393,6 +1413,70 @@ class TurPedidoDetalle
     public function setGrupoRel($grupoRel): void
     {
         $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasUnidad()
+    {
+        return $this->horasUnidad;
+    }
+
+    /**
+     * @param mixed $horasUnidad
+     */
+    public function setHorasUnidad($horasUnidad): void
+    {
+        $this->horasUnidad = $horasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasDiurnasUnidad()
+    {
+        return $this->horasDiurnasUnidad;
+    }
+
+    /**
+     * @param mixed $horasDiurnasUnidad
+     */
+    public function setHorasDiurnasUnidad($horasDiurnasUnidad): void
+    {
+        $this->horasDiurnasUnidad = $horasDiurnasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasNocturnasUnidad()
+    {
+        return $this->horasNocturnasUnidad;
+    }
+
+    /**
+     * @param mixed $horasNocturnasUnidad
+     */
+    public function setHorasNocturnasUnidad($horasNocturnasUnidad): void
+    {
+        $this->horasNocturnasUnidad = $horasNocturnasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProgramar()
+    {
+        return $this->programar;
+    }
+
+    /**
+     * @param mixed $programar
+     */
+    public function setProgramar($programar): void
+    {
+        $this->programar = $programar;
     }
 
 

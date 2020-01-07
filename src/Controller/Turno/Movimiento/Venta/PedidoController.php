@@ -249,16 +249,13 @@ class PedidoController extends AbstractController
             $arPedidoDetalle->setDomingo(true);
             $arPedidoDetalle->setFestivo(true);
             $arPedidoDetalle->setCantidad(1);
+            $arPedidoDetalle->setProgramar(true);
             $arPedidoDetalle->setVrSalarioBase($arPedido->getVrSalarioBase());
         }
         $form = $this->createForm(PedidoDetalleType::class, $arPedidoDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($id == 0) {
-                    $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
-                    $arPedidoDetalle->setPorcentajeBaseIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
-                }
                 $arPedidoDetalle->setAnio($arPedido->getFecha()->format('Y'));
                 $arPedidoDetalle->setMes($arPedido->getFecha()->format('n'));
                 if($arPedidoDetalle->getPeriodo() == 'M') {
@@ -266,6 +263,13 @@ class PedidoController extends AbstractController
                     $arPedidoDetalle->setDiaDesde(1);
                     $arPedidoDetalle->setDiaHasta($diaFinalMes);
                 }
+
+                $horas = FuncionesController::horaServicio($arPedidoDetalle->getHoraDesde(), $arPedidoDetalle->getHoraHasta());
+                $arPedidoDetalle->setHorasUnidad($horas['horas']);
+                $arPedidoDetalle->setHorasDiurnasUnidad($horas['horasDiurnas']);
+                $arPedidoDetalle->setHorasNocturnasUnidad($horas['horasNocturnas']);
+                $arPedidoDetalle->setPorcentajeIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentaje());
+                $arPedidoDetalle->setPorcentajeBaseIva($arPedidoDetalle->getItemRel()->getImpuestoIvaVentaRel()->getPorcentajeBase());
 
                 $em->persist($arPedidoDetalle);
                 $em->flush();

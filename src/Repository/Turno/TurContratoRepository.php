@@ -248,8 +248,8 @@ class TurContratoRepository extends ServiceEntityRepository
                             $diasFestivos = 2;
                         }
                         $totalDias = $diasOrdinarios + $diasSabados + $diasDominicales + $diasFestivos;
-                        $horasRealesDiurnas = $arContratoDetalle->getHorasDiurnas() * $totalDias;
-                        $horasRealesNocturnas = $arContratoDetalle->getHorasNocturnas() * $totalDias;
+                        $horasRealesDiurnas = $arContratoDetalle->getHorasDiurnasUnidad() * $totalDias;
+                        $horasRealesNocturnas = $arContratoDetalle->getHorasNocturnasUnidad() * $totalDias;
                     } else {
                         $arFestivos = $em->getRepository(TurFestivo::class)->fecha($arContratoDetalle->getFechaDesde()->format('Y-m-d'), $arContratoDetalle->getFechaHasta()->format('Y-m-d'));
                         $fecha = $arContratoDetalle->getFechaDesde()->format('Y-m-j');
@@ -375,9 +375,9 @@ class TurContratoRepository extends ServiceEntityRepository
                 }
             } else {
                 if ($arContratoDetalle->isEstadoTerminado() == 0) {
-                    $totalHoras += $arContratoDetalle->getHoras();
-                    $totalHorasDiurnas += $arContratoDetalle->getHorasDiurnas();
-                    $totalHorasNocturnas += $arContratoDetalle->getHorasNocturnas();
+                    $totalHoras += $arContratoDetalle->getHorasUnidad();
+                    $totalHorasDiurnas += $arContratoDetalle->getHorasDiurnasUnidad();
+                    $totalHorasNocturnas += $arContratoDetalle->getHorasNocturnasUnidad();
                     $totalMinimoServicio += $arContratoDetalle->getVrPrecioMinimo();
                     $subtotalGeneral += $arContratoDetalle->getVrSubtotal();
                     $totalServicio += $arContratoDetalle->getVrSubtotal();
@@ -528,7 +528,12 @@ class TurContratoRepository extends ServiceEntityRepository
                         $arPedidoDetalle->setAnio($anio);
                         $arPedidoDetalle->setMes($mes);
                         $arPedidoDetalle->setCompuesto($arContratoDetalle->getCompuesto());
-
+                        $arPedidoDetalle->setHorasUnidad($arContratoDetalle->getHorasUnidad());
+                        $arPedidoDetalle->setHorasDiurnasUnidad($arContratoDetalle->getHorasDiurnasUnidad());
+                        $arPedidoDetalle->setHorasNocturnasUnidad($arContratoDetalle->getHorasNocturnasUnidad());
+                        $arPedidoDetalle->setHoraDesde($arContratoDetalle->getHoraDesde());
+                        $arPedidoDetalle->setHoraHasta($arContratoDetalle->getHoraHasta());
+                        $arPedidoDetalle->setProgramar($arContratoDetalle->getProgramar());
                         if ($arContratoDetalle->getFechaHasta() >= $fechaDesde) {
                             if ($diaInicial != 0 && $diaFinal != 0) {
                                 $em->persist($arPedidoDetalle);

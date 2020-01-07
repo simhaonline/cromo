@@ -25,17 +25,6 @@ class PedidoDetalleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conceptoRel', EntityType::class, [
-                'required' => true,
-                'class' => TurConcepto::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('coc')
-                        ->orderBy('coc.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'nombre:',
-                'attr' => ['class' => 'form-control to-select-2']
-            ])
             ->add('itemRel', EntityType::class, [
                 'required' => true,
                 'class' => TurItem::class,
@@ -92,6 +81,7 @@ class PedidoDetalleType extends AbstractType
             ->add('festivo', CheckboxType::class, array('required' => false))
             ->add('compuesto', CheckboxType::class, array('required' => false))
             ->add('diasReales', CheckboxType::class, array('required' => false))
+            ->add('programar', CheckboxType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('guardar', SubmitType::class);
     }

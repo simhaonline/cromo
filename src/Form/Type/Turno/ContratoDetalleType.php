@@ -29,7 +29,7 @@ class ContratoDetalleType extends AbstractType
                 'class' => TurItem::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('i')
-                        ->orderBy('i.nombre', 'ASC');
+                        ->orderBy('i.orden', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => 'nombre:',

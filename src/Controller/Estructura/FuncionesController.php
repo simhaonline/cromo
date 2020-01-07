@@ -951,4 +951,53 @@ final class FuncionesController
         return $strMes;
     }
 
+    public static function horaServicio($horaInicio, $horaFinal)
+    {
+        $arrHoras = array(
+            'horas' => 24,
+            'horasDiurnas' => 15,
+            'horasNocturnas' => 9);
+        $intMinutoInicio = (($horaInicio->format('i') * 100) / 60) / 100;
+        $intHoraInicio = $horaInicio->format('G');
+        $intHoraInicio += $intMinutoInicio;
+        $intMinutoFinal = (($horaFinal->format('i') * 100) / 60) / 100;
+        $intHoraFinal = $horaFinal->format('G');
+        $intHoraFinal += $intMinutoFinal;
+        if($intHoraInicio != 0 || $intHoraFinal !=0) {
+            $horasNocturnasDia = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 0, 6);
+            $horasDiurnas = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 6, 21);
+            $horasNocturnasNoche = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 21, 24);
+            $horasNocturnas =  $horasNocturnasDia + $horasNocturnasNoche;
+            $horas = $horasDiurnas + $horasNocturnas;
+            $arrHoras['horas'] = $horas;
+            $arrHoras['horasDiurnas'] = $horasDiurnas;
+            $arrHoras['horasNocturnas'] = $horasNocturnas;
+        }
+        return $arrHoras;
+    }
+
+    private static function calcularTiempo($intInicial, $intFinal, $intParametroInicio, $intParametroFinal)
+    {
+        if ($intInicial < $intParametroInicio) {
+            $intHoraIniciaTemporal = $intParametroInicio;
+        } else {
+            $intHoraIniciaTemporal = $intInicial;
+        }
+        if ($intFinal > $intParametroFinal) {
+            if ($intInicial > $intParametroFinal) {
+                $intHoraTerminaTemporal = $intInicial;
+            } else {
+                $intHoraTerminaTemporal = $intParametroFinal;
+            }
+        } else {
+            if ($intFinal > $intParametroInicio) {
+                $intHoraTerminaTemporal = $intFinal;
+            } else {
+                $intHoraTerminaTemporal = $intParametroInicio;
+            }
+        }
+        $intHoras = $intHoraTerminaTemporal - $intHoraIniciaTemporal;
+        return $intHoras;
+    }
+
 }

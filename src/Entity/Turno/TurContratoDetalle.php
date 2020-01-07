@@ -83,17 +83,32 @@ class TurContratoDetalle
     private $dias = 0;
 
     /**
-     * @ORM\Column(name="horas", type="integer")
+     * @ORM\Column(name="horas_unidad", type="float", nullable=true)
+     */
+    private $horasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas_diurnas_unidad", type="float", nullable=true)
+     */
+    private $horasDiurnasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas_nocturnas_unidad", type="float", nullable=true)
+     */
+    private $horasNocturnasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas", type="float")
      */
     private $horas = 0;
 
     /**
-     * @ORM\Column(name="horas_diurnas", type="integer")
+     * @ORM\Column(name="horas_diurnas", type="float")
      */
     private $horasDiurnas = 0;
 
     /**
-     * @ORM\Column(name="horas_nocturnas", type="integer")
+     * @ORM\Column(name="horas_nocturnas", type="float")
      */
     private $horasNocturnas = 0;
 
@@ -469,6 +484,54 @@ class TurContratoDetalle
     public function setDias($dias): void
     {
         $this->dias = $dias;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasUnidad()
+    {
+        return $this->horasUnidad;
+    }
+
+    /**
+     * @param mixed $horasUnidad
+     */
+    public function setHorasUnidad($horasUnidad): void
+    {
+        $this->horasUnidad = $horasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasDiurnasUnidad()
+    {
+        return $this->horasDiurnasUnidad;
+    }
+
+    /**
+     * @param mixed $horasDiurnasUnidad
+     */
+    public function setHorasDiurnasUnidad($horasDiurnasUnidad): void
+    {
+        $this->horasDiurnasUnidad = $horasDiurnasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasNocturnasUnidad()
+    {
+        return $this->horasNocturnasUnidad;
+    }
+
+    /**
+     * @param mixed $horasNocturnasUnidad
+     */
+    public function setHorasNocturnasUnidad($horasNocturnasUnidad): void
+    {
+        $this->horasNocturnasUnidad = $horasNocturnasUnidad;
     }
 
     /**
@@ -1030,6 +1093,7 @@ class TurContratoDetalle
     {
         $this->contratoDetallesCompuestosContratoDetalleRel = $contratoDetallesCompuestosContratoDetalleRel;
     }
+
 
 
 

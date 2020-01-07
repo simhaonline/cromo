@@ -66,7 +66,14 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% set nombreCliente = '' %}
                         {% for arContratoDetalle in arContratoDetalles %}
+                            {% if nombreCliente != arContratoDetalle.cliente %}
+                                <tr>
+                                    <td colspan="31"><b> {{ arContratoDetalle.cliente }} </b></td>
+                                </tr>
+                                {% set nombreCliente =  arContratoDetalle.cliente %}
+                            {% endif %}
                             <td> {{ arContratoDetalle.codigoContratoDetallePk }}</td> <input type="hidden"
                                                                                              name="arrCodigo[]"
                                                                                              value="{{ arContratoDetalle.codigoContratoDetallePk }}">

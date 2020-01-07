@@ -457,9 +457,9 @@ class ContratoController extends AbstractController
             $hoja->setTitle('Movimientos');
             $j = 0;
             $arrColumnas=[
-                'ID','DESDE','NUMERO','EMPLEADO','IDENT','HASTA', 'TIPO','GRUPO',
+                'ID','FECHADESDE','NUMERO','EMPLEADO','NUMEROIDENTIFICACION','FECHAHASTA', 'TIPO','NOMBREGRUPO',
                 'TIEMPO', 'ULT_PAGO','ULT_CESANTIAS','ULT_PRIMAS', 'ULT_VACACIONES','SALARIO',
-                'NOMBRE', 'CODIGOEMPLEADO','TERMINADO','CAJA', 'SALUD', 'PENSION'
+                'NOMBRE', 'CODIGOEMPLEADO','ESTADOTERMINADO','CAJA', 'SALUD', 'PENSION'
             ];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
@@ -473,8 +473,8 @@ class ContratoController extends AbstractController
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
 
                 $hoja->setCellValue('A' . $j, $arContrato['codigoContratoPk']);
-                $hoja->setCellValue('C' . $j, $arContrato['fechaDesde']->format('Y/m/d'));
-                $hoja->setCellValue('B' . $j, $arContrato['numero']);
+                $hoja->setCellValue('B' . $j, $arContrato['fechaDesde']->format('Y/m/d'));
+                $hoja->setCellValue('C' . $j, $arContrato['numero']);
                 $hoja->setCellValue('E' . $j, $arContrato['empleado']);
                 $hoja->setCellValue('D' . $j, $arContrato['numeroIdentificacion']);
                 $hoja->setCellValue('F' . $j, $arContrato['fechaHasta']->format('Y/m/d'));

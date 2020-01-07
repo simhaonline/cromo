@@ -55,6 +55,11 @@ class TurItem
     private $codigoImpuestoIvaVentaFk;
 
     /**
+     * @ORM\Column(name="orden", type="integer", nullable=true)
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenImpuesto", inversedBy="turItemsImpuestoRetencionRel")
      * @ORM\JoinColumn(name="codigo_impuesto_retencion_fk",referencedColumnName="codigo_impuesto_pk")
      */
@@ -309,6 +314,22 @@ class TurItem
     public function setPorcentajeIva($porcentajeIva): void
     {
         $this->porcentajeIva = $porcentajeIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param mixed $orden
+     */
+    public function setOrden($orden): void
+    {
+        $this->orden = $orden;
     }
 
 

@@ -180,6 +180,12 @@ class GenConfiguracion
     protected $identificacionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GenTipoPersona", inversedBy="configuracionTipoPersonaRel")
+     * @ORM\JoinColumn(name="codigo_tipo_persona_fk", referencedColumnName="codigo_tipo_persona_pk")
+     */
+    private $tipoPersonaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -706,6 +712,23 @@ class GenConfiguracion
     {
         $this->correo = $correo;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTipoPersonaRel()
+    {
+        return $this->tipoPersonaRel;
+    }
+
+    /**
+     * @param mixed $tipoPersonaRel
+     */
+    public function setTipoPersonaRel($tipoPersonaRel): void
+    {
+        $this->tipoPersonaRel = $tipoPersonaRel;
+    }
+
 
 
 }

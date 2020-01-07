@@ -109,8 +109,10 @@ class GenConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('ciu.codigoDaneCompleto as ciudadCodigoDaneCompleto')
             ->addSelect('dep.nombre as departamentoNombre')
             ->addSelect('dep.codigoDaneMascara as departamentoCodigoDaneMascara')
+            ->addSelect('tp.codigoInterface as tipoPersona')
             ->leftJoin('c.ciudadRel', 'ciu')
             ->leftJoin('ciu.departamentoRel', 'dep')
+            ->leftJoin('c.tipoPersonaRel', 'tp')
             ->where('c.codigoConfiguracionPk = 1');
 
         return $queryBuilder->getQuery()->getSingleResult();

@@ -183,9 +183,9 @@ class InvMovimiento
     private $estadoContabilizado = false;
 
     /**
-     * @ORM\Column(name="estado_factura_electronica", type="boolean", options={"default" : false}, nullable=true)
+     * @ORM\Column(name="estado_electronico", type="boolean", options={"default" : false}, nullable=true)
      */
-    private $estadoFacturaElectronica = false;
+    private $estadoElectronico = false;
 
     /**
      * @ORM\Column(name="proceso_factura_electronica", type="string", length=2, nullable=true)
@@ -955,20 +955,21 @@ class InvMovimiento
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getEstadoFacturaElectronica()
+    public function getEstadoElectronico(): bool
     {
-        return $this->estadoFacturaElectronica;
+        return $this->estadoElectronico;
     }
 
     /**
-     * @param mixed $estadoFacturaElectronica
+     * @param bool $estadoElectronico
      */
-    public function setEstadoFacturaElectronica($estadoFacturaElectronica): void
+    public function setEstadoElectronico(bool $estadoElectronico): void
     {
-        $this->estadoFacturaElectronica = $estadoFacturaElectronica;
+        $this->estadoElectronico = $estadoElectronico;
     }
+
 
     /**
      * @return mixed

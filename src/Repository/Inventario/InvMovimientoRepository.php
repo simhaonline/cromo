@@ -1596,7 +1596,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.fechaVence')
             ->addSelect('m.vrSubtotal')
             ->addSelect('m.vrIva')
-            ->addSelect('m.vrTotalBruto')
+            ->addSelect('m.vrTotal')
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoElectronico')
             ->addSelect('m.codigoDocumentoFk')
@@ -1665,7 +1665,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('t.numeroIdentificacion as clienteNumeroIdentificacion')
             ->addSelect('t.nombreCorto AS clienteNombre')
             ->leftJoin('m.terceroRel', 't')
-            ->where('m.estadoFacturaElectronica =  0')
+            ->where('m.estadoElectronico =  0')
             ->andWhere('m.estadoAprobado = 1')
             ->andWhere("m.codigoDocumentoTipoFk='FAC'")
             ->andWhere("m.codigoDocumentoFk='FAC'")
@@ -1706,7 +1706,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $arrConfiguracion = $em->getRepository(GenConfiguracion::class)->facturaElectronica();
             foreach ($arr AS $codigo) {
                 $arFactura = $em->getRepository(InvMovimiento::class)->movimientoFacturaElectronica($codigo);
-                if($arFactura['estadoAprobado'] && !$arFactura['estadoFacturaElectronica']) {
+                if($arFactura['estadoAprobado'] && !$arFactura['estadoElectronico']) {
                     $baseIvaTotal = 0;
                     $arrFactura = [
                         'dat_nitFacturador' => $arrConfiguracion['nit'],
@@ -1733,7 +1733,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         'doc_iva' => number_format($arFactura['vrIva'], 2, '.', ''),
                         'doc_inc' => number_format(0, 2, '.', ''),
                         'doc_ica' => number_format(0, 2, '.', ''),
-                        'doc_total' => number_format($arFactura['vrTotalBruto'], 2, '.', ''),
+                        'doc_total' => number_format($arFactura['vrTotal'], 2, '.', ''),
                         'ref_cue' => $arFactura['referenciaCue'],
                         'ref_numero' => $arFactura['referenciaNumero'],
                         'ref_prefijo' => $arFactura['referenciaPrefijo'],
@@ -1770,12 +1770,12 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     ];
                     $arrItem = [];
                     $cantidadItemes = 0;
-                    $arFacturaDetalles = $em->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arFactura['codigoMovimientoPk']]);
+                    $arFacturaDetalles = $em->getRepository(InvMovimientoDetalle::class)->facturaElectronica($arFactura['codigoMovimientoPk']);
                     foreach ($arFacturaDetalles as $arFacturaDetalle) {
                         $cantidadItemes++;
                         $baseIva = 0;
-                        if($arFacturaDetalle->getVrIva() > 0) {
-                            $baseIva = $arFacturaDetalle->getVrSubtotal();
+                        if($arFacturaDetalle['vrIva'] > 0) {
+                            $baseIva = $arFacturaDetalle['vrSubtotal'];
                         }
                         $arrItem[] = [
                             "item_id" => $cantidadItemes,

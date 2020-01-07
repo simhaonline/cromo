@@ -59,9 +59,9 @@ class GenResolucion
     private $numeroHasta;
 
     /**
-     * @ORM\Column(name="llave_tecnica", type="string",length=500, nullable=true)
+     * @ORM\Column(name="clave_tecnica", type="string",length=500, nullable=true)
      */
-    private $llaveTecnica;
+    private $claveTecnica;
 
     /**
      * @ORM\Column(name="pin", type="string",length=20, nullable=true)
@@ -250,17 +250,17 @@ class GenResolucion
     /**
      * @return mixed
      */
-    public function getLlaveTecnica()
+    public function getClaveTecnica()
     {
-        return $this->llaveTecnica;
+        return $this->claveTecnica;
     }
 
     /**
-     * @param mixed $llaveTecnica
+     * @param mixed $claveTecnica
      */
-    public function setLlaveTecnica($llaveTecnica): void
+    public function setClaveTecnica($claveTecnica): void
     {
-        $this->llaveTecnica = $llaveTecnica;
+        $this->claveTecnica = $claveTecnica;
     }
 
     /**
@@ -344,19 +344,19 @@ class GenResolucion
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getMovimientosResolucionFacturaRel()
+    public function isEstadoActivo(): bool
     {
-        return $this->movimientosResolucionFacturaRel;
+        return $this->estadoActivo;
     }
 
     /**
-     * @param mixed $movimientosResolucionFacturaRel
+     * @param bool $estadoActivo
      */
-    public function setMovimientosResolucionFacturaRel($movimientosResolucionFacturaRel): void
+    public function setEstadoActivo(bool $estadoActivo): void
     {
-        $this->movimientosResolucionFacturaRel = $movimientosResolucionFacturaRel;
+        $this->estadoActivo = $estadoActivo;
     }
 
     /**
@@ -376,22 +376,6 @@ class GenResolucion
     }
 
     /**
-     * @return bool
-     */
-    public function isEstadoActivo(): bool
-    {
-        return $this->estadoActivo;
-    }
-
-    /**
-     * @param bool $estadoActivo
-     */
-    public function setEstadoActivo(bool $estadoActivo): void
-    {
-        $this->estadoActivo = $estadoActivo;
-    }
-
-    /**
      * @return mixed
      */
     public function getMovimientosResolucionRel()
@@ -406,7 +390,6 @@ class GenResolucion
     {
         $this->movimientosResolucionRel = $movimientosResolucionRel;
     }
-
 
 
 }

@@ -21,6 +21,9 @@ class TurClienteIcaRepository extends ServiceEntityRepository
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
+        $codigoClienteIca= null;
+        $numeroIdentificacion= null;
+
         if ($filtros) {
             $codigoClienteIca = $filtros['codigoClienteIca'] ?? null;
             $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
@@ -55,8 +58,7 @@ class TurClienteIcaRepository extends ServiceEntityRepository
     public function eliminar($arrDetallesSeleccionados)
     {
         $em = $this->getEntityManager();
-        if ($arrDetallesSeleccionados) {
-            if (count($arrDetallesSeleccionados)) {
+            if ($arrDetallesSeleccionados) {
                 foreach ($arrDetallesSeleccionados as $codigo) {
                     $ar = $em->getRepository(TurClienteIca::class)->find($codigo);
                     if ($ar) {
@@ -66,10 +68,9 @@ class TurClienteIcaRepository extends ServiceEntityRepository
                 try {
                     $em->flush();
                 } catch (\Exception $e) {
-                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                    Mensajes::error('No se puede eliminar, el registro porque se encuentra en uso');
                 }
             }
-        }
     }
 
     public function tarifaIca($codigoCliente, $codigoCiudad, $codigoServicioErp = "", $codigoConceptoServicio = "")

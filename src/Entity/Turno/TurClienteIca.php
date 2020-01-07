@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Turno\TurClienteIcaRepository")
- * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class TurClienteIca
 {
@@ -187,17 +186,17 @@ class TurClienteIca
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getPorIca()
+    public function getPorIca(): int
     {
         return $this->porIca;
     }
 
     /**
-     * @param float $porIca
+     * @param int $porIca
      */
-    public function setPorIca(float $porIca): void
+    public function setPorIca(int $porIca): void
     {
         $this->porIca = $porIca;
     }

@@ -32,6 +32,7 @@
             <th>ID</th>
             <th>NOMBRE</th>
             <th title="Impuesto iva venta">IVA</th>
+            <th title="Impuesto iva venta">%</th>
             <th title="Impuesto retención">IRTE</th>
             <th></th>
             <th></th>
@@ -46,6 +47,7 @@
                 <td>{{ arItem.codigoItemPk }}</td>
                 <td>{{ arItem.nombre }}</td>
                 <td>{{ arItem.codigoImpuestoIvaVentaFk }}</td>
+                <td>{{ arItem.porcentajeIva }}</td>
                 <td>{{ arItem.codigoImpuestoRetencionFk }}</td>
                 <td class="text-center">
                     <a href="{{ path('turno_administracion_venta_item_nuevo',{'id': arItem.codigoItemPk  }) }}"><i

@@ -30,6 +30,7 @@ class TurItemRepository extends ServiceEntityRepository
             ->select('i.codigoItemPk')
             ->addSelect('i.nombre')
             ->addSelect('i.codigoImpuestoIvaVentaFk')
+            ->addSelect('i.porcentajeIva')
             ->addSelect('i.codigoImpuestoRetencionFk');
 
         if ($itemCodigo) {

@@ -990,6 +990,12 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                                 }
                                 $intDiasVacacionesRecargo = $this->diasPrestaciones($dateFechaDesde, $dateFechaHasta);
                                 $intDiasVacacionesRecargo = $intDiasVacacionesRecargo - $intDiasAusentismo;
+                                //Esto sirve para definir si el empleado tiene un pago de vacaciones ya afectado en el año que se esta liquidando
+//                                if ($arContrato->getFechaUltimoPagoVacaciones() >= $fechaDesdeUltimoAnio) {
+//                                    $fechaUltimoPagoVacacion = $arContrato->getFechaUltimoPagoVacaciones();
+//                                    $primerDiaDelMes = date_create($fechaUltimoPagoVacacion->format('Y-m-') . "01");
+//                                    $fechaDesdeUltimoAnio = $primerDiaDelMes;
+//                                }
                                 $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdeUltimoAnio->format('Y-m-d'), $fechaHastaUltimoAnio->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                                 // calcular el promedio mensual de recargos nocturnos
                                 if ($intDiasVacacionesRecargo > 360) {

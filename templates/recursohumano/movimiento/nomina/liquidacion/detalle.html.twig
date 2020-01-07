@@ -173,9 +173,10 @@
             <td class="numero"></td>
             <td class="titulo">SALARIO VACACIONES:</td>
             <td class="numero">
-                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_vacaciones',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">
-                    $ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}
-                </a>
+                {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}</td>
+{#                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_vacaciones',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">#}
+{#                    $ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}#}
+{#                </a>#}
             </td>
             <td class="titulo"></td>
             <td class="numero"></td>

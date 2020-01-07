@@ -3,8 +3,8 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Seleccion;
 
-use App\Entity\RecursoHumano\RhuSolicitudMotivo;
-use App\Form\Type\RecursoHumano\SolicitudMotivoType;
+use App\Entity\RecursoHumano\RhuSeleccionTipo;
+use App\Form\Type\RecursoHumano\SeleccionTipoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,17 +15,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class SolicitudMotivoController extends AbstractController
+class SeleccionTipoController extends AbstractController
 {
 
     /**
-     * @Route("recursohumano/administracion/seleccion/solicitudmotivo/lista", name="recursohumano_administracion_seleccion_solicitudmotivo_lista")
+     * @Route("recursohumano/administracion/seleccion/selecciontipo/lista", name="recursohumano_administracion_seleccion_selecciontipo_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigoSolicitudMotivoPk', TextType::class, ['required' => false])
+            ->add('codigoSolicitudTipoPk', TextType::class, ['required' => false])
             ->add('nombre', TextType::class, ['required' => false])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -43,65 +43,66 @@ class SolicitudMotivoController extends AbstractController
             }
             if ($form->get ('btnExcel')->isClicked ()) {
                 $raw['filtros'] = $this->getFiltros ($form);
-                General::get ()->setExportar ($em->getRepository (RhuSolicitudMotivo::class)->lista ($raw), "SOLICITUD MOTIVO");
+                General::get ()->setExportar ($em->getRepository (RhuSeleccionTipo::class)->lista($raw), "seleccion tipo");
             }
             if ($form->get ('btnEliminar')->isClicked ()) {
                 $arrSeleccionados = $request->query->get ('ChkSeleccionar');
-                $em->getRepository (RhuSolicitudMotivo::class)->eliminar ($arrSeleccionados);
+                $em->getRepository (RhuSeleccionTipo::class)->eliminar ($arrSeleccionados);
             }
         }
-        $arSolicitudMotivos = $paginator->paginate ($em->getRepository (RhuSolicitudMotivo::class)->lista ($raw), $request->query->getInt ('page', 1), 30);
-        return $this->render ('recursohumano/administracion/seleccion/solicitudmotivo/lista.html.twig', [
-            'arSolicitudMotivos' => $arSolicitudMotivos,
+        $arSeleccionTipos = $paginator->paginate ($em->getRepository (RhuSeleccionTipo::class)->lista($raw), $request->query->getInt ('page', 1), 30);
+        return $this->render ('recursohumano/administracion/seleccion/selecciontipo/lista.html.twig', [
+            'arSeleccionTipos' => $arSeleccionTipos,
             'form' => $form->createView ()
         ]);
     }
 
     /**
-     * @Route("recursohumano/administracion/seleccion/solicitudmotivo/nuevo/{id}", name="recursohumano_administracion_seleccion_solicitudmotivo_nuevo")
+     * @Route("recursohumano/administracion/seleccion/selecciontipo/nuevo/{id}", name="recursohumano_administracion_seleccion_selecciontipo_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arSeleccionMotivo = new RhuSolicitudMotivo();
+        $arSeleccionTipo = new RhuSeleccionTipo();
         if ($id != 0) {
-            $arSeleccionMotivo = $em->getRepository(RhuSolicitudMotivo::class)->find($id);
-            if (!$arSeleccionMotivo) {
-                return $this->redirect($this->generateUrl('recursohumano_administracion_seleccion_solicitudmotivo_lista'));
+            $arSeleccionTipo = $em->getRepository(RhuSeleccionTipo::class)->find($id);
+            if (!$arSeleccionTipo) {
+                return $this->redirect($this->generateUrl('recursohumano_administracion_nomina_embargojuzgado_lista'));
             }
         }
-        $form = $this->createForm(SolicitudMotivoType::class, $arSeleccionMotivo);
+        $form = $this->createForm(SeleccionTipoType::class, $arSeleccionTipo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $arSeleccionMotivo = $form->getData();
-                $em->persist($arSeleccionMotivo);
+                $arSeleccionTipo = $form->getData();
+                $em->persist($arSeleccionTipo);
                 $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_seleccion_solicitudmotivo_detalle', array('id' => $arSeleccionMotivo->getCodigoSolicitudMotivoPk())));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_seleccion_selecciontipo_detalle', array('id' => $arSeleccionTipo->getCodigoSeleccionTipoPK())));
             }
         }
-        return $this->render ('recursohumano/administracion/seleccion/solicitudmotivo/nuevo.html.twig', [
-            'arSeleccionMotivo' => $arSeleccionMotivo,
+        return $this->render ('recursohumano/administracion/seleccion/selecciontipo/nuevo.html.twig', [
+            'arSeleccionTipo' => $arSeleccionTipo,
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("recursohumano/administracion/seleccion/solicitudmotivo/detalle/{id}", name="recursohumano_administracion_seleccion_solicitudmotivo_detalle")
+     * @Route("recursohumano/administracion/seleccion/selecciontipo/detalle/{id}", name="recursohumano_administracion_seleccion_selecciontipo_detalle")
      */
     public function detalle(Request $request, PaginatorInterface $paginator,$id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arSolicitudMotivo = $em->getRepository(RhuSolicitudMotivo::class)->find($id);
-        return $this->render ('recursohumano/administracion/seleccion/solicitudmotivo/detalle.html.twig', [
-            'arSolicitudMotivo' => $arSolicitudMotivo,
+        $arSeleccionTipo = $em->getRepository(RhuSeleccionTipo::class)->find($id);
+
+        return $this->render ('recursohumano/administracion/seleccion/selecciontipo/detalle.html.twig', [
+            'arSeleccionTipo' => $arSeleccionTipo,
         ]);
     }
 
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoSolicitudMotivo' => $form->get('codigoSolicitudMotivoPk')->getData(),
+            'codigoSeleccionTipo' => $form->get('codigoSolicitudTipoPk')->getData(),
             'nombre' => $form->get('nombre')->getData(),
         ];
         return $filtro;

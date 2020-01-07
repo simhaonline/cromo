@@ -82,6 +82,7 @@ class ItemController extends  AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arItem = $form->getData();
+                $arItem->setPorcentajeIva($arItem->getImpuestoIvaVentaRel()->getPorcentaje());
                 $em->persist($arItem);
                 $em->flush();
                 return $this->redirect($this->generateUrl('turno_administracion_venta_item_detalle', array('id' => $arItem->getCodigoItemPk())));

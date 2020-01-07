@@ -31,8 +31,8 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
-            <th title="Impuesto iva venta">I I V</th>
-            <th title="Impuesto retención">I R</th>
+            <th title="Impuesto iva venta">IVA</th>
+            <th title="Impuesto retención">IRTE</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
@@ -43,10 +43,10 @@
         <tbody>
         {% for arItem in arItems %}
             <tr>
-                <td>{{ arItem.codigoItemPk  }}</td>
-                <td>{{ arItem.nombre  }}</td>
-                <td>{{ arItem.codigoImpuestoIvaVentaFk  }}</td>
-                <td>{{ arItem.codigoImpuestoRetencionFk  }}</td>
+                <td>{{ arItem.codigoItemPk }}</td>
+                <td>{{ arItem.nombre }}</td>
+                <td>{{ arItem.codigoImpuestoIvaVentaFk }}</td>
+                <td>{{ arItem.codigoImpuestoRetencionFk }}</td>
                 <td class="text-center">
                     <a href="{{ path('turno_administracion_venta_item_nuevo',{'id': arItem.codigoItemPk  }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

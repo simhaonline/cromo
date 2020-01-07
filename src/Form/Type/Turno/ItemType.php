@@ -40,6 +40,7 @@ class ItemType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Iva:'
                 , 'required' => true])
+            ->add('codigoCuentaVentaFk', TextType::class, ['required' => false])
             ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
 
     }

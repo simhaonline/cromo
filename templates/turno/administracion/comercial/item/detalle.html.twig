@@ -12,22 +12,25 @@
         </div>
     </div>
     <br/><br/>
-    <table width="100%" class="table table-condensed table-bordered">
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
-            <td class="titulo"><b>CODIGO ITEM:</b></td>
+            <td class="titulo"><b>CODIGO:</b></td>
             <td class="td-in-well">{{ arItem.codigoItemPk }}</td>
             <td class="titulo"><b>NOMBRE</b></td>
             <td class="td-in-well">{{ arItem.nombre }}</td>
         </tr>
         <tr>
-            <td class="titulo">CODIGO IMP:</td>
+            <td class="titulo">IVA:</td>
             <td class="td-in-well">{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
-            <td class="titulo">CODIGO RETENCIÓN:</td>
-            <td class="td-in-well" >{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
+            <td class="titulo">RETENCION EN LA FUENTE:</td>
+            <td class="td-in-well">{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">PORCENTAJE IVA:</td>
+            <td class="td-in-well">{{ arItem.porcentajeIva }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
     </table>
-
     {{ form_end(form) }}
-
-
 {% endblock %}

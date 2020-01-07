@@ -26,22 +26,23 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
-    public function lista(){
+    public function lista()
+    {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoContratoFk')
             ->addSelect('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.estadoContrato')
             ->where('e.codigoEmpleadoPk <> 0');
-        if($session->get('filtroRhuEmpleadoCodigo')){
+        if ($session->get('filtroRhuEmpleadoCodigo')) {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroRhuEmpleadoCodigo')}");
         }
-        if($session->get('filtroRhuEmpleadoNombre')){
+        if ($session->get('filtroRhuEmpleadoNombre')) {
             $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroRhuEmpleadoNombre')}%'");
         }
-        if($session->get('filtroRhuEmpleadoIdentificacion')){
+        if ($session->get('filtroRhuEmpleadoIdentificacion')) {
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroRhuEmpleadoIdentificacion')}' ");
         }
         switch ($session->get('filtroRhuEmpleadoEstadoContrato')) {
@@ -55,56 +56,96 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function listaProvicional($raw){
+    public function listaProvicional($raw)
+    {
 
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
         $codigoEmpleadoPk = null;
         $nombreCorto = null;
-        $numeroIdentificacion =null;
+        $numeroIdentificacion = null;
         $estadoContrato = null;
         $codigoGrupoFk = null;
-        if ($filtros){
-            $codigoEmpleadoPk = $filtros['codigoEmpleadoPk']??null;
-            $codigoGrupoFk = $filtros['codigoGrupoFk']??null;
-            $nombreCorto = $filtros['nombreCorto']??null;
-            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
-            $estadoContrato = $filtros['estadoContrato']??null;
+        if ($filtros) {
+            $codigoEmpleadoPk = $filtros['codigoEmpleadoPk'] ?? null;
+            $codigoGrupoFk = $filtros['codigoGrupoFk'] ?? null;
+            $nombreCorto = $filtros['nombreCorto'] ?? null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
+            $estadoContrato = $filtros['estadoContrato'] ?? null;
         }
 
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoEmpleadoPk')
-            ->addSelect('e.fechaNacimiento')
+            ->addSelect('i.nombre AS tipo')
             ->addSelect('e.numeroIdentificacion')
-            ->addSelect('e.nombreCorto')
+            ->addSelect('e.digitoVerificacion AS dv')
+            ->addSelect('cex.nombre AS ciudad_expedicion_identificacion')
+            ->addSelect('e.fechaExpedicionIdentificacion')
+            ->addSelect('e.libretaMilitar')
             ->addSelect('g.nombre AS grupo')
-            ->addSelect('b.nombre AS  banco')
-            ->addSelect('e.cuenta')
-            ->addSelect('ci.nombre AS ciudad')
-            ->addSelect('e.direccion')
+            ->addSelect('e.nombreCorto')
             ->addSelect('e.telefono')
+            ->addSelect('e.celular')
+            ->addSelect('e.direccion')
+            ->addSelect('e.barrio')
+            ->addSelect('e.codigoRhFk')
+            ->addSelect('s.nombre AS genero')
             ->addSelect('e.correo')
-            ->addSelect('e.codigoContratoFk')
-            ->addSelect('e.codigoContratoUltimoFk AS ultimo_contrato_activo')
+            ->addSelect('e.fechaNacimiento')
+            ->addSelect('cin.nombre AS ciudad_nacimiento')
+            ->addSelect('ci.nombre AS ciudad')
+            ->addSelect('ec.nombre AS estado_civil')
+            ->addSelect('e.padreFamilia')
+            ->addSelect('e.cabezaHogar')
+            ->addSelect('es.nombre AS entidad_salud')
+            ->addSelect('ep.nombre AS entidad_pension')
+            ->addSelect('eca.nombre AS entidad_caja')
+            ->addSelect('clr.nombre AS clasificacion_riesgo')
+            ->addSelect('e.cuenta')
+            ->addSelect('b.nombre AS banco')
+            ->addSelect('c.fechaDesde AS fecha_desde_contrato')
+            ->addSelect('c.fechaHasta AS fecha_finalizacion_contrato')
+            ->addSelect('car.nombre AS cargo')
+            ->addSelect('tp.nombre AS tipo_pension')
+            ->addSelect('tc.nombre AS tipo_cotizante')
+            ->addSelect('stc.nombre AS sub_tipo_cotizante')
             ->addSelect('e.estadoContrato')
+            ->addSelect('e.codigoContratoFk')
+            ->addSelect('e.tallaCamisa')
+            ->addSelect('e.tallaPantalon')
+            ->addSelect('e.tallaCalzado')
+            ->addSelect('e.discapacidad')
             ->leftJoin('e.contratoRel', 'c')
             ->leftJoin('e.ciudadRel', 'ci')
-            ->leftJoin('c.grupoRel', 'g')
+            ->leftJoin('e.ciudadExpedicionRel', 'cex')
+            ->leftJoin('e.ciudadNacimientoRel', 'cin')
             ->leftJoin('e.bancoRel', 'b')
+            ->leftJoin('c.grupoRel', 'g')
+            ->leftJoin('c.entidadSaludRel', 'es')
+            ->leftJoin('c.entidadPensionRel', 'ep')
+            ->leftJoin('c.entidadCajaRel', 'eca')
+            ->leftJoin('e.identificacionRel', 'i')
+            ->leftJoin('e.sexoRel', 's')
+            ->leftJoin('e.estadoCivilRel', 'ec')
+            ->leftJoin('c.clasificacionRiesgoRel', 'clr')
+            ->leftJoin('e.cargoRel', 'car')
+            ->leftJoin('c.pensionRel', 'tp')
+            ->leftJoin('c.tipoCotizanteRel', 'tc')
+            ->leftJoin('c.subtipoCotizanteRel', 'stc')
             ->where('e.codigoEmpleadoPk <> 0');
-        if($codigoEmpleadoPk){
+        if ($codigoEmpleadoPk) {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$codigoEmpleadoPk}");
         }
-        if($nombreCorto){
+        if ($nombreCorto) {
             $queryBuilder->andWhere("e.nombreCorto LIKE '%{$nombreCorto}%'");
         }
-        if($numeroIdentificacion){
+        if ($numeroIdentificacion) {
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$numeroIdentificacion}' ");
         }
-        if($codigoGrupoFk){
+        if ($codigoGrupoFk) {
             $queryBuilder->andWhere("c.codigoGrupoFk = '{$codigoGrupoFk}' ");
         }
-        switch ($estadoContrato ) {
+        switch ($estadoContrato) {
             case '0':
                 $queryBuilder->andWhere("e.estadoContrato = 0");
                 break;
@@ -143,14 +184,15 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->leftJoin('e.ciudadRel', 'c')
             ->leftJoin('e.ciudadNacimientoRel', 'cn')
             ->leftJoin('e.ciudadExpedicionRel', 'ce')
-            ->leftJoin('e.bancoRel','b')
+            ->leftJoin('e.bancoRel', 'b')
             ->where('e.codigoEmpleadoPk <> 0');
         return $queryBuilder->getQuery()->execute();
     }
 
-    public function listaBuscarTurno(){
+    public function listaBuscarTurno()
+    {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class,'c')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('e.codigoContratoFk')
             ->addSelect('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
@@ -164,21 +206,22 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->where('c.habilitadoTurno = 1')
             ->leftJoin('c.empleadoRel', 'e')
             ->leftJoin('e.cargoRel', 'ca');
-        if($session->get('filtroTurEmpleadoCodigo')){
+        if ($session->get('filtroTurEmpleadoCodigo')) {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurEmpleadoCodigo')}");
         }
-        if($session->get('filtroTurEmpleadoNombre')){
+        if ($session->get('filtroTurEmpleadoNombre')) {
             $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroTurEmpleadoNombre')}%'");
         }
-        if($session->get('filtroTurEmpleadoIdentificacion')){
+        if ($session->get('filtroTurEmpleadoIdentificacion')) {
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurEmpleadoIdentificacion')}' ");
         }
         return $queryBuilder;
     }
 
-    public function turnoBuscarPrototipo(){
+    public function turnoBuscarPrototipo()
+    {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class,'e')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
             ->addSelect('e.numeroIdentificacion')
@@ -187,21 +230,22 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->where('c.habilitadoTurno = 1')
             ->leftJoin('e.contratoRel', 'c')
             ->leftJoin('c.cargoRel', 'car');
-        if($session->get('filtroTurEmpleadoCodigo')){
+        if ($session->get('filtroTurEmpleadoCodigo')) {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurEmpleadoCodigo')}");
         }
-        if($session->get('filtroTurEmpleadoNombre')){
+        if ($session->get('filtroTurEmpleadoNombre')) {
             $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroTurEmpleadoNombre')}%'");
         }
-        if($session->get('filtroTurEmpleadoIdentificacion')){
+        if ($session->get('filtroTurEmpleadoIdentificacion')) {
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurEmpleadoIdentificacion')}' ");
         }
         return $queryBuilder;
     }
 
-    public function listaBuscarProgramacion(){
+    public function listaBuscarProgramacion()
+    {
         $session = new Session();
-        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class,'c')
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('e.codigoContratoFk')
             ->addSelect('e.codigoEmpleadoPk')
             ->addSelect('e.nombreCorto')
@@ -215,13 +259,13 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->where('c.habilitadoTurno = 1')
             ->leftJoin('c.empleadoRel', 'e')
             ->leftJoin('e.cargoRel', 'ca');
-        if($session->get('filtroTurPedidoDetalleCodigo')){
+        if ($session->get('filtroTurPedidoDetalleCodigo')) {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurPedidoDetalleCodigo')}");
         }
-        if($session->get('filtroTurPedidoDetalleNombre')){
+        if ($session->get('filtroTurPedidoDetalleNombre')) {
             $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroTurPedidoDetalleNombre')}%'");
         }
-        if($session->get('filtroTurPedidoDetalleIdentificacion')){
+        if ($session->get('filtroTurPedidoDetalleIdentificacion')) {
             $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurPedidoDetalleIdentificacion')}' ");
         }
         switch ($session->get('filtroTurPedidoDetalleEmpleadoContratado')) {
@@ -239,9 +283,9 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arTercero = null;
-        if($arEmpleado) {
+        if ($arEmpleado) {
             $arTercero = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arEmpleado->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()));
-            if(!$arTercero) {
+            if (!$arTercero) {
                 $arTercero = new TesTercero();
                 $arTercero->setIdentificacionRel($arEmpleado->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
@@ -256,7 +300,8 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $arTercero;
     }
 
-    public function empleadoIntercambio($codigoEmpleado){
+    public function empleadoIntercambio($codigoEmpleado)
+    {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoEmpleadoPk')
             ->addSelect('e.codigoCuentaTipoFk')
@@ -279,9 +324,9 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = null;
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigo);
-        if($arEmpleado) {
+        if ($arEmpleado) {
             $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arEmpleado->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()));
-            if(!$arTercero) {
+            if (!$arTercero) {
                 $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arEmpleado->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
@@ -295,3 +340,4 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $arTercero;
     }
 }
+

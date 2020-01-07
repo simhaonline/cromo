@@ -190,6 +190,11 @@ class RhuEmpleado
     private $direccion;
 
     /**
+     * @ORM\Column(name="libreta_militar", type="string", length=30, nullable=true)
+     */
+    private $libretaMilitar;
+
+    /**
      * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
      */
     private $codigoCiudadFk;
@@ -1972,6 +1977,23 @@ class RhuEmpleado
     {
         $this->permisoEspecial = $permisoEspecial;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLibretaMilitar()
+    {
+        return $this->libretaMilitar;
+    }
+
+    /**
+     * @param mixed $libretaMilitar
+     */
+    public function setLibretaMilitar($libretaMilitar): void
+    {
+        $this->libretaMilitar = $libretaMilitar;
+    }
+
 
 
 }

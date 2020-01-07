@@ -123,7 +123,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             ->select('SUM(pd.vrIngresoBaseCotizacion) as ibc')
             ->addSelect('SUM(pd.horas) as horas')
             ->leftJoin('pd.pagoRel', 'p')
-            ->where("p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "' AND pd.codigoNovedadFk IS NULL AND pd.codigoVacacionFk IS NULL")
+            ->where("p.fechaDesdeContrato >= '" . $fechaDesde . "' AND p.fechaDesdeContrato <= '" . $fechaHasta . "' AND pd.codigoIncapacidadFk IS NULL AND pd.codigoVacacionFk IS NULL AND pd.codigoLicenciaFk IS NULL")
             ->andWhere('p.codigoContratoFk=' . $codigoContrato);
         $arrayResultado = $query->getQuery()->getResult();
         if ($arrayResultado) {

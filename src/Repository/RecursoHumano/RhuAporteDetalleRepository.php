@@ -82,6 +82,9 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
             ->leftJoin('c.entidadSaludRel', 'es')
             ->leftJoin('c.entidadCajaRel', 'ec')
             ->where('ad.codigoAporteFk = ' . $codigoAporte);
+//        if ($identificacion) {
+//            $queryBuilder->andWhere("e.numeroIdentificacion = '{$identificacion}'");
+//        }
         return $queryBuilder;
     }
 

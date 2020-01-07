@@ -157,6 +157,8 @@ class AporteController extends AbstractController
             ->add('btnExcelDetalle', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnCargarContratos', SubmitType::class, $arrPropiedadesCargarContratos)
             ->add('btnEliminarContratos', SubmitType::class, $arrPropiedadesEliminarContratos)
+//            ->add('identificacion', TextType::class, array('required' => false))
+//            ->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar'])
             ->add('btnExportarPlano', SubmitType::class, ['label' => 'Plano pila', 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

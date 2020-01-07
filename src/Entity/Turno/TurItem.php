@@ -92,6 +92,11 @@ class TurItem
     protected $CotizacionesDetallesItemRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurClienteIca", mappedBy="itemRel")
+     */
+    protected $clientesIcaItemRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoItemPk()

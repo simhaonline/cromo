@@ -32,17 +32,18 @@ class TurClienteIca
     private $codigoCiudadFk;
 
     /**
-     * @ORM\Column(name="codigo_concepto_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_item_fk", type="integer", nullable=true)
      */
-    private $codigoConceptoFk;
+    private $codigoItemFk;
 
     /**
-     * @ORM\Column(name="codigo_servicio_erp", type="string", length=20, nullable=true)
+     * @ORM\Column(name="codigo_interface", type="string", length=20, nullable=true)
      */
-    private $codigoServicioErp;
+    private $codigoInterface;
 
     /**
      * @ORM\Column(name="codigo_dane", type="string", length=5)
+     */
     private $codigoDane;
 
     /**
@@ -68,10 +69,10 @@ class TurClienteIca
     protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurConcepto", inversedBy="clientesIcaConceptoRel")
-     * @ORM\JoinColumn(name="codigo_concepto_fk", referencedColumnName="codigo_concepto_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurItem", inversedBy="clientesIcaItemRel")
+     * @ORM\JoinColumn(name="codigo_item_fk", referencedColumnName="codigo_item_pk")
      */
-    protected $conceptoRel;
+    protected $itemRel;
 
     /**
      * @return int
@@ -124,33 +125,33 @@ class TurClienteIca
     /**
      * @return mixed
      */
-    public function getCodigoConceptoFk()
+    public function getCodigoItemFk()
     {
-        return $this->codigoConceptoFk;
+        return $this->codigoItemFk;
     }
 
     /**
-     * @param mixed $codigoConceptoFk
+     * @param mixed $codigoItemFk
      */
-    public function setCodigoConceptoFk($codigoConceptoFk): void
+    public function setCodigoItemFk($codigoItemFk): void
     {
-        $this->codigoConceptoFk = $codigoConceptoFk;
+        $this->codigoItemFk = $codigoItemFk;
     }
 
     /**
      * @return mixed
      */
-    public function getCodigoServicioErp()
+    public function getCodigoInterface()
     {
-        return $this->codigoServicioErp;
+        return $this->codigoInterface;
     }
 
     /**
-     * @param mixed $codigoServicioErp
+     * @param mixed $codigoInterface
      */
-    public function setCodigoServicioErp($codigoServicioErp): void
+    public function setCodigoInterface($codigoInterface): void
     {
-        $this->codigoServicioErp = $codigoServicioErp;
+        $this->codigoInterface = $codigoInterface;
     }
 
     /**
@@ -170,29 +171,31 @@ class TurClienteIca
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getTarIca(): int
+    public function getTarIca()
     {
         return $this->tarIca;
     }
 
     /**
-     * @param int $tarIca
+     * @param float $tarIca
      */
     public function setTarIca(float $tarIca): void
     {
         $this->tarIca = $tarIca;
     }
 
-
+    /**
+     * @return float
+     */
     public function getPorIca()
     {
         return $this->porIca;
     }
 
     /**
-     * @param int $porIca
+     * @param float $porIca
      */
     public function setPorIca(float $porIca): void
     {
@@ -234,18 +237,17 @@ class TurClienteIca
     /**
      * @return mixed
      */
-    public function getConceptoRel()
+    public function getItemRel()
     {
-        return $this->conceptoRel;
+        return $this->itemRel;
     }
 
     /**
-     * @param mixed $conceptoRel
+     * @param mixed $itemRel
      */
-    public function setConceptoRel($conceptoRel): void
+    public function setItemRel($itemRel): void
     {
-        $this->conceptoRel = $conceptoRel;
+        $this->itemRel = $itemRel;
     }
-
 
 }

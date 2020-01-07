@@ -4,8 +4,10 @@
 namespace App\Controller\Turno\Administracion\Comercial\Cliente;
 
 
+use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurClienteIca;
 use App\Form\Type\Turno\ClienteIcaType;
+use App\Utilidades\Mensajes;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,18 +22,18 @@ use App\General\General;
 class ClienteIcaController extends AbstractController
 {
     /**
-     * @Route("/turno/administracion/comercial/cliente/ica/lista", name="turno_administracion_comercial__cliente_ica_lista")
+     * @Route("/turno/administracion/comercial/cliente/ica/lista", name="turno_administracion_comercial_cliente_ica_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('codigoClienteIcaPk', TextType::class, array('required' => false))
+            ->add('numeroIdentificacion', TextType::class, array('required' => false))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->add('codigoClienteIcaPk', TextType::class, array('required' => false))
-            ->add('numeroIdentificacion', TextType::class, array('required' => false))
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
@@ -55,13 +57,14 @@ class ClienteIcaController extends AbstractController
         }
         $arClientesIca = $paginator->paginate($em->getRepository(TurClienteIca::class)->lista($raw), $request->query->getInt('page', 1), 30);
 
-        return $this->render('transporte/movimiento/transporte/guia/lista.html.twig', [
+        return $this->render('turno/administracion/comercial/clienteica/lista.html.twig', [
             'arClientesIca' => $arClientesIca,
             'form' => $form->createView(),
         ]);
     }
+
     /**
-     * @Route("/turno/administracion/comercial/cliente/ica/nuevo/{id}", name="turno_administracion_comercial__cliente_ica_nuevo")
+     * @Route("/turno/administracion/comercial/cliente/ica/nuevo/{id}", name="turno_administracion_comercial_cliente_ica_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -70,7 +73,7 @@ class ClienteIcaController extends AbstractController
         if ($id != 0) {
             $arClienteIca = $em->getRepository(TurClienteIca::class)->find($id);
             if (!$arClienteIca) {
-                return $this->redirect($this->generateUrl('turno_administracion_comercial__cliente_ica_lista'));
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_ica_lista'));
             }
         }
         $form = $this->createForm(ClienteIcaType::class, $arClienteIca);
@@ -78,25 +81,36 @@ class ClienteIcaController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
                 $arClienteIca = $form->getData();
-                $em->persist($arClienteIca);
-                $em->flush();
-                return $this->redirect($this->generateUrl('turno_administracion_comercial__cliente_ica_detalle', array('id' => $arClienteIca->getCodigoClienteIcaPk())));
+                $arrControles = $request->request->All();
+                $arCliente = $em->getRepository(TurCliente::class)->find($arrControles['form_codigoCliente']);
+                if ($arCliente) {
+                    $codigoDane = $arClienteIca->getCiudadRel()->getDepartamentoRel()->getCodigoDane() . '' . $arClienteIca->getCiudadRel()->getCodigoDane();
+                    $arClienteIca->setCodigoDane($codigoDane);
+                    $arClienteIca->setCodigoInterface($arClienteIca->getItemRel()->getcodigoInterface());
+                    $arClienteIca->setClienteRel($arCliente);
+                    $em->persist($arClienteIca);
+                    $em->flush();
+                }else{
+                    Mensajes::error("No existe un cliente {$arrControles['txtNit']}, por favor intentelo nuevamente.");
+
+                }
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_ica_detalle', array('id' => $arClienteIca->getCodigoClienteIcaPk())));
             }
         }
-        return $this->render('recursohumano/administracion/nomina/juzgado/nuevo.html.twig', [
-            'arEmbargoJusgado' => $arClienteIca,
+        return $this->render('turno/administracion/comercial/clienteica/nuevo.html.twig', [
+            'arClienteIca' => $arClienteIca,
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/turno/administracion/comercial/cliente/ica/detalle/{id}", name="turno_administracion_comercial__cliente_ica_detalle")
+     * @Route("/turno/administracion/comercial/cliente/ica/detalle/{id}", name="turno_administracion_comercial_cliente_ica_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arClienteIca = $em->getRepository(TurClienteIca::class)->find($id);
-        return $this->render('recursohumano/movimiento/recurso/incidente/detalle.html.twig', [
+        return $this->render('turno/administracion/comercial/clienteica/detalle.html.twig', [
             'arClienteIca' => $arClienteIca,
         ]);
     }

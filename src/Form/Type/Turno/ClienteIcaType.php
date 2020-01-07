@@ -6,7 +6,7 @@ namespace App\Form\Type\Turno;
 
 use App\Entity\General\GenCiudad;
 use App\Entity\Turno\TurClienteIca;
-use App\Entity\Turno\TurConcepto;
+use App\Entity\Turno\TurItem;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -30,16 +30,14 @@ class ClienteIcaType extends AbstractType
                 'choice_label' => 'nombre',
                 'placeholder' => '',
                 'required' => true))
-            ->add('conceptoServicioRel', EntityType::class, array(
-                'class' => TurConcepto::class,
+            ->add('itemRel', EntityType::class, array(
+                'class' => TurItem::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('cs')
-                        ->where('cs.tipo = 1')
-                        ->orderBy('cs.nombre', 'ASC');
+                    return $er->createQueryBuilder('i')
+                        ->orderBy('i.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => false))
-            ->add('codigoServicioErp', TextType::class, array("required" => false))
             ->add('tarIca', NumberType::class, array("required" => true))
             ->add('porIca', NumberType::class, array("required" => false))
             ->add('guardar', SubmitType::class);

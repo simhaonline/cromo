@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="txtCodigoConductor" class="col-sm-2 control-label">Cliente:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                <input id="form_codigoCliente" name="form_codigoCliente" class="form-control" >
+
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="input-group">
+                                <input id="form_txtNombreCorto" class="form-control" readonly>
+                                <span class="input-group-btn">
+                                            <a class="btn btn-default btn-sm"
+                                               href="javascript:abrirVentana3('{{ path('turno_buscar_cliente',
+                                                   { 'campoCodigo': 'form_codigoCliente', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Ciudad</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ciudadRel,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.ciudadRel) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Item</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.itemRel, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.itemRel) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Tarifa ica:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.tarIca,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.tarIca) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Porcentaje ica:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.porIca, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.porIca) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('turno_administracion_comercial_cliente_ica_lista') }}">Cancelar</a>
+        {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

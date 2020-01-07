@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_comercial_cliente_ica_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arClienteIca.codigoClienteIcaPk }}</td>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arClienteIca.clienteRel.numeroIdentificacion }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arClienteIca.clienteRel.nombreCorto }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">CIUDAD:</td>
+            <td class="td-in-well">{{ arClienteIca.ciudadRel.nombre }}</td>
+            <td class="titulo">CODIGO DANE:</td>
+            <td class="td-in-well">{{ arClienteIca.codigoDane }}</td>
+            <td class="titulo">CODIGO DANE:</td>
+            <td class="td-in-well">{{ arClienteIca.itemRel.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">INTERFACE:</td>
+            <td class="td-in-well">{{ arClienteIca.codigoInterface }}</td>
+            <td class="titulo">tarIca:</td>
+            <td class="td-in-well">{{ arClienteIca.tarIca }}</td>
+            <td class="titulo">porIca:</td>
+            <td class="td-in-well">{{ arClienteIca.porIca }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

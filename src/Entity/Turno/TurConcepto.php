@@ -80,11 +80,6 @@ class TurConcepto
     protected $pedidosDetallesCompuestosConceptoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurClienteIca", mappedBy="conceptoRel")
-     */
-    protected $clientesIcaConceptoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoConceptoPk()

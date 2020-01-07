@@ -757,4 +757,22 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
         }
         return $queryBuilder;
     }
+
+    public function facturaElectronica($codigoMovimiento) {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(InvMovimientoDetalle::class, 'md')
+            ->select('md.codigoMovimientoDetallePk')
+            ->addSelect('md.cantidad')
+            ->addSelect('md.vrPrecio')
+            ->addSelect('md.vrSubtotal')
+            ->addSelect('md.vrIva')
+            ->addSelect('md.vrTotal')
+            ->addSelect('md.porcentajeIva')
+            ->addSelect('md.codigoItemFk')
+            ->addSelect('i.descripcion as itemNombre')
+            ->leftJoin('md.itemRel', 'i')
+            ->where("md.codigoMovimientoFk = {$codigoMovimiento} ");
+        $arrMovimiento = $queryBuilder->getQuery()->getResult();
+        return $arrMovimiento;
+    }
 }

@@ -37,6 +37,11 @@ class GenTipoPersona
     protected $invTercerosTipoPersonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\General\GenConfiguracion", mappedBy="tipoPersonaRel")
+     */
+    protected $configuracionTipoPersonaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurCliente", mappedBy="tipoPersonaRel")
      */
     protected $turClientesTipoPersonaRel;
@@ -103,6 +108,54 @@ class GenTipoPersona
     public function setTteClientesTipoPersonaRel($tteClientesTipoPersonaRel): void
     {
         $this->tteClientesTipoPersonaRel = $tteClientesTipoPersonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInvTercerosTipoPersonaRel()
+    {
+        return $this->invTercerosTipoPersonaRel;
+    }
+
+    /**
+     * @param mixed $invTercerosTipoPersonaRel
+     */
+    public function setInvTercerosTipoPersonaRel($invTercerosTipoPersonaRel): void
+    {
+        $this->invTercerosTipoPersonaRel = $invTercerosTipoPersonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionTipoPersonaRel()
+    {
+        return $this->configuracionTipoPersonaRel;
+    }
+
+    /**
+     * @param mixed $configuracionTipoPersonaRel
+     */
+    public function setConfiguracionTipoPersonaRel($configuracionTipoPersonaRel): void
+    {
+        $this->configuracionTipoPersonaRel = $configuracionTipoPersonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurClientesTipoPersonaRel()
+    {
+        return $this->turClientesTipoPersonaRel;
+    }
+
+    /**
+     * @param mixed $turClientesTipoPersonaRel
+     */
+    public function setTurClientesTipoPersonaRel($turClientesTipoPersonaRel): void
+    {
+        $this->turClientesTipoPersonaRel = $turClientesTipoPersonaRel;
     }
 
 

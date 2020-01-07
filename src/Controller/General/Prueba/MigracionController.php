@@ -105,6 +105,7 @@ class MigracionController extends Controller
             ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
             ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnAsignarItem', SubmitType::class, ['label' => 'Asignar item', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -141,6 +142,7 @@ class MigracionController extends Controller
                 if ($form->get('btnValidar')->isClicked()) {
                     $this->validarRhu($conn);
                 }
+
                 if ($request->request->get('OpGenerar')) {
                     $codigo = $request->request->get('OpGenerar');
                     switch ($codigo) {
@@ -230,6 +232,10 @@ class MigracionController extends Controller
                             $this->usuarios($conn);
                             break;
                     }
+                }
+
+                if ($form->get('btnAsignarItem')->isClicked()) {
+                    $this->asignarItem($conn);
                 }
                 mysqli_close($conn);
             } else {
@@ -2678,7 +2684,7 @@ class MigracionController extends Controller
                 $arContratoDetalle->setHoraHasta(date_create($row['hora_fin']));
                 $arContratoDetalle->setPeriodo('M');
                 $arContratoDetalle->setCompuesto($row['compuesto']);
-                $arContratoDetalle->setProgramable(1);
+                $arContratoDetalle->setProgramar(1);
                 $em->persist($arContratoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -3446,6 +3452,35 @@ class MigracionController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
         return $totalArticles;
+    }
+
+    private function asignarItem ($conn) {
+        $em = $this->getDoctrine()->getManager();
+        /** @var $arContratoDetalles TurContratoDetalle */
+        $arContratoDetalles = $em->getRepository(TurContratoDetalle::class)->findBy(array(),array(),100000);
+        foreach ($arContratoDetalles as $arContratoDetalle) {
+            $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $arContratoDetalle->getCodigoModalidadFk() . "' AND codigo_concepto_fk = " . $arContratoDetalle->getCodigoConceptoFk());
+            $registro = $ar->fetch_assoc();
+            if($registro) {
+                $codigoItem = $registro['codigo_pk'];
+                $arItem = $em->getRepository(TurItem::class)->find($codigoItem);
+                if(!$arItem) {
+                    $horaDesde = date_create($registro['hora_inicio']);
+                    $horaHasta = date_create($registro['hora_fin']);
+                    $arContratoDetalle->setItemRel($arItem);
+                    $arContratoDetalle->setHorasUnidad($registro['horas']);
+                    $arContratoDetalle->setHorasDiurnasUnidad($registro['horas_diurnas']);
+                    $arContratoDetalle->setHorasNocturnasUnidad($registro['horas_nocturnas']);
+                    $arContratoDetalle->setHoraDesde($horaDesde);
+                    $arContratoDetalle->setHoraHasta($horaHasta);
+                    $em->persist($arContratoDetalle);
+                }
+            } else {
+                Mensajes::error("Contrato " . $arContratoDetalle->getCodigoContratoDetallePk() . " no existe el registro modalidad " . $arContratoDetalle->getCodigoModalidadFk() . " concepto = " . $arContratoDetalle->getCodigoConceptoFk());
+                //break;
+            }
+        }
+        $em->flush();
     }
 
 }

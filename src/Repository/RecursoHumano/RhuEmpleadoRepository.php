@@ -339,5 +339,45 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
         return $arTercero;
     }
+
+    /**
+     * @todo: buscar avanzado de la ruta turno_buscar_empleado
+     */
+    public function ListaBuscarEmpleado($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoEmpelado = null;
+        $nombreCorto = null;
+        $numeroIdentificacion = null;
+        $estadoContrato = null;
+
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
+            ->select('e.codigoContratoFk')
+            ->addSelect('e.codigoEmpleadoPk')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.estadoContrato')
+            ->where('e.codigoEmpleadoPk <> 0');
+        if ($codigoEmpelado) {
+            $queryBuilder->andWhere("e.codigoEmpleadoPk = {$codigoEmpelado}");
+        }
+        if ($nombreCorto) {
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$nombreCorto}%'");
+        }
+        if ($numeroIdentificacion) {
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$numeroIdentificacion}' ");
+        }
+        switch ($estadoContrato) {
+            case '0':
+                $queryBuilder->andWhere("e.estadoContrato = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("e.estadoContrato = 1");
+                break;
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
 

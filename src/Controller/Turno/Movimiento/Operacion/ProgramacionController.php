@@ -154,7 +154,7 @@ class ProgramacionController extends ControllerListenerGeneral
         $arrDiaSemana = FuncionesController::diasMes($dateFecha, $em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));
         $arPedidoDetalles = $em->getRepository(TurProgramacion::class)->detalleProgramacion($id);
 
-
+        dd($arPedidoDetalles);
         return $this->render('turno/movimiento/operacion/programacion/detalle.html.twig', [
             'form' => $form->createView(),
             'arrDiaSemana' => $arrDiaSemana,
@@ -221,7 +221,7 @@ class ProgramacionController extends ControllerListenerGeneral
     /**
      * @Route("/turno/movimiento/operacion/programacion/puesto/{codigoPedidoDetalle}", name="turno_movimiento_operacion_programacion_puesto")
      */
-    public function programacionPuesto(Request $request, $codigoPedidoDetalle)
+    public function programacionPuesto(Request $request, $codigoPedidoDetalle )
     {
         $em = $this->getDoctrine()->getManager();
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
@@ -237,8 +237,16 @@ class ProgramacionController extends ControllerListenerGeneral
             if ($form->get('btnGuardar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+//                if ($arProgramacion->getEstadoAutorizado() == 0) {
+                    $arrControles = $request->request->All();
+                    $resultado = $this->actualizarDetalle2($arrControles, $codigoPedidoDetalle);
+                    if ($resultado == false) {
+                        $em->flush();
+                        $em->getRepository(TurProgramacion::class)->liquidar($codigoProgramacion);
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }
+//                }
+//                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         $strAnioMes = $arPedidoDetalle->getPedidoRel()->getFecha()->format('Y/m');
@@ -423,6 +431,130 @@ class ProgramacionController extends ControllerListenerGeneral
         $arrDetalle['horasNocturnasLinea'] = $horasNocturnasLinea;
 
         return $arrDetalle;
+    }
+
+    private function actualizarDetalle2($arrControles, $codigoPedidoDetalle)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $error = false;
+        $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
+        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+        $puestoRequiereArma = $arPedidoDetalle->getCodigoModalidadServicioFk() == $arConfiguracion->getCodigoModalidadArma();
+
+        $validarHoras = $arConfiguracion->getValidarHorasProgramacion();
+        $intIndice = 0;
+        $boolTurnosSobrepasados = false;
+        $cursoActivo = false;
+        $intDiaVenceCurso = 0;
+        $arrTotalHoras = $this->horasControles($arrControles);
+        $horasDiurnasPendientes = $arPedidoDetalle->getHorasDiurnas() - ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arrTotalHoras['horasDiurnasProgramacion']);
+        $horasDiurnasRestantes = $horasDiurnasPendientes - $arrTotalHoras['horasDiurnas'];
+        $horasNocturnasPendientes = $arPedidoDetalle->getHorasNocturnas() - ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arrTotalHoras['horasNocturnasProgramacion']);
+        $horasNocturnasRestantes = $horasNocturnasPendientes - $arrTotalHoras['horasNocturnas'];
+        if ($validarHoras) {
+            if ($horasDiurnasRestantes < 0) {
+                $error = TRUE;
+                Mensajes::error("Las horas diurnas de los turnos ingresadas [" . $arrTotalHoras['horasDiurnas'] . "], superan las horas del pedido disponibles para programar [" . $horasDiurnasPendientes . "]");
+            }
+            if ($horasNocturnasRestantes < 0) {
+                $error = TRUE;
+                Mensajes::error("Las horas nocturnas de los turnos ingresadas [" . $arrTotalHoras['horasNocturnas'] . "], superan las horas del pedido disponibles para programar [" . $horasNocturnasPendientes . "]");
+            }
+        }
+        if ($error == FALSE) {
+            foreach ($arrControles['LblCodigo'] as $intCodigo) {
+                $arProgramacionDetalle = $em->getRepository('BrasaTurnoBundle:TurProgramacionDetalle')->find($intCodigo);
+                $validar = $this->validarHoras($intCodigo, $arrControles);
+                if ($validar['validado']) {
+                    if ($arProgramacionDetalle->getPeriodoBloqueo() == 0) {
+                        if ($arrControles['TxtRecurso' . $intCodigo] != '') {
+                            $arRecurso = $em->getRepository('BrasaTurnoBundle:TurRecurso')->find($arrControles['TxtRecurso' . $intCodigo]);
+                            if ($arRecurso) {
+                                if ($puestoRequiereArma && $arRecurso->getRestriccionArma()) {
+                                    Mensajes::error("El recurso {$arRecurso->getCodigoRecursoPk()} no es apto para portar arma.");
+                                    $error = true;
+                                } else {
+                                    $arProgramacionDetalle->setRecursoRel($arRecurso);
+                                }
+                                $respuestaValidarRestriccionCliente = $em->getRepository('BrasaTurnoBundle:TurRecurso')->validarClienteRecurso($arRecurso->getCodigoRecursoPk(), $arPedidoDetalle);
+                                if ($respuestaValidarRestriccionCliente != "") {
+                                    Mensajes::error($respuestaValidarRestriccionCliente);
+                                    $error = true;
+                                }
+                            }
+
+                            // validar vencimiento de cursos de vigilancia
+                            // aqui se consulta que cursos tiene el empleado
+                            if ($arConfiguracion->getValidarVencimientoCurso()) {
+                                $fechaProgramacion = $arProgramacionDetalle->getProgramacionRel()->getFecha();
+                                $fechaDesdeVenceCurso = $fechaProgramacion->format("Y/m/1");
+                                $dqlCursos = $em->createQuery($em->getRepository('BrasaRecursoHumanoBundle:RhuAcreditacion')->listaDql($arRecurso->getCodigoEmpleadoFk(), "", "", "", $fechaDesde = "", $fechaHasta = "", $fechaDesdeVenceCurso, "", "", "", "", ""));
+                                $arrCursos = $dqlCursos->getResult();
+                                if ($arrCursos != null) {
+                                    $arCurso = $arrCursos[0];
+                                    $mesVenceCurso = $arCurso->getFechaVenceCurso()->format('n');
+                                    $anioVenceCurso = $arCurso->getFechaVenceCurso()->format('Y');
+                                    $intDiaVenceCurso = $arCurso->getFechaVenceCurso()->format('j');
+                                    if (($mesVenceCurso >= $arPedidoDetalle->getMes() && $anioVenceCurso == $arPedidoDetalle->getAnio()) || $anioVenceCurso >= $arPedidoDetalle->getAnio()) {
+                                        $cursoActivo = true;
+                                    }
+                                }
+                            }
+                        } else {
+                            $arProgramacionDetalle->setRecursoRel(NULL);
+                        }
+                    }
+                    $cambio = false;
+                    for ($i = 1; $i <= 31; $i++) {
+                        $indice = 'TxtDia' . ($i < 10 ? '0' . $i : $i) . 'D' . $intCodigo;
+                        if (isset($arrControles[$indice]) && $arrControles[$indice] != "") {
+                            //validacion de curso de vigilancia
+                            // aqui se valida segun el dia de vencimiento de curso de vigilancia
+                            if ($arConfiguracion->getValidarVencimientoCurso()) {
+                                if ($cursoActivo == true) {
+                                    if ($i > $intDiaVenceCurso && $mesVenceCurso == $arPedidoDetalle->getMes()) {
+                                        Mensajes::error("El curso de vigilancia vence el día" . $intDiaVenceCurso . ", por ende el recurso {$arRecurso->getCodigoRecursoPk()} no puede ser programado");
+                                        $error = true;
+                                        break;
+                                    }
+                                } else {
+                                    Mensajes::error("El recurso {$arRecurso->getCodigoRecursoPk()} no tiene curso de vigilancia vigente");
+                                    $error = true;
+                                    break;
+                                }
+                            }
+                            if (call_user_func_array([$arProgramacionDetalle, "getDia{$i}"], []) != $indice) {
+                                $cambio = true;
+                            }
+                            call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [$arrControles[$indice]]);
+                        } else {
+                            call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [null]);
+                        }
+                    }
+                    if ($cambio) {
+                        $arProgramacionDetalle->setActualizadoPor($this->getUser()->getNombreCorto());
+                        $arProgramacionDetalle->setFechaActualizacion(new \DateTime(date("Y-m-d H:i:s")));
+                    }
+                    $arProgramacionDetalle->setHorasDiurnas($validar['horasDiurnas']);
+                    $arProgramacionDetalle->setHorasNocturnas($validar['horasNocturnas']);
+                    $arProgramacionDetalle->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
+                    $em->persist($arProgramacionDetalle);
+                } else {
+                    $error = true;
+                    Mensajes::error($validar['mensaje']);
+                }
+                if ($error) {
+                    break;
+                }
+            }
+//            $horasProgramadasDiurnasPedidoTotales = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arrTotalHoras['horasDiurnasProgramacion']) + $arrTotalHoras['horasDiurnas'];
+//            $horasProgramadasNocturnasPedidoTotales = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arrTotalHoras['horasNocturnasProgramacion']) + $arrTotalHoras['horasNocturnas'];
+            $arPedidoDetalle->setHorasDiurnasProgramadas($arrTotalHoras['horasDiurnas']);
+            $arPedidoDetalle->setHorasNocturnasProgramadas($arrTotalHoras['horasNocturnas']);
+            $arPedidoDetalle->setHorasProgramadas($arrTotalHoras['horasDiurnas'] + $arrTotalHoras['horasNocturnas']);
+            $em->persist($arPedidoDetalle);
+        }
+        return $error;
     }
 
 }

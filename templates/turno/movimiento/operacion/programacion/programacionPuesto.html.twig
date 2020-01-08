@@ -18,6 +18,15 @@
             <tbody>
             {% for arProgramacion in arProgramaciones %}
                 <tr>
+                    <td>
+                        <input type="text" style="text-transform: uppercase; width:27px; padding: 0px"
+                               class="input-paste input-grid" value="{{ arProgramacion.codigoEmpleadoFk }}"
+                               id="TxtEmpleado{{ arProgramacion.codigoEmpleadoFk }}"
+                               name="TxtEmpleado{{ arProgramacion.codigoEmpleadoFk }}" />
+                        <a href="javascript:abrirVentana3('{{ path('turno_buscar_empleado', {'campoCodigo': 'TxtEmpleado' ~ arProgramacion.codigoEmpleadoFk }) }}', 'AgregarNuevoDetalle', 600, 900)">
+                            <i class="fa fa-edit" style="font-size: large;color: black;">
+                            </i></a>
+                    </td>
                     <td colspan="33">{{ arProgramacion.empleadoRel.nombreCorto }}
                         | {{ arProgramacion.puestoRel.clienteRel.nombreCorto }}| {{ arProgramacion.puestoRel.nombre }}
                         | {{ arProgramacion.pedidoDetalleRel.conceptoRel.nombre }}</td>

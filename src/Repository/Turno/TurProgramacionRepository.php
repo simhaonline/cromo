@@ -1387,5 +1387,25 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         $arrProgramacionDetalle = $qb->getQuery()->getResult();
         return $arrProgramacionDetalle;
     }
+
+    public function liquidar($codigoProgramacion)
+    {
+        $em = $this->getEntityManager();
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->find($codigoProgramacion);
+        $douTotalHoras = 0;
+        $douTotalHorasDiurnas = 0;
+        $douTotalHorasNocturnas = 0;
+        foreach ($arProgramaciones as $arProgramacion) {
+            $douTotalHorasDiurnas += $arProgramacion->getHorasDiurnas();
+            $douTotalHorasNocturnas += $arProgramacion->getHorasNocturnas();
+            $douTotalHoras += $arProgramacion->getHoras();
+        }
+        $arProgramacion->setHoras($douTotalHoras);
+        $arProgramacion->setHorasDiurnas($douTotalHorasDiurnas);
+        $arProgramacion->setHorasNocturnas($douTotalHorasNocturnas);
+        $em->persist($arProgramacion);
+        $em->flush();
+        return true;
+    }
 }
 

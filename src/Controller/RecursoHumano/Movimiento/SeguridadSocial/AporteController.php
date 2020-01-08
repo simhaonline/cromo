@@ -157,10 +157,13 @@ class AporteController extends AbstractController
             ->add('btnExcelDetalle', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnCargarContratos', SubmitType::class, $arrPropiedadesCargarContratos)
             ->add('btnEliminarContratos', SubmitType::class, $arrPropiedadesEliminarContratos)
-//            ->add('identificacion', TextType::class, array('required' => false))
-//            ->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar'])
+            ->add('identificacion', TextType::class, array('required' => false))
+            ->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar'])
             ->add('btnExportarPlano', SubmitType::class, ['label' => 'Plano pila', 'attr' => ['class' => 'btn btn-sm btn-default']]);
         $form->handleRequest($request);
+        $raw = [
+            'limiteRegistros' => null
+        ];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuAporte::class)->autorizar($arAporte);
@@ -200,8 +203,11 @@ class AporteController extends AbstractController
                 }
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
+            if ($form->get('btnFiltrar')->isClicked()){
+                $raw['filtros'] = $this->getFiltrosDetalle($form);
+            }
         }
-        $arAporteDetalles = $paginator->paginate($em->getRepository(RhuAporteDetalle::class)->lista($id), $request->query->getInt('page', 1), 2000);
+        $arAporteDetalles = $paginator->paginate($em->getRepository(RhuAporteDetalle::class)->lista($id, $raw), $request->query->getInt('page', 1), 2000);
         $arAporteContratos = $paginator->paginate($em->getRepository(RhuAporteContrato::class)->lista($id), $request->query->getInt('page', 1), 2000);
         $arAporteEntidades = $paginator->paginate($em->getRepository(RhuAporteEntidad::class)->lista($id), $request->query->getInt('page', 1), 2000);
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalle.html.twig', [
@@ -541,6 +547,16 @@ class AporteController extends AbstractController
         ];
 
         return $filtro;
+    }
+
+    public function getFiltrosDetalle($form)
+    {
+        $filtro = [
+            'identificacion' => $form->get('identificacion')->getData(),
+        ];
+
+        return $filtro;
+
     }
 
 }

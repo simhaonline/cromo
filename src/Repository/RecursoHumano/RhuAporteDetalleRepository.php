@@ -23,8 +23,14 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuAporteDetalle::class);
     }
 
-    public function lista($codigoAporte)
+    public function lista($codigoAporte, $raw)
     {
+        $filtros = $raw['filtros'] ?? null;
+        $identificacion = null;
+        if ($filtros) {
+            $identificacion = $filtros['identificacion'] ?? null;
+        }
+
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(RhuAporteDetalle::class, 'ad')
             ->select('ad.codigoAporteDetallePk')
@@ -82,9 +88,9 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
             ->leftJoin('c.entidadSaludRel', 'es')
             ->leftJoin('c.entidadCajaRel', 'ec')
             ->where('ad.codigoAporteFk = ' . $codigoAporte);
-//        if ($identificacion) {
-//            $queryBuilder->andWhere("e.numeroIdentificacion = '{$identificacion}'");
-//        }
+        if ($identificacion) {
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$identificacion}'");
+        }
         return $queryBuilder;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Repository\RecursoHumano;
 
+use App\Controller\Turno\Informe\Juridico\contratoController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuProgramacion;
@@ -442,5 +443,49 @@ class RhuContratoRepository extends ServiceEntityRepository
         $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function informeVacacionesPendiente($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+        }
+        $fechaActual = new \DateTime('now');
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->addSelect('c.codigoEmpleadoFk')
+            ->addSelect('c.fecha')
+            ->addSelect('c.fechaDesde')
+            ->addSelect('c.fechaHasta')
+            ->addSelect('c.fechaUltimoPagoVacaciones')
+            ->addSelect('e.nombreCorto as empleado')
+            ->addSelect('e.numeroIdentificacion')
+            ->leftJoin('c.empleadoRel', 'e')
+            ->where("c.fechaUltimoPagoVacaciones <= '{$fechaActual->format('Y-m-d')} 23:59:59' ");
+        if ($codigoCliente) {
+            $queryBuilder->andWhere("c.codigoClienteFk = '{$codigoCliente}'");
+        }
+        
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("c.fechaDesde >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("c.fechaHasta <= '{$fechaHasta} 23:59:59'");
+        }
+
+        $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+
     }
 }

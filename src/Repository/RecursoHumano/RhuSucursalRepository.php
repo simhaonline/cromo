@@ -13,23 +13,35 @@ class RhuSucursalRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuSucursal::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoSucursal = null;
+        $nombre = null;
+        $estadoActivo = null;
+
+        if ($filtros) {
+            $codigoSucursal = $filtros['codigoSucursal'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $estadoActivo = $filtros['estadoActivo'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSucursal::class, 's')
             ->select('s.codigoSucursalPk')
             ->addSelect('s.nombre')
             ->addSelect('s.estadoActivo');
 
-        if ($session->get('RhuSucursal_codigoSucursalPk')) {
-            $queryBuilder->andWhere(" = '{$session->get('RhuSucursal_codigoSucursalPk')}'");
+        if ($codigoSucursal) {
+            $queryBuilder->andWhere("s.codigoSucursalPk = '{$codigoSucursal}'");
         }
 
-        if ($session->get('RhuSucursal_nombre')) {
-            $queryBuilder->andWhere("s.nombre = '%{$session->get('RhuSucursal_cnombre')}%'");
+        if ($nombre) {
+            $queryBuilder->andWhere("s.nombre LIKE '%{$nombre}%'");
         }
 
-        switch ($session->get('RhuSucursal_estadoActivo')) {
+        switch ($estadoActivo) {
             case '0':
                 $queryBuilder->andWhere("s.estadoActivo = 0");
                 break;
@@ -38,6 +50,8 @@ class RhuSucursalRepository extends ServiceEntityRepository
                 break;
         }
 
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('s.codigoSucursalPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 }

@@ -54,7 +54,7 @@ class TurCostoServicio
     private $codigoPuestoFk;
 
     /**
-     * @ORM\Column(name="codigo_concepto_fk", type="integer")
+     * @ORM\Column(name="codigo_concepto_fk", type="integer", nullable=true)
      */
     private $codigoConceptoFk;
 

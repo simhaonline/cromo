@@ -47,7 +47,7 @@ class TurCostoServicioRepository extends ServiceEntityRepository
                 $arCostoServicio->setPedidoDetalleRel($arPedidoDetalle);
                 $arCostoServicio->setClienteRel($arPedidoDetalle->getPedidoRel()->getClienteRel());
                 $arCostoServicio->setPuestoRel($arPedidoDetalle->getPuestoRel());
-                $arCostoServicio->setConceptoRel($arPedidoDetalle->getConceptoRel());
+                //$arCostoServicio->setConceptoRel($arPedidoDetalle->getConceptoRel());
                 $arCostoServicio->setModalidadRel($arPedidoDetalle->getModalidadRel());
                 //$arCostoServicio->setPeriodoRel($arPedidoDetalle->getPeriodoRel());
                 $arCostoServicio->setDiaDesde($arPedidoDetalle->getDiaDesde());

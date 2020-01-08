@@ -72,6 +72,9 @@
             <th>VIGENTE</th>
             <th>DESDE</th>
             <th>HASTA</th>
+            <th title="Tipo de costo">C_TIPO</th>
+            <th title="Clase de costo">C_CLASE</th>
+            <th title="Habilitado para turnos">HT</th>
             <th></th>
             <th></th>
         </tr>
@@ -90,6 +93,9 @@
                 <td>{{ arContrato.estadoTerminado ? 'NO' : 'SI' }}</td>
                 <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
                 <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
+                <td>{{ arContrato.codigoCostoTipoFk }}</td>
+                <td>{{ arContrato.codigoCostoClaseFk }}</td>
+                <td>{{ arContrato.habilitadoTurno ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
                     {% if arContrato.estadoTerminado == 0 %}
                         <a href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_empleado_nuevo_contrato',{'codigoEmpleado' : arContrato.codigoEmpleadoFk,'id': arContrato.codigoContratoPk }) }}','agregarContrato',600,950)"><i

@@ -56,6 +56,7 @@ DELETE FROM inv_remision_detalle WHERE inv_remision_detalle.codigo_remision_deta
 DELETE FROM inv_remision_detalle;
 DELETE FROM inv_remision;
 DELETE FROM inv_sucursal;
+DELETE FROM rhu_credito_pago;
 DELETE FROM rhu_pago_detalle;
 DELETE FROM rhu_pago;
 DELETE FROM rhu_programacion_detalle;
@@ -71,6 +72,7 @@ DELETE FROM rhu_aporte;
 DELETE FROM rhu_incapacidad;
 DELETE FROM rhu_vacacion;
 DELETE FROM rhu_licencia;
+DELETE FROM rhu_liquidacion;
 DELETE FROM rhu_contrato;
 DELETE FROM rhu_costo;
 DELETE FROM rhu_empleado;

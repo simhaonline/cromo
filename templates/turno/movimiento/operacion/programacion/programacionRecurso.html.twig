@@ -19,8 +19,7 @@
             {% for arProgramacion in arProgramaciones %}
                 <tr>
                     <td colspan="33">{{ arProgramacion.empleadoRel.nombreCorto }}
-                        | {{ arProgramacion.puestoRel.clienteRel.nombreCorto }}| {{ arProgramacion.puestoRel.nombre }}
-                        | {{ arProgramacion.pedidoDetalleRel.conceptoRel.nombre }}</td>
+                        | {{ arProgramacion.puestoRel.clienteRel.nombreCorto }}| {{ arProgramacion.puestoRel.nombre }}</td>
                 </tr>
                 <tr>
                     <input type="hidden" name="LblCodigo[]" value="{{ arProgramacion.codigoProgramacionPk }}">

@@ -174,7 +174,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
 
                         # Si hay que homologar el turno nos llegara A, B, C, D, etc. Por ende obtenemos el que le
                         # corresponde directamente del detalle del recurso.
-                        if ($turno != null && $arSecuencia->isHomologar()) {
+                        if ($turno != null && $arSecuencia->getHomologar()) {
                             $nombreMetodo = "getTurno{$turno}";
                             if (method_exists($arPrototipo, $nombreMetodo)) {
                                 # La funcion call user function nos permite llamar un metodo de un objeto

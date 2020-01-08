@@ -22,7 +22,8 @@ class TurClienteRepository extends ServiceEntityRepository
     public function lista()
     {
         $session = new Session();
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurCliente::class, 'c')
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder()->from(TurCliente::class, 'c')
             ->select('c.codigoClientePk')
             ->addSelect('c.nombreCorto')
             ->addSelect('c.numeroIdentificacion')

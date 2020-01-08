@@ -93,9 +93,19 @@ class Usuario implements UserInterface, \Serializable
     private $codigoOperacionFk;
 
     /**
+     * @ORM\Column(name="codigo_segmento_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSegmentoFk;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean",options={"default":false})
      */
     private $isActive;
+
+    /**
+     * @ORM\Column(name="utiliza_segmento", type="boolean", options={"default":false}, nullable=true)
+     */
+    private $utilizaSegmento = false;
 
     /**
      * @ORM\Column(name="restringir_movimientos", type="boolean", options={"default":false}, nullable=true)
@@ -136,9 +146,20 @@ class Usuario implements UserInterface, \Serializable
     protected $asesorRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSegmento", inversedBy="usuariosSegmentoRel")
+     * @ORM\JoinColumn(name="codigo_segmento_fk", referencedColumnName="codigo_segmento_pk")
+     */
+    protected $segmentoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\General\GenTarea", mappedBy="usuarioRecibeRel")
      */
     protected $genTareasUsuarioRecibeRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\SegUsuarioSegmento", mappedBy="usuarioRel")
+     */
+    protected $usuariosSegmentosSegmento;
 
     public function __construct()
     {
@@ -530,6 +551,70 @@ class Usuario implements UserInterface, \Serializable
     public function setAsesorRel($asesorRel): void
     {
         $this->asesorRel = $asesorRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSegmentoFk()
+    {
+        return $this->codigoSegmentoFk;
+    }
+
+    /**
+     * @param mixed $codigoSegmentoFk
+     */
+    public function setCodigoSegmentoFk($codigoSegmentoFk): void
+    {
+        $this->codigoSegmentoFk = $codigoSegmentoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSegmentoRel()
+    {
+        return $this->segmentoRel;
+    }
+
+    /**
+     * @param mixed $segmentoRel
+     */
+    public function setSegmentoRel($segmentoRel): void
+    {
+        $this->segmentoRel = $segmentoRel;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getUtilizaSegmento(): bool
+    {
+        return $this->utilizaSegmento;
+    }
+
+    /**
+     * @param bool $utilizaSegmento
+     */
+    public function setUtilizaSegmento(bool $utilizaSegmento): void
+    {
+        $this->utilizaSegmento = $utilizaSegmento;
     }
 
 

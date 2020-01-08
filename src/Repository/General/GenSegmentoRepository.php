@@ -14,4 +14,15 @@ class GenSegmentoRepository extends ServiceEntityRepository
         parent::__construct($registry, GenSegmento::class);
     }
 
+    public function lista(){
+        $em=$this->getEntityManager();
+
+        $arGenSegmento=$em->createQueryBuilder()
+            ->from('App:General\GenSegmento','seg')
+            ->select('seg.codigoSegmentoPk')
+            ->addSelect('seg.nombre')
+            ->getQuery()->getResult();
+
+        return $arGenSegmento;
+    }
 }

@@ -1,0 +1,33 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate':'novalidate'} }) }}
+    {{ form_errors(form) }}
+    {{ notificar()|raw }}
+    <div>
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>SEGMENTO</th>
+                <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            {%for arSegmento in arSegmento %}
+                <tr>
+                    <td>{{  arSegmento.codigoSegmentoPk}}</td>
+                    <td>{{  arSegmento.nombre}}</td>
+                    <td align="center"><input type="checkbox"  name="ChkSeleccionar[]" value="{{ arSegmento.codigoSegmentoPk }}"/></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" onclick="window.close();">Cancelar</a>
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+

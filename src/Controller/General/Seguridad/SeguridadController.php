@@ -114,16 +114,33 @@ class SeguridadController extends AbstractController
             'placeholder' => "",
             'data' => ""
         ];
+        $arrPropiedadesSegmentoRel = [
+            'required' => false,
+            'class' => 'App\Entity\General\GenSegmento',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('s')
+                    ->orderBy('s.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'label' => 'Nombre:',
+            'empty_data' => "",
+            'placeholder' => "",
+            'data' => ""
+        ];
         if ($arUsuario->getOperacionRel()) {
             $arrPropiedadesOperacionRel["data"] = $em->getReference(TteOperacion::class, $arUsuario->getCodigoOperacionFk());
         }
         if ($arUsuario->getAsesorRel()) {
             $arrPropiedadesAsesorRel["data"] = $em->getReference(Usuario::class, $arUsuario->getCodigoAsesorFk());
         }
+        if ($arUsuario->getSegmentoRel()) {
+            $arrPropiedadesSegmentoRel["data"] = $em->getReference(Usuario::class, $arUsuario->getCodigoSegmentoFk());
+        }
         //se crea el formulario acá por que el campo rol genera error con el core de symfony
         $form = $this->createFormBuilder()
             ->add('operacionRel', EntityType::class, $arrPropiedadesOperacionRel)
             ->add('asesorRel', EntityType::class, $arrPropiedadesAsesorRel)
+            ->add('segmentoRel', EntityType::class, $arrPropiedadesSegmentoRel)
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername(), 'required' => true, 'constraints' => array(
                 new NotBlank(array("message" => "El nombre de usuario es obligatorio")),
                 new Regex(array('pattern' => "/[A-Za-z0-9]/", 'message' => "El nombre de usuario no puedo contener caracteres")),
@@ -143,6 +160,7 @@ class SeguridadController extends AbstractController
             ->add('txtClaveEscritorio', TextType::class, ['data' => $arUsuario->getClaveEscritorio(), 'required' => false])
             ->add('cboRol', ChoiceType::class, ['data' => $arUsuario->getRoles()[0], 'required' => true, 'choices' => array('Usuario' => "ROLE_USER", 'Administrador' => "ROLE_ADMIN")])
             ->add('boolActivo', CheckboxType::class, ['data' => $arUsuario->getisActive(), 'label' => ' ', 'required' => false])
+            ->add('boolUtilizaSegmento', CheckboxType::class, ['data' => $arUsuario->getUtilizaSegmento(), 'label' => ' ', 'required' => false])
             ->add('txtNuevaClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('txtConfirmacionClave', PasswordType::class, $arrPropiedadesClaves)
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
@@ -165,6 +183,7 @@ class SeguridadController extends AbstractController
                 $arUsuario->setOperacionRel($form->get('operacionRel')->getData());
                 $arUsuario->setRol($form->get('cboRol')->getData());
                 $arUsuario->setAsesorRel($form->get('asesorRel')->getData());
+                $arUsuario->setSegmentoRel($form->get('segmentoRel')->getData());
                 if ($id === 0) {
                     $claveNueva = $form->get('txtNuevaClave')->getData();
                     $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();

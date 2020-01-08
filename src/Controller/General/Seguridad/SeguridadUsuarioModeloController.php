@@ -3,8 +3,11 @@
 namespace App\Controller\General\Seguridad;
 
 use App\Entity\General\GenModulo;
+use App\Entity\General\GenSegmento;
 use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Entity\Seguridad\SegUsuarioProceso;
+use App\Entity\Seguridad\SegUsuarioSegmento;
+use App\Entity\Seguridad\Usuario;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -76,6 +79,28 @@ class SeguridadUsuarioModeloController extends AbstractController
                 }
             }
         }
+        $formSegmentos = $this->createFormBuilder()
+            ->add('btnEliminarSegmento', SubmitType::class, ['label' => 'Eliminar'])
+            ->getForm();
+        $formSegmentos->handleRequest($request);
+        if ($formSegmentos->isSubmitted() && $formSegmentos->isValid()) {
+            if ($formSegmentos->get('btnEliminarSegmento')->isClicked()) {
+                $arrSeleccionadosProceso = $request->request->get('ChkSeleccionarSegmentos');
+                if ($arrSeleccionadosProceso && count($arrSeleccionadosProceso) > 0) {
+                    if ($arrSeleccionadosProceso) {
+                        foreach ($arrSeleccionadosProceso as $codigoProceso) {
+                            $arSegUsuarioSegmento = $em->getRepository(SegUsuarioSegmento::class)->find($codigoProceso);
+                            if ($arSegUsuarioSegmento) {
+                                $em->remove($arSegUsuarioSegmento);
+                            }
+
+                        }
+                        $em->flush();
+                        return $this->redirectToRoute('general_seguridad_usuario_modelo_lista', array('hash' => $hash));
+                    }
+                }
+            }
+        }
         if ($id != "") {
             $arUsuario = $em->getRepository('App:Seguridad\Usuario')->find($id);
             if (!$arUsuario) {
@@ -83,6 +108,7 @@ class SeguridadUsuarioModeloController extends AbstractController
             }
             $arSeguridadUsuarioModelo = $em->getRepository(SegUsuarioModelo::class)->lista($arUsuario->getUsername());
             $arSeguridadUsuarioProceso = $em->getRepository(SegUsuarioProceso::class)->lista($arUsuario->getUsername());
+            $arSeguridadUsuarioSegmento = $em->getRepository(SegUsuarioSegmento::class)->lista($arUsuario->getUsername());
 //            $nombreUsuario=$arUsuario->getNombreCorto();
         }
         return $this->render('general/seguridad/seguridad_usuario_modelo/lista.html.twig', [
@@ -91,6 +117,8 @@ class SeguridadUsuarioModeloController extends AbstractController
             'hash' => $hash,
             'form' => $form->createView(),
             'arSeguridadUsuarioProceso' => $arSeguridadUsuarioProceso,
+            'formSegmento' => $formSegmentos->createView(),
+            'arSeguridadUsuarioSegmento' => $arSeguridadUsuarioSegmento,
             'formProceso' => $formProcesos->createView(),
         ]);
     }

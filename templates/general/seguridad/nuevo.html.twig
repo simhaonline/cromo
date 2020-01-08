@@ -10,12 +10,12 @@
                 <label class="col-sm-2 control-label">Nombre de usuario:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtUser, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.txtUser)}}
+                    {{ form_errors(form.txtUser) }}
                 </div>
                 <label class="col-sm-2 control-label">Email:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.txtEmail, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.txtEmail)}}
+                    {{ form_errors(form.txtEmail) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -66,37 +66,47 @@
                     {{ form_widget(form.txtClaveEscritorio, { 'attr': {'class': 'form-control','placeholder':'Clave escritorio'} }) }}
                 </div>
             </div>
-                <div class="form-group form-group-sm">
-                    {% if editarContrasenas == false %}
-                        <label class="col-sm-2 control-label"  style="display: none">Contraseña:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.txtNuevaClave , {'attr': {'style': 'display: none'}}) }}
-                        </div>
-                        <label class="col-sm-2 control-label" style="display: none">Confirmar contraseña:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.txtConfirmacionClave, {'attr': {'style': 'display: none'}} ) }}
-                        </div>
-                    {% else %}
-                        <label class="col-sm-2 control-label">Contraseña:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.txtNuevaClave) }}
-                        </div>
-                        <label class="col-sm-2 control-label">Confirmar contraseña:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.txtConfirmacionClave) }}
-                        </div>
-                    {% endif %}
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Segmento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.segmentoRel, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <div class="form group form-group-sm">
-                    <label class="col-sm-2 control-label">Activo:</label>
+            </div>
+            <div class="form-group form-group-sm">
+                {% if editarContrasenas == false %}
+                    <label class="col-sm-2 control-label" style="display: none">Contraseña:</label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.boolActivo) }}
+                        {{ form_widget(form.txtNuevaClave , {'attr': {'style': 'display: none'}}) }}
                     </div>
-                        <label class="col-sm-2 control-label">Retringir movimientos:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.restringirMovimientos) }}
-                        </div>
+                    <label class="col-sm-2 control-label" style="display: none">Confirmar contraseña:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.txtConfirmacionClave, {'attr': {'style': 'display: none'}} ) }}
+                    </div>
+                {% else %}
+                    <label class="col-sm-2 control-label">Contraseña:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.txtNuevaClave) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Confirmar contraseña:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.txtConfirmacionClave) }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form group form-group-sm">
+                <label class="col-sm-2 control-label">Activo:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.boolActivo) }}
                 </div>
+                <label class="col-sm-2 control-label">Utiliza segmento:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.boolUtilizaSegmento) }}
+                </div>
+                <label class="col-sm-2 control-label">Retringir movimientos:</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.restringirMovimientos) }}
+                </div>
+            </div>
         </div>
     </div>
     <div style="float: right;">

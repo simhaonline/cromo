@@ -40,6 +40,7 @@
                 <th>EMAIL</th>
                 <th>TELEFONO</th>
                 <th>EXT.</th>
+                <th>SEGMENTO</th>
                 <td>ROL</td>
                 <th>ACTIVO</th>
                 <th></th>
@@ -58,6 +59,7 @@
                     <td>{{ arUsuario.email }}</td>
                     <td>{{ arUsuario.telefono }}</td>
                     <td>{{ arUsuario.extension }}</td>
+                    <td>{{ arUsuario.segmentoRel.nombre | default('') }}</td>
                     {% if arUsuario.roles.0 == 'ROLE_ADMIN' %}
                         <td>ADMINISTRADOR</td>
                     {% else %}

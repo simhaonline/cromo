@@ -68,8 +68,7 @@ class ClienteController extends ControllerListenerGeneral
                 $this->get("UtilidadesModelo")->eliminar(TurCliente::class, $arData);
             }
         }
-
-        $arClientes = $paginator->paginate($em->getRepository(TurCliente::class)->lista(), $request->query->getInt('page', 1), 50);
+        $arClientes = $paginator->paginate($em->getRepository(TurCliente::class)->lista($this->getUser()), $request->query->getInt('page', 1), 50);
         return $this->render('turno/administracion/comercial/cliente/lista.html.twig', [
             'arClientes' => $arClientes,
             'form' => $form->createView(),

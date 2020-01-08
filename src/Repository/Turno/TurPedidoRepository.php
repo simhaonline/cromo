@@ -173,14 +173,14 @@ class TurPedidoRepository extends ServiceEntityRepository
                         if ($diaSemana == 6) {
                             $intDiasSabados += 1;
                             if ($arPedidoDetalle->getSabado() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getHorasDiurnasUnidad();
                                 $intHorasRealesNocturnas += $arPedidoDetalle->getHorasNocturnasUnidad();
                             }
                         }
                         if ($diaSemana == 7) {
                             $intDiasDominicales += 1;
                             if ($arPedidoDetalle->getDomingo() == 1) {
-                                $intHorasRealesDiurnas += $arPedidoDetalle->getConceptoRel()->getHorasDiurnas();
+                                $intHorasRealesDiurnas += $arPedidoDetalle->getHorasDiurnasUnidad();
                                 $intHorasRealesNocturnas += $arPedidoDetalle->getHorasNocturnasUnidad();
                             }
                         }

@@ -16,6 +16,7 @@ use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\ContratoDetalleType;
 use App\Form\Type\Turno\PedidoType;
@@ -165,7 +166,7 @@ class ProgramacionController extends ControllerListenerGeneral
     /**
      * @Route("/turno/movimiento/operacion/programacion/recurso/{codigoPedidoDetalle}/{codigoEmpleado}", name="turno_movimiento_operacion_programacion_recurso")
      */
-    public function programacion_masiva(Request $request, $codigoPedidoDetalle, $codigoEmpleado)
+    public function programacionRecurso(Request $request, $codigoPedidoDetalle, $codigoEmpleado)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var $arPedidoDetalle TurPedidoDetalle */
@@ -210,8 +211,57 @@ class ProgramacionController extends ControllerListenerGeneral
             }
         }
         $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(array('anio' => $arPedidoDetalle->getAnio(), 'mes' => $arPedidoDetalle->getMes(), 'codigoEmpleadoFk' => $codigoEmpleado));
-        //$arProgramaciones = $em->getRepository(TurProgramacion::class)->periodoDias($arPedidoDetalle->getAnio() , $arPedidoDetalle->getMes(), $codigoEmpleado);
         return $this->render('turno/movimiento/operacion/programacion/programacionRecurso.html.twig', [
+            'arrDiaSemana' => $arrDiaSemana,
+            'arProgramaciones' => $arProgramaciones,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/turno/movimiento/operacion/programacion/puesto/{codigoPedidoDetalle}", name="turno_movimiento_operacion_programacion_puesto")
+     */
+    public function programacionPuesto(Request $request, $codigoPedidoDetalle)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+        if (!$arPedidoDetalle) {
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        $arPuesto = $em->getRepository(TurPuesto::class)->find($arPedidoDetalle->getCodigoPuestoFk());
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $strAnioMes = $arPedidoDetalle->getPedidoRel()->getFecha()->format('Y/m');
+        $arrDiaSemana = array();
+        for ($i = 1; $i <= 31; $i++) {
+            $strFecha = $strAnioMes . '/' . $i;
+            $dateFecha = date_create($strFecha);
+            $diaSemana = $this->devuelveDiaSemanaEspaniol($dateFecha);
+            $arrDiaSemana[$i] = ['dia' => $i, 'diaSemana' => $diaSemana];
+        }
+
+        $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(array('codigoPedidoDetalleFk' => $codigoPedidoDetalle));
+        $mes = $arPedidoDetalle->getMes();
+        $anio = $arPedidoDetalle->getAnio();
+        //$arConfiguracion = $em->getRepository("BrasaTurnoBundle:TurConfiguracion")->find(1);
+        //$bloquearInicios = $arConfiguracion->getBloquearTurnosInicioRecurso();
+        //$diaBloqueoPeriodoProgramacion = $em->getRepository("BrasaTurnoBundle:TurCierreProgramacionPeriodo")->getDiaHastaBloqueo($arProgramacion->getAnio(), $arProgramacion->getMes());
+
+        $fechaActual = $anio . "-" . ($mes < 10 ? '0' . $mes : $mes) . "-01";
+        return $this->render('turno/movimiento/operacion/programacion/programacionPuesto.html.twig', [
+            'fechaActual' => $fechaActual,
+            'arrDiaSemana' => $arrDiaSemana,
+            'arPuesto' => $arPuesto,
             'arrDiaSemana' => $arrDiaSemana,
             'arProgramaciones' => $arProgramaciones,
             'form' => $form->createView()

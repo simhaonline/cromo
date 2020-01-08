@@ -117,18 +117,17 @@
                                 <td colspan="21">
                                     <b>
                                         ({{ arPedidoDetalle.puestoCodigo | default('') }})
-                                        {{ arPedidoDetalle.cliente }}
-                                        |
-                                        {{ arPedidoDetalle.puestoNombre | default('') }}
-                                        |
-                                        <b>{{ arPedidoDetalle.pedidoTipo| default('') }} | </b>
-                                        <b>{{ arPedidoDetalle.concepto| default('') }} | </b>
-                                        <b>{{ arPedidoDetalle.modalidad }}</b>
+                                        | {{ arPedidoDetalle.puestoNombre | default('') }}
+                                        | {{ arPedidoDetalle.pedidoTipo| default('') }}
+                                        | {{ arPedidoDetalle.concepto| default('') }}
+                                        | {{ arPedidoDetalle.modalidad }}
 
                                     </b>
+                                    <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto',
+                                        { 'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'VerProgramaciones', 600, 1300)">Editar</a>
                                 </td>
-                                <td class="text-center" colspan="4">H.DIURNAS: {{ arPedido.horasDiurnas }}</td>
-                                <td class="text-center" colspan="4">H.NOCTURNAS: {{arPedido.horasNocturnas }}</td>
+                                <td class="text-center" colspan="4">H.DIURNAS: {{ arPedido.horasDiurnas | number_format }}</td>
+                                <td class="text-center" colspan="4">H.NOCTURNAS: {{arPedido.horasNocturnas | number_format }}</td>
                                 <td colspan="2"></td>
                                 <td class="text-center" colspan="4">
                                     <a href="{{ path('turno_movimiento_venta_pedido_detalle', {"id": arPedidoDetalle.codigoPedidoDetallePk}) }}" >PEDIDO DETALLE:  {{arPedidoDetalle.codigoPedidoDetallePk }}</a>

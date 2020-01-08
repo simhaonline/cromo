@@ -105,7 +105,6 @@ class MigracionController extends Controller
             ->add('usuario', TextType::class, ['required' => false, 'data' => 'consulta', 'attr' => ['class' => 'form-control']])
             ->add('clave', TextType::class, ['required' => false, 'data' => 'SoporteErp2018@', 'attr' => ['class' => 'form-control']])
             ->add('btnIniciar', SubmitType::class, ['label' => 'Migrar datos basicos', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnAsignarItem', SubmitType::class, ['label' => 'Asignar item', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnValidar', SubmitType::class, ['label' => 'Validar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -234,9 +233,6 @@ class MigracionController extends Controller
                     }
                 }
 
-                if ($form->get('btnAsignarItem')->isClicked()) {
-                    $this->asignarItem($conn);
-                }
                 mysqli_close($conn);
             } else {
                 Mensajes::error("Debe seleccionar los parametros de conexion");
@@ -2685,6 +2681,24 @@ class MigracionController extends Controller
                 $arContratoDetalle->setPeriodo('M');
                 $arContratoDetalle->setCompuesto($row['compuesto']);
                 $arContratoDetalle->setProgramar(1);
+
+                $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
+                $registro = $ar->fetch_assoc();
+                if($registro) {
+                    $codigoItem = $registro['codigo_pk'];
+                    $horaDesde = date_create($registro['hora_inicio']);
+                    $horaHasta = date_create($registro['hora_fin']);
+                    $arContratoDetalle->setItemRel($em->getReference(TurItem::class, $codigoItem));
+                    $arContratoDetalle->setHorasUnidad($registro['horas']);
+                    $arContratoDetalle->setHorasDiurnasUnidad($registro['horas_diurnas']);
+                    $arContratoDetalle->setHorasNocturnasUnidad($registro['horas_nocturnas']);
+                    $arContratoDetalle->setHoraDesde($horaDesde);
+                    $arContratoDetalle->setHoraHasta($horaHasta);
+                } else {
+                    Mensajes::error("No existe el registro modalidad " . $row['codigo_modalidad_servicio_externo'] . " concepto = " . $row['codigo_concepto_servicio_fk']);
+                    break 2;
+                }
+
                 $em->persist($arContratoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2964,12 +2978,24 @@ class MigracionController extends Controller
                 $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
                 $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
                 $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
-                if ($row['hora_inicio']) {
-                    $arPedidoDetalle->setHoraDesde(date_create($row['hora_inicio']));
+
+                $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
+                $registro = $ar->fetch_assoc();
+                if($registro) {
+                    $codigoItem = $registro['codigo_pk'];
+                    $horaDesde = date_create($registro['hora_inicio']);
+                    $horaHasta = date_create($registro['hora_fin']);
+                    $arPedidoDetalle->setItemRel($em->getReference(TurItem::class, $codigoItem));
+                    $arPedidoDetalle->setHorasUnidad($registro['horas']);
+                    $arPedidoDetalle->setHorasDiurnasUnidad($registro['horas_diurnas']);
+                    $arPedidoDetalle->setHorasNocturnasUnidad($registro['horas_nocturnas']);
+                    $arPedidoDetalle->setHoraDesde($horaDesde);
+                    $arPedidoDetalle->setHoraHasta($horaHasta);
+                } else {
+                    Mensajes::error("No existe el registro modalidad " . $row['codigo_modalidad_servicio_externo'] . " concepto = " . $row['codigo_concepto_servicio_fk']);
+                    break 2;
                 }
-                if ($row['hora_fin']) {
-                    $arPedidoDetalle->setHoraHasta(date_create($row['hora_fin']));
-                }
+
                 $em->persist($arPedidoDetalle);
                 $metadata = $em->getClassMetaData(get_class($arPedidoDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -3192,7 +3218,19 @@ class MigracionController extends Controller
                 $arFacturaDetalle->setPorcentajeIva($row['por_iva']);
                 $arFacturaDetalle->setVrIva($row['iva']);
                 $arFacturaDetalle->setVrTotal($row['total']);
-                //$arFacturaDetalle->setVrNeto($row['total']);
+
+                $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
+                $registro = $ar->fetch_assoc();
+                if($registro) {
+                    $codigoItem = $registro['codigo_pk'];
+                    if($codigoItem) {
+                        $arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $codigoItem));
+                    }
+                } else {
+                    Mensajes::error("No existe el registro modalidad " . $row['codigo_modalidad_servicio_externo'] . " concepto = " . $row['codigo_concepto_servicio_fk']);
+                    break 2;
+                }
+
                 $em->persist($arFacturaDetalle);
                 $metadata = $em->getClassMetaData(get_class($arFacturaDetalle));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -3452,35 +3490,6 @@ class MigracionController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
         return $totalArticles;
-    }
-
-    private function asignarItem ($conn) {
-        $em = $this->getDoctrine()->getManager();
-        /** @var $arContratoDetalles TurContratoDetalle */
-        $arContratoDetalles = $em->getRepository(TurContratoDetalle::class)->findBy(array(),array(),100000);
-        foreach ($arContratoDetalles as $arContratoDetalle) {
-            $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $arContratoDetalle->getCodigoModalidadFk() . "' AND codigo_concepto_fk = " . $arContratoDetalle->getCodigoConceptoFk());
-            $registro = $ar->fetch_assoc();
-            if($registro) {
-                $codigoItem = $registro['codigo_pk'];
-                $arItem = $em->getRepository(TurItem::class)->find($codigoItem);
-                if(!$arItem) {
-                    $horaDesde = date_create($registro['hora_inicio']);
-                    $horaHasta = date_create($registro['hora_fin']);
-                    $arContratoDetalle->setItemRel($arItem);
-                    $arContratoDetalle->setHorasUnidad($registro['horas']);
-                    $arContratoDetalle->setHorasDiurnasUnidad($registro['horas_diurnas']);
-                    $arContratoDetalle->setHorasNocturnasUnidad($registro['horas_nocturnas']);
-                    $arContratoDetalle->setHoraDesde($horaDesde);
-                    $arContratoDetalle->setHoraHasta($horaHasta);
-                    $em->persist($arContratoDetalle);
-                }
-            } else {
-                Mensajes::error("Contrato " . $arContratoDetalle->getCodigoContratoDetallePk() . " no existe el registro modalidad " . $arContratoDetalle->getCodigoModalidadFk() . " concepto = " . $arContratoDetalle->getCodigoConceptoFk());
-                //break;
-            }
-        }
-        $em->flush();
     }
 
 }

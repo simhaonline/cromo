@@ -548,7 +548,6 @@ class MigracionController extends Controller
                 if ($row['codigo_ciudad_nacimiento_fk']) {
                     $arEmpleado->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
                 }
-
                 $arEmpleado->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
                 $arEmpleado->setCuenta($row['cuenta']);
                 $arEmpleado->setTallaCamisa($row['camisa']);
@@ -556,7 +555,6 @@ class MigracionController extends Controller
                 $arEmpleado->setTallaCalzado($row['calzado']);
                 $arEmpleado->setEstatura($row['estatura']);
                 $arEmpleado->setPeso($row['peso']);
-                $arEmpleado->setPagadoEntidad($row['pagado_entidad_salud']);
                 $arEmpleado->setDigitoVerificacion($row['digito_verificacion']);
                 $em->persist($arEmpleado);
                 $metadata = $em->getClassMetaData(get_class($arEmpleado));

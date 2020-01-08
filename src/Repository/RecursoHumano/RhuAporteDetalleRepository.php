@@ -236,8 +236,13 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 if ($arAporteSoporte->getVacaciones()) {
                     $ibcCaja = $this->redondearIbc2($ibcCajaVacaciones);
                 }
-                //Si tiene licencia y retiro
+                //Si tiene licencia maternidad y retiro
                 if ($arAporteSoporte->getLicenciaMaternidad()) {
+                    if ($arAporteSoporte->getRetiro() == "X") {
+                        $ibcCaja = $this->redondearIbc2($vacaciones);
+                    }
+                }
+                if ($arAporteSoporte->getLicencia() && !$arAporteSoporte->getLicenciaRemunerada()) {
                     if ($arAporteSoporte->getRetiro() == "X") {
                         $ibcCaja = $this->redondearIbc2($vacaciones);
                     }

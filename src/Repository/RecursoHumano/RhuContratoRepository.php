@@ -450,12 +450,12 @@ class RhuContratoRepository extends ServiceEntityRepository
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
-        $codigoCliente = null;
+        $codigoEmpleado = null;
         $fechaDesde = null;
         $fechaHasta = null;
 
         if ($filtros) {
-            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
         }
@@ -472,8 +472,8 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('e.numeroIdentificacion')
             ->leftJoin('c.empleadoRel', 'e')
             ->where("c.fechaUltimoPagoVacaciones <= '{$fechaActual->format('Y-m-d')} 23:59:59' ");
-        if ($codigoCliente) {
-            $queryBuilder->andWhere("c.codigoClienteFk = '{$codigoCliente}'");
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
         
         if ($fechaDesde) {

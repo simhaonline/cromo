@@ -10,12 +10,12 @@
             <div>
                 <div class="widget-body">
                     <div class="form-group form-group-sm">
-                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Cliente:</label>
+                        <label for="txtCodigoConductor" class="col-sm-1 control-label">Empleado:</label>
                         <div class="col-sm-11">
                             <div class="row">
                                 <div class="col-lg-2">
                                     <div class="input-group">
-                                        {{ form_widget(form.codigoClienteFk) }}
+                                        {{ form_widget(form.codigoEmpleadoFk) }}
                                     </div>
                                 </div>
                                 <div class="col-lg-10">
@@ -24,7 +24,7 @@
                                         <span class="input-group-btn">
                                             <a class="btn btn-default btn-sm"
                                                href="javascript:abrirVentana3('{{ path('recursohumano_buscar_empleado',
-                                                   { 'campoCodigo': 'form_codigoClienteFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
+                                                   { 'campoCodigo': 'form_codigoEmpleadoFk', 'campoNombre': 'form_txtNombreCorto' }) }}', 'buscarCliente', 600, 900)">Buscar</a>
                                         </span>
                                     </div>
                                 </div>

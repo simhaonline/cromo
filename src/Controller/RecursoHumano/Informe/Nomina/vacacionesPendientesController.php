@@ -23,7 +23,7 @@ class vacacionesPendientesController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigoClienteFk', TextType::class, array('required' => false))
+            ->add('codigoEmpleadoFk', TextType::class, array('required' => false))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
@@ -56,7 +56,7 @@ class vacacionesPendientesController extends AbstractController
     public function getFiltros($form)
     {
         $filtro = [
-            'codigoCliente' => $form->get('codigoClienteFk')->getData(),
+            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
         ];

@@ -102,7 +102,7 @@ class FacturaController extends AbstractController
                 $respuesta = $this->getDoctrine()->getRepository(TurFactura::class)->contabilizar($arr);
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TurFactura::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_venta_factura_lista'));
             }

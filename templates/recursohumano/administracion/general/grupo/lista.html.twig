@@ -70,11 +70,11 @@
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">
-{#            <span class="badge">{{ arGrupos.getTotalItemCount }}</span>#}
+            Registros <span class="badge">{{ arGrupos.getTotalItemCount }}</span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-{#        {{ knp_pagination_render(arGrupos) }}#}
+        {{ knp_pagination_render(arGrupos) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}

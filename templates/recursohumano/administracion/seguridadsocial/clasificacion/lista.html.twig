@@ -1,72 +1,74 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div id="content sortable-grid ui-sortable">
         <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
-            <header role="heading" class="ui-sortable-handle">
+            <header>
                 <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
                 <h2>Filtro</h2>
             </header>
             <div>
                 <div class="widget-body">
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-2 control-label">Código:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.codigoSolicitudTipoPk, { 'attr': {'class': 'form-control'} }) }}
+                        <label class="col-sm-1 control-label">Codigo:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigoClasificacionRiesgoPk) }}
                         </div>
-                        <label class="col-sm-2 control-label">Nombre:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                        <label class="col-sm-1 control-label">Nombre:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.nombre) }}
                         </div>
                     </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover tabla-datos">
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
         <thead>
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
+            <th>%</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
         </tr>
         </thead>
         <tbody>
-        {% for arSeleccionTipo in arSeleccionTipos %}
+        {% for arClasificacionRiego in arClasificacionRiegos %}
             <tr>
-                <td>{{ arSeleccionTipo.codigoSeleccionTipoPk }}</td>
-                <td>{{ arSeleccionTipo.nombre }}</td>
+                <td>{{ arClasificacionRiego.codigoClasificacionRiesgoPk }}</td>
+                <td>{{ arClasificacionRiego.nombre }}</td>
+                <td>{{ arClasificacionRiego.porcentaje }}</td>
                 <td class="text-center">
-                    <a href="{{ path('recursohumano_administracion_seleccion_selecciontipo_nuevo',{'id': arSeleccionTipo.codigoSeleccionTipoPk }) }}"><i
+                    <a href="{{ path('recursohumano_administracion_seguridadsocial_clasificacion_nuevo',{'id': arClasificacionRiego.codigoClasificacionRiesgoPk  }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
-                <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_administracion_seleccion_selecciontipo_detalle',{'id' : arSeleccionTipo.codigoSeleccionTipoPk}) }}">
+                <td class="text-center">
+                    <a href="{{ path('recursohumano_administracion_seguridadsocial_clasificacion_detalle',{'id' : arClasificacionRiego.codigoClasificacionRiesgoPk  }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arSeleccionTipo.codigoSeleccionTipoPk }}"/>
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arClasificacionRiego.codigoClasificacionRiesgoPk  }}" />
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
-        <div class="btn btn-default btn-sm">
-            Registros <span class="badge">{{ arSeleccionTipos.getTotalItemCount }}</span>
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arClasificacionRiegos.getTotalItemCount }}</span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arSeleccionTipos) }}
+        {{ knp_pagination_render(arClasificacionRiegos) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}
@@ -79,8 +81,8 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('recursohumano_administracion_seleccion_selecciontipo_nuevo',{'id':0}) }}">Nuevo</a>
+           href="{{ path('recursohumano_administracion_seguridadsocial_clasificacion_nuevo', {'id': 0}) }}">Nuevo</a>
     </div>
-    <br><br><br>
     {{ form_end(form) }}
+    <br /><br /><br />
 {% endblock %}

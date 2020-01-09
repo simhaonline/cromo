@@ -121,12 +121,6 @@ class RhuCliente
      * @ORM\Column(name="codigo_forma_pago_fk", type="string", length=10, nullable=true)
      */
     private $codigoFormaPagoFk;
-
-    /**
-     * @ORM\Column(name="estrato", type="string", length=5, nullable=true)
-     */
-    private $estrato;
-
     /**
      * @ORM\Column(name="comentario", type="string", length=2000, nullable=true)
      */
@@ -500,22 +494,6 @@ class RhuCliente
     public function setCodigoFormaPagoFk($codigoFormaPagoFk): void
     {
         $this->codigoFormaPagoFk = $codigoFormaPagoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEstrato()
-    {
-        return $this->estrato;
-    }
-
-    /**
-     * @param mixed $estrato
-     */
-    public function setEstrato($estrato): void
-    {
-        $this->estrato = $estrato;
     }
 
     /**

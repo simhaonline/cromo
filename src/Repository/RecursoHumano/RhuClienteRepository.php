@@ -39,7 +39,7 @@ class RhuClienteRepository extends ServiceEntityRepository
         if ($session->get('filtroTurClienteCodigo') != '') {
             $queryBuilder->andWhere("c.codigoClientePk = {$session->get('filtroTurClienteCodigo')} ");
         }
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function terceroFinanciero($codigo)

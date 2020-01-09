@@ -26,6 +26,7 @@ use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -236,16 +237,12 @@ class ProgramacionController extends ControllerListenerGeneral
             if ($form->get('btnGuardar')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-//                if ($arProgramacion->getEstadoAutorizado() == 0) {
-                    $arrControles = $request->request->All();
-                    $resultado = $this->actualizarDetalle2($arrControles, $codigoPedidoDetalle);
-                    if ($resultado == false) {
-                        $em->flush();
-                        $em->getRepository(TurProgramacion::class)->liquidar($codigoProgramacion);
-                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                    }
-//                }
-//                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                $arrControles = $request->request->All();
+                $resultado = $this->actualizarDetallePuesto($arrControles, $codigoPedidoDetalle);
+                if ($resultado == false) {
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
             }
         }
         $strAnioMes = $arPedidoDetalle->getPedidoRel()->getFecha()->format('Y/m');
@@ -260,10 +257,6 @@ class ProgramacionController extends ControllerListenerGeneral
         $arProgramaciones = $em->getRepository(TurProgramacion::class)->findBy(array('codigoPedidoDetalleFk' => $codigoPedidoDetalle));
         $mes = $arPedidoDetalle->getMes();
         $anio = $arPedidoDetalle->getAnio();
-        //$arConfiguracion = $em->getRepository("BrasaTurnoBundle:TurConfiguracion")->find(1);
-        //$bloquearInicios = $arConfiguracion->getBloquearTurnosInicioRecurso();
-        //$diaBloqueoPeriodoProgramacion = $em->getRepository("BrasaTurnoBundle:TurCierreProgramacionPeriodo")->getDiaHastaBloqueo($arProgramacion->getAnio(), $arProgramacion->getMes());
-
         $fechaActual = $anio . "-" . ($mes < 10 ? '0' . $mes : $mes) . "-01";
         return $this->render('turno/movimiento/operacion/programacion/programacionPuesto.html.twig', [
             'fechaActual' => $fechaActual,
@@ -271,7 +264,96 @@ class ProgramacionController extends ControllerListenerGeneral
             'arPuesto' => $arPuesto,
             'arrDiaSemana' => $arrDiaSemana,
             'arProgramaciones' => $arProgramaciones,
+            'arPedidoDetalle' => $arPedidoDetalle,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/turno/movimiento/operacion/programacion/puesto/cambiar/empleado/{campoCodigo}", name="turno_movimiento_operacion_programacion_puesto_cambiar_empleado")
+     */
+    public function cambiarEmpleadoPuesto(Request $request,  PaginatorInterface $paginator, $campoCodigo)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, ['required' => false])
+            ->add('txtCodigo', TextType::class, ['required' => false])
+            ->add('txtIdentificacion', TextType::class, ['required' => false])
+            ->add('chkEstadoContrato', CheckboxType::class, ['label' => ' ', 'required' => false])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
+            ->setMethod('GET')
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = [];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroRhuEmpleadoCodigo', $form->get('txtCodigo')->getData());
+                $session->set('filtroRhuEmpleadoNombre', $form->get('txtNombre')->getData());
+                $session->set('filtroRhuEmpleadoIdentificacion', $form->get('txtIdentificacion')->getData());
+                $session->set('filtroRhuEmpleadoEstadoContrato', $form->get('chkEstadoContrato')->getData());
+            }
+        }
+        $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->ListaBuscarEmpleado($raw), $request->query->get('page', 1), 20);
+        return $this->render('turno/movimiento/operacion/programacion/programacionPuestoCambiarEmpleado.html.twig', array(
+            'arEmpleados' => $arEmpleados,
+            'campoCodigo' => $campoCodigo,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/turno/movimiento/operacion/programacion/puesto/nuevo/empleado/{codigoPedidoDetalle}", name="turno_movimiento_operacion_programacion_puesto_nuevo_empleado")
+     */
+    public function nuevoEmpleadoPuesto(Request $request,  PaginatorInterface $paginator, $codigoPedidoDetalle)
+    {
+        $session = new Session();
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $formFiltro = $this->createFormBuilder()
+            ->add('txtNombre', TextType::class, array('required' => false, 'data' => $session->get('filtroTurEmpleadoNombre')))
+            ->add('txtCodigo', TextType::class, array('required' => false, 'data' => $session->get('filtroTurEmpleadoCodigo')))
+            ->add('chkEstadoTerminado', CheckboxType::class, array('label' => 'Terminado', 'required' => false, 'data' => $session->get('filtroTurPedidoDetalleEmpleadoContratado')))
+            ->add('txtIdentificacion', TextType::class, array('required' => false, 'data' => $session->get('filtroTurEmpleadoIdentificacion')))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $formFiltro->handleRequest($request);
+        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->get('btnFiltrar')->isClicked()) {
+                $session->set('filtroTurPedidoDetalleEmpleadoContratado', $formFiltro->get('chkEstadoTerminado')->getData());
+                $session->set('filtroTurPedidoDetalleCodigo', $formFiltro->get('txtCodigo')->getData());
+                $session->set('filtroTurPedidoDetalleNombre', $formFiltro->get('txtNombre')->getData());
+                $session->set('filtroTurPedidoDetalleIdentificacion', $formFiltro->get('txtIdentificacion')->getData());
+            }
+
+            if ($formFiltro->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arPedidoDetalle = $em->getRepository( TurPedidoDetalle::class)->find($codigoPedidoDetalle);
+
+                if(is_array($arrSeleccionados)) {
+                    foreach ($arrSeleccionados as $codigo) {
+                        $fechaActual = new \DateTime('now');
+                        $arContrato = $em->getRepository(RhuContrato::class)->find($codigo);
+                        $arTurProgramacion = new TurProgramacion();
+                        $arTurProgramacion->setPedidoRel($arPedidoDetalle->getPedidoRel());
+                        $arTurProgramacion->setPedidoDetalleRel($arPedidoDetalle);
+                        $arTurProgramacion->setAnio($arPedidoDetalle->getAnio());
+                        $arTurProgramacion->setMes($arPedidoDetalle->getMes());
+                        $arTurProgramacion->setContratoRel($arContrato);
+                        $arTurProgramacion->setEmpleadoRel($arContrato->getEmpleadoRel());
+                        $arTurProgramacion->setPuestoRel($arPedidoDetalle->getPuestoRel());
+                        $em->persist($arTurProgramacion);
+                    }
+                    $em->flush();
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->listaBuscarProgramacion(), $request->query->get('page', 1), 20);
+        return $this->render('turno/movimiento/operacion/programacion/programacionPuestoNuevoEmpleado.html.twig', [
+            'arEmpleados' => $arEmpleados,
+            'form' => $formFiltro->createView()
         ]);
     }
 
@@ -432,19 +514,13 @@ class ProgramacionController extends ControllerListenerGeneral
         return $arrDetalle;
     }
 
-    private function actualizarDetalle2($arrControles, $codigoPedidoDetalle)
+    private function actualizarDetallePuesto($arrControles, $codigoPedidoDetalle)
     {
         $em = $this->getDoctrine()->getManager();
         $error = false;
         $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
-        $puestoRequiereArma = $arPedidoDetalle->getCodigoModalidadFk() == $arConfiguracion->getCodigoModalidadArma();
-
         $validarHoras = $arConfiguracion->getValidarHorasProgramacion();
-        $intIndice = 0;
-        $boolTurnosSobrepasados = false;
-        $cursoActivo = false;
-        $intDiaVenceCurso = 0;
         $arrTotalHoras = $this->horasControles($arrControles);
         $horasDiurnasPendientes = $arPedidoDetalle->getHorasDiurnas() - ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arrTotalHoras['horasDiurnasProgramacion']);
         $horasDiurnasRestantes = $horasDiurnasPendientes - $arrTotalHoras['horasDiurnas'];
@@ -462,82 +538,31 @@ class ProgramacionController extends ControllerListenerGeneral
         }
         if ($error == FALSE) {
             foreach ($arrControles['LblCodigo'] as $intCodigo) {
-                $arProgramacion = $em->getRepository(TurProgramacion::class)->find($intCodigo);
+                $arProgramacionDetalle = $em->getRepository(TurProgramacion::class)->find($intCodigo);
                 $validar = $this->validarHoras($intCodigo, $arrControles);
                 if ($validar['validado']) {
-                    if ($arProgramacion->getPeriodoBloqueo() == 0) {
-                        if ($intCodigo != '') {
-                            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($intCodigo);
-                            if ($arEmpleado) {
-                                if ($puestoRequiereArma && $arEmpleado->getRestriccionArma()) {
-                                    Mensajes::error("El empleado {$arEmpleado->getCodigoRecursoPk()} no es apto para portar arma.");
-                                    $error = true;
-                                } else {
-                                    $arProgramacion->setRecursoRel($arEmpleado);
-                                }
-                                $respuestaValidarRestriccionCliente = $em->getRepository(RhuEmpleado::class)->validarClienteRecurso($arEmpleado->getCodigoRecursoPk(), $arPedidoDetalle);
-                                if ($respuestaValidarRestriccionCliente != "") {
-                                    Mensajes::error($respuestaValidarRestriccionCliente);
-                                    $error = true;
-                                }
-                            }
-
-                            // validar vencimiento de cursos de vigilancia
-                            // aqui se consulta que cursos tiene el empleado
-                            if ($arConfiguracion->getValidarVencimientoCurso()) {
-                                $fechaProgramacion = $arProgramacion->getProgramacionRel()->getFecha();
-                                $fechaDesdeVenceCurso = $fechaProgramacion->format("Y/m/1");
-                                $dqlCursos = $em->createQuery($em->getRepository('BrasaRecursoHumanoBundle:RhuAcreditacion')->listaDql($arEmpleado->getCodigoEmpleadoFk(), "", "", "", $fechaDesde = "", $fechaHasta = "", $fechaDesdeVenceCurso, "", "", "", "", ""));
-                                $arrCursos = $dqlCursos->getResult();
-                                if ($arrCursos != null) {
-                                    $arCurso = $arrCursos[0];
-                                    $mesVenceCurso = $arCurso->getFechaVenceCurso()->format('n');
-                                    $anioVenceCurso = $arCurso->getFechaVenceCurso()->format('Y');
-                                    $intDiaVenceCurso = $arCurso->getFechaVenceCurso()->format('j');
-                                    if (($mesVenceCurso >= $arPedidoDetalle->getMes() && $anioVenceCurso == $arPedidoDetalle->getAnio()) || $anioVenceCurso >= $arPedidoDetalle->getAnio()) {
-                                        $cursoActivo = true;
-                                    }
-                                }
-                            }
-                        } else {
-                            $arProgramacion->setRecursoRel(NULL);
+                    $codigoEmpleado = $arrControles['TxtEmpleado' . $intCodigo];
+                    if ($codigoEmpleado != '') {
+                        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigoEmpleado);
+                        if ($arEmpleado) {
+                            $arProgramacionDetalle->setEmpleadoRel($arEmpleado);
                         }
+                    } else {
+                        $arProgramacionDetalle->setEmpleadoRel(NULL);
                     }
-                    $cambio = false;
+
                     for ($i = 1; $i <= 31; $i++) {
                         $indice = 'TxtDia' . ($i < 10 ? '0' . $i : $i) . 'D' . $intCodigo;
                         if (isset($arrControles[$indice]) && $arrControles[$indice] != "") {
-                            //validacion de curso de vigilancia
-                            // aqui se valida segun el dia de vencimiento de curso de vigilancia
-                            if ($arConfiguracion->getValidarVencimientoCurso()) {
-                                if ($cursoActivo == true) {
-                                    if ($i > $intDiaVenceCurso && $mesVenceCurso == $arPedidoDetalle->getMes()) {
-                                        Mensajes::error("El curso de vigilancia vence el día" . $intDiaVenceCurso . ", por ende el recurso {$arEmpleado->getCodigoRecursoPk()} no puede ser programado");
-                                        $error = true;
-                                        break;
-                                    }
-                                } else {
-                                    Mensajes::error("El recurso {$arEmpleado->getCodigoRecursoPk()} no tiene curso de vigilancia vigente");
-                                    $error = true;
-                                    break;
-                                }
-                            }
-                            if (call_user_func_array([$arProgramacion, "getDia{$i}"], []) != $indice) {
-                                $cambio = true;
-                            }
-                            call_user_func_array([$arProgramacion, "setDia{$i}"], [$arrControles[$indice]]);
+                            call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [$arrControles[$indice]]);
                         } else {
-                            call_user_func_array([$arProgramacion, "setDia{$i}"], [null]);
+                            call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [null]);
                         }
                     }
-                    if ($cambio) {
-                        $arProgramacion->setActualizadoPor($this->getUser()->getNombreCorto());
-                        $arProgramacion->setFechaActualizacion(new \DateTime(date("Y-m-d H:i:s")));
-                    }
-                    $arProgramacion->setHorasDiurnas($validar['horasDiurnas']);
-                    $arProgramacion->setHorasNocturnas($validar['horasNocturnas']);
-                    $arProgramacion->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
-                    $em->persist($arProgramacion);
+                    $arProgramacionDetalle->setHorasDiurnas($validar['horasDiurnas']);
+                    $arProgramacionDetalle->setHorasNocturnas($validar['horasNocturnas']);
+                    $arProgramacionDetalle->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
+                    $em->persist($arProgramacionDetalle);
                 } else {
                     $error = true;
                     Mensajes::error($validar['mensaje']);
@@ -546,8 +571,6 @@ class ProgramacionController extends ControllerListenerGeneral
                     break;
                 }
             }
-//            $horasProgramadasDiurnasPedidoTotales = ($arPedidoDetalle->getHorasDiurnasProgramadas() - $arrTotalHoras['horasDiurnasProgramacion']) + $arrTotalHoras['horasDiurnas'];
-//            $horasProgramadasNocturnasPedidoTotales = ($arPedidoDetalle->getHorasNocturnasProgramadas() - $arrTotalHoras['horasNocturnasProgramacion']) + $arrTotalHoras['horasNocturnas'];
             $arPedidoDetalle->setHorasDiurnasProgramadas($arrTotalHoras['horasDiurnas']);
             $arPedidoDetalle->setHorasNocturnasProgramadas($arrTotalHoras['horasNocturnas']);
             $arPedidoDetalle->setHorasProgramadas($arrTotalHoras['horasDiurnas'] + $arrTotalHoras['horasNocturnas']);

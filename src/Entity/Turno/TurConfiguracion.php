@@ -44,11 +44,6 @@ class TurConfiguracion
     private $redondearValorFactura = false;
 
     /**
-     * @ORM\Column(name="codigo_modalidad_arma", type="integer", nullable=true)
-     */
-    private $codigoModalidadArma;
-
-    /**
      * @ORM\Column(name="validar_horas_programacion", type="boolean")
      */
     private $validarHorasProgramacion = false;
@@ -102,22 +97,6 @@ class TurConfiguracion
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
     public function getCodigoFormatoFactura()
@@ -152,31 +131,15 @@ class TurConfiguracion
     /**
      * @return mixed
      */
-    public function getCodigoModalidadArma()
-    {
-        return $this->codigoModalidadArma;
-    }
-
-    /**
-     * @param mixed $codigoModalidadArma
-     */
-    public function setCodigoModalidadArma($codigoModalidadArma): void
-    {
-        $this->codigoModalidadArma = $codigoModalidadArma;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getValidarHorasProgramacion(): bool
+    public function getValidarHorasProgramacion()
     {
         return $this->validarHorasProgramacion;
     }
 
     /**
-     * @param bool $validarHorasProgramacion
+     * @param mixed $validarHorasProgramacion
      */
-    public function setValidarHorasProgramacion(bool $validarHorasProgramacion): void
+    public function setValidarHorasProgramacion($validarHorasProgramacion): void
     {
         $this->validarHorasProgramacion = $validarHorasProgramacion;
     }

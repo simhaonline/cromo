@@ -126,14 +126,14 @@
                                     <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto',
                                         { 'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'VerProgramaciones', 600, 1300)">Editar</a>
                                 </td>
-                                <td class="text-center" colspan="4">H.DIURNAS: {{ arPedido.horasDiurnas | number_format }}</td>
-                                <td class="text-center" colspan="4">H.NOCTURNAS: {{arPedido.horasNocturnas | number_format }}</td>
+                                <td class="text-center" colspan="4">H_D: {{ arPedidoDetalle.horasDiurnas | number_format }} ({{ arPedidoDetalle.horasDiurnasProgramadas | number_format }})</td>
+                                <td class="text-center" colspan="4">H_N: {{arPedidoDetalle.horasNocturnas | number_format }} ({{arPedidoDetalle.horasNocturnasProgramadas | number_format }})</td>
                                 <td colspan="2"></td>
                                 <td class="text-center" colspan="4">
-                                    <a href="{{ path('turno_movimiento_venta_pedido_detalle', {"id": arPedidoDetalle.codigoPedidoDetallePk}) }}" >PEDIDO DETALLE:  {{arPedidoDetalle.codigoPedidoDetallePk }}</a>
+                                    <a href="{{ path('turno_movimiento_venta_pedido_detalle', {"id": arPedido.codigoPedidoPk}) }}" >DET:  {{arPedidoDetalle.codigoPedidoDetallePk }}</a>
                                 </td>
                                 <td style="text-align: center;">
-                                    <a href="javascript:abrirVentana3('{{ path('turno_buscar_empleadopedido',
+                                    <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto_nuevo_empleado',
                                         { 'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'VerProgramaciones', 600, 1300)">
                                         <i class="fa fa-user" style="color: black;font-size: large;"></i>
                                     </a>

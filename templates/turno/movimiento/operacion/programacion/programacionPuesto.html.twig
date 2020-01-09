@@ -18,18 +18,16 @@
             <tbody>
             {% for arProgramacion in arProgramaciones %}
                 <tr>
-                    <td>
-                        <input type="text" style="text-transform: uppercase; width:27px; padding: 0px"
+                    <td colspan="3">{{ arProgramacion.codigoProgramacionPk }}</td>
+                    <td colspan="4">
+                        <input type="text" style="text-transform: uppercase; width:50px; padding: 0px"
                                class="input-paste input-grid" value="{{ arProgramacion.codigoEmpleadoFk }}"
-                               id="TxtEmpleado{{ arProgramacion.codigoEmpleadoFk }}"
-                               name="TxtEmpleado{{ arProgramacion.codigoEmpleadoFk }}" />
-                        <a href="javascript:abrirVentana3('{{ path('turno_buscar_empleado', {'campoCodigo': 'TxtEmpleado' ~ arProgramacion.codigoEmpleadoFk }) }}', 'AgregarNuevoDetalle', 600, 900)">
-                            <i class="fa fa-edit" style="font-size: large;color: black;">
-                            </i></a>
+                               id="TxtEmpleado{{ arProgramacion.codigoProgramacionPk }}"
+                               name="TxtEmpleado{{ arProgramacion.codigoProgramacionPk }}" />
+                        <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto_cambiar_empleado', {'campoCodigo': 'TxtEmpleado' ~ arProgramacion.codigoProgramacionPk }) }}', 'AgregarNuevoDetalle', 600, 900)">
+                            Buscar</a>
                     </td>
-                    <td colspan="33">{{ arProgramacion.empleadoRel.nombreCorto }}
-                        | {{ arProgramacion.puestoRel.clienteRel.nombreCorto }}| {{ arProgramacion.puestoRel.nombre }}
-                        | {{ arProgramacion.pedidoDetalleRel.conceptoRel.nombre }}</td>
+                    <td colspan="26">{{ arProgramacion.empleadoRel.nombreCorto }}</td>
                 </tr>
                 <tr>
                     <input type="hidden" name="LblCodigo[]" value="{{ arProgramacion.codigoProgramacionPk }}">
@@ -49,6 +47,10 @@
         </table>
     </div>
     <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto_nuevo_empleado', {'codigoPedidoDetalle':arPedidoDetalle.codigoPedidoDetallePk  }) }}', 'FacturaAdicionarDetalle', 800, 1200)">Nuevo</a>
+        </div>
         <div class="btn-group">
             {{ form_widget(form.btnGuardar) }}
         </div>

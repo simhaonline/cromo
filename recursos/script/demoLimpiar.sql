@@ -12,6 +12,7 @@ DELETE FROM tur_soporte_contrato;
 DELETE FROM tur_distribucion_empleado;
 DELETE FROM tur_costo_empleado;
 DELETE FROM tur_soporte;
+DELETE FROM tur_distribucion;
 DELETE FROM tur_cierre;
 
 DELETE FROM tte_recogida;

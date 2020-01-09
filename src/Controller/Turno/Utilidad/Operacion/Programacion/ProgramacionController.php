@@ -35,6 +35,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ProgramacionController extends AbstractController
 {
@@ -91,6 +93,7 @@ class ProgramacionController extends AbstractController
         $arrBtnSimular = ['label' => 'Simular', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnSimularLimpiar = ['label' => 'Limpiar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnExcel = ['label' => 'Excel', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         if ($arPedidoDetalle->getEstadoProgramado()) {
             $arrBtnGenerar['disabled'] = true;
         }
@@ -101,6 +104,7 @@ class ProgramacionController extends AbstractController
             ->add('btnSimular', SubmitType::class, $arrBtnSimular)
             ->add('btnSimularLimpiar', SubmitType::class, $arrBtnSimularLimpiar)
             ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->add('btnExcel', SubmitType::class, $arrBtnExcel)
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -131,7 +135,10 @@ class ProgramacionController extends AbstractController
                 $em->getRepository(TurSimulacion::class)->limpiar($id);
                 return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
-
+            if($form->get('btnExcel')->isClicked()) {
+                $arSimulaciones = $em->getRepository(TurSimulacion::class)->listaExcel($id);
+                $this->exportarExcelPersonalizado($arSimulaciones);
+            }
         }
         $arPrototipos = $em->getRepository(TurPrototipo::class)->listaProgramar($arPedidoDetalle->getCodigoContratoDetalleFk());
         $arSimulaciones = $em->getRepository(TurSimulacion::class)->listaProgramar($id);
@@ -222,7 +229,6 @@ class ProgramacionController extends AbstractController
 
     }
 
-
     public function getFiltros($form)
     {
         $filtro = [
@@ -234,4 +240,76 @@ class ProgramacionController extends AbstractController
         ];
         return $filtro;
     }
+
+    public function exportarExcelPersonalizado($arSecuencias)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arSecuencias) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Movimientos');
+            $j = 0;
+            $arrColumnas=[
+                'ANIO','MES','PUESTO','EMPLEADO','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','D13',
+                'D14','D15','D16','D17','D18','D19','D20','D21','D22','D23','D24','D25','D26','D27','D28','D29','D30','D31'
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arSecuencias as $arSecuencia) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arSecuencia['anio']);
+                $hoja->setCellValue('B' . $j, $arSecuencia['mes']);
+                $hoja->setCellValue('C' . $j, $arSecuencia['puestoNombre']);
+                $hoja->setCellValue('D' . $j, $arSecuencia['nombreCorto']);
+                $hoja->setCellValue('E' . $j, $arSecuencia['dia1']);
+                $hoja->setCellValue('F' . $j, $arSecuencia['dia2']);
+                $hoja->setCellValue('G' . $j, $arSecuencia['dia3']);
+                $hoja->setCellValue('H' . $j, $arSecuencia['dia4']);
+                $hoja->setCellValue('I' . $j, $arSecuencia['dia5']);
+                $hoja->setCellValue('J' . $j, $arSecuencia['dia6']);
+                $hoja->setCellValue('K' . $j, $arSecuencia['dia7']);
+                $hoja->setCellValue('L' . $j, $arSecuencia['dia8']);
+                $hoja->setCellValue('M' . $j, $arSecuencia['dia9']);
+                $hoja->setCellValue('N' . $j, $arSecuencia['dia10']);
+                $hoja->setCellValue('O' . $j, $arSecuencia['dia11']);
+                $hoja->setCellValue('P' . $j, $arSecuencia['dia12']);
+                $hoja->setCellValue('Q' . $j, $arSecuencia['dia13']);
+                $hoja->setCellValue('R' . $j, $arSecuencia['dia14']);
+                $hoja->setCellValue('S' . $j, $arSecuencia['dia15']);
+                $hoja->setCellValue('T' . $j, $arSecuencia['dia16']);
+                $hoja->setCellValue('U' . $j, $arSecuencia['dia17']);
+                $hoja->setCellValue('V' . $j, $arSecuencia['dia18']);
+                $hoja->setCellValue('W' . $j, $arSecuencia['dia19']);
+                $hoja->setCellValue('X' . $j, $arSecuencia['dia20']);
+                $hoja->setCellValue('Y' . $j, $arSecuencia['dia21']);
+                $hoja->setCellValue('Z' . $j, $arSecuencia['dia22']);
+                $hoja->setCellValue('AA' . $j, $arSecuencia['dia23']);
+                $hoja->setCellValue('AB' . $j, $arSecuencia['dia24']);
+                $hoja->setCellValue('AC' . $j, $arSecuencia['dia25']);
+                $hoja->setCellValue('AD' . $j, $arSecuencia['dia26']);
+                $hoja->setCellValue('AE' . $j, $arSecuencia['dia27']);
+                $hoja->setCellValue('AF' . $j, $arSecuencia['dia28']);
+                $hoja->setCellValue('AG' . $j, $arSecuencia['dia29']);
+                $hoja->setCellValue('AH' . $j, $arSecuencia['dia30']);
+                $hoja->setCellValue('AI' . $j, $arSecuencia['dia31']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=simulacion.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+
+        }
+    }
+
 }

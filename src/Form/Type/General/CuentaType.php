@@ -41,4 +41,16 @@ class CuentaType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCuentaPk",         "tipo":"pk",    "ayuda":"Codigo del registro",    "titulo":"ID"},
+            {"campo":"nombre",                 "tipo":"texto", "ayuda":"Nombre del registro",    "titulo":"NOMBRE"},            
+            {"campo":"bancoRel.nombre",        "tipo":"texto", "ayuda":"Nombre del banco",       "titulo":"BANCO", "relacion":""},            
+            {"campo":"cuenta",                 "tipo":"texto", "ayuda":"Cuenta",                 "titulo":"CUENTA"},            
+            {"campo":"tipo",                   "tipo":"texto", "ayuda":"Tipo de cuenta",         "titulo":"TIPO"},            
+            {"campo":"codigoCuentaContableFk", "tipo":"texto", "ayuda":"Codigo cuenta contable", "titulo":"CUENTA CONTABLE"}            
+        ]';
+        return $campos;
+    }
 }

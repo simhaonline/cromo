@@ -6,7 +6,6 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="rhu_dotacion_elemento")
  * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuDotacionElementoRepository")
  */
 class RhuDotacionElemento

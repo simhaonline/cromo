@@ -6,22 +6,14 @@
         </div>
     </div>
     <br/><br/>
-    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="true">
-        <header>
-            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-            <h2>Información de la dotación</h2>
-        </header>
-        <div>
-            <div class="widget-body no-padding">
-                <table width="100%" class="table table-condensed table-bordered">
-                    <tr>
-                        <td class="titulo">Código:</td>
-                        <td class="td-in-well">{{ arDotacionElemento.codigoDotacionElementoPk }}</td>
-                        <td class="titulo">Nombre:</td>
-                        <td class="td-in-well">{{ arDotacionElemento.nombre }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arDotacionElemento.codigoDotacionElementoPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arDotacionElemento.nombre }}</td>
+        </tr>
+        </tbody>
+    </table>
 {% endblock %}

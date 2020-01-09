@@ -570,4 +570,61 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
     }
 
+    public function listaFormatoMasivo($arrDatos)
+    {
+        $codigoMovimientoPk = null;
+        $codigoMovimientoDesde = null;
+        $codigoMovimientoHasta = null;
+        $codigoMovimientoClase = null;
+        $fechaDesde=null;
+        $fechaHasta=null;
+        if ($arrDatos) {
+            $codigoMovimientoPk = $arrDatos['codigoMovimientoPk'] ?? null;
+            $codigoMovimientoDesde = $arrDatos['codigoMovimientoDesde'] ?? null;
+            $codigoMovimientoHasta = $arrDatos['codigoMovimientoHasta'] ?? null;
+            $codigoMovimientoClase = $arrDatos['codigoMovimientoClase'] ?? null;
+            $fechaDesde = $arrDatos['fechaDesde'] ?? null;
+            $fechaHasta = $arrDatos['fechaHasta'] ?? null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->addSelect('m.fecha')
+            ->addSelect('m.numero')
+            ->addSelect('m.vrTotalNeto')
+            ->addSelect('m.estadoAutorizado')
+            ->addSelect('m.estadoAprobado')
+            ->addSelect('m.estadoAnulado')
+            ->addSelect('m.estadoContabilizado')
+            ->addSelect('m.comentarios')
+            ->addSelect('tl.nombreCorto')
+            ->addSelect('tl.numeroIdentificacion')
+            ->addSelect('tl.direccion')
+            ->addSelect('tl.telefono')
+            ->leftJoin('m.movimientoTipoRel', 'it')
+            ->leftJoin('m.terceroRel', 'tl')
+            ->leftJoin('m.cuentaRel', 'cu');
+        if($codigoMovimientoPk){
+            $queryBuilder->where("m.codigoMovimientoPk = {$codigoMovimientoPk}");
+        } else {
+            if ($codigoMovimientoDesde) {
+                $queryBuilder->andWhere("m.numero >= '{$codigoMovimientoDesde}'");
+            }
+            if ($codigoMovimientoHasta) {
+                $queryBuilder->andWhere("m.numero <= '{$codigoMovimientoHasta}'");
+            }
+            if ($fechaDesde) {
+                $queryBuilder->andWhere("m.fecha >= '{$fechaDesde} 00:00:00'");
+            }
+            if ($fechaHasta) {
+                $queryBuilder->andWhere("m.fecha <= '{$fechaHasta} 23:59:59'");
+            }
+            if ($codigoMovimientoClase) {
+                $queryBuilder->andWhere("m.codigoMovimientoClaseFk = '{$codigoMovimientoClase}'");
+            }
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
 }

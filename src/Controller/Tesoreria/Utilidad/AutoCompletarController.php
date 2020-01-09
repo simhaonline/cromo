@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\Tesoreria\Utilidades;
+namespace App\Controller\Tesoreria\Utilidad;
 
 
 use App\Entity\Tesoreria\TesTercero;

@@ -51,8 +51,6 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-
-
     /**
      * @param $arMovimiento
      * @param $arrDetallesSeleccionados

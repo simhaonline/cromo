@@ -25,7 +25,6 @@ class GenCuenta
      * @ORM\Column(name="codigo_banco_fk", type="string", length=10, nullable=true)
      */
     private $codigoBancoFk;
-
     /**
      * @ORM\Column(name="nombre", type="string", length=30, nullable=true)
      */
@@ -47,8 +46,8 @@ class GenCuenta
     private $codigoCuentaContableFk;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GenBanco", inversedBy="cuentasBancoRel")
-     * @ORM\JoinColumn(name="codigo_banco_fk", referencedColumnName="codigo_banco_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenBanco", inversedBy="cuentasBancoRel")
+     * @ORM\JoinColumn(name="codigo_banco_fk",referencedColumnName="codigo_banco_pk")
      */
     protected $bancoRel;
 
@@ -66,11 +65,6 @@ class GenCuenta
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimiento" , mappedBy="cuentaRel")
      */
     protected $movimientosCuentaRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngreso" , mappedBy="cuentaRel")
-     */
-    protected $ingresosCuentaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimiento" , mappedBy="cuentaRel")
@@ -240,22 +234,6 @@ class GenCuenta
     /**
      * @return mixed
      */
-    public function getIngresosCuentaRel()
-    {
-        return $this->ingresosCuentaRel;
-    }
-
-    /**
-     * @param mixed $ingresosCuentaRel
-     */
-    public function setIngresosCuentaRel($ingresosCuentaRel): void
-    {
-        $this->ingresosCuentaRel = $ingresosCuentaRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCarMovimientosCuentaRel()
     {
         return $this->carMovimientosCuentaRel;
@@ -268,7 +246,6 @@ class GenCuenta
     {
         $this->carMovimientosCuentaRel = $carMovimientosCuentaRel;
     }
-
 
 
 }

@@ -44,6 +44,16 @@ class TurConfiguracion
     private $redondearValorFactura = false;
 
     /**
+     * @ORM\Column(name="codigo_modalidad_arma", type="integer", nullable=true)
+     */
+    private $codigoModalidadArma;
+
+    /**
+     * @ORM\Column(name="validar_horas_programacion", type="boolean")
+     */
+    private $validarHorasProgramacion = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoConfiguracionPk()
@@ -137,6 +147,38 @@ class TurConfiguracion
     public function setRedondearValorFactura($redondearValorFactura): void
     {
         $this->redondearValorFactura = $redondearValorFactura;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoModalidadArma()
+    {
+        return $this->codigoModalidadArma;
+    }
+
+    /**
+     * @param mixed $codigoModalidadArma
+     */
+    public function setCodigoModalidadArma($codigoModalidadArma): void
+    {
+        $this->codigoModalidadArma = $codigoModalidadArma;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getValidarHorasProgramacion(): bool
+    {
+        return $this->validarHorasProgramacion;
+    }
+
+    /**
+     * @param bool $validarHorasProgramacion
+     */
+    public function setValidarHorasProgramacion(bool $validarHorasProgramacion): void
+    {
+        $this->validarHorasProgramacion = $validarHorasProgramacion;
     }
 
 

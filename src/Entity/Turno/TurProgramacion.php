@@ -239,6 +239,11 @@ class TurProgramacion
     private $adicional = false;
 
     /**
+     * @ORM\Column(name="periodo_bloqueo", type="integer")
+     */
+    private $periodoBloqueo = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="programacionesPedidoRel")
      * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
@@ -1087,6 +1092,22 @@ class TurProgramacion
     public function setSoportesHorasProgramacionRel($soportesHorasProgramacionRel): void
     {
         $this->soportesHorasProgramacionRel = $soportesHorasProgramacionRel;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPeriodoBloqueo(): int
+    {
+        return $this->periodoBloqueo;
+    }
+
+    /**
+     * @param int $periodoBloqueo
+     */
+    public function setPeriodoBloqueo(int $periodoBloqueo): void
+    {
+        $this->periodoBloqueo = $periodoBloqueo;
     }
 
 

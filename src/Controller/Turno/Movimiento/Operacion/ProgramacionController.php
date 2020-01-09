@@ -438,7 +438,7 @@ class ProgramacionController extends ControllerListenerGeneral
         $error = false;
         $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
-        $puestoRequiereArma = $arPedidoDetalle->getCodigoModalidadServicioFk() == $arConfiguracion->getCodigoModalidadArma();
+        $puestoRequiereArma = $arPedidoDetalle->getCodigoModalidadFk() == $arConfiguracion->getCodigoModalidadArma();
 
         $validarHoras = $arConfiguracion->getValidarHorasProgramacion();
         $intIndice = 0;
@@ -462,20 +462,20 @@ class ProgramacionController extends ControllerListenerGeneral
         }
         if ($error == FALSE) {
             foreach ($arrControles['LblCodigo'] as $intCodigo) {
-                $arProgramacionDetalle = $em->getRepository('BrasaTurnoBundle:TurProgramacionDetalle')->find($intCodigo);
+                $arProgramacion = $em->getRepository(TurProgramacion::class)->find($intCodigo);
                 $validar = $this->validarHoras($intCodigo, $arrControles);
                 if ($validar['validado']) {
-                    if ($arProgramacionDetalle->getPeriodoBloqueo() == 0) {
-                        if ($arrControles['TxtRecurso' . $intCodigo] != '') {
-                            $arRecurso = $em->getRepository('BrasaTurnoBundle:TurRecurso')->find($arrControles['TxtRecurso' . $intCodigo]);
-                            if ($arRecurso) {
-                                if ($puestoRequiereArma && $arRecurso->getRestriccionArma()) {
-                                    Mensajes::error("El recurso {$arRecurso->getCodigoRecursoPk()} no es apto para portar arma.");
+                    if ($arProgramacion->getPeriodoBloqueo() == 0) {
+                        if ($intCodigo != '') {
+                            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($intCodigo);
+                            if ($arEmpleado) {
+                                if ($puestoRequiereArma && $arEmpleado->getRestriccionArma()) {
+                                    Mensajes::error("El empleado {$arEmpleado->getCodigoRecursoPk()} no es apto para portar arma.");
                                     $error = true;
                                 } else {
-                                    $arProgramacionDetalle->setRecursoRel($arRecurso);
+                                    $arProgramacion->setRecursoRel($arEmpleado);
                                 }
-                                $respuestaValidarRestriccionCliente = $em->getRepository('BrasaTurnoBundle:TurRecurso')->validarClienteRecurso($arRecurso->getCodigoRecursoPk(), $arPedidoDetalle);
+                                $respuestaValidarRestriccionCliente = $em->getRepository(RhuEmpleado::class)->validarClienteRecurso($arEmpleado->getCodigoRecursoPk(), $arPedidoDetalle);
                                 if ($respuestaValidarRestriccionCliente != "") {
                                     Mensajes::error($respuestaValidarRestriccionCliente);
                                     $error = true;
@@ -485,9 +485,9 @@ class ProgramacionController extends ControllerListenerGeneral
                             // validar vencimiento de cursos de vigilancia
                             // aqui se consulta que cursos tiene el empleado
                             if ($arConfiguracion->getValidarVencimientoCurso()) {
-                                $fechaProgramacion = $arProgramacionDetalle->getProgramacionRel()->getFecha();
+                                $fechaProgramacion = $arProgramacion->getProgramacionRel()->getFecha();
                                 $fechaDesdeVenceCurso = $fechaProgramacion->format("Y/m/1");
-                                $dqlCursos = $em->createQuery($em->getRepository('BrasaRecursoHumanoBundle:RhuAcreditacion')->listaDql($arRecurso->getCodigoEmpleadoFk(), "", "", "", $fechaDesde = "", $fechaHasta = "", $fechaDesdeVenceCurso, "", "", "", "", ""));
+                                $dqlCursos = $em->createQuery($em->getRepository('BrasaRecursoHumanoBundle:RhuAcreditacion')->listaDql($arEmpleado->getCodigoEmpleadoFk(), "", "", "", $fechaDesde = "", $fechaHasta = "", $fechaDesdeVenceCurso, "", "", "", "", ""));
                                 $arrCursos = $dqlCursos->getResult();
                                 if ($arrCursos != null) {
                                     $arCurso = $arrCursos[0];
@@ -500,7 +500,7 @@ class ProgramacionController extends ControllerListenerGeneral
                                 }
                             }
                         } else {
-                            $arProgramacionDetalle->setRecursoRel(NULL);
+                            $arProgramacion->setRecursoRel(NULL);
                         }
                     }
                     $cambio = false;
@@ -512,32 +512,32 @@ class ProgramacionController extends ControllerListenerGeneral
                             if ($arConfiguracion->getValidarVencimientoCurso()) {
                                 if ($cursoActivo == true) {
                                     if ($i > $intDiaVenceCurso && $mesVenceCurso == $arPedidoDetalle->getMes()) {
-                                        Mensajes::error("El curso de vigilancia vence el día" . $intDiaVenceCurso . ", por ende el recurso {$arRecurso->getCodigoRecursoPk()} no puede ser programado");
+                                        Mensajes::error("El curso de vigilancia vence el día" . $intDiaVenceCurso . ", por ende el recurso {$arEmpleado->getCodigoRecursoPk()} no puede ser programado");
                                         $error = true;
                                         break;
                                     }
                                 } else {
-                                    Mensajes::error("El recurso {$arRecurso->getCodigoRecursoPk()} no tiene curso de vigilancia vigente");
+                                    Mensajes::error("El recurso {$arEmpleado->getCodigoRecursoPk()} no tiene curso de vigilancia vigente");
                                     $error = true;
                                     break;
                                 }
                             }
-                            if (call_user_func_array([$arProgramacionDetalle, "getDia{$i}"], []) != $indice) {
+                            if (call_user_func_array([$arProgramacion, "getDia{$i}"], []) != $indice) {
                                 $cambio = true;
                             }
-                            call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [$arrControles[$indice]]);
+                            call_user_func_array([$arProgramacion, "setDia{$i}"], [$arrControles[$indice]]);
                         } else {
-                            call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [null]);
+                            call_user_func_array([$arProgramacion, "setDia{$i}"], [null]);
                         }
                     }
                     if ($cambio) {
-                        $arProgramacionDetalle->setActualizadoPor($this->getUser()->getNombreCorto());
-                        $arProgramacionDetalle->setFechaActualizacion(new \DateTime(date("Y-m-d H:i:s")));
+                        $arProgramacion->setActualizadoPor($this->getUser()->getNombreCorto());
+                        $arProgramacion->setFechaActualizacion(new \DateTime(date("Y-m-d H:i:s")));
                     }
-                    $arProgramacionDetalle->setHorasDiurnas($validar['horasDiurnas']);
-                    $arProgramacionDetalle->setHorasNocturnas($validar['horasNocturnas']);
-                    $arProgramacionDetalle->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
-                    $em->persist($arProgramacionDetalle);
+                    $arProgramacion->setHorasDiurnas($validar['horasDiurnas']);
+                    $arProgramacion->setHorasNocturnas($validar['horasNocturnas']);
+                    $arProgramacion->setHoras($validar['horasDiurnas'] + $validar['horasNocturnas']);
+                    $em->persist($arProgramacion);
                 } else {
                     $error = true;
                     Mensajes::error($validar['mensaje']);
@@ -556,4 +556,43 @@ class ProgramacionController extends ControllerListenerGeneral
         return $error;
     }
 
+    private function horasControles($arrControles)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arrDetalle = array('validado' => true, 'horasDiurnas' => 0, 'horasNocturnas' => 0, 'horasDiurnasProgramacion' => 0, 'horasNocturnasProgramacion' => 0, 'mensaje' => '');
+        $horasDiurnas = 0;
+        $horasNocturnas = 0;
+        $horasDiurnasProgramacion = 0;
+        $horasNocturnasProgramacion = 0;
+
+        foreach ($arrControles['LblCodigo'] as $codigo) {
+            for ($i = 1; $i <= 31; $i++) {
+                $dia = $i;
+                if (strlen($dia) < 2) {
+                    $dia = "0" . $i;
+                }
+                $indice = 'TxtDia' . $dia . 'D' . $codigo;
+                if (isset($arrControles[$indice]) && $arrControles[$indice] != '') {
+                    $arrTurno = $this->validarTurno($arrControles['TxtDia' . $dia . 'D' . $codigo]);
+                    if ($arrTurno['errado'] == true) {
+                        $arrDetalle['validado'] = false;
+                        $arrDetalle['mensaje'] = "Turno " . $arrControles['TxtDia' . $dia . 'D' . $codigo] . " no esta creado";
+                        break;
+                    }
+                    $horasDiurnas += $arrTurno['horasDiurnas'];
+                    $horasNocturnas += $arrTurno['horasNocturnas'];
+                }
+            }
+            $arProgramacion = $em->getRepository(TurProgramacion::class)->find($codigo);
+            if($arProgramacion){
+                $horasDiurnasProgramacion += $arProgramacion->getHorasDiurnas();
+                $horasNocturnasProgramacion += $arProgramacion->getHorasNocturnas();
+            }
+        }
+        $arrDetalle['horasDiurnas'] = $horasDiurnas;
+        $arrDetalle['horasNocturnas'] = $horasNocturnas;
+        $arrDetalle['horasDiurnasProgramacion'] = $horasDiurnasProgramacion;
+        $arrDetalle['horasNocturnasProgramacion'] = $horasNocturnasProgramacion;
+        return $arrDetalle;
+    }
 }

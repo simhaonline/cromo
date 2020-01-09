@@ -106,8 +106,8 @@
                                     <th>{{ i }}</th>
                                 {% endfor %}
                             {% endif %}
-                            <th>H</th>
-                            <th>P.D</th>
+                            <th>HD</th>
+                            <th>HN</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -126,11 +126,16 @@
                                     <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto',
                                         { 'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'VerProgramaciones', 600, 1300)">Editar</a>
                                 </td>
-                                <td class="text-center" colspan="4">H_D: {{ arPedidoDetalle.horasDiurnas | number_format }} ({{ arPedidoDetalle.horasDiurnasProgramadas | number_format }})</td>
-                                <td class="text-center" colspan="4">H_N: {{arPedidoDetalle.horasNocturnas | number_format }} ({{arPedidoDetalle.horasNocturnasProgramadas | number_format }})</td>
+                                <td colspan="4" {% if arPedidoDetalle.horasDiurnas != arPedidoDetalle.horasDiurnasProgramadas %} class="danger" {% endif %}>H_D: {{ arPedidoDetalle.horasDiurnas | number_format }} ({{ arPedidoDetalle.horasDiurnasProgramadas | number_format }})</td>
+                                <td colspan="4" {% if arPedidoDetalle.horasNocturnas != arPedidoDetalle.horasNocturnasProgramadas %} class="danger" {% endif %}>H_N: {{arPedidoDetalle.horasNocturnas | number_format }} ({{arPedidoDetalle.horasNocturnasProgramadas | number_format }})</td>
                                 <td colspan="2"></td>
-                                <td class="text-center" colspan="4">
+                                <td class="text-center" colspan="3">
                                     <a href="{{ path('turno_movimiento_venta_pedido_detalle', {"id": arPedido.codigoPedidoPk}) }}" >DET:  {{arPedidoDetalle.codigoPedidoDetallePk }}</a>
+                                </td>
+                                <td style="text-align: center;">
+                                    <a href="javascript:abrirVentana3('{{ path('turno_utilidad_operacion_programacion_detalle',
+                                        { 'id': arPedidoDetalle.codigoPedidoDetallePk }) }}', 'Programar', 600, 1300)"><i class="fa fa-table" style="color: black;font-size: large;"></i>
+                                    </a>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="javascript:abrirVentana3('{{ path('turno_movimiento_operacion_programacion_puesto_nuevo_empleado',

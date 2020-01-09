@@ -91,6 +91,9 @@ class ProgramacionController extends AbstractController
         $arrBtnSimular = ['label' => 'Simular', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnSimularLimpiar = ['label' => 'Limpiar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if ($arPedidoDetalle->getEstadoProgramado()) {
+            $arrBtnGenerar['disabled'] = true;
+        }
         $form = $this->createFormBuilder()
             ->add('fechaSimulacion', DateType::class, array('data' => $fechaProgramacion, 'format' => 'yyyyMMdd'))
             ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)

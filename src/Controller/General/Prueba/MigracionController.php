@@ -2782,6 +2782,22 @@ class MigracionController extends Controller
                 $arContratoDetalleCompuesto->setDomingo($row['domingo']);
                 $arContratoDetalleCompuesto->setFestivo($row['festivo']);
                 $arContratoDetalleCompuesto->setPorcentajeIva($row['porcentaje_iva']);
+
+                $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
+                $registro = $ar->fetch_assoc();
+                if($registro) {
+                    $horaDesde = date_create($registro['hora_inicio']);
+                    $horaHasta = date_create($registro['hora_fin']);
+                    $arContratoDetalleCompuesto->setHorasUnidad($registro['horas']);
+                    $arContratoDetalleCompuesto->setHorasDiurnasUnidad($registro['horas_diurnas']);
+                    $arContratoDetalleCompuesto->setHorasNocturnasUnidad($registro['horas_nocturnas']);
+                    $arContratoDetalleCompuesto->setHoraDesde($horaDesde);
+                    $arContratoDetalleCompuesto->setHoraHasta($horaHasta);
+                } else {
+                    Mensajes::error("No existe el registro modalidad " . $row['codigo_modalidad_servicio_externo'] . " concepto = " . $row['codigo_concepto_servicio_fk']);
+                    break 2;
+                }
+
                 $em->persist($arContratoDetalleCompuesto);
                 $metadata = $em->getClassMetaData(get_class($arContratoDetalleCompuesto));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

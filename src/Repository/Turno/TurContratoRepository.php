@@ -374,7 +374,7 @@ class TurContratoRepository extends ServiceEntityRepository
                     $intCantidad++;
                 }
             } else {
-                if ($arContratoDetalle->isEstadoTerminado() == 0) {
+                if ($arContratoDetalle->getEstadoTerminado() == 0) {
                     $totalHoras += $arContratoDetalle->getHorasUnidad();
                     $totalHorasDiurnas += $arContratoDetalle->getHorasDiurnasUnidad();
                     $totalHorasNocturnas += $arContratoDetalle->getHorasNocturnasUnidad();

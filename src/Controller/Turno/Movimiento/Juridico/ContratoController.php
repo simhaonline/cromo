@@ -299,7 +299,7 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if($arContratoDetalle->getHoraDesde() <= $arContratoDetalle->getHoraHasta()) {
+                if ($arContratoDetalle->getHoraDesde() <= $arContratoDetalle->getHoraHasta()) {
                     $horas = FuncionesController::horaServicio($arContratoDetalle->getHoraDesde(), $arContratoDetalle->getHoraHasta());
                     $arContratoDetalle->setHorasUnidad($horas['horas']);
                     $arContratoDetalle->setHorasDiurnasUnidad($horas['horasDiurnas']);
@@ -326,7 +326,8 @@ class ContratoController extends AbstractController
     /**
      * @Route("/turno/movimiento/juridico/contrato/detalle/compuesto/{codigoContratoDetalle}", name="turno_movimiento_juridico_contrato_detalle_compuesto")
      */
-    public function detalleCompuesto(Request $request,PaginatorInterface $paginator,$codigoContratoDetalle){
+    public function detalleCompuesto(Request $request, PaginatorInterface $paginator, $codigoContratoDetalle)
+    {
         $em = $this->getDoctrine()->getManager();
         $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
         $arContrato = $em->getRepository(TurContrato::class)->find($arContratoDetalle->getCodigoContratoFk());
@@ -368,8 +369,8 @@ class ContratoController extends AbstractController
         $arContratoDetalle = $em->getRepository(TurContratoDetalle::class)->find($codigoContratoDetalle);
         $arContratoDetalleCompuesto = new TurContratoDetalleCompuesto();
         if ($codigoContratoDetalleCompuesto != 0) {
-            $arContratoDetalleCompuesto =  $em->getRepository(TurContratoDetalleCompuesto::class)->find($codigoContratoDetalleCompuesto);
-        }else {
+            $arContratoDetalleCompuesto = $em->getRepository(TurContratoDetalleCompuesto::class)->find($codigoContratoDetalleCompuesto);
+        } else {
             $arContratoDetalleCompuesto->setPeriodo('M');
             $arContratoDetalleCompuesto->setlunes(true);
             $arContratoDetalleCompuesto->setMartes(true);
@@ -385,12 +386,16 @@ class ContratoController extends AbstractController
         $form = $this->createForm(ContratoDetalleCompuestoType::class, $arContratoDetalleCompuesto);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-                $arContratoDetalleCompuesto = $form->getData();
-                $em->persist($arContratoDetalleCompuesto);
-                $em->flush();
-                $em->getRepository(TurContratoDetalle::class)->liquidar($codigoContratoDetalle);
-                $em->getRepository(TurContrato::class)->liquidar($arContratoDetalle->getContratoRel());
-                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            $horas = FuncionesController::horaServicio($arContratoDetalleCompuesto->getHoraDesde(), $arContratoDetalleCompuesto->getHoraHasta());
+            $arContratoDetalleCompuesto->setHorasUnidad($horas['horas']);
+            $arContratoDetalleCompuesto->setHorasDiurnasUnidad($horas['horasDiurnas']);
+            $arContratoDetalleCompuesto->setHorasNocturnasUnidad($horas['horasNocturnas']);
+            $arContratoDetalleCompuesto = $form->getData();
+            $em->persist($arContratoDetalleCompuesto);
+            $em->flush();
+            $em->getRepository(TurContratoDetalle::class)->liquidar($codigoContratoDetalle);
+            $em->getRepository(TurContrato::class)->liquidar($arContratoDetalle->getContratoRel());
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('turno/movimiento/juridico/contrato/contratoCompuestoNuevo.html.twig', [
             'arContratoDetalleCompuesto' => $arContratoDetalleCompuesto,

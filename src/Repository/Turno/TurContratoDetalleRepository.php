@@ -318,8 +318,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
                     $intDiasFestivos = 2;
                 }
                 $intTotalDias = $intDiasOrdinarios + $intDiasSabados + $intDiasDominicales + $intDiasFestivos;
-                $intHorasRealesDiurnas = $arContratoDetalleCompuesto->getConceptoRel()->getHorasDiurnas() * $intTotalDias;
-                $intHorasRealesNocturnas = $arContratoDetalleCompuesto->getConceptoRel()->getHorasNocturnas() * $intTotalDias;
+                $intHorasRealesDiurnas = $arContratoDetalleCompuesto->getHorasDiurnasUnidad() * $intTotalDias;
+                $intHorasRealesNocturnas = $arContratoDetalleCompuesto->getHorasNocturnasUnidad() * $intTotalDias;
             }
 
             $douHoras = ($intHorasRealesDiurnas + $intHorasRealesNocturnas) * $arContratoDetalleCompuesto->getCantidad();

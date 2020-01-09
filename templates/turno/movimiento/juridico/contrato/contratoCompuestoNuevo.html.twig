@@ -6,37 +6,39 @@
             <div class="panel-heading">Informacion general</div>
             <div class="panel-body">
                 <div class="form-group form-group-sm">
-                    <label for="form_conceptoServicioRel" class="col-sm-3 control-label">Servicio:</label>
-                    <div class="col-sm-9">
-                        {{ form_widget(form.conceptoRel, { 'attr': {'class': 'form-control to-select-2'} }) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label for="form_modalidadServicioRel" class="col-sm-3 control-label">Modalidad:</label>
-                    <div class="col-sm-9">
+                    <label for="form_modalidadServicioRel" class="col-sm-2 control-label">Modalidad:</label>
+                    <div class="col-sm-4">
                         {{ form_widget(form.modalidadRel, { 'attr': {'class': 'form-control'} }) }}
                     </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label for="form_liquidarDiasReales" class="col-sm-3 control-label"></label>
-                    <div class="col-sm-9">
-                        {{ form_widget(form.DiasReales) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label for="form_dia31" class="col-sm-3 control-label"></label>
-                    <div class="col-sm-9">
-                        {{ form_widget(form.dia31) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
-                    <label for="form_cantidad" class="col-sm-3 control-label">Cantidad:</label>
-                    <div class="col-sm-9">
+                    <label for="form_cantidad" class="col-sm-2 control-label">Cantidad:</label>
+                    <div class="col-sm-4">
                         {{ form_widget(form.cantidad, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="form_lunes" class="col-sm-3 control-label"></label>
+                    <label class="col-sm-2 control-label">Hora desde:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.horaDesde) }}
+                    </div>
+                    <label for="form_liquidarDiasReales" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.DiasReales) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Hora hasta:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.horaHasta) }}
+                    </div>
+                    <label for="form_dia31" class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.dia31) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_lunes" class="col-sm-2 control-label"></label>
                     <div class="col-sm-9">
                         <div class="col-sm-2">{{ form_widget(form.lunes) }}</div>  <div class="col-sm-2">{{ form_widget(form.martes) }}</div> <div class="col-sm-2">{{ form_widget(form.miercoles) }}</div>
                         <div class="col-sm-2">{{ form_widget(form.jueves) }}</div> <div class="col-sm-2">{{ form_widget(form.viernes) }}</div> <div class="col-sm-2">{{ form_widget(form.sabado) }}</div>

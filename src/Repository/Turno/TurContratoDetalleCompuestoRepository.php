@@ -23,6 +23,8 @@ class TurContratoDetalleCompuestoRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalleCompuesto::class, 'cdc')
             ->select('cdc.codigoContratoDetalleCompuestoPk')
             ->addSelect('cdc.codigoContratoDetalleFk')
+            ->addSelect('cdc.horaDesde')
+            ->addSelect('cdc.horaHasta')
             ->addSelect('cdc.diasReales')
             ->addSelect('cdc.periodo')
             ->addSelect('cdc.cantidad')

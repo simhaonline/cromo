@@ -59,7 +59,8 @@
                         <thead>
                         <tr>
                             <th>COD</th>
-                            <th>SERVICIO</th>
+                            <th title="Hora inicia el servicio">H_I</th>
+                            <th title="Hora finaliza el servicio">H_F</th>
                             <th>MODALIDAD</th>
                             <th>PERIODO</th>
                             <th title="Liquidar dias reales">LDR</th>
@@ -88,7 +89,8 @@
                         {% for arContratoDetalleCompuesto in arContratoDetallesCompuestos %}
                             <tr>
                                 <td>{{ arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }} <input type="hidden" name="arrCodigo[]" value="{{ arContratoDetalleCompuesto.codigoContratoDetalleCompuestoPk }}"></td>
-                                <td>{{ arContratoDetalleCompuesto.conceptoNombre }}</td>
+                                <td>{{ arContratoDetalleCompuesto.horaDesde | date('H:i') }}</td>
+                                <td>{{ arContratoDetalleCompuesto.horaHasta | date('H:i') }}</td>
                                 <td>{{ arContratoDetalleCompuesto.modalidadNombre }}</td>
                                 <td>{{ arContratoDetalleCompuesto.periodo }}</td>
                                 <td>{{ arContratoDetalleCompuesto.diasReales?"SI" :"NO" }}</td>

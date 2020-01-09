@@ -30,7 +30,7 @@ class TurContratoDetalleCompuesto
     private $codigoContratoDetalleFk;
 
     /**
-     * @ORM\Column(name="codigo_concepto_fk", type="integer")
+     * @ORM\Column(name="codigo_concepto_fk", type="integer", nullable=true)
      */
     private $codigoConceptoFk;
 
@@ -55,6 +55,21 @@ class TurContratoDetalleCompuesto
     private $dias = 0;
 
     /**
+     * @ORM\Column(name="horas_unidad", type="float", nullable=true)
+     */
+    private $horasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas_diurnas_unidad", type="float", nullable=true)
+     */
+    private $horasDiurnasUnidad = 0;
+
+    /**
+     * @ORM\Column(name="horas_nocturnas_unidad", type="float", nullable=true)
+     */
+    private $horasNocturnasUnidad = 0;
+
+    /**
      * @ORM\Column(name="horas", type="integer")
      */
     private $horas = 0;
@@ -68,6 +83,16 @@ class TurContratoDetalleCompuesto
      * @ORM\Column(name="horas_nocturnas", type="integer")
      */
     private $horasNocturnas = 0;
+
+    /**
+     * @ORM\Column(name="hora_desde", type="time", nullable=true)
+     */
+    private $horaDesde;
+
+    /**
+     * @ORM\Column(name="hora_hasta", type="time", nullable=true)
+     */
+    private $horaHasta;
 
     /**
      * @ORM\Column(name="cantidad", type="integer")
@@ -694,7 +719,101 @@ class TurContratoDetalleCompuesto
         $this->modalidadRel = $modalidadRel;
     }
 
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
 
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasUnidad()
+    {
+        return $this->horasUnidad;
+    }
+
+    /**
+     * @param mixed $horasUnidad
+     */
+    public function setHorasUnidad($horasUnidad): void
+    {
+        $this->horasUnidad = $horasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasDiurnasUnidad()
+    {
+        return $this->horasDiurnasUnidad;
+    }
+
+    /**
+     * @param mixed $horasDiurnasUnidad
+     */
+    public function setHorasDiurnasUnidad($horasDiurnasUnidad): void
+    {
+        $this->horasDiurnasUnidad = $horasDiurnasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHorasNocturnasUnidad()
+    {
+        return $this->horasNocturnasUnidad;
+    }
+
+    /**
+     * @param mixed $horasNocturnasUnidad
+     */
+    public function setHorasNocturnasUnidad($horasNocturnasUnidad): void
+    {
+        $this->horasNocturnasUnidad = $horasNocturnasUnidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraDesde()
+    {
+        return $this->horaDesde;
+    }
+
+    /**
+     * @param mixed $horaDesde
+     */
+    public function setHoraDesde($horaDesde): void
+    {
+        $this->horaDesde = $horaDesde;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHoraHasta()
+    {
+        return $this->horaHasta;
+    }
+
+    /**
+     * @param mixed $horaHasta
+     */
+    public function setHoraHasta($horaHasta): void
+    {
+        $this->horaHasta = $horaHasta;
+    }
 
 
 }

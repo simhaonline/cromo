@@ -20,6 +20,10 @@ class RequisitoCargoType extends AbstractType
                 'class' => RhuCargo::class,
                 'choice_label' => 'nombre',
             ))
+            ->add('requisitoConceptoRel', EntityType::class, array(
+                'class' => RhuRequisitoConcepto::class,
+                'choice_label' => 'nombre',
+            ))
             ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
     }

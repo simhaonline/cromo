@@ -15,7 +15,6 @@ class RequisitoConceptoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-
             ->add('nombre', TextType::class, array('required' => true))
             ->add('general', ChoiceType::class, array('choices' => array('SI' => '1', 'NO' => '0')))
             ->add('guardar', SubmitType::class);

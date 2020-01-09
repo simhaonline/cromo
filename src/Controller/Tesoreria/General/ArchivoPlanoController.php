@@ -378,7 +378,7 @@ class ArchivoPlanoController extends AbstractController
                 fputs($ar, "02"); //(1)Tipo registro
                 fputs($ar, "000023"); // codigo transaccion
                 fputs($ar, "06"); // tipo producto origen
-                fputs($ar, $this->RellenarNr($arMovimientoDetalle->getCuentaRel()->getCuenta(), "0", 16)); // Nro cuenta origen
+                fputs($ar, $this->RellenarNr($arMovimiento->getCuentaRel()->getCuenta(), "0", 16)); // Nro cuenta origen
                 fputs($ar, "052"); // entidad destino av villas 052
                 fputs($ar, "01"); // tipo producto destino
                 fputs($ar, $this->RellenarNr($arMovimientoDetalle->getCuenta(), "0", 16)); // Nro cuenta destino

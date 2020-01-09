@@ -45,8 +45,8 @@ class ArchivoPlanoController extends AbstractController
                 'BANCO DE BOGOTA 2' => 'BancoBogota2']
             ])
             ->add('secuencia', TextType::class, array('required' => false))
-            ->add('fechaTrasmision', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaAplicacion', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaTrasmision', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => new \DateTime('now')])
+            ->add('fechaAplicacion', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => new \DateTime('now')])
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
             ->getForm();
         $form->handleRequest($request);

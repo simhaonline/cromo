@@ -57,11 +57,14 @@ class CierreController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurCierre')
+        ];
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -69,16 +72,14 @@ class CierreController extends AbstractController
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(TurCierre::class)->listaCierre($raw)->getQuery()->execute(), "Cierres");
+                General::get()->setExportar($em->getRepository(TurCierre::class)->lista($raw), "Cierres");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
@@ -198,25 +199,14 @@ class CierreController extends AbstractController
 
     public function getFiltros($form)
     {
-        $fitro = [
-            'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
-            'numero' => $form->get('numero')->getData(),
-            'codigoCierrePk' => $form->get('codigoCierrePk')->getData(),
+        $session = new Session();
+        $filtro = [
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
-            'estadoAnulado' => $form->get('estadoAnulado')->getData(),
-            'fechaDesde' => $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null,
-            'fechaHasta' => $form->get('fechaHasta')->getData() ?$form->get('fechaHasta')->getData()->format('Y-m-d'): null,
-
+            'estadoAnulado' => $form->get('estadoAnulado')->getData()
         ];
-        $arCierreTipo = $form->get('codigoCierreTipoFk')->getData();
-
-        if ( is_object($arCierreTipo)) {
-            $fitro['codigoCierreTipoFk'] = $arCierreTipo->getCodigoCierreTipoPk();
-        } else {
-            $fitro['codigoCierreTipoFk'] = $arCierreTipo;
-        }
-        return $fitro;
+        $session->set('filtroTurCierre', $filtro);
+        return $filtro;
 
     }
 

@@ -54,33 +54,34 @@ class TurCierreRepository extends ServiceEntityRepository
 
         switch ($estadoAutorizado) {
             case '0':
-                $queryBuilder->andWhere("p.estadoAutorizado = 0");
+                $queryBuilder->andWhere("c.estadoAutorizado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("pestadoAutorizado = 1");
+                $queryBuilder->andWhere("c.estadoAutorizado = 1");
                 break;
         }
 
         switch ($estadoAprobado) {
             case '0':
-                $queryBuilder->andWhere("p.estadoAprobado = 0");
+                $queryBuilder->andWhere("c.estadoAprobado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("p.estadoAprobado = 1");
+                $queryBuilder->andWhere("c.estadoAprobado = 1");
                 break;
         }
 
         switch ($estadoAnulado) {
             case '0':
-                $queryBuilder->andWhere("p.estadoAnulado = 0");
+                $queryBuilder->andWhere("c.estadoAnulado = 0");
                 break;
             case '1':
-                $queryBuilder->andWhere("p.estadoAnulado = 1");
+                $queryBuilder->andWhere("c.estadoAnulado = 1");
                 break;
         }
 
+        $queryBuilder->addOrderBy('c.codigoCierrePk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
 
     }
 

@@ -114,8 +114,8 @@ final class FuncionesController
     //5,0,10
     public static function RellenarNr($Nro, $Str, $NroCr, $pos = 'D')
     {
+        $Nro = utf8_decode($Nro);
         $Longitud = strlen($Nro); //5
-
         $Nc = $NroCr - $Longitud; //5
         for ($i = 0; $i < $Nc; $i++) {
             if ($pos == 'I') {
@@ -124,7 +124,6 @@ final class FuncionesController
                 $Nro = $Nro . $Str;
             }
         }
-
         return (string)$Nro;
     }
 

@@ -540,7 +540,7 @@ class TurPedidoRepository extends ServiceEntityRepository
         }
 
         if($numero){
-            $queryBuilder->andWhere("p.numero  = '{$numero}'");
+            $queryBuilder->andWhere("p.numero  = {$numero} ");
         }
         if($codigoPedidoPk){
             $queryBuilder->andWhere("p.codigoPedidoPk  = '{$codigoPedidoPk}'");
@@ -575,6 +575,7 @@ class TurPedidoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("p.estadoAnulado = 1");
                 break;
         }
+
         $queryBuilder->orderBy('p.fecha', 'DESC');
         $queryBuilder->addOrderBy('p.numero', 'ASC');
         $queryBuilder->setMaxResults($limiteRegistros);

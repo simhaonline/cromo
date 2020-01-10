@@ -56,10 +56,14 @@ class PedidoController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurPedido')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoClienteFk', TextType::class, array('required' => false))
-            ->add('numero', TextType::class, array('required' => false))
-            ->add('codigoPedidoPk', TextType::class, array('required' => false))
+            ->add('codigoClienteFk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoClienteFk'] ))
+            ->add('numero', TextType::class, array('required' => false, 'data'=>$raw['filtros']['numero']))
+            ->add('codigoPedidoPk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoPedidoPk'] ))
             ->add('codigoPedidoTipoFk', EntityType::class, [
                 'class' => TurPedidoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -68,22 +72,21 @@ class PedidoController extends AbstractController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['codigoPedidoTipoFk'] ? $em->getReference(TurPedidoTipo::class, $raw['filtros']['codigoPedidoTipoFk']) : null
             ])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -429,6 +432,7 @@ class PedidoController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $fitro = [
             'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
             'numero' => $form->get('numero')->getData(),
@@ -447,8 +451,9 @@ class PedidoController extends AbstractController
         } else {
             $fitro['codigoPedidoTipoFk'] = $arPedidoTipo;
         }
-        return $fitro;
 
+        $session->set('filtroTurPedido', $fitro);
+        return $fitro;
     }
 
     public function exportarExcel($arPedidoDetalles)

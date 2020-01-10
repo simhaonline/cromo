@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,13 +25,6 @@ class PedidoDetalleCompuestoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conceptoRel', EntityType::class, array(
-                'class' => TurConcepto::class,
-                'query_builder' => function (EntityRepository $er)  {
-                    return $er->createQueryBuilder('cs')
-                        ->orderBy('cs.nombre', 'ASC');},
-                'choice_label' => 'nombre',
-                'required' => true))
             ->add('modalidadRel', EntityType::class, array(
                 'class' => TurModalidad::class,
                 'query_builder' => function (EntityRepository $er)  {
@@ -50,6 +44,8 @@ class PedidoDetalleCompuestoType extends AbstractType
             ->add('domingo', CheckboxType::class, array('required'  => false))
             ->add('festivo', CheckboxType::class, array('required'  => false))
             ->add('dia31', CheckboxType::class, array('required'  => false))
+            ->add('horaDesde', TimeType::class)
+            ->add('horaHasta', TimeType::class)
             ->add('DiasReales', CheckboxType::class, array('required'  => false))
             ->add('guardar', SubmitType::class);
     }

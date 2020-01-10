@@ -347,6 +347,10 @@ class PedidoController extends AbstractController
         $form = $this->createForm(PedidoDetalleCompuestoType::class, $arPedidoDetalleCompuesto);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
+            $horas = FuncionesController::horaServicio($arPedidoDetalleCompuesto->getHoraDesde(), $arPedidoDetalleCompuesto->getHoraHasta());
+            $arPedidoDetalleCompuesto->setHorasUnidad($horas['horas']);
+            $arPedidoDetalleCompuesto->setHorasDiurnasUnidad($horas['horasDiurnas']);
+            $arPedidoDetalleCompuesto->setHorasNocturnasUnidad($horas['horasNocturnas']);
             $arPedidoDetalleCompuesto = $form->getData();
             $em->persist($arPedidoDetalleCompuesto);
             $em->flush();

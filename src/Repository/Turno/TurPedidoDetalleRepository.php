@@ -570,57 +570,57 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
                 if ($this->festivo($arFestivos, $dateNuevaFecha) == 1) {
                     $intDiasFestivos += 1;
                     if ($arPedidoDetalleCompuesto->getFestivo() == 1) {
-                        $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                        $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                        $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                        $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                     }
                 } else {
                     if ($diaSemana == 1) {
                         $intDiasOrdinarios += 1;
                         if ($arPedidoDetalleCompuesto->getLunes() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                     if ($diaSemana == 2) {
                         $intDiasOrdinarios += 1;
                         if ($arPedidoDetalleCompuesto->getMartes() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                     if ($diaSemana == 3) {
                         $intDiasOrdinarios += 1;
                         if ($arPedidoDetalleCompuesto->getMiercoles() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                     if ($diaSemana == 4) {
                         $intDiasOrdinarios += 1;
                         if ($arPedidoDetalleCompuesto->getJueves() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                     if ($diaSemana == 5) {
                         $intDiasOrdinarios += 1;
                         if ($arPedidoDetalleCompuesto->getViernes() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                     if ($diaSemana == 6) {
                         $intDiasSabados += 1;
                         if ($arPedidoDetalleCompuesto->getSabado() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                     if ($diaSemana == 7) {
                         $intDiasDominicales += 1;
                         if ($arPedidoDetalleCompuesto->getDomingo() == 1) {
-                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas();
-                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas();
+                            $intHorasRealesDiurnas += $arPedidoDetalleCompuesto->getHorasDiurnasUnidad();
+                            $intHorasRealesNocturnas += $arPedidoDetalleCompuesto->getHorasNocturnasUnidad();
                         }
                     }
                 }
@@ -656,8 +656,8 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
                         $intDiasFestivos = 2;
                     }
                     $intTotalDias = $intDiasOrdinarios + $intDiasSabados + $intDiasDominicales + $intDiasFestivos;
-                    $intHorasDiurnasLiquidacion = $arPedidoDetalleCompuesto->getConceptoRel()->getHorasDiurnas() * $intTotalDias;
-                    $intHorasNocturnasLiquidacion = $arPedidoDetalleCompuesto->getConceptoRel()->getHorasNocturnas() * $intTotalDias;
+                    $intHorasDiurnasLiquidacion = $arPedidoDetalleCompuesto->getHorasDiurnasUnidad() * $intTotalDias;
+                    $intHorasNocturnasLiquidacion = $arPedidoDetalleCompuesto->getHorasNocturnasUnidad() * $intTotalDias;
                 } else {
                     $intHorasDiurnasLiquidacion = $intHorasRealesDiurnas;
                     $intHorasNocturnasLiquidacion = $intHorasRealesNocturnas;

@@ -56,9 +56,12 @@
                         <thead>
                         <tr>
                             <th>COD</th>
-                            <th>SERVICIO</th>
                             <th>MODALIDAD</th>
                             <th>PERIODO</th>
+                            <th>DES</th>
+                            <th>HAS</th>
+                            <th title="Hora inicia el servicio">H_I</th>
+                            <th title="Hora finaliza el servicio">H_F</th>
                             <th title="Liquidar dias reales">LDR</th>
                             <th title="Cantidad de recuresos">CANT</th>
                             <th>LU</th>
@@ -85,9 +88,12 @@
                         {% for arPedidoDetalleCompuesto in arPedidoDetallesCompuestos %}
                             <tr>
                                 <td>{{ arPedidoDetalleCompuesto.codigoPedidoDetalleCompuestoPk }} <input type="hidden" name="arrCodigo[]" value="{{ arPedidoDetalleCompuesto.codigoPedidoDetalleCompuestoPk }}"></td>
-                                <td>{{ arPedidoDetalleCompuesto.conceptoNombre }}</td>
                                 <td>{{ arPedidoDetalleCompuesto.modalidadNombre }}</td>
                                 <td>{{ arPedidoDetalleCompuesto.periodo }}</td>
+                                <td>{{ arPedidoDetalleCompuesto.diaDesde }}</td>
+                                <td>{{ arPedidoDetalleCompuesto.diaHasta }}</td>
+                                <td>{{ arPedidoDetalleCompuesto.horaDesde | date('H:i') }}</td>
+                                <td>{{ arPedidoDetalleCompuesto.horaHasta | date('H:i') }}</td>
                                 <td>{{ arPedidoDetalleCompuesto.diasReales?"SI" :"NO" }}</td>
                                 <td>{{ arPedidoDetalleCompuesto.cantidad }}</td>
                                 <td>{{ arPedidoDetalleCompuesto.lunes?"SI" :"NO" }}</td>

@@ -57,9 +57,13 @@ class CotizacionController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurCotizacion')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoCotizacionPk', TextType::class, array('required' => false))
-            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoCotizacionPk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoCotizacionPk']))
+            ->add('numero', TextType::class, array('required' => false, 'data'=>$raw['filtros']['numero']))
             ->add('codigoCotizacionTipoFk', EntityType::class, [
                 'class' => TurCotizacionTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -68,11 +72,12 @@ class CotizacionController extends AbstractController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['codigoPedidoTipoFk'] ? $em->getReference(TurCotizacionTipo::class, $raw['filtros']['codigoCotizacionTipoFk']) : null
             ])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -80,22 +85,17 @@ class CotizacionController extends AbstractController
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
-
             }
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TurCotizacion::class)->lista($raw)->getQuery()->execute(), "Pedidos");
-
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurCotizacion::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('turno_movimiento_comercial_cotizacion_lista'));
             }
         }
         $arCotizaciones = $paginator->paginate($em->getRepository(TurCotizacion::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -280,7 +280,8 @@ class CotizacionController extends AbstractController
 
     public function getFiltros($form)
     {
-         $filtro = [
+        $session = new Session();
+        $filtro = [
             'codigoCotizacionPk' => $form->get('codigoCotizacionPk')->getData(),
             'numero' => $form->get('numero')->getData(),
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
@@ -294,6 +295,8 @@ class CotizacionController extends AbstractController
         } else {
             $filtro['codigoCotizacionTipoFk'] = $arCotizacionTipo;
         }
+
+        $session->set('filtroTurCotizacion', $filtro);
         return $filtro;
     }
 }

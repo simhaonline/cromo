@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 
+use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\Entity\Transporte\TteFacturaPlanilla;
 use App\Entity\Transporte\TteGuia;
@@ -139,7 +140,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
     public function formatoFactura($codigoFactura): array
     {
         $em = $this->getEntityManager();
-        $query = $em->createQuery(
+        /*$query = $em->createQuery(
             'SELECT fd.codigoGuiaFk, 
         g.numero,
         g.documentoCliente, 
@@ -166,7 +167,41 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         LEFT JOIN g.empaqueRel ep
         WHERE fd.codigoFacturaFk = :codigoFactura and fd.codigoFacturaPlanillaFk IS NULL ORDER BY fd.codigoGuiaFk ASC'
         )->setParameter('codigoFactura', $codigoFactura);
-        return $query->execute();
+        return $query->execute();*/
+        $arFactura = $em->getRepository(TteFactura::class)->find($codigoFactura);
+        $ordenarAlfabeticamenteDestino = $arFactura->getClienteRel()->getOrdenarImpresionAlfabeticamenteDestino();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd')
+            ->select('fd.codigoFacturaDetallePk')
+            ->addSelect('g.numero')
+            ->addSelect('g.documentoCliente')
+            ->addSelect('g.fechaIngreso')
+            ->addSelect('g.codigoOperacionIngresoFk')
+            ->addSelect('g.codigoOperacionCargoFk')
+            ->addSelect('fd.unidades')
+            ->addSelect('p.nombre AS producto')
+            ->addSelect('g.pesoReal')
+            ->addSelect('ep.nombre AS empaque')
+            ->addSelect('g.pesoFacturado')
+            ->addSelect('fd.vrFlete')
+            ->addSelect('fd.vrManejo')
+            ->addSelect('g.vrDeclara')
+            ->addSelect('fd.vrFlete + fd.vrManejo AS vrTotal')
+            ->addSelect('g.nombreDestinatario')
+            ->addSelect('cd.nombre AS ciudadDestino')
+            ->addSelect('co.nombre AS ciudadOrigen')
+            ->leftJoin('fd.guiaRel', 'g')
+            ->leftJoin('g.ciudadDestinoRel', 'cd')
+            ->leftJoin('g.ciudadOrigenRel', 'co')
+            ->leftJoin('g.productoRel', 'p')
+            ->leftJoin('g.empaqueRel', 'ep')
+            ->where('fd.codigoFacturaFk =' . $codigoFactura)
+            ->andWhere('fd.codigoFacturaPlanillaFk IS NULL');
+        if($ordenarAlfabeticamenteDestino) {
+            $queryBuilder->orderBy('cd.nombre');
+        } else {
+            $queryBuilder->orderBy('fd.codigoGuiaFk');
+        }
+        return $queryBuilder->getQuery()->getResult();
 
     }
 

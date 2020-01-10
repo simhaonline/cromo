@@ -158,7 +158,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('ter.nombreCorto AS terceroNombreCorto')
             ->addSelect('ter.numeroIdentificacion as terceroNumeroIdentificacion')
             ->addSelect('md.vrPago')
-            ->addSelect('cp.numeroDocumento')
+            ->addSelect('md.numero')
             ->addSelect('b.nombre as banco')
             ->addSelect('cp.codigoCuentaPagarTipoFk')
             ->leftJoin('md.cuentaPagarRel', 'cp')

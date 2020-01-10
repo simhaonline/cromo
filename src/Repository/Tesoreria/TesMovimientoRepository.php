@@ -592,6 +592,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->select('m.codigoMovimientoPk')
             ->addSelect('m.fecha')
             ->addSelect('m.numero')
+            ->addSelect('m.numeroDocumento')
             ->addSelect('m.vrTotalNeto')
             ->addSelect('m.estadoAutorizado')
             ->addSelect('m.estadoAprobado')

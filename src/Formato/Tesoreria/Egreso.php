@@ -114,7 +114,7 @@ class Egreso extends \FPDF
             $pdf->Cell(30, 6, 'NUM DOCUMENTO', 1, 0, 'L', 1);
             $pdf->SetFillColor(272, 272, 272);
             $pdf->SetFont('Arial', '', 8);
-            $pdf->Cell(66, 6, $arMovimiento['numero'], 1, 0, 'L', 1);
+            $pdf->Cell(66, 6, $arMovimiento['numeroDocumento'], 1, 0, 'L', 1);
             $pdf->SetFont('Arial', 'B', 8);
             $pdf->SetFillColor(200, 200, 200);
             $pdf->Cell(30, 6, "", 1, 0, 'L', 1);
@@ -131,14 +131,14 @@ class Egreso extends \FPDF
             $pdf->MultiCell(161, 4, utf8_decode($arMovimiento['comentarios']), 1, 'L');
 
             $pdf->Ln(12);
-            $header = array('ID', 'TIPO', 'DOC', 'NIT', 'TERCERO', 'CTA', 'N', 'BANCO', 'VALOR');
+            $header = array('TIPO', 'DOC', 'NIT', 'TERCERO', 'CTA', 'N', 'BANCO', 'VALOR');
             $pdf->SetFillColor(236, 236, 236);
             $pdf->SetTextColor(0);
             $pdf->SetDrawColor(0, 0, 0);
             $pdf->SetLineWidth(.2);
             $pdf->SetFont('', 'B', 7);
             //creamos la cabecera de la tabla.
-            $w = array(15, 10, 15, 25, 60, 20, 5, 20, 20);
+            $w = array(25, 15, 25, 60, 20, 5, 20, 20);
             for ($i = 0; $i < count($header); $i++)
                 if ($i == 0 || $i == 1)
                     $pdf->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -154,8 +154,7 @@ class Egreso extends \FPDF
             $pdf->SetFont('Arial', '', 7);
             if ($arMovimientosDetalle) {
                 foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
-                    $pdf->Cell(15, 4, $arMovimientoDetalle['codigoMovimientoDetallePk'], 1, 0, 'L');
-                    $pdf->Cell(10, 4, $arMovimientoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
+                    $pdf->Cell(25, 4, $arMovimientoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
                     $pdf->Cell(15, 4, $arMovimientoDetalle['numeroDocumento'], 1, 0, 'L');
                     $pdf->Cell(25, 4, $arMovimientoDetalle['terceroNumeroIdentificacion'], 1, 0, 'L');
                     $pdf->Cell(60, 4, substr($arMovimientoDetalle['terceroNombreCorto'], 0, 30), 1, 0, 'L');

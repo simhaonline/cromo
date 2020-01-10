@@ -2118,39 +2118,46 @@ class TteGuiaRepository extends ServiceEntityRepository
         if ($arGuia && $arDespacho) {
             if ($arGuia->getEstadoEmbarcado() == 0 && $arGuia->getCodigoDespachoFk() == null) {
                 if ($arDespacho->getCodigoOperacionFk() == $arGuia->getCodigoOperacionCargoFk()) {
-                    $arGuia->setDespachoRel($arDespacho);
-                    $arGuia->setEstadoEmbarcado(1);
-                    $em->persist($arGuia);
+                    if($arGuia->getEstadoAnulado() == 0) {
+                        $arGuia->setDespachoRel($arDespacho);
+                        $arGuia->setEstadoEmbarcado(1);
+                        $em->persist($arGuia);
 
-                    $arDespachoDetalle = new TteDespachoDetalle();
-                    $arDespachoDetalle->setDespachoRel($arDespacho);
-                    $arDespachoDetalle->setGuiaRel($arGuia);
-                    $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
-                    $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
-                    $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
-                    $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
-                    $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
-                    $arDespachoDetalle->setUnidades($arGuia->getUnidades());
-                    $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
-                    $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
-                    if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
-                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                        $arDespachoDetalle = new TteDespachoDetalle();
+                        $arDespachoDetalle->setDespachoRel($arDespacho);
+                        $arDespachoDetalle->setGuiaRel($arGuia);
+                        $arDespachoDetalle->setVrDeclara($arGuia->getVrDeclara());
+                        $arDespachoDetalle->setVrFlete($arGuia->getVrFlete());
+                        $arDespachoDetalle->setVrManejo($arGuia->getVrManejo());
+                        $arDespachoDetalle->setVrRecaudo($arGuia->getVrRecaudo());
+                        $arDespachoDetalle->setVrCobroEntrega($arGuia->getVrCobroEntrega());
+                        $arDespachoDetalle->setUnidades($arGuia->getUnidades());
+                        $arDespachoDetalle->setPesoReal($arGuia->getPesoReal());
+                        $arDespachoDetalle->setPesoVolumen($arGuia->getPesoVolumen());
+                        if ($arGuia->getPesoReal() >= $arGuia->getPesoVolumen()) {
+                            $arDespachoDetalle->setPesoCosto($arGuia->getPesoReal());
+                        } else {
+                            $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                        }
+                        $em->persist($arDespachoDetalle);
+
+                        $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
+                        $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
+                        $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
+                        $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
+                        $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
+                        $em->persist($arDespacho);
+                        $em->flush();
+                        return [
+                            'error' => false,
+                            'mensaje' => '',
+                        ];
                     } else {
-                        $arDespachoDetalle->setPesoCosto($arGuia->getPesoVolumen());
+                        return [
+                            'error' => true,
+                            'mensaje' => "La guia esta anulada y no puede ser despachada",
+                        ];
                     }
-                    $em->persist($arDespachoDetalle);
-
-                    $arDespacho->setUnidades($arDespacho->getUnidades() + $arGuia->getUnidades());
-                    $arDespacho->setPesoReal($arDespacho->getPesoReal() + $arGuia->getPesoReal());
-                    $arDespacho->setPesoVolumen($arDespacho->getPesoVolumen() + $arGuia->getPesoVolumen());
-                    $arDespacho->setPesoCosto($arDespacho->getPesoCosto() + $arDespachoDetalle->getPesoCosto());
-                    $arDespacho->setCantidad($arDespacho->getCantidad() + 1);
-                    $em->persist($arDespacho);
-                    $em->flush();
-                    return [
-                        'error' => false,
-                        'mensaje' => '',
-                    ];
                 } else {
                     return [
                         'error' => true,

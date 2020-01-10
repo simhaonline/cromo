@@ -57,9 +57,13 @@ class FacturaController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurFactura')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoClienteFk', TextType::class, array('required' => false))
-            ->add('numero', TextType::class, array('required' => false))
+            ->add('codigoClienteFk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoClienteFk'] ))
+            ->add('numero', TextType::class, array('required' => false, 'data'=>$raw['filtros']['numero']))
             ->add('codigoFacturaPk', TextType::class, array('required' => false))
             ->add('codigoFacturaTipoFk', EntityType::class, [
                 'class' => TurFacturaTipo::class,
@@ -69,14 +73,15 @@ class FacturaController extends AbstractController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['codigoFacturaTipoFk'] ? $em->getReference(TurFacturaTipo::class, $raw['filtros']['codigoFacturaTipoFk']) : null
             ])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
+            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoContabilizado']  ])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
@@ -86,9 +91,7 @@ class FacturaController extends AbstractController
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -452,7 +455,8 @@ class FacturaController extends AbstractController
 
     public function getFiltros($form)
     {
-        $fitro = [
+        $session = new Session();
+        $filtro = [
             'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
             'numero' => $form->get('numero')->getData(),
             'codigoFacturaPk' => $form->get('codigoFacturaPk')->getData(),
@@ -462,16 +466,17 @@ class FacturaController extends AbstractController
             'estadoContabilizado' => $form->get('estadoContabilizado')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
-
         ];
         $arFacturaTipo = $form->get('codigoFacturaTipoFk')->getData();
 
         if (is_object($arFacturaTipo)) {
-            $fitro['codigoFacturaTipoFk'] = $arFacturaTipo->getCodigoFacturaTipoPk();
+            $filtro['codigoFacturaTipoFk'] = $arFacturaTipo->getCodigoFacturaTipoPk();
         } else {
-            $fitro['codigoFacturaTipoFk'] = $arFacturaTipo;
+            $filtro['codigoFacturaTipoFk'] = $arFacturaTipo;
         }
-        return $fitro;
+        $session->set('filtroTurFactura', $filtro);
+
+        return $filtro;
     }
 
     private function generarInterfazOfimaticaTrade($arFacturas)

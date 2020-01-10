@@ -53,7 +53,7 @@ class TurFacturaRepository extends ServiceEntityRepository
             $codigoFacturaPk = $filtros['codigoFacturaPk'] ?? null;
             $codigoClienteFk = $filtros['codigoClienteFk'] ?? null;
             $numero = $filtros['numero'] ?? null;
-            $codigoFacturaTipoFk = $filtros['codigoPedidoTipoFk'] ?? null;
+            $codigoFacturaTipoFk = $filtros['codigoFacturaTipoFk'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;

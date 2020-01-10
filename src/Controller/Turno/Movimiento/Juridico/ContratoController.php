@@ -22,7 +22,6 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ContratoController extends AbstractController
@@ -46,23 +45,24 @@ class ContratoController extends AbstractController
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
-
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurContrato')
+        ];
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigoContratoPk', TextType::class, array('required' => false))
-            ->add('codigoClienteFk', TextType::class, array('required' => false))
-            ->add('codigoClienteFk', TextType::class, array('required' => false))
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN TERMINAR' => '0', 'TERMINADO' => '1'], 'required' => false])
+            ->add('codigoContratoPk', TextType::class,array('required' => false,   'data'=>$raw['filtros']['codigoContratoPk'] ))
+            ->add('codigoClienteFk', TextType::class, array('required' => false,    'data'=>$raw['filtros']['codigoClienteFk'] ))
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SIN TERMINAR' => '0', 'TERMINADO' => '1'], 'required' => false, 'data'=>$raw['filtros']['estadoTerminado']])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -71,7 +71,7 @@ class ContratoController extends AbstractController
                 General::get()->setExportar($em->getRepository(TurContrato::class)->lista($raw), "Contratos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(TurContrato::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_movimiento_juridico_contrato_lista'));
             }
@@ -405,13 +405,14 @@ class ContratoController extends AbstractController
 
     public function getFiltros($form)
     {
-        return $filtro = [
+        $session = new Session();
+        $filtro = [
             'codigoContratoPk' => $form->get('codigoContratoPk')->getData(),
             'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoTerminado' => $form->get('estadoTerminado')->getData(),
         ];
-
+        $session->set('filtroTurContrato', $filtro);
         return $filtro;
     }
 

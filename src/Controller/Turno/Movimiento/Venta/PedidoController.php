@@ -433,7 +433,7 @@ class PedidoController extends AbstractController
     public function getFiltros($form)
     {
         $session = new Session();
-        $fitro = [
+        $filtro = [
             'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
             'numero' => $form->get('numero')->getData(),
             'codigoPedidoPk' => $form->get('codigoPedidoPk')->getData(),
@@ -452,7 +452,7 @@ class PedidoController extends AbstractController
             $fitro['codigoPedidoTipoFk'] = $arPedidoTipo;
         }
 
-        $session->set('filtroTurPedido', $fitro);
+        $session->set('filtroTurPedido', $filtro);
         return $fitro;
     }
 

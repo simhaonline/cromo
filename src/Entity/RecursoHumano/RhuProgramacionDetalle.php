@@ -73,6 +73,11 @@ class RhuProgramacionDetalle
     private $vrSalarioPrima = 0;
 
     /**
+     * @ORM\Column(name="vr_salario_cesantia", type="float")
+     */
+    private $vrSalarioCesantia = 0;
+
+    /**
      * @ORM\Column(name="vr_neto", type="float", nullable=true)
      */
     private $vrNeto = 0;
@@ -974,5 +979,21 @@ class RhuProgramacionDetalle
     public function setPagosProgramacionDetalleRel($pagosProgramacionDetalleRel): void
     {
         $this->pagosProgramacionDetalleRel = $pagosProgramacionDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioCesantia()
+    {
+        return $this->vrSalarioCesantia;
+    }
+
+    /**
+     * @param mixed $vrSalarioCesantia
+     */
+    public function setVrSalarioCesantia($vrSalarioCesantia): void
+    {
+        $this->vrSalarioCesantia = $vrSalarioCesantia;
     }
 }

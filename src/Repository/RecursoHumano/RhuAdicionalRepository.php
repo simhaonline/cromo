@@ -81,6 +81,9 @@ class RhuAdicionalRepository extends ServiceEntityRepository
         if ($pagoTipo == 'PRI') {
             $queryBuilder->andWhere('a.aplicaPrima = 1');
         }
+        if ($pagoTipo == 'CES') {
+            $queryBuilder->andWhere('a.aplicaCesantia = 1');
+        }
 
         $arrResultado = $queryBuilder->getQuery()->getResult();
         return $arrResultado;

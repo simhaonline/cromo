@@ -14,7 +14,7 @@ class RhuConfiguracion
 {
     public $infoLog = [
         "primaryKey" => "codigoConfiguracionPk",
-        "todos"     => true,
+        "todos" => true,
     ];
     /**
      * @ORM\Id
@@ -42,6 +42,16 @@ class RhuConfiguracion
      * @ORM\Column(name="codigo_concepto_prima_fk", type="string", length=10, nullable=true)
      */
     private $codigoConceptoPrimaFk;
+
+    /**
+     * @ORM\Column(name="codigo_concepto_cesantia_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoCesantiaFk;
+
+    /**
+     * @ORM\Column(name="codigo_concepto_interes_cesantia_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoConceptoInteresCesantiaFk;
 
     /**
      * @ORM\Column(name="vr_auxilio_transporte", type="float", nullable=true)
@@ -982,6 +992,39 @@ class RhuConfiguracion
     {
         $this->diasAusentismoPrimas = $diasAusentismoPrimas;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoCesantiaFk()
+    {
+        return $this->codigoConceptoCesantiaFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoCesantiaFk
+     */
+    public function setCodigoConceptoCesantiaFk($codigoConceptoCesantiaFk): void
+    {
+        $this->codigoConceptoCesantiaFk = $codigoConceptoCesantiaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoConceptoInteresCesantiaFk()
+    {
+        return $this->codigoConceptoInteresCesantiaFk;
+    }
+
+    /**
+     * @param mixed $codigoConceptoInteresCesantiaFk
+     */
+    public function setCodigoConceptoInteresCesantiaFk($codigoConceptoInteresCesantiaFk): void
+    {
+        $this->codigoConceptoInteresCesantiaFk = $codigoConceptoInteresCesantiaFk;
+    }
+
 
 
 }

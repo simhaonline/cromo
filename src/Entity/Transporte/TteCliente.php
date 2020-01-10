@@ -199,6 +199,11 @@ class TteCliente
     private $facturaAgrupadaDestino = false;
 
     /**
+     * @ORM\Column(name="ordenar_impresion_alfabeticamente_destino", type="boolean", nullable=true,options={"default":false})
+     */
+    private $ordenarImpresionAlfabeticamenteDestino = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="tteClientesIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk", referencedColumnName="codigo_identificacion_pk")
      */
@@ -1243,6 +1248,22 @@ class TteCliente
     public function setCodigoCIUU($codigoCIUU): void
     {
         $this->codigoCIUU = $codigoCIUU;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrdenarImpresionAlfabeticamenteDestino()
+    {
+        return $this->ordenarImpresionAlfabeticamenteDestino;
+    }
+
+    /**
+     * @param mixed $ordenarImpresionAlfabeticamenteDestino
+     */
+    public function setOrdenarImpresionAlfabeticamenteDestino($ordenarImpresionAlfabeticamenteDestino): void
+    {
+        $this->ordenarImpresionAlfabeticamenteDestino = $ordenarImpresionAlfabeticamenteDestino;
     }
 
 

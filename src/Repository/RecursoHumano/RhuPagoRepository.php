@@ -1291,26 +1291,26 @@ class RhuPagoRepository extends ServiceEntityRepository
             $em->persist($arPagoDetalle);
 
             //Adicionales
-            $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));
-            foreach ($arAdicionales as $arAdicional) {
-                $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
-                $arPagoDetalle = new RhuPagoDetalle();
-                $pagoDetalle = $arAdicional['vrValor'];
-                if ($arAdicional['aplicaDiaLaborado']) {
-                    $valorDia = $arAdicional['vrValor'] / $arProgramacion->getDias();
-                    $pagoDetalle = $valorDia * $arProgramacionDetalle->getDias();
-                }
-                $pagoDetalle = round($pagoDetalle);
-                if ($arConcepto->getOperacion() == 1) {
-                    $devengado += $pagoDetalle;
-                    if ($arConcepto->getGeneraIngresoBasePrestacion()) {
-                        $devengadoPrestacional += $pagoDetalle;
-                    }
-                }
-                $arPagoDetalle->setDetalle($arAdicional['detalle']);
-                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
-                $em->persist($arPagoDetalle);
-            }
+//            $arAdicionales = $em->getRepository(RhuAdicional::class)->programacionPago($arProgramacionDetalle->getCodigoEmpleadoFk(), $arContrato->getCodigoContratoPk(), $arProgramacion->getCodigoPagoTipoFk(), $arProgramacion->getFechaDesde()->format('Y/m/d'), $arProgramacion->getFechaHasta()->format('Y/m/d'));
+//            foreach ($arAdicionales as $arAdicional) {
+//                $arConcepto = $em->getRepository(RhuConcepto::class)->find($arAdicional['codigoConceptoFk']);
+//                $arPagoDetalle = new RhuPagoDetalle();
+//                $pagoDetalle = $arAdicional['vrValor'];
+//                if ($arAdicional['aplicaDiaLaborado']) {
+//                    $valorDia = $arAdicional['vrValor'] / $arProgramacion->getDias();
+//                    $pagoDetalle = $valorDia * $arProgramacionDetalle->getDias();
+//                }
+//                $pagoDetalle = round($pagoDetalle);
+//                if ($arConcepto->getOperacion() == 1) {
+//                    $devengado += $pagoDetalle;
+//                    if ($arConcepto->getGeneraIngresoBasePrestacion()) {
+//                        $devengadoPrestacional += $pagoDetalle;
+//                    }
+//                }
+//                $arPagoDetalle->setDetalle($arAdicional['detalle']);
+//                $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
+//                $em->persist($arPagoDetalle);
+//            }
 
 
             $arPago->setVrNeto($arrDatosGenerales['neto']);

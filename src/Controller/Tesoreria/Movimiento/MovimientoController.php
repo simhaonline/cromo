@@ -204,6 +204,7 @@ class MovimientoController extends AbstractController
     public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        /** @var $arMovimiento TesMovimiento */
         $arMovimiento = $em->getRepository(TesMovimiento::class)->find($id);
         $form = Estandares::botonera($arMovimiento->getEstadoAutorizado(), $arMovimiento->getEstadoAprobado(), $arMovimiento->getEstadoAnulado());
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
@@ -286,6 +287,8 @@ class MovimientoController extends AbstractController
                 $arMovimientoDetalle->setTerceroRel($arMovimiento->getTerceroRel());
                 if ($arMovimiento->getCodigoMovimientoClaseFk() == 'EG') {
                     $arMovimientoDetalle->setNaturaleza('C');
+                    $detalle = $arMovimiento->getNumeroDocumento() . $arMovimiento->getTerceroRel()->getNombreCorto();
+                    $arMovimientoDetalle->setDetalle($detalle);
                 } else {
                     $arMovimientoDetalle->setNaturaleza('D');
                     $arMovimientoDetalle->setNumero($arMovimiento->getNumeroDocumento());
@@ -392,6 +395,11 @@ class MovimientoController extends AbstractController
 
                         $arMovimientoDetalle->setCuenta($arCuentaPagar->getCuenta());
                         $arMovimientoDetalle->setBancoRel($arCuentaPagar->getBancoRel());
+                        if($arMovimiento->getCodigoMovimientoClaseFk() == 'EG') {
+                            $detalle = $arCuentaPagar->getNumeroDocumento() . $arCuentaPagar->getTerceroRel()->getNombreCorto();
+                            $arMovimientoDetalle->setDetalle($detalle);
+                        }
+
                         $em->persist($arMovimientoDetalle);
                     }
                     $em->flush();

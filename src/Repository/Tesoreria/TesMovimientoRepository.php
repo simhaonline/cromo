@@ -308,7 +308,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $respuesta = [];
-        if ($arMovimiento->getEstadoAprobado() == 1) {
+        if ($arMovimiento->getEstadoAprobado() == 1 && $arMovimiento->getEstadoContabilizado() == 0) {
             $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
                 if ($arMovimientoDetalle->getCodigoCuentaPagarFk()) {
@@ -328,6 +328,8 @@ class TesMovimientoRepository extends ServiceEntityRepository
             $arMovimiento->setEstadoAnulado(1);
             $this->_em->persist($arMovimiento);
             $this->_em->flush();
+        } else {
+            Mensajes::error();
         }
         return $respuesta;
     }

@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteFacturaTipo;
 use App\Formato\Transporte\ControlFactura;
 use App\Formato\Transporte\FacturaInforme;
 use App\General\General;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -63,7 +64,10 @@ class RegistroController extends Controller
                 $session->set('filtroFinRegistroFiltroFecha', $form->get('filtrarFecha')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(FinRegistro::class)->registros()->getQuery()->getResult(), "Registros");
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
+                $this->exportarExcelPersonalizado($arRegistros);
             }
         }
         $query = $this->getDoctrine()->getRepository(FinRegistro::class)->registros();
@@ -72,5 +76,69 @@ class RegistroController extends Controller
             'arRegistros' => $arRegistros,
             'form' => $form->createView() ]);
     }
+
+    public function exportarExcelPersonalizado($arRegistros){
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arRegistros) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Movimientos');
+            $j = 0;
+            $arrColumnas=[
+                'COD',
+                'P',
+                'NUMERO',
+                'P',
+                'NUMERO REF',
+                'FECHA',
+                'COMPRABANTE',
+                'CUENTA',
+                'C_C',
+                'NIT',
+                'TERCERO',
+                'DEBITO',
+                'CREDITO',
+                'BASE',
+                'DETALLE',
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arRegistros as $arRegistro) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoRegistroPk']);
+                $hoja->setCellValue('C' . $j, $arRegistro['numeroPrefijo']);
+                $hoja->setCellValue('B' . $j, $arRegistro['numero']);
+                $hoja->setCellValue('E' . $j, $arRegistro['numeroReferenciaPrefijo']);
+                $hoja->setCellValue('D' . $j, $arRegistro['numeroReferencia']);
+                $hoja->setCellValue('F' . $j, $arRegistro['fecha']->format('Y/m/d'));
+                $hoja->setCellValue('G' . $j, "{$arRegistro['codigoComprobanteFk']} - {$arRegistro['nombre']}");
+                $hoja->setCellValue('H' . $j, $arRegistro['codigoCuentaFk']);
+                $hoja->setCellValue('I' . $j, $arRegistro['codigoCentroCostoFk']);
+                $hoja->setCellValue('J' . $j, $arRegistro['numeroIdentificacion']);
+                $hoja->setCellValue('K' . $j, $arRegistro['nombreCorto']);
+                $hoja->setCellValue('L' . $j, $arRegistro['vrDebito']);
+                $hoja->setCellValue('M' . $j, $arRegistro['vrCredito']);
+                $hoja->setCellValue('N' . $j, $arRegistro['vrBase']);
+                $hoja->setCellValue('O' . $j, $arRegistro['descripcion']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=intercambioRegistro.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
+    }
+
 }
 

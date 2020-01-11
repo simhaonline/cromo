@@ -157,7 +157,7 @@ class NotaCredito extends \FPDF
                 foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
                     $pdf->Cell(15, 4, $arMovimientoDetalle['codigoMovimientoDetallePk'], 1, 0, 'L');
                     $pdf->Cell(10, 4, $arMovimientoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
-                    $pdf->Cell(15, 4, $arMovimientoDetalle['numeroDocumento'], 1, 0, 'L');
+                    $pdf->Cell(15, 4, $arMovimientoDetalle['numero'], 1, 0, 'L');
                     $pdf->Cell(25, 4, $arMovimientoDetalle['terceroNumeroIdentificacion'], 1, 0, 'L');
                     $pdf->Cell(60, 4, substr($arMovimientoDetalle['terceroNombreCorto'], 0, 30), 1, 0, 'L');
                     $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaFk'], 1, 0, 'L');

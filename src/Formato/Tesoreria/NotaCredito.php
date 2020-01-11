@@ -36,7 +36,7 @@ class NotaCredito extends \FPDF
     public function Header()
     {
         $arConfiguracion = self::$em->getRepository(GenConfiguracion::class)->find(1);
-        Estandares::generarEncabezado($this, 'EGRESO', self::$em);
+        Estandares::generarEncabezado($this, 'NOTA CREDITO', self::$em);
         $this->EncabezadoDetalles();
     }
 

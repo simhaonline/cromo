@@ -13,7 +13,7 @@
                 <td class="titulo">ID:</td>
                 <td class="td-in-well">{{ arCliente.codigoClientePk }}</td>
                 <td class="titulo">TIPO IDENTIFICACION:</td>
-                <td class="td-in-well">{{ arCliente.identificacionRel.nombre }}</td>
+                <td class="td-in-well">{{ arCliente.identificacionRel.nombre | default('')}}</td>
                 <td class="titulo">NUMERO IDENTIFICACION:</td>
                 <td class="td-in-well">{{ arCliente.numeroIdentificacion }}</td>
             </tr>
@@ -29,7 +29,7 @@
                 <td class="titulo">DIRECCION:</td>
                 <td class="td-in-well">{{ arCliente.direccion }}</td>
                 <td class="titulo">CIUDAD:</td>
-                <td class="td-in-well">{{ arCliente.ciudadRel.nombre }}</td>
+                <td class="td-in-well">{{ arCliente.ciudadRel.nombre  | default('') }}</td>
                 <td class="titulo">TELEFONO:</td>
                 <td class="td-in-well">{{ arCliente.telefono }}</td>
             </tr>

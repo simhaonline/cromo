@@ -57,11 +57,15 @@ class SoporteController extends ControllerListenerGeneral
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurSoporteLista')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoSoportePk', TextType::class, array('required' => false))
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('codigoSoportePk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoSoportePk']))
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -69,19 +73,13 @@ class SoporteController extends ControllerListenerGeneral
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
-
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
-
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
-
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TurSoporte::class)->lista($raw)->getQuery()->execute(), "Soporte");
-
+                General::get()->setExportar($em->getRepository(TurSoporte::class)->lista($raw), "Soporte");
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 /*set_time_limit(0);
@@ -155,9 +153,12 @@ class SoporteController extends ControllerListenerGeneral
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @Route("/turno/movimiento/operacion/soporte/detalle/{id}", name="turno_movimiento_operacion_soporte_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
-        $paginator = $this->get('knp_paginator');
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurSoporteDetalle')
+        ];
         $em = $this->getDoctrine()->getManager();
         $arSoporte = $em->getRepository(TurSoporte::class)->find($id);
         $form = Estandares::botonera($arSoporte->getEstadoAutorizado(), $arSoporte->getEstadoAprobado(), $arSoporte->getEstadoAnulado());
@@ -180,9 +181,8 @@ class SoporteController extends ControllerListenerGeneral
         }
         $form->add('btnCargarContratos', SubmitType::class, $arrBtnCargarContratos);
         $form->add('btnEliminarDetalle', SubmitType::class, $arrBtnEliminar);
-        $form->add('identificacion', TextType::class,array('required' => false));
+        $form->add('identificacion', TextType::class,array('required' => false,  'data'=>$raw['filtros']['identificacion'] ));
         $form->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar']);
-        $raw = [];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if($form->get('btnAutorizar')->isClicked()) {
@@ -273,15 +273,14 @@ class SoporteController extends ControllerListenerGeneral
 
     public function getFiltros($form)
     {
-        return $filtro = [
+        $session = new Session();
+        $filtro = [
             'codigoSoportePk' => $form->get('codigoSoportePk')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
-
         ];
-
-
+        $session->set('filtroTurSoporteLista', $filtro);
         return $filtro;
     }
 
@@ -404,9 +403,11 @@ class SoporteController extends ControllerListenerGeneral
 
     public function getFiltrosDetalle($form)
     {
+        $session = new Session();
         $filtro = [
             'identificacion' => $form->get('identificacion')->getData(),
         ];
+        $session->set('filtroTurSoporteDetalle', $filtro);
         return $filtro;
     }
 }

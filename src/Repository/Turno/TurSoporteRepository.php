@@ -89,7 +89,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         }
         $queryBuilder->orderBy('s.codigoSoportePk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function cargarSoporte()

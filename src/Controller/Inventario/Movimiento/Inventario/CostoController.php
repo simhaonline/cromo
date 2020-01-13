@@ -81,7 +81,7 @@ class CostoController extends AbstractController
                 General::get()->setExportar($em->getRepository(InvCosto::class)->lista($raw), "Costo");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(InvCosto::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('inventario_movimiento_inventario_costo_lista'));
             }

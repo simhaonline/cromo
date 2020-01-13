@@ -470,11 +470,22 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('c.fecha')
             ->addSelect('c.fechaDesde')
             ->addSelect('c.fechaHasta')
+            ->addSelect('c.vrSalario')
             ->addSelect('c.fechaUltimoPagoVacaciones')
+            ->addSelect('c.estadoTerminado')
             ->addSelect('e.nombreCorto as empleado')
             ->addSelect('e.numeroIdentificacion')
+            ->addSelect('ct.nombre AS tipo')
+            ->addSelect('gp.nombre AS grupo')
             ->leftJoin('c.empleadoRel', 'e')
-            ->where("c.fechaUltimoPagoVacaciones <= '{$fechaActual->format('Y-m-d')} 23:59:59' ");
+            ->leftJoin('c.contratoTipoRel', 'ct')
+            ->leftJoin('c.grupoRel', 'gp')
+            ->where("c.fechaHasta <= '{$fechaActual->format('Y-m-d')} 23:59:59' ")
+            ->andWhere("c.fechaUltimoPagoVacaciones <= '{$fechaActual->format('Y-m-d')} 23:59:59' ")
+            ->andWhere('c.estadoTerminado = 0')
+            ->andWhere("c.codigoContratoClaseFk != 'APR' ")
+            ->andWhere("c.codigoContratoClaseFk != 'PRA' ")
+        ;
         if ($codigoEmpleado) {
             $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }

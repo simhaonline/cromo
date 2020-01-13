@@ -56,38 +56,50 @@
         <thead>
         <tr>
             <th>CÓDIGO</th>
+            <th>TIPO</th>
             <th>FECHA</th>
+            <th>CÓDIGO EMPLEADO</th>
+            <th>IDENTIFICACIÓN</th>
+            <th>NOMBRE</th>
             <th>DESDE</th>
             <th>HASTA</th>
             <th>ULTIMO PAGO</th>
-            <th>CÓDIGO EMPLEADO</th>
-            <th>NOMBRE</th>
-            <th>IDENTIFICACIÓN</th>
+            <th>VIGENTE</th>
+            <th>SALARIO</th>
+            <th>DIAS</th>
+            <th>AUS</th>
+            <th>VR VAC</th>
         </tr>
         </thead>
         <tbody>
-        {% for  arContrato in arContratos %}
+        {% for  arVacacionPagar in arVacacionesPagar %}
             <tr>
-                <td>{{ arContrato.codigoContratoPk }}</td>
-                <td>{{ arContrato.fecha | date('Y-m-d') }}</td>
-                <td>{{ arContrato.fechaDesde | date('Y-m-d') }}</td>
-                <td>{{ arContrato.fechaHasta | date('Y-m-d') }}</td>
-                <td>{{ arContrato.fechaUltimoPagoVacaciones | date('Y-m-d') }}</td>
-                <td>{{ arContrato.codigoEmpleadoFk }}</td>
-                <td>{{ arContrato.empleado }}</td>
-                <td>{{ arContrato.numeroIdentificacion }}</td>
+                <td>{{ arVacacionPagar.codigoContratoPk }}</td>
+                <td>{{ arVacacionPagar.tipo }}</td>
+                <td>{{ arVacacionPagar.codigoEmpleadoFk }}</td>
+                <td>{{ arVacacionPagar.empleado }}</td>
+                <td>{{ arVacacionPagar.numeroIdentificacion }}</td>
+                <td>{{ arVacacionPagar.fecha | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPagar.fechaDesde | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPagar.fechaHasta | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPagar.fechaUltimoPagoVacaciones | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPagar.estadoTerminado?"SI":"NO"}}</td>
+                <td style="text-align: right">{{ arVacacionPagar.vrSalario | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPagar.diasVacaciones | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPagar.diasAusentismo | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPagar.valorVacaciones | number_format(0, '.', ',') }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arContratos.getTotalItemCount }}
+            <span class="badge">{{ arVacacionesPagar.getTotalItemCount }}
                     </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arContratos) }}
+        {{ knp_pagination_render(arVacacionesPagar) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}

@@ -68,7 +68,6 @@ class CarClienteRepository extends ServiceEntityRepository
 
     public function eliminar($arrSeleccionados)
     {
-        $respuesta = '';
         $em = $this->getEntityManager();
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados AS $codigo) {
@@ -80,10 +79,9 @@ class CarClienteRepository extends ServiceEntityRepository
             try {
                 $em->flush();
             } catch (\Exception $exception) {
-                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
+                Mensajes::error('No se puede eliminar, el registro esta siendo utilizado en el sistema');
             }
         }
-        return $respuesta;
     }
 
     public function terceroFinanciero($codigo)

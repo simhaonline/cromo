@@ -34,6 +34,7 @@ class RhuConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('c.provisionPorcentajeVacacion')
             ->addSelect('c.primasDiasAdicionalesSalario')
             ->addSelect('c.diasAusentismoPrimas')
+            ->addSelect('c.aportarCajaLicenciaMaternidadPaternidad')
             ->where('c.codigoConfiguracionPk = 1');
         return $queryBuilder->getQuery()->getSingleResult();
     }

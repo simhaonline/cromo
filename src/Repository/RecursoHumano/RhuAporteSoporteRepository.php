@@ -471,7 +471,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                     if ($diaSalarioLicencia != $diaSalario) {
                         $arAporteSoporte->setVariacionTransitoriaSalario('X');
                     }
-                    $porcentaje = $arContrato->getTipoPensionRel()->getPorcentajeEmpleador() + 4;
+                    $porcentaje = $arContrato->getPensionRel()->getPorcentajeEmpleador() + 4;
                     $arAporteSoporte->setTarifaPension($porcentaje);
                     $arAporteSoporte->setTarifaSalud(4);
                     /*if ($arConfiguracionNomina->getAportarCajaLicenciaMaternidadPaternidad()) {

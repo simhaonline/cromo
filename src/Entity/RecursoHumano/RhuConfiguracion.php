@@ -79,6 +79,11 @@ class RhuConfiguracion
     private $codigoConceptoAnticipoFk;
 
     /**
+     * @ORM\Column(name="aportar_caja_licencia_maternidad_paternidad" , type="boolean" ,nullable=true)
+     */
+    private $aportarCajaLicenciaMaternidadPaternidad = false;
+
+    /**
      * @ORM\Column(name="auxilio_transporte_no_prestacional", type="boolean", nullable=true)
      */
     private $auxilioTransporteNoPrestacional = false;
@@ -1023,6 +1028,22 @@ class RhuConfiguracion
     public function setCodigoConceptoInteresCesantiaFk($codigoConceptoInteresCesantiaFk): void
     {
         $this->codigoConceptoInteresCesantiaFk = $codigoConceptoInteresCesantiaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAportarCajaLicenciaMaternidadPaternidad()
+    {
+        return $this->aportarCajaLicenciaMaternidadPaternidad;
+    }
+
+    /**
+     * @param mixed $aportarCajaLicenciaMaternidadPaternidad
+     */
+    public function setAportarCajaLicenciaMaternidadPaternidad($aportarCajaLicenciaMaternidadPaternidad): void
+    {
+        $this->aportarCajaLicenciaMaternidadPaternidad = $aportarCajaLicenciaMaternidadPaternidad;
     }
 
 

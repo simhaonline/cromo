@@ -12,6 +12,7 @@ use App\Entity\RecursoHumano\RhuVacacion;
 use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,10 +28,15 @@ class vacacionesPendientesController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroInformeRhuContrato')
+        ];
         $form = $this->createFormBuilder()
             ->add('codigoEmpleadoFk', TextType::class, array('required' => false))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('estadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoTerminado'] ])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
@@ -197,11 +203,14 @@ class vacacionesPendientesController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
+            'estadoTerminado' => $form->get('estadoTerminado')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
         ];
+        $session->set('filtroInformeRhuContrato', $filtro);
 
         return $filtro;
 

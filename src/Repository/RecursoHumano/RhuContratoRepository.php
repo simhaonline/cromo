@@ -456,11 +456,13 @@ class RhuContratoRepository extends ServiceEntityRepository
         $codigoEmpleado = null;
         $fechaDesde = null;
         $fechaHasta = null;
+        $estadoTerminado = null;
 
         if ($filtros) {
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoTerminado = $filtros['estadoTerminado'] ?? null;
         }
         $fechaActual = new \DateTime('now');
 
@@ -482,7 +484,6 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->leftJoin('c.grupoRel', 'gp')
             ->where("c.fechaHasta <= '{$fechaActual->format('Y-m-d')} 23:59:59' ")
             ->andWhere("c.fechaUltimoPagoVacaciones <= '{$fechaActual->format('Y-m-d')} 23:59:59' ")
-            ->andWhere('c.estadoTerminado = 0')
             ->andWhere("c.codigoContratoClaseFk != 'APR' ")
             ->andWhere("c.codigoContratoClaseFk != 'PRA' ")
         ;
@@ -496,6 +497,16 @@ class RhuContratoRepository extends ServiceEntityRepository
         if ($fechaHasta) {
             $queryBuilder->andWhere("c.fechaHasta <= '{$fechaHasta} 23:59:59'");
         }
+
+        switch ($estadoTerminado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoTerminado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoTerminado = 1");
+                break;
+        }
+
 
         $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);

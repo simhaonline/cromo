@@ -23,6 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NovedadController extends AbstractController
@@ -33,16 +34,20 @@ class NovedadController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTurNovedad')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoEmpleadoFk', TextType::class, array('required' => false))
-            ->add('codigoNovedad', TextType::class, array('label' => 'Codigo', 'required' => false))
-            ->add('codigoNovedadTipo', TextType::class, array('label' => 'Codigo', 'required' => false))
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAplicado', ChoiceType::class, array('choices' => array('TODOS' => '2', 'APLICADAS' => '1', 'SIN APLICAR' => '0')))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoEmpleadoFk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoEmpleadoFk']))
+            ->add('codigoNovedad', TextType::class, array('label' => 'Codigo', 'required' => false, 'data'=>$raw['filtros']['codigoEmpleadoFk'] ))
+            ->add('codigoNovedadTipo', TextType::class, array('label' => 'Codigo', 'required' => false, 'data'=>$raw['filtros']['codigoEmpleadoFk'] ))
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado']])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado']])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado']])
+            ->add('estadoAplicado', ChoiceType::class, ['choices' => [ 'TODOS' => '', 'APLICADAS' => '1', 'SIN APLICAR' => '0'], 'require'=>false, 'data'=>$raw['filtros']['estadoAplicado'] ])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -50,9 +55,7 @@ class NovedadController extends AbstractController
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -247,6 +250,7 @@ class NovedadController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'codigoNovedad' => $form->get('codigoNovedad')->getData(),
@@ -258,6 +262,8 @@ class NovedadController extends AbstractController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
             'estadoAplicado' => $form->get('estadoAplicado')->getData(),
         ];
+        $session->set('filtroTurNovedad', $filtro);
+
         return $filtro;
 
     }

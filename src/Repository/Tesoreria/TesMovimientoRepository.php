@@ -244,6 +244,10 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                     break;
                                 }
                             }
+                        } else {
+                            Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " no tiene cuenta");
+                            $error = true;
+                            break;
                         }
                     }
                     if ($error == false) {

@@ -37,7 +37,7 @@
             <td class="titulo">DISCAPACIDAD:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.discapacidad) }}</td>
             <td class="titulo">RH:</td>
-            <td class="td-in-well">{{ arEmpleado.rhRel.tipo | default('') }}</td>
+            <td class="td-in-well">{{ arEmpleado.rhRel.nombre | default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">MOTO:</td>
@@ -78,6 +78,14 @@
             <td class="td-in-well">{{ arEmpleado.celular }}</td>
             <td class="titulo">CUENTA:</td>
             <td class="td-in-well">{{ arEmpleado.cuenta }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">BANCO:</td>
+            <td class="td-in-well">{{ arEmpleado.bancoRel.nombre | default('') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

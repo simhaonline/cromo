@@ -16,6 +16,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -41,20 +42,21 @@ class AdicionalController extends AbstractController
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuAdicional')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
-            ->add('estadoInactivo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuAdicionalEstadoInactivo'), 'required' => false])
-            ->add('estadoInactivoPeriodo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroRhuAdicionalEstadoInactivo'), 'required' => false])
+            ->add('codigoEmpleadoFk', SearchType::class, ['required' => false,  'data'=>$raw['filtros']['codigoEmpleado']])
+            ->add('estadoInactivo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data'=>$raw['filtros']['estadoInactivo'], 'required' => false])
+            ->add('estadoInactivoPeriodo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data'=>$raw['filtros']['estadoInactivoPeriodo'], 'required' => false])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -141,12 +143,13 @@ class AdicionalController extends AbstractController
      */
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'estadoInactivo' => $form->get('estadoInactivo')->getData(),
             'estadoInactivoPeriodo' => $form->get('estadoInactivoPeriodo')->getData(),
         ];
-
+        $session->set('filtroRhuAdicional', $filtro);
         return $filtro;
     }
 }

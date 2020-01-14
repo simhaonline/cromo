@@ -45,9 +45,7 @@ class vacacionesPendientesController extends AbstractController
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -59,12 +57,13 @@ class vacacionesPendientesController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                $arVacacionPendiente = $this->getDoctrine()->getRepository(RhuInformeVacacionPendiente::class)->informe();
+                $raw['filtros'] = $this->getFiltros($form);
+                $arVacacionPendiente = $this->getDoctrine()->getRepository(RhuInformeVacacionPendiente::class)->informe($raw);
                 $this->exportarExcelPersonalizado($arVacacionPendiente);
             }
         }
 
-        $arVacacionesPendientes = $paginator->paginate($em->getRepository(RhuInformeVacacionPendiente::class)->informe(), $request->query->getInt('page', 1), 500);
+        $arVacacionesPendientes = $paginator->paginate($em->getRepository(RhuInformeVacacionPendiente::class)->informe($raw), $request->query->getInt('page', 1), 500);
         return $this->render('recursohumano/informe/vacacion/pendiente.html.twig', [
             'arVacacionesPendientes' => $arVacacionesPendientes,
             'form' => $form->createView(),
@@ -77,8 +76,6 @@ class vacacionesPendientesController extends AbstractController
         $filtro = [
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'estadoTerminado' => $form->get('estadoTerminado')->getData(),
-            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
-            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
         ];
         $session->set('filtroInformeRhuContrato', $filtro);
 

@@ -1360,6 +1360,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $arInformeVacacionPendiente->setDias($arrVacaciones['dias']);
             $arInformeVacacionPendiente->setDiasAusentismo($arrVacaciones['diasAusentismo']);
             $arInformeVacacionPendiente->setVrVacacion($arrVacaciones['valor']);
+            $arInformeVacacionPendiente->setCodigoEmpleadoFk($arVacacion['codigoEmpleadoFk']);
             $em->persist($arInformeVacacionPendiente);
         }
         $em->flush();

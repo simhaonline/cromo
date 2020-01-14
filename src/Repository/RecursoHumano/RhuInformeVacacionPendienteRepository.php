@@ -19,14 +19,24 @@ class RhuInformeVacacionPendienteRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuInformeVacacionPendiente::class);
     }
 
-    public function informe()
+    public function informe($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoEmpleado = null;
+        $estadoTerminado = null;
+
+        if ($filtros) {
+            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
+            $estadoTerminado = $filtros['estadoTerminado'] ?? null;
+        }
+
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuInformeVacacionPendiente::class, 'ivp')
             ->addSelect('ivp.codigoInformeVacacionPendientePk')
-        ->addSelect('ivp.codigoContratoFk')
-        ->addSelect('ivp.tipoContrato')
-        ->addSelect('ivp.fechaIngreso')
+            ->addSelect('ivp.codigoContratoFk')
+            ->addSelect('ivp.tipoContrato')
+            ->addSelect('ivp.fechaIngreso')
             ->addSelect('ivp.numeroIdentificacion')
             ->addSelect('ivp.empleado')
             ->addSelect('ivp.grupo')
@@ -40,6 +50,18 @@ class RhuInformeVacacionPendienteRepository extends ServiceEntityRepository
             ->addSelect('ivp.vrVacacion')
             ->addSelect('ivp.vrPromedioRecargoNocturno')
             ->addSelect('ivp.vrSalarioPromedio');
+
+        if ($codigoEmpleado) {
+            $queryBuilder->andWhere("ivp.codigoEmpleadoFk = {$codigoEmpleado} ");
+        }
+        switch ($estadoTerminado) {
+            case '0':
+                $queryBuilder->andWhere("ivp.estadoTerminado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("ivp.estadoTerminado = 1");
+                break;
+        }
         return $queryBuilder->getQuery()->getResult();
 
     }

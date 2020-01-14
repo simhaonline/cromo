@@ -98,6 +98,11 @@ class RhuInformeVacacionPendiente
     private $vrVacacion = 0;
 
     /**
+     * @ORM\Column(name="codigo_empleado_fk", type="integer", nullable=true)
+     */
+    private $codigoEmpleadoFk;
+
+    /**
      * @return mixed
      */
     public function getCodigoInformeVacacionPendientePk()
@@ -367,6 +372,22 @@ class RhuInformeVacacionPendiente
     public function setVrSalarioPromedio($vrSalarioPromedio): void
     {
         $this->vrSalarioPromedio = $vrSalarioPromedio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEmpleadoFk()
+    {
+        return $this->codigoEmpleadoFk;
+    }
+
+    /**
+     * @param mixed $codigoEmpleadoFk
+     */
+    public function setCodigoEmpleadoFk($codigoEmpleadoFk): void
+    {
+        $this->codigoEmpleadoFk = $codigoEmpleadoFk;
     }
 
 

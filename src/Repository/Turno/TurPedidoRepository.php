@@ -413,8 +413,32 @@ class TurPedidoRepository extends ServiceEntityRepository
         }
     }
 
-    public function lista(){
-        $session = new Session();
+    public function lista($raw){
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigoCliente = null;
+        $numero = null;
+        $codigoPedido = null;
+        $codigoPedidoTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigoCliente = $filtros['codigoCliente'] ?? null;
+            $numero = $filtros['numero'] ?? null;
+            $codigoPedido = $filtros['codigoPedido'] ?? null;
+            $codigoPedidoTipo = $filtros['codigoPedidoTipo'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
+            $estadoAprobado = $filtros['estadoAprobado'] ?? null;
+            $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedido::class, 'p')
             ->select('p.codigoPedidoPk')
             ->addSelect('p.numero')
@@ -441,45 +465,51 @@ class TurPedidoRepository extends ServiceEntityRepository
         ->leftJoin('p.clienteRel', 'c')
         ->leftJoin('p.sectorRel', 's');
 
-        if($session->get('filtroTurInformeComercialPedidoClienteCodigo') != ''){
-            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurInformeComercialPedidoClienteCodigo')}'");
+        if($codigoCliente){
+            $queryBuilder->andWhere("p.codigoClienteFk  = '{$codigoCliente}'");
         }
-        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde') != null) {
-            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaDesde')} 00:00:00'");
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("p.fecha >= '{$fechaDesde} 00:00:00'");
         }
-        if ($session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta') != null) {
-            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurInformeComercialPedidoClienteCodigoFechaHasta')} 23:59:59'");
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("p.fecha <= '{$fechaHasta} 23:59:59'");
         }
-
-        if($session->get('filtroTurPedidoProgramacionCodigoCliente') != ''){
-            $queryBuilder->andWhere("p.codigoClienteFk  = '{$session->get('filtroTurPedidoProgramacionCodigoCliente')}'");
+        if($numero){
+            $queryBuilder->andWhere("p.numero  = '{$numero}'");
         }
-        if($session->get('filtroTurPedidoProgramacionNumero') != ''){
-            $queryBuilder->andWhere("p.numero  = '{$session->get('filtroTurPedidoProgramacionNumero')}'");
+        if($codigoPedido){
+            $queryBuilder->andWhere("p.codigoPedidoPk  = '{$codigoPedido}'");
         }
-        if($session->get('filtroTurPedidoProgramacionCodigoPedido') != ''){
-            $queryBuilder->andWhere("p.codigoPedidoPk  = '{$session->get('filtroTurPedidoProgramacionCodigoPedido')}'");
+        if($codigoPedidoTipo){
+            $queryBuilder->andWhere("p.codigoPedidoTipoFk  = '{$codigoPedidoTipo}'");
         }
-        if($session->get('filtroTurPedidoProgramacionCodigoPedidoTipo') != ''){
-            $queryBuilder->andWhere("p.codigoPedidoTipoFk  = '{$session->get('filtroTurPedidoProgramacionCodigoPedidoTipo')}'");
+        switch ($estadoAutorizado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAutorizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAutorizado = 1");
+                break;
         }
-        if ($session->get('filtroTurPedidoProgramacionFechaDesde') != null) {
-            $queryBuilder->andWhere("p.fecha >= '{$session->get('filtroTurPedidoProgramacionFechaDesde')} 00:00:00'");
+        switch ($estadoAprobado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAprobado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAprobado = 1");
+                break;
         }
-        if ($session->get('filtroTurPedidoProgramacionFechaHasta') != null) {
-            $queryBuilder->andWhere("p.fecha <= '{$session->get('filtroTurPedidoProgramacionFechaHasta')} 23:59:59'");
-        }
-        if($session->get('filtroTurPedidoProgramacionEstadoAutorizado') != ''){
-            $queryBuilder->andWhere("p.estadoAutorizado  = '{$session->get('filtroTurPedidoProgramacionEstadoAutorizado')}'");
-        }
-        if($session->get('filtroTurPedidoProgramacionEstadoAprobado') != ''){
-            $queryBuilder->andWhere("p.estadoAprobado  = '{$session->get('filtroTurPedidoProgramacionEstadoAprobado')}'");
-        }
-        if($session->get('filtroTurPedidoProgramacionEstadoAnulado') != ''){
-            $queryBuilder->andWhere("p.estadoAnulado  = '{$session->get('filtroTurPedidoProgramacionEstadoAnulado')}'");
+        switch ($estadoAnulado) {
+            case '0':
+                $queryBuilder->andWhere("p.estadoAnulado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("p.estadoAnulado = 1");
+                break;
         }
 
         $queryBuilder->addOrderBy('p.codigoPedidoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }
 

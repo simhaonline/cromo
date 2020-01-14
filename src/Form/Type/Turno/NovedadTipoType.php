@@ -43,4 +43,30 @@ class NovedadTipoType extends   AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"estadoLicencia",          "tipo":"bool",  "ayuda":"Estado licencia",           "titulo":"LIC"},
+            {"campo":"estadoIncapacidad",          "tipo":"bool",  "ayuda":"Estado incapcidad",           "titulo":"INC"},
+            {"campo":"estadoIngreso",          "tipo":"bool",  "ayuda":"Estado ingreso",           "titulo":"ING"},
+            {"campo":"estadoRetiro",          "tipo":"bool",  "ayuda":"Estado retiro",           "titulo":"RET"}
+        ]';
+        return $campos;
+    }
+
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoNovedadTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro", "titulo":"NOMBRE"},
+            {"campo":"estadoLicencia",          "tipo":"bool",  "ayuda":"Operativo",           "titulo":"estadoLicencia"},
+            {"campo":"estadoIncapacidad",          "tipo":"bool",  "ayuda":"Operativo",           "titulo":"estadoIncapacidad"},
+            {"campo":"estadoIngreso",          "tipo":"bool",  "ayuda":"Operativo",           "titulo":"estadoIngreso"},
+            {"campo":"estadoRetiro",          "tipo":"bool",  "ayuda":"Operativo",           "titulo":"estadoRetiro"}
+        ]';
+        return $campos;
+    }
 }

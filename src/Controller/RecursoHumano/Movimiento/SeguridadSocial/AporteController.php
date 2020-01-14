@@ -16,6 +16,7 @@ use App\Entity\RecursoHumano\RhuAporteSoporte;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\Transporte\TteGuia;
+use App\Form\Type\RecursoHumano\AporteDetalleType;
 use App\Form\Type\RecursoHumano\AporteType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -203,7 +204,7 @@ class AporteController extends AbstractController
                 }
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
-            if ($form->get('btnFiltrar')->isClicked()){
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltrosDetalle($form);
             }
         }
@@ -217,6 +218,47 @@ class AporteController extends AbstractController
             'arAporteEntidades' => $arAporteEntidades,
             'clase' => array('clase' => 'RhuAporte', 'codigo' => $id),
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("recursohumano/movimiento/seguridadsocial/aporte/editar/{id}", name="recursohumano_movimiento_seguridadsocial_aporte_editar")
+     */
+    public function detalleAporteEditar(Request $request, PaginatorInterface $paginator, Modelo $utilidadesModelo, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arAporteDetalle = $em->getRepository(RhuAporteDetalle::class)->find($id);
+        $arAporte = $em->getRepository(RhuAporte::class)->find($arAporteDetalle->getCodigoAporteFk());
+        if (!$arAporteDetalle) {
+            return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_lista'));
+        }
+        $form = $this->createForm(AporteDetalleType::class, $arAporteDetalle);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $arAporteDetalleDetalle = $form->getData();
+            $arAporteDetalleDetalle->setCodigoEntidadSaludPertenece($arAporteDetalle->getEntidadSaludRel()->getCodigoInterface());
+            $arAporteDetalle->setCodigoEntidadCajaPertenece($arAporteDetalle->getEntidadCajaRel()->getCodigoInterface());
+            $arAporteDetalle->setCodigoEntidadPensionPertenece($arAporteDetalle->getEntidadPensionRel()->getCodigoInterface());
+            if (!$arAporteDetalle->getIngreso()) {
+                $arAporteDetalle->setIngreso(' ');
+            }
+            if (!$arAporteDetalle->getRetiro()) {
+                $arAporteDetalle->setRetiro(' ');
+            }
+            if ($arAporteDetalle->getAporteVoluntarioFondoPensionesObligatorias() > 0) {
+                $arAporteDetalle->setAporteVoluntario('X');
+            } else {
+                $arAporteDetalle->setAporteVoluntario(' ');
+            }
+            $totalCotizacion = $arAporteDetalle->getAporteVoluntarioFondoPensionesObligatorias() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporteDetalle->getCotizacionPension() + $arAporteDetalle->getCotizacionSalud() + $arAporteDetalle->getCotizacionRiesgos() + $arAporteDetalle->getCotizacionCaja() + $arAporteDetalle->getCotizacionIcbf() + $arAporteDetalle->getCotizacionSena();
+            $arAporteDetalle->setTotalCotizacion($totalCotizacion);
+            $em->persist($arAporteDetalle);
+            $em->flush();
+            $em->getRepository(RhuAporte::class)->liquidar2($arAporte->getCodigoAportePk());
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalleEditar.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 

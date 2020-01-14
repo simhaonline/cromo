@@ -1,0 +1,137 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="identificacionRel" class="col-sm-2 control-label">Ingreso:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ingreso) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Retiro:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.retiro, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Ibc pension:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ibcPension, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Ibc salud:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ibcSalud, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Ibc caja:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ibcCaja, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Ibc riesgos:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ibcRiesgosProfesionales, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Ibc otros parafiscales:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.ibcOtrosParafiscalesDiferentesCcf, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Dias pension:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasCotizadosPension, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Dias salud:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasCotizadosSalud, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Dias caja:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasCotizadosCajaCompensacion, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Dias riesgos:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.diasCotizadosRiesgosProfesionales, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion pension:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cotizacionPension, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion salud:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cotizacionSalud, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion caja:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cotizacionCaja, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion riesgos:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cotizacionRiesgos, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion sena:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cotizacionSena, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion icbf:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cotizacionIcbf, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion fondo solidaridad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.aportesFondoSolidaridadPensionalSolidaridad) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Cotizacion fondo subsistencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.aportesFondoSolidaridadPensionalSubsistencia) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Aporte voluntario del afiliado a fondo de
+                    pension:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.aporteVoluntarioFondoPensionesObligatorias) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label"></label>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Entidad salud:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.entidadSaludRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}
+                </div>
+                <label for="form_mes" class="col-sm-2 control-label">Entidad pension:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.entidadPensionRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_mes" class="col-sm-2 control-label">Entidad caja:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.entidadCajaRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

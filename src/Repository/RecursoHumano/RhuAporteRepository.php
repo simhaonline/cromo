@@ -725,5 +725,24 @@ class RhuAporteRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
+    public function liquidar2($codigoAporte)
+    {
+        /**
+         * @var $arAporte RhuAporte
+         */
+        $em = $this->getEntityManager();
+        set_time_limit(0);
+        $arAporteTotal = $em->getRepository(RhuAporte::class)->find($codigoAporte);
+        $arAportes = $em->getRepository(RhuAporteDetalle::class)->findBy(array('codigoAporteFk' => $codigoAporte));
+        $totalCotizacion = 0;
+        foreach ($arAportes as $arAporte) {
+            $totalCotizacion += $arAporte->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporte->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporte->getCotizacionPension() + $arAporte->getCotizacionSalud() + $arAporte->getCotizacionRiesgos() + $arAporte->getCotizacionCaja() + $arAporte->getCotizacionIcbf() + $arAporte->getCotizacionSena();
+        }
+        $arAporteTotal->setVrTotal($totalCotizacion);
+        $em->persist($arAporteTotal);
+        $em->flush();
+        return true;
+    }
+
 
 }

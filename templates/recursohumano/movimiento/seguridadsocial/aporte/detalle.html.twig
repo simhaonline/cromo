@@ -3,7 +3,8 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Volver</a> &nbsp;&nbsp;
+            <a class="btn btn-default btn-sm"
+               href="{{ path('recursohumano_movimiento_seguridadsocial_aporte_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
@@ -15,7 +16,7 @@
         {% if arAporte.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
         {% if arAporte.estadoContabilizado == true %}<span class="label label-danger">Contabilizado</span>{% endif %}
     </div>
-    <br /><br />
+    <br/><br/>
     <br><br>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tbody>
@@ -39,7 +40,7 @@
             <td class="titulo">AÑO:</td>
             <td class="td-in-well">{{ arAporte.anio }}</td>
             <td class="titulo">MES:</td>
-            <td class="numero">{{ arAporte.mes}}</td>
+            <td class="numero">{{ arAporte.mes }}</td>
             <td class="titulo">IBC TOTAL:</td>
             <td class="numero">{{ arAporte.vrIngresoBaseCotizacion | number_format(0,".",",") }}</td>
         </tr>
@@ -47,7 +48,7 @@
             <td class="titulo">AÑO(Salud):</td>
             <td class="td-in-well">{{ arAporte.anioSalud }}</td>
             <td class="titulo">MES SALUD:</td>
-            <td class="numero">{{ arAporte.mesSalud}}</td>
+            <td class="numero">{{ arAporte.mesSalud }}</td>
             <td class="titulo">TOTAL:</td>
             <td class="numero">{{ arAporte.vrTotal | number_format(0,".",",") }}</td>
         </tr>
@@ -76,7 +77,10 @@
                             <th>CAJA</th>
                             <th>RIESGOS</th>
                             <th></th>
-                            <th class="text-center" title="seleccionar todo"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
+                            <th class="text-center" title="seleccionar todo"><input type="checkbox"
+                                                                                    name="ChkSeleccionarTodos"
+                                                                                    onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -87,16 +91,18 @@
                                 <td>{{ arAporteContrato.empleadoNombreCorto }}</td>
                                 <td>{{ arAporteContrato.codigoContratoFk }}</td>
                                 <td>{{ arAporteContrato.dias }}</td>
-                                <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arAporteContrato.ibc  | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arAporteContrato.vrPensionCotizacion  | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arAporteContrato.vrSaludCotizacion  | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arAporteContrato.vrCaja  | number_format(0, '.', ',')}}</td>
-                                <td class="numero">{{ arAporteContrato.vrRiesgos  | number_format(0, '.', ',')}}</td>
+                                <td class="numero">{{ arAporteContrato.vrSalario  | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arAporteContrato.ibc  | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arAporteContrato.vrPensionCotizacion  | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arAporteContrato.vrSaludCotizacion  | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arAporteContrato.vrCaja  | number_format(0, '.', ',') }}</td>
+                                <td class="numero">{{ arAporteContrato.vrRiesgos  | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: center;"><a
                                             href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seguridadsocial_soporte_aporte_detalle',{ 'id': arAporteContrato.codigoAporteContratoPk }) }}','resumen',600,1000)"><i
                                                 class="fa fa-table" style="color: black;font-size: large;"></i></a></td>
-                                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]" value="{{ arAporteContrato.codigoAporteContratoPk }}"/></td>
+                                <td class="text-center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                               value="{{ arAporteContrato.codigoAporteContratoPk }}"/>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -174,6 +180,7 @@
                             <th>C.SN</th>
                             <th>C.I</th>
                             <th>TOTAL</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -218,6 +225,10 @@
                                 <td class="numero">{{ arAporteDetalle.cotizacionSena | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arAporteDetalle.cotizacionIcbf | number_format(0, '.', ',') }}</td>
                                 <td class="numero">{{ arAporteDetalle.totalCotizacion  | number_format(0, '.', ',') }}</td>
+                                <td style="text-align: center;">
+                                    <a style="color:black" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seguridadsocial_aporte_editar', {'id': arAporteDetalle.codigoAporteDetallePk }) }}', 'Editar', 500, 800)"><i
+                                                class="fa fa-edit fa-2x"></i></a>
+                                </td>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -273,5 +284,5 @@
         </div>
     </div>
     {{ form_end(form) }}
-<br /><br /><br /><br />
+    <br/><br/><br/><br/>
 {% endblock %}

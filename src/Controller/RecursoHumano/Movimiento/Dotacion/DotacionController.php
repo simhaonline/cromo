@@ -45,15 +45,19 @@ class DotacionController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuDotacion')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoDotacionPk', TextType::class, array('required' => false))
-            ->add('codigoEmpleadoFk', TextType::class, array('required' => false))
-            ->add('codigoInternoReferencia', TextType::class, array('required' => false))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoSalidaInventario', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('codigoDotacionPk', TextType::class, array('required' => false,'data'=>$raw['filtros']['codigoDotacion']))
+            ->add('codigoEmpleadoFk', TextType::class, array('required' => false,'data'=>$raw['filtros']['codigoEmpleado']))
+            ->add('codigoInternoReferencia', TextType::class, array('required' => false,'data'=>$raw['filtros']['codigoInternoReferencia']))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaHasta']?date_create($raw['filtros']['fechaHasta']):null ])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoCerrado']])
+            ->add('estadoSalidaInventario', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoSalidaInventario']])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -61,9 +65,7 @@ class DotacionController extends AbstractController
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -247,6 +249,7 @@ class DotacionController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoDotacion' => $form->get('codigoDotacionPk')->getData(),
             'codigoInternoReferencia' => $form->get('codigoInternoReferencia')->getData(),
@@ -258,6 +261,7 @@ class DotacionController extends AbstractController
             'estadoSalidaInventario' => $form->get('estadoSalidaInventario')->getData(),
         ];
 
+        $session->set('filtroRhuDotacion', $filtro);
         return $filtro;
     }
 

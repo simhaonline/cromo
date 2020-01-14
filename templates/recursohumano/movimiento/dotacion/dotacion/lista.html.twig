@@ -27,7 +27,8 @@
                     <div class="form-group form-group-sm">
                         <label for="form_TxtCodigo" class="col-sm-1 control-label">Desde:</label>
                         <div class="col-sm-3">
-                            {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+
                         </div>
                         <label for="form_numeroIdentificacion" class="control-label col-sm-offset-4 col-sm-1">Cerrado:</label>
                         <div class="col-sm-3">
@@ -37,7 +38,7 @@
                     <div class="form-group form-group-sm">
                         <label for="form_TxtCodigo" class="col-sm-1 control-label">Hasta:</label>
                         <div class="col-sm-3">
-                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(form.fechaHasta, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <label for="form_numeroIdentificacion" class="control-label col-sm-offset-4 col-sm-1">Salida inventario:</label>
                         <div class="col-sm-3">

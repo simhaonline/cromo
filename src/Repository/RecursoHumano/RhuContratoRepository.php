@@ -537,4 +537,13 @@ class RhuContratoRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
 
     }
+
+    public function cierreAnio($fechaHasta, $vrSalarioMinimo)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuContrato::class, 'c')
+            ->select('c.codigoContratoPk')
+            ->where("c.estadoTerminado = 0")
+            ->andWhere("c.fechaDesde <= '{$fechaHasta}' AND c.vrSalario <= " . $vrSalarioMinimo);
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

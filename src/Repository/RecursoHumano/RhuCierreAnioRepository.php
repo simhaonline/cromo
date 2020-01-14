@@ -7,6 +7,7 @@ use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
+use App\Entity\RecursoHumano\RhuCambioSalario;
 use App\Entity\RecursoHumano\RhuCierreAnio;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
@@ -113,7 +114,7 @@ class RhuCierreAnioRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $arCierre RhuCierre
+     * @param $arCierre RhuCierreAnio
      * @param $usuario Usuario
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -122,7 +123,6 @@ class RhuCierreAnioRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (!$arCierre->getEstadoAutorizado()) {
-            $em->getRepository(RhuCosto::class)->generar($arCierre);
             $arCierre->setEstadoAutorizado(1);
             $em->persist($arCierre);
             $em->flush();
@@ -131,56 +131,66 @@ class RhuCierreAnioRepository extends ServiceEntityRepository
 
 
     /**
-     * @param $arCierre RhuCierre
+     * @param $arCierreAnio RhuCierreAnio
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function aprobar($arCierre)
+    public function aprobar($arCierreAnio)
     {
+        $em = $this->getEntityManager();
+        if ($arCierreAnio->getEstadoAutorizado() && !$arCierreAnio->getEstadoAprobado()) {
+            set_time_limit(0);
+            ini_set("memory_limit", -1);
+            $arCierreAnio->setEstadoAprobado(1);
+            $em->persist($arCierreAnio);
 
+            $salarioMinimoNuevo = $arCierreAnio->getVrSalarioMinimo();
+            $auxilioTransporteNuevo = $arCierreAnio->getVrAuxilioTransporte();
+
+            $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+            $salarioMinimoAnterior = $arConfiguracion->getVrSalarioMinimo();
+
+            $fechaHasta = $arCierreAnio->getAnio() . "/12/30";
+            $arContratos = $em->getRepository(RhuContrato::class)->cierreAnio($fechaHasta, $salarioMinimoNuevo);
+            foreach ($arContratos as $arContrato) {
+                $arContratoAct = $em->getRepository(RhuContrato::class)->find($arContrato['codigoContratoPk']);
+                $arCambioSalario = new RhuCambioSalario();
+                $arCambioSalario->setContratoRel($arContratoAct);
+                $arCambioSalario->setEmpleadoRel($arContratoAct->getEmpleadoRel());
+                $arCambioSalario->setFecha(date_create($fechaHasta));
+                $arCambioSalario->setVrSalarioAnterior($salarioMinimoAnterior);
+                $arCambioSalario->setVrSalarioNuevo($salarioMinimoNuevo);
+                $arCambioSalario->setDetalle('ACTUALIZACION SALARIO MINIMO');
+                $em->persist($arCambioSalario);
+
+                $arContratoAct->setVrSalario($salarioMinimoNuevo);
+                $arContratoAct->setVrSalarioPago($salarioMinimoNuevo);
+                if ($arContratoAct->getCodigoTiempoFk() == 'TMED') {
+                    $arContratoAct->setVrSalarioPago($salarioMinimoNuevo / 2);
+                }
+                $em->persist($arContratoAct);
+            }
+
+            $arConfiguracion->setVrSalarioMinimo($salarioMinimoNuevo);
+            $arConfiguracion->setVrAuxilioTransporte($auxilioTransporteNuevo);
+            $em->persist($arConfiguracion);
+            $em->flush();
+        }
     }
 
     /**
-     * @param $arCierre RhuCierre
+     * @param $arCierre RhuCierreAnio
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function desautorizar($arCierre)
     {
         $em = $this->getEntityManager();
-        if ($arCierre->getEstadoAutorizado()) {
-            $em->createQueryBuilder()->delete(RhuCosto::class, 'c')
-                ->where("c.codigoCierreFk = ({$arCierre->getCodigoCierrePk()})")->getQuery()->execute();
+        if ($arCierre->getEstadoAutorizado() && !$arCierre->getEstadoAprobado()) {
             $arCierre->setEstadoAutorizado(0);
             $em->persist($arCierre);
             $em->flush();
         }
-    }
-
-    /**
-     * @param $arCierre RhuCierre
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function liquidar($arCierre)
-    {
-        $em = $this->getEntityManager();
-        set_time_limit(0);
-        $numeroPagos = 0;
-        $douNetoTotal = 0;
-//        $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
-        $arPagos = $em->getRepository(RhuPago::class)->findBy(['codigoCierreFk' => $arCierre->getCodigoCierrePk()]);
-        foreach ($arPagos as $arPago) {
-            $vrNeto = $em->getRepository(RhuPago::class)->liquidar($arPago);
-            $arCierreDetalle = $em->getRepository(RhuCierreDetalle::class)->find($arPago->getCodigoCierreDetalleFk());
-            $arCierreDetalle->setVrNeto($vrNeto);
-            $em->persist($arCierreDetalle);
-            $douNetoTotal += $vrNeto;
-            $numeroPagos++;
-        }
-        $arCierre->setVrNeto($douNetoTotal);
-        $arCierre->setCantidad($numeroPagos);
-        $em->persist($arCierre);
-        $em->flush();
     }
 
 }

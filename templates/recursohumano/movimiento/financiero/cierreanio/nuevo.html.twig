@@ -7,13 +7,24 @@
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_nombre" class="control-label col-sm-2">Año:</label>
+                <label for="form_nombre" class="control-label col-sm-2">Año (cerrar):</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.anio) }}
                     {{ form_errors(form.anio) }}
                 </div>
             </div>
-
+            <div class="form-group form-group-sm">
+                <label for="form_nombre" class="control-label col-sm-2">Salario minimo(nuevo):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrSalarioMinimo) }}
+                    {{ form_errors(form.vrSalarioMinimo) }}
+                </div>
+                <label for="form_nombre" class="control-label col-sm-2">Auxilio transporte(Nuevo):</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.vrAuxilioTransporte) }}
+                    {{ form_errors(form.vrAuxilioTransporte) }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer">

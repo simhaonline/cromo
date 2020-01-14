@@ -535,6 +535,11 @@ class RhuContrato
     protected $programacionesContratoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCambioSalario", mappedBy="contratoRel")
+     */
+    protected $cambiosSalariosContratoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoContratoPk()
@@ -2116,6 +2121,22 @@ class RhuContrato
     public function setPagadoEntidad($pagadoEntidad): void
     {
         $this->pagadoEntidad = $pagadoEntidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCambiosSalariosContratoRel()
+    {
+        return $this->cambiosSalariosContratoRel;
+    }
+
+    /**
+     * @param mixed $cambiosSalariosContratoRel
+     */
+    public function setCambiosSalariosContratoRel($cambiosSalariosContratoRel): void
+    {
+        $this->cambiosSalariosContratoRel = $cambiosSalariosContratoRel;
     }
 
 

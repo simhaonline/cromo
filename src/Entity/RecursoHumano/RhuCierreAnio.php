@@ -27,6 +27,16 @@ class RhuCierreAnio
     private $anio = 0;
 
     /**
+     * @ORM\Column(name="vr_salario_minimo", options={"default":0},type="float", nullable=true)
+     */
+    private $vrSalarioMinimo = 0;
+
+    /**
+     * @ORM\Column(name="vr_auxilio_transporte", options={"default":0},type="float", nullable=true)
+     */
+    private $vrAuxilioTransporte = 0;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean", options={"default":false})
      */
     private $estadoAutorizado = false;
@@ -45,27 +55,6 @@ class RhuCierreAnio
      * @ORM\Column(name="estado_contabilizado", type="boolean", options={"default":false})
      */
     private $estadoContabilizado = false;
-
-    /**
-     * @ORM\Column(name="fecha_aplicacion", type="date", nullable=true)
-     */
-    private $fechaAplicacion;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -97,6 +86,38 @@ class RhuCierreAnio
     public function setAnio($anio): void
     {
         $this->anio = $anio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioMinimo()
+    {
+        return $this->vrSalarioMinimo;
+    }
+
+    /**
+     * @param mixed $vrSalarioMinimo
+     */
+    public function setVrSalarioMinimo($vrSalarioMinimo): void
+    {
+        $this->vrSalarioMinimo = $vrSalarioMinimo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrAuxilioTransporte()
+    {
+        return $this->vrAuxilioTransporte;
+    }
+
+    /**
+     * @param mixed $vrAuxilioTransporte
+     */
+    public function setVrAuxilioTransporte($vrAuxilioTransporte): void
+    {
+        $this->vrAuxilioTransporte = $vrAuxilioTransporte;
     }
 
     /**
@@ -161,22 +182,6 @@ class RhuCierreAnio
     public function setEstadoContabilizado($estadoContabilizado): void
     {
         $this->estadoContabilizado = $estadoContabilizado;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaAplicacion()
-    {
-        return $this->fechaAplicacion;
-    }
-
-    /**
-     * @param mixed $fechaAplicacion
-     */
-    public function setFechaAplicacion($fechaAplicacion): void
-    {
-        $this->fechaAplicacion = $fechaAplicacion;
     }
 
 

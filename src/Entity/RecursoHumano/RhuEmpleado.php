@@ -523,6 +523,11 @@ class RhuEmpleado
     protected $novedadesEmpeladoReemplazoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCambioSalario", mappedBy="empleadoRel")
+     */
+    protected $cambiosSalariosEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -1992,6 +1997,22 @@ class RhuEmpleado
     public function setLibretaMilitar($libretaMilitar): void
     {
         $this->libretaMilitar = $libretaMilitar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCambiosSalariosEmpleadoRel()
+    {
+        return $this->cambiosSalariosEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $cambiosSalariosEmpleadoRel
+     */
+    public function setCambiosSalariosEmpleadoRel($cambiosSalariosEmpleadoRel): void
+    {
+        $this->cambiosSalariosEmpleadoRel = $cambiosSalariosEmpleadoRel;
     }
 
 

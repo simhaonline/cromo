@@ -32,9 +32,9 @@
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label for="" class="col-sm-1 control-label">Desde:</label>
+                        <label for="" class="col-sm-1 control-label"></label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.fechaDesde, { 'attr': {'class': 'form-control'} }) }}
+
                         </div>
                         <label for="" class="col-sm-1 col-sm-offset-6 control-label">Terminado:</label>
                         <div class="col-sm-2">
@@ -49,6 +49,7 @@
                     </div>
                     <div class="form-group form-group-sm">
                         <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                             {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
                         </div>
                     </div>
@@ -59,51 +60,53 @@
     <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
         <thead>
         <tr>
-            <th>CÓDIGO</th>
+            <th>ID</th>
+            <th>CONTRATO</th>
             <th>TIPO</th>
-            <th>FECHA</th>
-            <th>CÓDIGO EMPLEADO</th>
+            <th>INGRESO</th>
             <th>IDENTIFICACIÓN</th>
-            <th>NOMBRE</th>
-            <th>DESDE</th>
-            <th>HASTA</th>
-            <th>ULTIMO PAGO</th>
-            <th>VIGENTE</th>
+            <th>EMPLEADO</th>
+            <th>GRUPO</th>
+            <th>ZONA</th>
+            <th>ULT_PAGO</th>
+            <th>ULT_VAC</th>
+            <th>TER</th>
             <th>SALARIO</th>
             <th>DIAS</th>
             <th>AUS</th>
-            <th>VR VAC</th>
+            <th>VALOR</th>
         </tr>
         </thead>
         <tbody>
-        {% for  arVacacionPagar in arVacacionesPagar %}
+        {% for  arVacacionPendiente in arVacacionesPendientes %}
             <tr>
-                <td>{{ arVacacionPagar.codigoContratoPk }}</td>
-                <td>{{ arVacacionPagar.tipo }}</td>
-                <td>{{ arVacacionPagar.codigoEmpleadoFk }}</td>
-                <td>{{ arVacacionPagar.empleado }}</td>
-                <td>{{ arVacacionPagar.numeroIdentificacion }}</td>
-                <td>{{ arVacacionPagar.fecha | date('Y-m-d') }}</td>
-                <td>{{ arVacacionPagar.fechaDesde | date('Y-m-d') }}</td>
-                <td>{{ arVacacionPagar.fechaHasta | date('Y-m-d') }}</td>
-                <td>{{ arVacacionPagar.fechaUltimoPagoVacaciones | date('Y-m-d') }}</td>
-                <td>{{ arVacacionPagar.estadoTerminado?"SI":"NO"}}</td>
-                <td style="text-align: right">{{ arVacacionPagar.vrSalario | number_format(0, '.', ',') }}</td>
-                <td style="text-align: right">{{ arVacacionPagar.diasVacaciones | number_format(0, '.', ',') }}</td>
-                <td style="text-align: right">{{ arVacacionPagar.diasAusentismo | number_format(0, '.', ',') }}</td>
-                <td style="text-align: right">{{ arVacacionPagar.valorVacaciones | number_format(0, '.', ',') }}</td>
+                <td>{{ arVacacionPendiente.codigoInformeVacacionPendientePk }}</td>
+                <td>{{ arVacacionPendiente.codigoContratoFk }}</td>
+                <td>{{ arVacacionPendiente.tipoContrato }}</td>
+                <td>{{ arVacacionPendiente.fechaIngreso | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPendiente.numeroIdentificacion }}</td>
+                <td>{{ arVacacionPendiente.empleado }}</td>
+                <td>{{ arVacacionPendiente.grupo }}</td>
+                <td>{{ arVacacionPendiente.zona }}</td>
+                <td>{{ arVacacionPendiente.fechaUltimoPago | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPendiente.fechaUltimoPagoVacaciones | date('Y-m-d') }}</td>
+                <td>{{ arVacacionPendiente.estadoTerminado?"SI":"NO"}}</td>
+                <td style="text-align: right">{{ arVacacionPendiente.vrSalario | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPendiente.dias | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPendiente.diasAusentismo | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPendiente.vrVacacion | number_format(0, '.', ',') }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arVacacionesPagar.getTotalItemCount }}
+            <span class="badge">{{ arVacacionesPendientes.getTotalItemCount }}
                     </span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arVacacionesPagar) }}
+        {{ knp_pagination_render(arVacacionesPendientes) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}

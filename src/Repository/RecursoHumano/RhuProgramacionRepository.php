@@ -565,8 +565,8 @@ class RhuProgramacionRepository extends ServiceEntityRepository
 //                            }
 //                        }
 //                    }
-                    $diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-
+                    //$diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                    $diasAusentismo = 0;
                     //Validar si existe la configuración de primas de movimientos y sumar los dias solo de tipo ausentismo.
 //                    if ($arConfiguracion->getDiasAusentismoPrimasMovimiento()) {
 //                        $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());

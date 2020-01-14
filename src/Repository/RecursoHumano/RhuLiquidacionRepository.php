@@ -914,7 +914,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
 
                         // validacion para descontar todos los ausentimos durante la vigencia del contrato
                         if ($arConfiguracion->getDescontarTotalAusentismosContratoTerminadoEnLiquidacion()) {
-                            $intDiasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($arLiquidacion->getContratoRel()->getFechaDesde()->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                            //$intDiasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($arLiquidacion->getContratoRel()->getFechaDesde()->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arLiquidacion->getCodigoContratoFk());
+                            $intDiasAusentismo = 0;
                         }
                         $intDiasAusentismo += $arLiquidacion->getDiasAusentismoAdicional();
 

@@ -21,6 +21,8 @@ use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmbargoPago;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuInformeVacacionPendiente;
+use App\Entity\RecursoHumano\RhuLicencia;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -521,7 +523,8 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $diasPeriodo = $objFunciones->diasPrestaciones($fechaDesdePeriodo, $arVacacion->getFechaHastaPeriodo());
 
 //        Se comenta esta linea debido a que nuestros pagos no almacenan los dias de ausentismo
-        $diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($fechaDesdePeriodo, $arVacacion->getFechaHastaPeriodo(), $arVacacion->getContratoRel()->getCodigoContratoPk());
+        //$diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($fechaDesdePeriodo, $arVacacion->getFechaHastaPeriodo(), $arVacacion->getContratoRel()->getCodigoContratoPk());
+        $diasAusentismo = 0;
         if ($arVacacion->getDiasAusentismoPropuesto() > 0) {
             $diasAusentismo = $arVacacion->getDiasAusentismoPropuesto();
         }
@@ -1332,6 +1335,65 @@ class RhuVacacionRepository extends ServiceEntityRepository
             }
         }
 
+    }
+
+    public function pendientePagarInforme($fechaHasta)
+    {
+        $em = $this->getEntityManager();
+        $em->createQueryBuilder()->delete(RhuInformeVacacionPendiente::class,'ivp')->getQuery()->execute();
+        $arVacacionesPagar = $em->getRepository(RhuContrato::class)->informeVacacionesPendiente($fechaHasta);
+        foreach ($arVacacionesPagar as $arVacacion) {
+            $fechaDesde = $arVacacion['fechaUltimoPagoVacaciones'];
+            /*$arVacacionesAnteriores = $em->getRepository(RhuVacacion::class)->findOneBy(array('codigoContratoFk' =>  $arVacacion['codigoContratoPk'] ));
+            if ($arVacacionesAnteriores != null) {
+                if ($arVacacionesAnteriores->getFecha() > $fechaHasta) {
+                    $fechaDesde = $arVacacionesAnteriores->getFechaDesdePeriodo();
+                } else if ($fechaDesde > $fechaHasta) {
+                    $fechaDesde = $arVacacionesAnteriores->getFechaDesdePeriodo();
+                    $arVacacion->setFechaUltimoPagoVacaciones($fechaDesde);
+                }
+            }*/
+
+            $arrVacaciones = $this->liquidarVacaciones($arVacacion, $fechaHasta);
+            $arInformeVacacionPendiente = new RhuInformeVacacionPendiente();
+            $arInformeVacacionPendiente->setCodigoContratoFk($arVacacion['codigoContratoPk']);
+            $arInformeVacacionPendiente->setTipoContrato($arVacacion['tipo']);
+            $arInformeVacacionPendiente->setFechaIngreso($arVacacion['fechaDesde']);
+            $arInformeVacacionPendiente->setNumeroIdentificacion($arVacacion['numeroIdentificacion']);
+            $arInformeVacacionPendiente->setEmpleado($arVacacion['empleado']);
+            $arInformeVacacionPendiente->setGrupo($arVacacion['grupo']);
+            $arInformeVacacionPendiente->setFechaUltimoPago($arVacacion['fechaUltimoPago']);
+            $arInformeVacacionPendiente->setFechaUltimoPagoVacaciones($arVacacion['fechaUltimoPagoVacaciones']);
+            $arInformeVacacionPendiente->setEstadoTerminado($arVacacion['estadoTerminado']);
+            $arInformeVacacionPendiente->setVrSalario($arVacacion['vrSalario']);
+            $arInformeVacacionPendiente->setDias($arrVacaciones['dias']);
+            $arInformeVacacionPendiente->setDiasAusentismo($arrVacaciones['diasAusentismo']);
+            $arInformeVacacionPendiente->setVrVacacion($arrVacaciones['valor']);
+            $em->persist($arInformeVacacionPendiente);
+        }
+        $em->flush();
+    }
+
+    public function liquidarVacaciones($arVacacionPagar, $dateFechaHasta = '')
+    {
+        $em = $this->getEntityManager();
+        $dateFechaDesde = $arVacacionPagar['fechaUltimoPagoVacaciones'];
+        $salario = $arVacacionPagar['vrSalario'];
+        $fechaInicio = date_create($dateFechaDesde->format('Y-m-d'));
+        $dias = FuncionesController::diasPrestaciones($fechaInicio, $dateFechaHasta);
+        $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($fechaInicio->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arVacacionPagar['codigoContratoPk']);
+        $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaInicio->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arVacacionPagar['codigoContratoPk']);
+        $mesesPeriodo = $dias / 30;
+        $promedioRecargosNocturnos = $recargosNocturnos / $mesesPeriodo;
+        $salarioVacaciones = (($salario + $promedioRecargosNocturnos) * ($dias - $diasAusentismo)) / 720;
+
+        $salarioVacaciones = round($salarioVacaciones);
+        $arrRespuesta = [
+            'dias' => $dias,
+            'diasAusentismo' => $diasAusentismo,
+            'valor' => $salarioVacaciones
+        ];
+        return $arrRespuesta;
     }
 
 }

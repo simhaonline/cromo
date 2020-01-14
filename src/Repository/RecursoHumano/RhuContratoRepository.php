@@ -448,24 +448,8 @@ class RhuContratoRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function informeVacacionesPendiente($raw)
+    public function informeVacacionesPendiente($fechaHasta)
     {
-        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
-        $filtros = $raw['filtros'] ?? null;
-
-        $codigoEmpleado = null;
-        $fechaDesde = null;
-        $fechaHasta = null;
-        $estadoTerminado = null;
-
-        if ($filtros) {
-            $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
-            $fechaDesde = $filtros['fechaDesde'] ?? null;
-            $fechaHasta = $filtros['fechaHasta'] ?? null;
-            $estadoTerminado = $filtros['estadoTerminado'] ?? null;
-        }
-        $fechaActual = new \DateTime('now');
-
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuContrato::class, 'c')
             ->select('c.codigoContratoPk')
             ->addSelect('c.codigoEmpleadoFk')
@@ -474,6 +458,7 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect('c.fechaHasta')
             ->addSelect('c.vrSalario')
             ->addSelect('c.fechaUltimoPagoVacaciones')
+            ->addSelect('c.fechaUltimoPago')
             ->addSelect('c.estadoTerminado')
             ->addSelect('e.nombreCorto as empleado')
             ->addSelect('e.numeroIdentificacion')
@@ -482,36 +467,11 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->leftJoin('c.empleadoRel', 'e')
             ->leftJoin('c.contratoTipoRel', 'ct')
             ->leftJoin('c.grupoRel', 'gp')
-            ->where("c.fechaHasta <= '{$fechaActual->format('Y-m-d')} 23:59:59' ")
-            ->andWhere("c.fechaUltimoPagoVacaciones <= '{$fechaActual->format('Y-m-d')} 23:59:59' ")
+            ->where("c.fechaDesde <= '{$fechaHasta->format('Y-m-d')}' AND c.fechaUltimoPagoVacaciones <='{$fechaHasta->format('Y-m-d')}' AND (c.fechaHasta > '{$fechaHasta->format('Y-m-d')}'  OR c.estadoTerminado = 0)")
             ->andWhere("c.codigoContratoClaseFk != 'APR' ")
-            ->andWhere("c.codigoContratoClaseFk != 'PRA' ")
-        ;
-        if ($codigoEmpleado) {
-            $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
-        }
-        
-        if ($fechaDesde) {
-            $queryBuilder->andWhere("c.fechaDesde >= '{$fechaDesde} 00:00:00'");
-        }
-        if ($fechaHasta) {
-            $queryBuilder->andWhere("c.fechaHasta <= '{$fechaHasta} 23:59:59'");
-        }
-
-        switch ($estadoTerminado) {
-            case '0':
-                $queryBuilder->andWhere("c.estadoTerminado = 0");
-                break;
-            case '1':
-                $queryBuilder->andWhere("c.estadoTerminado = 1");
-                break;
-        }
-
-
+            ->andWhere("c.codigoContratoClaseFk != 'PRA' ");
         $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
-        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
-
     }
 
     public function informeContratoFechaRetiro($raw)

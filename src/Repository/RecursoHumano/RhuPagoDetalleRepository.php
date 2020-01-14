@@ -195,6 +195,7 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
     public function recargosNocturnosIbp($fechaDesde, $fechaHasta, $codigoContrato)
     {
         $em = $this->getEntityManager();
+        $recargosNocturnos = 0;
         $query = $em->createQueryBuilder()
             ->select("SUM(pd.vrIngresoBasePrestacion  * (pc.porcentajeVacaciones / 100)) as recargoNocturno")
             ->from(RhuPagoDetalle::class, 'pd')
@@ -207,7 +208,9 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
 
 
         $arrayResultado = $query->getQuery()->getResult();
-        $recargosNocturnos = $arrayResultado[0]['recargoNocturno'];
+        if($arrayResultado[0]['recargoNocturno']) {
+            $recargosNocturnos = $arrayResultado[0]['recargoNocturno'];
+        }
         return $recargosNocturnos;
 
     }

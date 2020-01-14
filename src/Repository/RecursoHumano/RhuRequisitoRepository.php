@@ -5,6 +5,7 @@ namespace App\Repository\RecursoHumano;
 use App\Entity\RecursoHumano\RhuRequisito;
 use App\Entity\RecursoHumano\RhuRequisitoCargo;
 use App\Entity\RecursoHumano\RhuRequisitoDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -59,7 +60,8 @@ class RhuRequisitoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("r.codigoRequisitoPk = '{$codigoRequisito}'");
         }
         if ($codigoEmpleado) {
-            $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
+            $queryBuilder->leftJoin('r.contratoRel', 'ct');
+            $queryBuilder->andWhere("ct.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
         if ($requisitoTipo) {
             $queryBuilder->andWhere("r.codigoRequisitoTipoFk = '{$requisitoTipo}'");
@@ -106,7 +108,6 @@ class RhuRequisitoRepository extends ServiceEntityRepository
      */
     public function eliminar($arrSeleccionados)
     {
-        $respuesta = '';
         $em = $this->getEntityManager();
         if ($arrSeleccionados) {
             foreach ($arrSeleccionados AS $codigo) {
@@ -118,9 +119,8 @@ class RhuRequisitoRepository extends ServiceEntityRepository
             try {
                 $em->flush();
             } catch (\Exception $exception) {
-                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
+                 Mensajes::error('No se puede eliminar, el registro esta siendo utilizado en el sistema');
             }
         }
-        return $respuesta;
     }
 }

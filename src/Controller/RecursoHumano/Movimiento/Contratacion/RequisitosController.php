@@ -29,6 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -54,6 +55,10 @@ class RequisitosController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuRequisito')
+        ];
         $form = $this->createFormBuilder()
             ->add('codigoRequisitoTipoFk', EntityType::class, [
                 'class' => RhuRequisitoTipo::class,
@@ -64,23 +69,23 @@ class RequisitosController extends AbstractController
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
-                'attr' => ['class' => 'form-control to-select-2']
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data'=>  $raw['filtros']['requisitoTipo'] ? $em->getReference(RhuRequisitoTipo::class, $raw['filtros']['requisitoTipo']) : null
             ])
-            ->add('codigoRequisitoPk', TextType::class, array('required' => false))
-            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoRequisitoPk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoRequisito']))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false, 'data'=>$raw['filtros']['codigoEmpleado']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaHasta']?date_create($raw['filtros']['fechaHasta']):null ])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -88,6 +93,10 @@ class RequisitosController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(RhuRequisito::class)->lista($raw), "Creditos");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuRequisito::class)->eliminar($arrSeleccionados);
             }
         }
         $arRequisitos = $paginator->paginate($em->getRepository(RhuRequisito::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -283,6 +292,7 @@ class RequisitosController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoRequisito' => $form->get('codigoRequisitoPk')->getData(),
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
@@ -292,17 +302,14 @@ class RequisitosController extends AbstractController
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
-
         $arRequisitoTipo = $form->get('codigoRequisitoTipoFk')->getData();
-
         if (is_object($arRequisitoTipo)) {
             $filtro['requisitoTipo'] = $arRequisitoTipo->getCodigoRequisitoTipoPk();
         } else {
             $filtro['requisitoTipo'] = $arRequisitoTipo;
         }
-
+        $session->set('filtroRhuRequisito', $filtro);
         return $filtro;
-
     }
 }
 

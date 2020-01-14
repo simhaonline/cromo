@@ -1381,9 +1381,12 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $diasNeto = $dias - $diasAusentismo;
         $totalVacacion = ($salarioPromedio * $diasNeto) / 720;
 
+        $aniosVacaciones = $diasNeto / 360;
+        $diasVacaciones = $aniosVacaciones * 15;
+
         $totalVacacion = round($totalVacacion);
         $arrRespuesta = [
-            'dias' => $dias,
+            'dias' => $diasVacaciones,
             'diasAusentismo' => $diasAusentismo,
             'promedioRecargoNocturno' => $promedioRecargosNocturnos,
             'salarioPromedio' => $salarioPromedio,

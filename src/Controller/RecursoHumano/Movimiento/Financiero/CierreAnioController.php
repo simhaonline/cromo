@@ -49,7 +49,7 @@ class CierreAnioController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $raw = [
-            'filtros'=> $session->get('filtroRhuCierre')
+            'filtros'=> $session->get('filtroCierreAnio')
         ];
         $form = $this->createFormBuilder()
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
@@ -158,7 +158,7 @@ class CierreAnioController extends AbstractController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
 
-        $session->set('filtroRhuCierre', $filtro);
+        $session->set('filtroCierreAnio', $filtro);
         return $filtro;
 
     }

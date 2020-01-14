@@ -41,14 +41,22 @@
             <td class="td-in-well">{{ arAporte.anio }}</td>
             <td class="titulo">MES:</td>
             <td class="numero">{{ arAporte.mes }}</td>
-            <td class="titulo">IBC TOTAL:</td>
-            <td class="numero">{{ arAporte.vrIngresoBaseCotizacion | number_format(0,".",",") }}</td>
+            <td class="titulo">LINEAS:</td>
+            <td class="numero">{{ arAporte.numeroLineas }}</td>
         </tr>
         <tr>
             <td class="titulo">AÑO(Salud):</td>
             <td class="td-in-well">{{ arAporte.anioSalud }}</td>
             <td class="titulo">MES SALUD:</td>
             <td class="numero">{{ arAporte.mesSalud }}</td>
+            <td class="titulo">TOTAL IBC:</td>
+            <td class="numero">{{ arAporte.vrIngresoBaseCotizacion | number_format(0,".",",") }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="numero"></td>
             <td class="titulo">TOTAL:</td>
             <td class="numero">{{ arAporte.vrTotal | number_format(0,".",",") }}</td>
         </tr>

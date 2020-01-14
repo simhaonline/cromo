@@ -223,7 +223,7 @@ class RhuAporteRepository extends ServiceEntityRepository
         }
     }
 
-    public function liquidar($arAporte) {
+    public function generarResumen($arAporte) {
         $em = $this->getEntityManager();
         //Salud
         $queryBuilder = $em->createQueryBuilder()->from(RhuAporteDetalle::class, 'ad')
@@ -725,7 +725,7 @@ class RhuAporteRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
-    public function liquidar2($codigoAporte)
+    public function liquidar($codigoAporte)
     {
         /**
          * @var $arAporte RhuAporte
@@ -733,12 +733,22 @@ class RhuAporteRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         set_time_limit(0);
         $arAporteTotal = $em->getRepository(RhuAporte::class)->find($codigoAporte);
-        $arAportes = $em->getRepository(RhuAporteDetalle::class)->findBy(array('codigoAporteFk' => $codigoAporte));
+        $arAportesDetalle = $em->getRepository(RhuAporteDetalle::class)->findBy(array('codigoAporteFk' => $codigoAporte));
+        $numeroContratos = $em->getRepository(RhuAporteDetalle::class)->numeroContratos($codigoAporte);
+        $numeroEmpleados = $em->getRepository(RhuAporteDetalle::class)->numeroEmpleados($codigoAporte);
         $totalCotizacion = 0;
-        foreach ($arAportes as $arAporte) {
-            $totalCotizacion += $arAporte->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporte->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporte->getCotizacionPension() + $arAporte->getCotizacionSalud() + $arAporte->getCotizacionRiesgos() + $arAporte->getCotizacionCaja() + $arAporte->getCotizacionIcbf() + $arAporte->getCotizacionSena();
+        $ibcTotal = 0;
+        $lineas = 0;
+        foreach ($arAportesDetalle as $arAporteDetalle) {
+            $totalCotizacion += $arAporteDetalle->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporteDetalle->getCotizacionPension() + $arAporteDetalle->getCotizacionSalud() + $arAporteDetalle->getCotizacionRiesgos() + $arAporteDetalle->getCotizacionCaja() + $arAporteDetalle->getCotizacionIcbf() + $arAporteDetalle->getCotizacionSena();
+            $ibcTotal += $arAporteDetalle->getIbcCaja();
+            $lineas ++;
         }
         $arAporteTotal->setVrTotal($totalCotizacion);
+        $arAporteTotal->setVrIngresoBaseCotizacion($ibcTotal);
+        $arAporteTotal->setCantidadContratos($numeroContratos);
+        $arAporteTotal->setCantidadEmpleados($numeroEmpleados);
+        $arAporteTotal->setNumeroLineas($lineas);
         $em->persist($arAporteTotal);
         $em->flush();
         return true;

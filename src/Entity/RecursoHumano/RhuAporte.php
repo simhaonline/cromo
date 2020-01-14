@@ -83,6 +83,11 @@ class RhuAporte
     private $cantidadEmpleados = 0;
 
     /**
+     * @ORM\Column(name="numero_lineas", type="integer", nullable=true, options={"default" : 0})
+     */
+    private $numeroLineas = 0;
+
+    /**
      * @ORM\Column(name="vr_total", type="float" , nullable=true)
      */
     private $vrTotal = 0;
@@ -542,6 +547,38 @@ class RhuAporte
     public function setNumero($numero): void
     {
         $this->numero = $numero;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroLineas()
+    {
+        return $this->numeroLineas;
+    }
+
+    /**
+     * @param mixed $numeroLineas
+     */
+    public function setNumeroLineas($numeroLineas): void
+    {
+        $this->numeroLineas = $numeroLineas;
     }
 
 

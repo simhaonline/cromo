@@ -99,10 +99,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->generarAporte();
-        $arEntidadRiesgos = $em->getRepository(RhuEntidad::class)->find($arrConfiguracionNomina['codigoEntidadRiesgosProfesionalesFk']);
-        $totalCotizacionGeneral = 0;
-        $ibcCajaTotal = 0;
-        $secuencia = 1 ;
+        $secuencia = 1;
         $arAporteContratos = $em->getRepository(RhuAporteContrato::class)->listaGenerarDetalle($arAporte->getCodigoAportePk());
         foreach ($arAporteContratos as $arAporteContratoConsulta) {
             /** @var $arAporteContrato RhuAporteContrato */
@@ -355,7 +352,6 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                     $cotizacionRiesgos = 0;
 
                 }
-                $ibcCajaTotal += $ibcCaja;
                 $arAporteDetalle->setDiasCotizadosPension($diasPension);
                 $arAporteDetalle->setDiasCotizadosSalud($dias);
                 $arAporteDetalle->setDiasCotizadosRiesgosProfesionales($diasRiesgos);
@@ -404,14 +400,11 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 $arAporteDetalle->setNumeroHorasLaboradas($arAporteSoporte->getHoras());
 
                 if ($dias > 0) {
-                    $totalCotizacionGeneral += $totalCotizacion;
                     $em->persist($arAporteDetalle);
                     $secuencia++;
                 }
             }
         }
-        $arAporte->setVrTotal($totalCotizacionGeneral);
-        $arAporte->setVrIngresoBaseCotizacion($ibcCajaTotal);
         $em->persist($arAporte);
         $em->flush();
     }
@@ -585,7 +578,8 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
         return $porcentaje;
     }
 
-    public function informe(){
+    public function informe()
+    {
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteDetalle::class, 'ad')
             ->select('ad.codigoAporteDetallePk')
@@ -703,4 +697,34 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
+    public function numeroContratos($codigoAporte)
+    {
+        $resultado = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteDetalle::class, 'apd')
+            ->select('COUNT(apd.codigoAporteDetallePk) AS numeroContratos')
+            ->where('apd.codigoAporteFk = ' . $codigoAporte)
+            ->groupBy('apd.codigoContratoFk');
+        $contratos = $queryBuilder->getQuery()->getResult();
+        if($contratos){
+            $resultado =  count($contratos);
+        }
+
+        return $resultado;
+
+    }
+
+    public function numeroEmpleados($codigoAporte)
+    {
+        $resultado = 0;
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAporteDetalle::class, 'apd')
+            ->select('COUNT(apd.codigoAporteDetallePk) AS numeroEmpleados')
+            ->where('apd.codigoAporteFk = ' . $codigoAporte)
+            ->groupBy('apd.codigoEmpleadoFk');
+        $empleados = $queryBuilder->getQuery()->getResult();
+        if($empleados){
+            $resultado =  count($empleados);
+        }
+
+        return $resultado;
+    }
 }

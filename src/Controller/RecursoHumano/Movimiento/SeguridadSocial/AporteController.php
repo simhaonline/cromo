@@ -168,6 +168,7 @@ class AporteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuAporte::class)->autorizar($arAporte);
+                $em->getRepository(RhuAporte::class)->generarResumen($arAporte);
                 $em->getRepository(RhuAporte::class)->liquidar($arAporte);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
@@ -254,7 +255,9 @@ class AporteController extends AbstractController
             $arAporteDetalle->setTotalCotizacion($totalCotizacion);
             $em->persist($arAporteDetalle);
             $em->flush();
-            $em->getRepository(RhuAporte::class)->liquidar2($arAporte->getCodigoAportePk());
+            $em->createQueryBuilder()->delete(RhuAporteEntidad::class,'ae')->andWhere("ae.codigoAporteFk = " . $arAporte->getCodigoAportePk())->getQuery()->execute();
+            $em->getRepository(RhuAporte::class)->generarResumen($arAporte);
+            $em->getRepository(RhuAporte::class)->liquidar($arAporte->getCodigoAportePk());
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }
         return $this->render('recursohumano/movimiento/seguridadsocial/aporte/detalleEditar.html.twig', [

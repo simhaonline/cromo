@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -48,8 +49,11 @@ class ExamenController extends AbstractController
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros' => $session->get('filtroRhuExamen')
+        ];
         $form = $this->createFormBuilder()
             ->add('codigoExamenClaseFk', EntityType::class, [
                 'class' => RhuExamenClase::class,
@@ -60,24 +64,23 @@ class ExamenController extends AbstractController
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
-                'attr' => ['class' => 'form-control to-select-2']
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data'=>  $raw['filtros']['examenClase'] ? $em->getReference(RhuExamenClase::class, $raw['filtros']['examenClase']) : null
             ])
-            ->add('codigoExamenPk', TextType::class, array('required' => false))
-            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoExamenPk', TextType::class, array('required' => false,'data' => $raw['filtros']['codigoExamen']))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false,'data' => $raw['filtros']['codigoEmpleado']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $raw['filtros']['fechaDesde'] ? date_create($raw['filtros']['fechaDesde']) : null])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $raw['filtros']['fechaHasta'] ? date_create($raw['filtros']['fechaHasta']) : null])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data' => $raw['filtros']['estadoAutorizado']])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data' => $raw['filtros']['estadoAprobado']])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data' => $raw['filtros']['estadoAnulado']])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -89,7 +92,6 @@ class ExamenController extends AbstractController
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->query->get('ChkSeleccionar');
                 $em->getRepository(RhuExamen::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_examen_lista'));
             }
         }
         $arExamenes = $paginator->paginate($em->getRepository(RhuExamen::class)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -264,6 +266,7 @@ class ExamenController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoExamen' => $form->get('codigoExamenPk')->getData(),
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
@@ -281,6 +284,7 @@ class ExamenController extends AbstractController
         } else {
             $filtro['examenClase'] = $arExamenClase;
         }
+        $session->set('filtroRhuExamen', $filtro);
 
         return $filtro;
 

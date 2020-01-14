@@ -18,9 +18,14 @@
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_examenClaseRel" class="col-sm-2 control-label">Porcentaje:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-1">
                     {{ form_widget(form.porcentaje) }}
                     {{ form_errors(form.porcentaje) }}
+                </div>
+                <label for="form_examenClaseRel" class="col-sm-2 control-label">Porcentaje (RN):</label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.porcentajeVacaciones) }}
+                    {{ form_errors(form.porcentajeVacaciones) }}
                 </div>
                 <label for="form_entidadExamenRel" class="col-sm-2 control-label">Operacion:</label>
                 <div class="col-sm-4">

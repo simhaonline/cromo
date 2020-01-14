@@ -37,7 +37,9 @@ class RhuInformeVacacionPendienteRepository extends ServiceEntityRepository
             ->addSelect('ivp.vrSalario')
             ->addSelect('ivp.dias')
             ->addSelect('ivp.diasAusentismo')
-            ->addSelect('ivp.vrVacacion');
+            ->addSelect('ivp.vrVacacion')
+            ->addSelect('ivp.vrPromedioRecargoNocturno')
+            ->addSelect('ivp.vrSalarioPromedio');
         return $queryBuilder->getQuery()->getResult();
 
     }

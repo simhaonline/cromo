@@ -73,6 +73,16 @@ class RhuInformeVacacionPendiente
     private $vrSalario = 0;
 
     /**
+     * @ORM\Column(name="vr_promedio_recargo_nocturno", options={"default":0},type="float", nullable=true)
+     */
+    private $vrPromedioRecargoNocturno = 0;
+
+    /**
+     * @ORM\Column(name="vr_salario_promedio", options={"default":0},type="float", nullable=true)
+     */
+    private $vrSalarioPromedio = 0;
+
+    /**
      * @ORM\Column(name="dias", type="integer", nullable=true)
      */
     private $dias = 0;
@@ -325,6 +335,38 @@ class RhuInformeVacacionPendiente
     public function setVrVacacion($vrVacacion): void
     {
         $this->vrVacacion = $vrVacacion;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrPromedioRecargoNocturno()
+    {
+        return $this->vrPromedioRecargoNocturno;
+    }
+
+    /**
+     * @param mixed $vrPromedioRecargoNocturno
+     */
+    public function setVrPromedioRecargoNocturno($vrPromedioRecargoNocturno): void
+    {
+        $this->vrPromedioRecargoNocturno = $vrPromedioRecargoNocturno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrSalarioPromedio()
+    {
+        return $this->vrSalarioPromedio;
+    }
+
+    /**
+     * @param mixed $vrSalarioPromedio
+     */
+    public function setVrSalarioPromedio($vrSalarioPromedio): void
+    {
+        $this->vrSalarioPromedio = $vrSalarioPromedio;
     }
 
 

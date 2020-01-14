@@ -20,6 +20,7 @@ class ConceptoType extends AbstractType
             ->add('codigoConceptoPk',TextType::class,['required'=> true,'label' => 'Codigo concepto:'])
             ->add('nombre',TextType::class,['required'=> true,'label' => 'Nombre:'])
             ->add('porcentaje',IntegerType::class,['label' => 'Porcentaje:','required' => true])
+            ->add('porcentajeVacaciones',IntegerType::class,['label' => 'Porcentaje:','required' => true])
             ->add('operacion',ChoiceType::class,['required' => true,'choices' => ['SUMA' => 1,'RESTA' => -1,'NEUTRO' => 0],'label' => 'Operacion:'])
             ->add('numeroDian',TextType::class,['required' => false,'label' => 'Numero Dian (Cert. Ing):'])
             ->add('adicionalTipo',ChoiceType::class,['required' => true,'choices' => ['BONIFICACION' => 'BON','DESCUENTO' => 'DES','COMISION' => 'COM','NO APLICA' => 'NNN'],'label' => 'Adicional tipo:'])

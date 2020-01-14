@@ -1343,17 +1343,6 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $em->createQueryBuilder()->delete(RhuInformeVacacionPendiente::class,'ivp')->getQuery()->execute();
         $arVacacionesPagar = $em->getRepository(RhuContrato::class)->informeVacacionesPendiente($fechaHasta);
         foreach ($arVacacionesPagar as $arVacacion) {
-            $fechaDesde = $arVacacion['fechaUltimoPagoVacaciones'];
-            /*$arVacacionesAnteriores = $em->getRepository(RhuVacacion::class)->findOneBy(array('codigoContratoFk' =>  $arVacacion['codigoContratoPk'] ));
-            if ($arVacacionesAnteriores != null) {
-                if ($arVacacionesAnteriores->getFecha() > $fechaHasta) {
-                    $fechaDesde = $arVacacionesAnteriores->getFechaDesdePeriodo();
-                } else if ($fechaDesde > $fechaHasta) {
-                    $fechaDesde = $arVacacionesAnteriores->getFechaDesdePeriodo();
-                    $arVacacion->setFechaUltimoPagoVacaciones($fechaDesde);
-                }
-            }*/
-
             $arrVacaciones = $this->liquidarVacaciones($arVacacion, $fechaHasta);
             $arInformeVacacionPendiente = new RhuInformeVacacionPendiente();
             $arInformeVacacionPendiente->setCodigoContratoFk($arVacacion['codigoContratoPk']);
@@ -1366,6 +1355,8 @@ class RhuVacacionRepository extends ServiceEntityRepository
             $arInformeVacacionPendiente->setFechaUltimoPagoVacaciones($arVacacion['fechaUltimoPagoVacaciones']);
             $arInformeVacacionPendiente->setEstadoTerminado($arVacacion['estadoTerminado']);
             $arInformeVacacionPendiente->setVrSalario($arVacacion['vrSalario']);
+            $arInformeVacacionPendiente->setVrPromedioRecargoNocturno($arrVacaciones['promedioRecargoNocturno']);
+            $arInformeVacacionPendiente->setVrSalarioPromedio($arrVacaciones['salarioPromedio']);
             $arInformeVacacionPendiente->setDias($arrVacaciones['dias']);
             $arInformeVacacionPendiente->setDiasAusentismo($arrVacaciones['diasAusentismo']);
             $arInformeVacacionPendiente->setVrVacacion($arrVacaciones['valor']);
@@ -1374,24 +1365,28 @@ class RhuVacacionRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    public function liquidarVacaciones($arVacacionPagar, $dateFechaHasta = '')
+    public function liquidarVacaciones($arContrato, $dateFechaHasta = '')
     {
         $em = $this->getEntityManager();
-        $dateFechaDesde = $arVacacionPagar['fechaUltimoPagoVacaciones'];
-        $salario = $arVacacionPagar['vrSalario'];
+        $dateFechaDesde = $arContrato['fechaUltimoPagoVacaciones'];
+        $salario = $arContrato['vrSalario'];
         $fechaInicio = date_create($dateFechaDesde->format('Y-m-d'));
         $dias = FuncionesController::diasPrestaciones($fechaInicio, $dateFechaHasta);
-        $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($fechaInicio->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arVacacionPagar['codigoContratoPk']);
-        $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaInicio->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arVacacionPagar['codigoContratoPk']);
+        $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($fechaInicio->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato['codigoContratoPk']);
+        $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaInicio->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato['codigoContratoPk']);
         $mesesPeriodo = $dias / 30;
         $promedioRecargosNocturnos = $recargosNocturnos / $mesesPeriodo;
-        $salarioVacaciones = (($salario + $promedioRecargosNocturnos) * ($dias - $diasAusentismo)) / 720;
+        $salarioPromedio = $salario + $promedioRecargosNocturnos;
+        $diasNeto = $dias - $diasAusentismo;
+        $totalVacacion = ($salarioPromedio * $diasNeto) / 720;
 
-        $salarioVacaciones = round($salarioVacaciones);
+        $totalVacacion = round($totalVacacion);
         $arrRespuesta = [
             'dias' => $dias,
             'diasAusentismo' => $diasAusentismo,
-            'valor' => $salarioVacaciones
+            'promedioRecargoNocturno' => $promedioRecargosNocturnos,
+            'salarioPromedio' => $salarioPromedio,
+            'valor' => $totalVacacion
         ];
         return $arrRespuesta;
     }

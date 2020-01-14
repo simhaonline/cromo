@@ -72,6 +72,8 @@
             <th>ULT_VAC</th>
             <th>TER</th>
             <th>SALARIO</th>
+            <th title="Promedio recargo nocturno">R_N</th>
+            <th title="Salario promedio para liquidar la vacacion">PROMEDIO</th>
             <th>DIAS</th>
             <th>AUS</th>
             <th>VALOR</th>
@@ -92,6 +94,8 @@
                 <td>{{ arVacacionPendiente.fechaUltimoPagoVacaciones | date('Y-m-d') }}</td>
                 <td>{{ arVacacionPendiente.estadoTerminado?"SI":"NO"}}</td>
                 <td style="text-align: right">{{ arVacacionPendiente.vrSalario | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPendiente.vrPromedioRecargoNocturno | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arVacacionPendiente.vrSalarioPromedio | number_format(0, '.', ',') }}</td>
                 <td style="text-align: right">{{ arVacacionPendiente.dias | number_format(0, '.', ',') }}</td>
                 <td style="text-align: right">{{ arVacacionPendiente.diasAusentismo | number_format(0, '.', ',') }}</td>
                 <td style="text-align: right">{{ arVacacionPendiente.vrVacacion | number_format(0, '.', ',') }}</td>

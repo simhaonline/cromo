@@ -88,6 +88,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         $arrTercero = $arrControles['arrTercero'];
         $arrDetalle = $arrControles['arrDetalle'];
         $arrNumero = $arrControles['arrNumero']??null;
+        $arrCuentaBancaria = $arrControles['arrCuentaBancaria'];
         $arrBanco = $arrControles['arrBanco']??null;
 
         $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $idMovimiento]);
@@ -97,6 +98,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             $valorBase = isset($arrControles['TxtVrBase' . $intCodigo]) && $arrControles['TxtVrBase' . $intCodigo] != '' ? $arrControles['TxtVrBase' . $intCodigo] : 0;
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
             $detalle = $arrDetalle[$intCodigo];
+            $cuenta = $arrCuentaBancaria[$intCodigo];
             if ($arrCuenta[$intCodigo]) {
                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
                 if ($arCuenta) {
@@ -130,7 +132,6 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             if($arrBanco[$intCodigo]){
                 $arBanco = $em->getRepository(GenBanco::class)->find($arrBanco[$intCodigo]);
                 if ($arBanco){
-                    $arMovimientoDetalle->setCuenta($arrBanco['cuenta']);
                     $arMovimientoDetalle->setBancoRel($arBanco);
                 }
             }
@@ -138,6 +139,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             $arMovimientoDetalle->setVrPago($valorPago);
             $arMovimientoDetalle->setNaturaleza($codigoNaturaleza);
             $arMovimientoDetalle->setDetalle($detalle);
+            $arMovimientoDetalle->setCuenta($cuenta);
             if($arrNumero) {
                 $numero = $arrNumero[$intCodigo] && $arrNumero[$intCodigo] != '' ? $arrNumero[$intCodigo] : null;
                 $arMovimientoDetalle->setNumero($numero);

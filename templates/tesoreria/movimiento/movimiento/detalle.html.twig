@@ -205,10 +205,10 @@
                                     {% if arMovimiento.estadoAutorizado == false %}
                                         <td>
                                             <input type="text"
-                                                   name="arrBanco[cuenta]"
-                                                   id="arrBanco[cuenta{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   name="arrCuentaBancaria[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   id="arrCuentaBancaria[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                    value="{{ arMovimientoDetalle.cuenta }}"
-                                                   style="text-align: left; width:90px" size="20">
+                                                   style="text-align: left; width:80px" size="10">
                                         </td>
                                         <td>
                                             <input type="text"

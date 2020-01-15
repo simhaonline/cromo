@@ -47,18 +47,19 @@ class AdicionalPeriodoController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuAdicionalPeriodoLista')
+        ];
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoCerrado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoCerrado']])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -109,14 +110,16 @@ class AdicionalPeriodoController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("recursohumano/movimiento/nomina/adicionalperiodo/detalle/{id}", name="recursohumano_movimiento_nomina_adicionalperiodo_detalle")
      */
     public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuAdicionalPeriodoDetalle')
+        ];
         $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($id);
 
         $arrBtnEliminar = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar'];
@@ -129,16 +132,15 @@ class AdicionalPeriodoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuEmpleadoCodigo', $form->get('txtCodigoEmpleado')->getData());
+                $raw['filtros'] = $this->getFiltrosDetalle($form);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicionalperiodo_detalle', ['id' => $id]));
             }
-
         }
         $arAdicionalPeriodo = $em->getRepository(RhuAdicionalPeriodo::class)->find($id);
-        $arAdicionales = $paginator->paginate($em->getRepository(RhuAdicional::class)->adicionalesPorPeriodo($id), $request->query->getInt('page', 1), 30);
+        $arAdicionales = $paginator->paginate($em->getRepository(RhuAdicional::class)->adicionalesPorPeriodo($raw, $id), $request->query->getInt('page', 1), 30);
         return $this->render('recursohumano/movimiento/nomina/adicionalPeriodo/detalle.html.twig', [
             'arAdicionalPeriodo' => $arAdicionalPeriodo,
             'arAdicionales' => $arAdicionales,
@@ -338,11 +340,25 @@ class AdicionalPeriodoController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'estadoCerrado' => $form->get('estadoCerrado')->getData(),
         ];
+        $session->set('filtroRhuAdicionalPeriodoLista', $filtro);
+
+        return $filtro;
+    }
+
+    public function getFiltrosDetalle($form)
+    {
+        $session = new Session();
+        $filtro = [
+            'codigoEmpleado' => $form->get('txtCodigoEmpleado')->getData(),
+        ];
+        $session->set('filtroRhuAdicionalPeriodoDetalle', $filtro);
 
         return $filtro;
     }

@@ -172,6 +172,7 @@ class TteFacturaDetalleRepository extends ServiceEntityRepository
         $ordenarAlfabeticamenteDestino = $arFactura->getClienteRel()->getOrdenarImpresionAlfabeticamenteDestino();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteFacturaDetalle::class, 'fd')
             ->select('fd.codigoFacturaDetallePk')
+            ->addSelect('fd.codigoGuiaFk')
             ->addSelect('g.numero')
             ->addSelect('g.documentoCliente')
             ->addSelect('g.fechaIngreso')

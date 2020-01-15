@@ -447,13 +447,13 @@ class PedidoController extends AbstractController
         $arPedidoTipo = $form->get('codigoPedidoTipoFk')->getData();
 
         if ( is_object($arPedidoTipo)) {
-            $fitro['codigoPedidoTipoFk'] = $arPedidoTipo->getCodigoPedidoTipoPk();
+            $filtro['codigoPedidoTipoFk'] = $arPedidoTipo->getCodigoPedidoTipoPk();
         } else {
-            $fitro['codigoPedidoTipoFk'] = $arPedidoTipo;
+            $filtro['codigoPedidoTipoFk'] = $arPedidoTipo;
         }
 
         $session->set('filtroTurPedido', $filtro);
-        return $fitro;
+        return $filtro;
     }
 
     public function exportarExcel($arPedidoDetalles)

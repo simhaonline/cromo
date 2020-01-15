@@ -31,7 +31,7 @@ class FechaRetiroController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
         $raw = [
-            'filtros'=> $session->get('filtroTurPedido')
+            'filtros'=> $session->get('filtroInformeTurPedido')
         ];
         $form = $this->createFormBuilder()
             ->add('codigoEmpleadoFk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoClienteFk'] ))

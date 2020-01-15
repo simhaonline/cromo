@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAdicional;
+use App\Entity\RecursoHumano\RhuCambioSalario;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
@@ -185,8 +186,11 @@ class ContratoController extends AbstractController
                 ], $id);
             }
         }
+
+        $arCambiosSalario = $em->getRepository(RhuCambioSalario::class)->findBy(array('codigoContratoFk' => $id));
         return $this->render('recursohumano/administracion/recurso/contrato/detalle.html.twig', [
             'arContrato' => $arContrato,
+            'arCambiosSalario'=>$arCambiosSalario,
             'clase' => array('clase' => 'RhuContrato', 'codigo' => $id),
             'form' => $form->createView()
         ]);

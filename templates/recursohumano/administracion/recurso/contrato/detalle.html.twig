@@ -1,4 +1,4 @@
-    {% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
@@ -7,9 +7,13 @@
         </div>
         <div class="btn-group">
             {% include 'estructura/botoneraAdministracion.html.twig' %}
-            <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros iniciales</a>
+            <a class="btn btn-sm btn-default abrir-modal"
+               href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_parametrosIniciales',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Parámetros
+                iniciales</a>
             {% if arContrato.estadoTerminado %}
-                <a class="btn btn-sm btn-default abrir-modal" href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_actualizarterminado',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Actualizar terminado</a>
+                <a class="btn btn-sm btn-default abrir-modal"
+                   href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_actualizarterminado',{'id' : arContrato.codigoContratoPk }) }}','parametrosIniciales',600,900)">Actualizar
+                    terminado</a>
             {% endif %}
         </div>
         {% if arContrato.estadoTerminado == false %}
@@ -149,6 +153,63 @@
             <td class="td-in-well numero"></td>
         </tr>
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#detalles" data-toggle="tab">Cambio salario</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>FECHA</th>
+                        <th>INICIO</th>
+                        <th>ANTERIOR</th>
+                        <th>NUEVO</th>
+                        <th>DETALLE</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for arCambioSalario in arCambiosSalario %}
+                        <tr>
+                            <td><input type="hidden" name="LblCodigo[]"
+                                       value="{{ arCambioSalario.codigoCambioSalarioPk }}">{{ arCambioSalario.codigoCambioSalarioPk }}
+                            </td>
+                            <td>{{ arCambioSalario.fecha |date("Y/m/d") }}</td>
+                            <td>{{ arCambioSalario.fechaInicio |date("Y/m/d") }}</td>
+                            <td class="numero">{{ arCambioSalario.vrSalarioAnterior | number_format(0, '.', ',') }}</td>
+                            <td class="numero">{{ arCambioSalario.vrSalarioNuevo | number_format(0, '.', ',') }}</td>
+                            <td>{{ arCambioSalario.detalle }}</td>
+                            {% if arContrato.indefinido == 1 %}
+                                <td style="text-align: center"><a href="javascript:abrirVentana3('{{ path('recursohumano_cambio_salario_nuevo',
+                                        { 'codigoContrato': arContrato.codigoContratoPk,  'codigoCambioSalario': arCambioSalario.codigoCambioSalarioPk}) }}',
+                                        'EditarCambioSalario', 600, 900)">
+                                        <i class="fa fa-edit" style="color: black;font-size: large;"></i></a></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                            <td>
+                                <button class="btn btn-default btn-xs" type="submit"
+                                        name="OpImprimirCambioSalarioNotificacion"
+                                        value="{{ arCambioSalario.codigoCambioSalarioPk }}">Imprimir notificacion
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        <a class="btn btn-default btn-sm"
+                           href="javascript:abrirVentana3('{{ path('recursohumano_cambio_salario_nuevo', {'codigoContrato': arContrato.codigoContratoPk, 'codigoCambioSalario': 0 }) }}', 'AgregarCambioSalario', 600, 900)">Nuevo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <br><br><br>
     {{ form_end(form) }}
 {% endblock %}

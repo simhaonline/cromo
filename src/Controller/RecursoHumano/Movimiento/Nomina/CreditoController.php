@@ -51,6 +51,10 @@ class CreditoController extends AbstractController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuCredito')
+        ];
         $form = $this->createFormBuilder()
             ->add('codigoCreditoTipoFk', EntityType::class, [
                 'class' => RhuCreditoTipo::class,
@@ -61,7 +65,9 @@ class CreditoController extends AbstractController
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
-                'attr' => ['class' => 'form-control to-select-2']
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data'=>  $raw['filtros']['creditoTipo'] ? $em->getReference(RhuCreditoTipo::class, $raw['filtros']['creditoTipo']) : null
+
             ])
             ->add('codigoCreditoPagoTipoFk', EntityType::class, [
                 'class' => RhuCreditoPagoTipo::class,
@@ -72,22 +78,22 @@ class CreditoController extends AbstractController
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
-                'attr' => ['class' => 'form-control to-select-2']
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data'=>  $raw['filtros']['creditoPagoTipo'] ? $em->getReference(RhuCreditoPagoTipo::class, $raw['filtros']['creditoPagoTipo']) : null
+
             ])
-            ->add('codigoCreditoPk', TextType::class, array('required' => false))
-            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
-            ->add('estadoPagado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoSuspendido', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoCreditoPk', TextType::class, array('required' => false,  'data'=>$raw['filtros']['codigoCredito'] ))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false,  'data'=>$raw['filtros']['codigoEmpleado'] ])
+            ->add('estadoPagado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoPagado']])
+            ->add('estadoSuspendido', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoSuspendido']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaHasta']?date_create($raw['filtros']['fechaHasta']):null ])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -237,6 +243,8 @@ class CreditoController extends AbstractController
 
     public function getFiltros($form)
     {
+        $session = new Session();
+
         $filtro = [
             'codigoCredito' => $form->get('codigoCreditoPk')->getData(),
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
@@ -259,6 +267,7 @@ class CreditoController extends AbstractController
         } else {
             $filtro['creditoPagoTipo'] = $arCreditoPagoTipo;
         }
+        $session->set('filtroRhuCredito', $filtro);
 
         return $filtro;
 

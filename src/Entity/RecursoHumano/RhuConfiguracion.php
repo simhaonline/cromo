@@ -251,6 +251,18 @@ class RhuConfiguracion
     protected $conceptoVacacionRel;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoCesantiaRel")
+     * @ORM\JoinColumn(name="codigo_concepto_cesantia_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoCesantiaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoInteresCesantiaRel")
+     * @ORM\JoinColumn(name="codigo_concepto_interes_cesantia_fk", referencedColumnName="codigo_concepto_pk")
+     */
+    protected $conceptoInteresCesantiaRel;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuConcepto", inversedBy="configuracionConceptoFondoSolidaridadRel")
      * @ORM\JoinColumn(name="codigo_concepto_fondo_solidaridad_pension_fk", referencedColumnName="codigo_concepto_pk")
      */
@@ -1044,6 +1056,38 @@ class RhuConfiguracion
     public function setAportarCajaLicenciaMaternidadPaternidad($aportarCajaLicenciaMaternidadPaternidad): void
     {
         $this->aportarCajaLicenciaMaternidadPaternidad = $aportarCajaLicenciaMaternidadPaternidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoCesantiaRel()
+    {
+        return $this->conceptoCesantiaRel;
+    }
+
+    /**
+     * @param mixed $conceptoCesantiaRel
+     */
+    public function setConceptoCesantiaRel($conceptoCesantiaRel): void
+    {
+        $this->conceptoCesantiaRel = $conceptoCesantiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConceptoInteresCesantiaRel()
+    {
+        return $this->conceptoInteresCesantiaRel;
+    }
+
+    /**
+     * @param mixed $conceptoInteresCesantiaRel
+     */
+    public function setConceptoInteresCesantiaRel($conceptoInteresCesantiaRel): void
+    {
+        $this->conceptoInteresCesantiaRel = $conceptoInteresCesantiaRel;
     }
 
 

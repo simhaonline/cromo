@@ -185,6 +185,16 @@ class RhuConcepto
     protected $configuracionConceptoAuxilioTransporteRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoCesantiaRel")
+     */
+    protected $configuracionConceptoCesantiaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoInteresCesantiaRel")
+     */
+    protected $configuracionConceptoInteresCesantiaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuConfiguracion", mappedBy="conceptoVacacionRel")
      */
     protected $configuracionConceptoVacacionRel;
@@ -980,7 +990,37 @@ class RhuConcepto
         $this->orden = $orden;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionConceptoCesantiaRel()
+    {
+        return $this->configuracionConceptoCesantiaRel;
+    }
 
+    /**
+     * @param mixed $configuracionConceptoCesantiaRel
+     */
+    public function setConfiguracionConceptoCesantiaRel($configuracionConceptoCesantiaRel): void
+    {
+        $this->configuracionConceptoCesantiaRel = $configuracionConceptoCesantiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfiguracionConceptoInteresCesantiaRel()
+    {
+        return $this->configuracionConceptoInteresCesantiaRel;
+    }
+
+    /**
+     * @param mixed $configuracionConceptoInteresCesantiaRel
+     */
+    public function setConfiguracionConceptoInteresCesantiaRel($configuracionConceptoInteresCesantiaRel): void
+    {
+        $this->configuracionConceptoInteresCesantiaRel = $configuracionConceptoInteresCesantiaRel;
+    }
 
 
 }

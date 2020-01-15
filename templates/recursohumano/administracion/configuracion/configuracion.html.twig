@@ -36,18 +36,6 @@
         <div class="panel-heading">Conceptos</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="" class="control-label col-sm-2">Auxilio de transporte:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formConfiguracion.conceptoAuxilioTransporteRel ) }}
-                    {{ form_errors(formConfiguracion.conceptoAuxilioTransporteRel ) }}
-                </div>
-                <label for="" class="control-label col-sm-2">Fondo de solidaridad:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(formConfiguracion.conceptoFondoSolidaridadRel ) }}
-                    {{ form_errors(formConfiguracion.conceptoFondoSolidaridadRel ) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
                 <label for="" class="col-sm-2 control-label">Horas diurnas:</label>
                 <div class="col-sm-4">
                     {{ form_widget(formConceptoHora.DConceptoRel , {'attr':{'class': 'to-select-2'}}) }}
@@ -105,6 +93,36 @@
                 <label for="" class="col-sm-2 control-label">Horas descanso:</label>
                 <div class="col-sm-4">
                     {{ form_widget(formConceptoHora.DSConceptoRel , {'attr':{'class': 'to-select-2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="panel panel-default">
+        <div class="panel-heading">Conceptos otros</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Auxilio de transporte:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.conceptoAuxilioTransporteRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoAuxilioTransporteRel ) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Fondo de solidaridad:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.conceptoFondoSolidaridadRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoFondoSolidaridadRel ) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="" class="control-label col-sm-2">Cesantias:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.conceptoCesantiaRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoCesantiaRel ) }}
+                </div>
+                <label for="" class="control-label col-sm-2">Intereses:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(formConfiguracion.conceptoInteresCesantiaRel ) }}
+                    {{ form_errors(formConfiguracion.conceptoInteresCesantiaRel ) }}
                 </div>
             </div>
         </div>

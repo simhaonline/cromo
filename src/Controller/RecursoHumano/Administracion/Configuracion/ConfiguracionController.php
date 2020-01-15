@@ -44,6 +44,7 @@ class ConfiguracionController extends Controller
         $arrConceptoRelRecargoNocturno = $this->generarConceptoRel('RN');
         $arrConceptoRelRecargoFestivoDiurno = $this->generarConceptoRel('RFD');
         $arrConceptoRelRecargoFestivoNocturno = $this->generarConceptoRel('RFN');
+//        $arrConceptoCesantiasRel = $this->generarConceptoRel('CES');
         $formConceptoHora = $this->get('form.factory')->createNamedBuilder('conceptoHora')
             ->add('DConceptoRel', EntityType::class, $arrConceptoRelDiurna)
             ->add('DSConceptoRel', EntityType::class, $arrConceptoRelDescanso)
@@ -57,6 +58,7 @@ class ConfiguracionController extends Controller
             ->add('RNConceptoRel', EntityType::class, $arrConceptoRelRecargoNocturno)
             ->add('RFDConceptoRel', EntityType::class, $arrConceptoRelRecargoFestivoDiurno)
             ->add('RFNConceptoRel', EntityType::class, $arrConceptoRelRecargoFestivoNocturno)
+//            ->add('CESConceptoRel', EntityType::class, $arrConceptoCesantiasRel)
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
             ->getForm();
         $formConceptoHora->handleRequest($request);

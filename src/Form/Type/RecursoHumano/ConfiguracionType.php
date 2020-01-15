@@ -55,6 +55,33 @@ class ConfiguracionType extends AbstractType
                 'required' => true,
                 'attr' => ['class' => 'form-control to-select-2']
             ])
+            ->add('conceptoCesantiaRel',EntityType::class,[
+                'class' => RhuConcepto::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('er')
+                        ->orderBy('er.nombre','ASC')
+                        ->where('er.cesantia = 1');
+                },
+                'choice_label' => function ($er) {
+                    $campo = $er->getCodigoConceptoPk() . " - " . $er->getNombre();
+                    return $campo;
+                },
+                'required' => true,
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('conceptoInteresCesantiaRel',EntityType::class,[
+                'class' => RhuConcepto::class,
+                'query_builder' => function(EntityRepository $er){
+                    return $er->createQueryBuilder('er')
+                        ->orderBy('er.nombre','ASC');
+                },
+                'choice_label' => function ($er) {
+                    $campo = $er->getCodigoConceptoPk() . " - " . $er->getNombre();
+                    return $campo;
+                },
+                'required' => true,
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
             ->add('vrSalarioMinimo', NumberType::class, ['required' => false])
             ->add('vrAuxilioTransporte', NumberType::class, ['required' => true])
             ->add('provisionPorcentajeCesantia', NumberType::class, ['required' => false])

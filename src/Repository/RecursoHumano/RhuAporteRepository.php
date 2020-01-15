@@ -12,6 +12,7 @@ use App\Entity\RecursoHumano\RhuAporteEntidad;
 use App\Entity\RecursoHumano\RhuAporteSoporte;
 use App\Entity\RecursoHumano\RhuAporteTipo;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
+use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracionProvision;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -86,9 +87,17 @@ class RhuAporteRepository extends ServiceEntityRepository
 
     public function desAutorizar($arAporte)
     {
+        /**
+         * @var $arAporte RhuAporte
+         */
         $em = $this->getEntityManager();
         if ($arAporte->getEstadoAutorizado() == 1 && $arAporte->getEstadoAprobado() == 0) {
             $arAporte->setEstadoAutorizado(0);
+            $arAporte->setVrTotal(0);
+            $arAporte->setVrIngresoBaseCotizacion(0);
+            $arAporte->setCantidadContratos(0);
+            $arAporte->setCantidadEmpleados(0);
+            $arAporte->setNumeroLineas(0);
             $em->persist($arAporte);
             $em->createQueryBuilder()->delete(RhuAporteDetalle::class,'ad')->andWhere("ad.codigoAporteFk = " . $arAporte->getCodigoAportePk())->getQuery()->execute();
             $em->createQueryBuilder()->delete(RhuAporteSoporte::class,'aso')->andWhere("aso.codigoAporteFk = " . $arAporte->getCodigoAportePk())->getQuery()->execute();
@@ -725,33 +734,154 @@ class RhuAporteRepository extends ServiceEntityRepository
         return $arrResultado;
     }
 
+//    public function liquidar($codigoAporte)
+//    {
+//        /**
+//         * @var $arAporte RhuAporte
+//         */
+//        $em = $this->getEntityManager();
+//        set_time_limit(0);
+//        $arAporteTotal = $em->getRepository(RhuAporte::class)->find($codigoAporte);
+//        $arAportesDetalle = $em->getRepository(RhuAporteDetalle::class)->findBy(array('codigoAporteFk' => $codigoAporte));
+//        $numeroContratos = $em->getRepository(RhuAporteDetalle::class)->numeroContratos($codigoAporte);
+//        $numeroEmpleados = $em->getRepository(RhuAporteDetalle::class)->numeroEmpleados($codigoAporte);
+//        $totalCotizacion = 0;
+//        $ibcTotal = 0;
+//        $lineas = 0;
+//        foreach ($arAportesDetalle as $arAporteDetalle) {
+//            $totalCotizacion += $arAporteDetalle->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporteDetalle->getCotizacionPension() + $arAporteDetalle->getCotizacionSalud() + $arAporteDetalle->getCotizacionRiesgos() + $arAporteDetalle->getCotizacionCaja() + $arAporteDetalle->getCotizacionIcbf() + $arAporteDetalle->getCotizacionSena();
+//            $ibcTotal += $arAporteDetalle->getIbcCaja();
+//            $lineas ++;
+//        }
+//        $arAporteTotal->setCantidadContratos($numeroContratos);
+//        $arAporteTotal->setCantidadEmpleados($numeroEmpleados);
+//        $arAporteTotal->setNumeroLineas($lineas);
+//        $em->persist($arAporteTotal);
+//        $em->flush();
+//        return true;
+//    }
+
     public function liquidar($codigoAporte)
     {
-        /**
-         * @var $arAporte RhuAporte
-         */
         $em = $this->getEntityManager();
         set_time_limit(0);
-        $arAporteTotal = $em->getRepository(RhuAporte::class)->find($codigoAporte);
-        $arAportesDetalle = $em->getRepository(RhuAporteDetalle::class)->findBy(array('codigoAporteFk' => $codigoAporte));
+        $arConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arPeriodoDetalle = $em->getRepository(RhuAporte::class)->find($codigoAporte);
+        $arAportes = $em->getRepository(RhuAporteDetalle::class)->findBy(array('codigoAporteFk' => $codigoAporte));
         $numeroContratos = $em->getRepository(RhuAporteDetalle::class)->numeroContratos($codigoAporte);
         $numeroEmpleados = $em->getRepository(RhuAporteDetalle::class)->numeroEmpleados($codigoAporte);
-        $totalCotizacion = 0;
+        $totalCotizacionDetalle = 0;
         $ibcTotal = 0;
         $lineas = 0;
-        foreach ($arAportesDetalle as $arAporteDetalle) {
-            $totalCotizacion += $arAporteDetalle->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporteDetalle->getCotizacionPension() + $arAporteDetalle->getCotizacionSalud() + $arAporteDetalle->getCotizacionRiesgos() + $arAporteDetalle->getCotizacionCaja() + $arAporteDetalle->getCotizacionIcbf() + $arAporteDetalle->getCotizacionSena();
-            $ibcTotal += $arAporteDetalle->getIbcCaja();
+        foreach ($arAportes as $arAporte) {
+            $ibc = $this->redondearIbc2($arAporte->getIbcPension());
+            if ($ibc > $arConfiguracionNomina->getVrSalarioMinimo()) {
+                $arAporte->setVariacionTransitoriaSalario('X');
+            }
+            $ibcPension = $this->redondearIbc2($arAporte->getIbcPension());
+            $ibcSalud = $this->redondearIbc2($arAporte->getIbcSalud());
+            $ibcRiesgos = $this->redondearIbc2($arAporte->getIbcRiesgosProfesionales());
+            $ibcCaja = $this->redondearIbc2($arAporte->getIbcCaja());
+            $ibcOtrosParafiscales = 0;
+            $ibcCajaTotal = 0;
+
+            // se valida si es empleado devenga mas de 25 SMLV y aporta unicamente sobre los 25 SMLv
+            //Según la ley 797 de 2003 en su articulo 5.
+            if ($ibc >= ($arConfiguracionNomina->getVrSalarioMinimo() * 25)) {
+                $ibc = $arConfiguracionNomina->getVrSalarioMinimo() * 25;
+                $ibcPension = $ibc;
+                $ibcSalud = $ibc;
+                $ibcRiesgos = $ibc;
+            }
+
+            $tarifaPension = $arAporte->getTarifaPension();
+            $tarifaSalud = $arAporte->getTarifaSalud();
+            $tarifaRiesgos = $arAporte->getTarifaRiesgos();
+            $tarifaCaja = $arAporte->getTarifaCaja();
+            $tarifaIcbf = 0;
+            $tarifaSena = 0;
+
+            if ((($ibc) > (10 * $arConfiguracionNomina->getVrSalarioMinimo()))) {
+                $tarifaSalud = 12.5;
+                $tarifaIcbf = 3;
+                $tarifaSena = 2;
+            } else {
+//                $diasNovedad = $arAporte->getDiasLicencia() + $arAporte->getDiasIncapacidadGeneral() + $arAporte->getDiasLicenciaMaternidad() + $arAporte->getDiasVacaciones() + $arAporte->getIncapacidadAccidenteTrabajoEnfermedadProfesional();
+//                //Si el ibc no alcanzo para reportar parafiscales, se debe validar si no tuvo dias de novedad para reportar sobre los dias realmente cotizados
+//                if (($arContrato->getVrSalario() > (10 * $arConfiguracionNomina->getVrSalario())) && $diasNovedad == 0) {
+//                    $tarifaSalud = 12.5;
+//                    $tarifaIcbf = 3;
+//                    $tarifaSena = 2;
+//                } else {
+//                    $ibcOtrosParafiscales = 0;
+//                }
+            }
+            //20 Estudiantes (Régimen especial-Ley 789/2002)
+            if ($arAporte->getTipoCotizante() == '20') {
+                $ibcCaja = 0;
+                $diasCaja = 0;
+                $tarifaCaja = 0;
+            }
+            $cotizacionPension = $ibcPension * $tarifaPension / 100;
+            $cotizacionSalud = $ibcSalud * $tarifaSalud / 100;
+            $cotizacionRiesgos = $ibcRiesgos * $tarifaRiesgos / 100;
+            $cotizacionCaja = $ibcCaja * $tarifaCaja / 100;
+            $cotizacionSena = $ibcOtrosParafiscales * $tarifaSena / 100;
+            $cotizacionIcbf = $ibcOtrosParafiscales * $tarifaIcbf / 100;
+
+            $cotizacionPension = $this->redondearAporte3($cotizacionPension);
+            $cotizacionSalud = $this->redondearAporte3($cotizacionSalud);
+            $cotizacionRiesgos = $this->redondearAporte3($cotizacionRiesgos);
+            $cotizacionCaja = $this->redondearAporte3($cotizacionCaja);
+            $cotizacionSena = $this->redondearAporte3($cotizacionSena);
+            $cotizacionIcbf = $this->redondearAporte3($cotizacionIcbf);
+
+            if ($arAporte->getTipoCotizante() == '19' || $arAporte->getTipoCotizante() == '12' || $arAporte->getTipoCotizante() == '23') {
+                $cotizacionPension = 0;
+                $cotizacionCaja = 0;
+            }
+            if ($arAporte->getTipoCotizante() == '12') {
+                $cotizacionRiesgos = 0;
+            }
+            if ($arAporte->getTipoCotizante() == '23') {
+                $cotizacionSalud = 0;
+            }
+            $arAporte->setCotizacionPension($cotizacionPension);
+            $arAporte->setCotizacionSalud($cotizacionSalud);
+            $arAporte->setCotizacionRiesgos($cotizacionRiesgos);
+            $arAporte->setCotizacionCaja($cotizacionCaja);
+            $arAporte->setCotizacionIcbf($cotizacionIcbf);
+            $arAporte->setCotizacionSena($cotizacionSena);
+            $totalCotizacion = $arAporte->getAporteVoluntarioFondoPensionesObligatorias() + $cotizacionPension + $cotizacionSalud + $cotizacionRiesgos + $cotizacionCaja + $cotizacionIcbf + $cotizacionSena;
+            $arAporte->setTotalCotizacion($totalCotizacion);
+
+            $em->persist($arAporte);
+
+            $totalCotizacionDetalle += $arAporte->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporte->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporte->getCotizacionPension() + $arAporte->getCotizacionSalud() + $arAporte->getCotizacionRiesgos() + $arAporte->getCotizacionCaja() + $arAporte->getCotizacionIcbf() + $arAporte->getCotizacionSena();
+            $ibcTotal += $arAporte->getIbcCaja();
             $lineas ++;
         }
-        $arAporteTotal->setVrTotal($totalCotizacion);
-        $arAporteTotal->setVrIngresoBaseCotizacion($ibcTotal);
-        $arAporteTotal->setCantidadContratos($numeroContratos);
-        $arAporteTotal->setCantidadEmpleados($numeroEmpleados);
-        $arAporteTotal->setNumeroLineas($lineas);
-        $em->persist($arAporteTotal);
+        $arPeriodoDetalle->setVrTotal($totalCotizacionDetalle);
+        $arPeriodoDetalle->setVrIngresoBaseCotizacion($ibcTotal);
+        $arPeriodoDetalle->setCantidadContratos($numeroContratos);
+        $arPeriodoDetalle->setCantidadEmpleados($numeroEmpleados);
+        $arPeriodoDetalle->setNumeroLineas($lineas);
+
+        $em->persist($arPeriodoDetalle);
         $em->flush();
         return true;
+    }
+
+    public function redondearIbc2($ibc)
+    {
+        $ibcRetornar = ceil($ibc);
+        return $ibcRetornar;
+    }
+
+    public function redondearAporte3($cotizacion, $significance = 100)
+    {
+        $cotizacionRetornar = 0;
+        return (is_numeric($cotizacion) && is_numeric($significance)) ? (ceil($cotizacion / $significance) * $significance) : 0;
     }
 
 

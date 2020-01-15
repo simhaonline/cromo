@@ -169,7 +169,7 @@ class AporteController extends AbstractController
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuAporte::class)->autorizar($arAporte);
                 $em->getRepository(RhuAporte::class)->generarResumen($arAporte);
-                $em->getRepository(RhuAporte::class)->liquidar($arAporte);
+                $em->getRepository(RhuAporte::class)->liquidar($arAporte->getCodigoAportePk());
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seguridadsocial_aporte_detalle', array('id' => $id)));
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
@@ -251,12 +251,11 @@ class AporteController extends AbstractController
             } else {
                 $arAporteDetalle->setAporteVoluntario(' ');
             }
-            $totalCotizacion = $arAporteDetalle->getAporteVoluntarioFondoPensionesObligatorias() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSolidaridad() + $arAporteDetalle->getAportesFondoSolidaridadPensionalSubsistencia() + $arAporteDetalle->getCotizacionPension() + $arAporteDetalle->getCotizacionSalud() + $arAporteDetalle->getCotizacionRiesgos() + $arAporteDetalle->getCotizacionCaja() + $arAporteDetalle->getCotizacionIcbf() + $arAporteDetalle->getCotizacionSena();
-            $arAporteDetalle->setTotalCotizacion($totalCotizacion);
             $em->persist($arAporteDetalle);
             $em->flush();
             $em->createQueryBuilder()->delete(RhuAporteEntidad::class,'ae')->andWhere("ae.codigoAporteFk = " . $arAporte->getCodigoAportePk())->getQuery()->execute();
             $em->getRepository(RhuAporte::class)->generarResumen($arAporte);
+//            $em->getRepository(RhuAporte::class)->liquidar($arAporte->getCodigoAportePk());
             $em->getRepository(RhuAporte::class)->liquidar($arAporte->getCodigoAportePk());
             echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
         }

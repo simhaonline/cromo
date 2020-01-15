@@ -331,6 +331,9 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
 
         $arRemisionDetalles = $this->listaRegenerarRemisionada();
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
+//            if($arRemisionDetalle['codigoItemFk'] == 76 && $arRemisionDetalle['loteFk'] == 'AA190917-17' && $arRemisionDetalle['codigoBodegaFk'] == 'BUC') {
+//                echo "hola";
+//            }
             $arLote = $em->getRepository(InvLote::class)->findOneBy(array('codigoItemFk' => $arRemisionDetalle['codigoItemFk'],
                 'loteFk' => $arRemisionDetalle['loteFk'], 'codigoBodegaFk' => $arRemisionDetalle['codigoBodegaFk']));
             if($arLote) {
@@ -344,9 +347,6 @@ class InvRemisionDetalleRepository extends ServiceEntityRepository
         }
         $arRemisionDetalles = $this->listaRegenerarRemisionadaItem();
         foreach ($arRemisionDetalles as $arRemisionDetalle) {
-            /*if($arRemisionDetalle['codigoItemFk'] == 84) {
-                echo "hola";
-            }*/
             $arItem = $em->getRepository(InvItem::class)->find($arRemisionDetalle['codigoItemFk']);
             $arItem->setCantidadRemisionada($arRemisionDetalle['cantidad']);
             $arItem->setCantidadDisponible($arItem->getCantidadExistencia() - $arItem->getCantidadRemisionada());

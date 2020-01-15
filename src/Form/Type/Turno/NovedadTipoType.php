@@ -27,8 +27,9 @@ class NovedadTipoType extends   AbstractType
                         ->orderBy('t.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
+                'label' => 'Tipo:',
                 'required' => true))
-            ->add('nombre', TextType::class, array('required' => true))
+            ->add('nombre', TextType::class, array('required' => true, 'label' => 'Nombre:'))
             ->add('estadoLicencia', CheckboxType::class, array('required' => false))
             ->add('estadoIncapacidad', CheckboxType::class, array('required' => false))
             ->add('estadoIngreso', CheckboxType::class, array('required' => false))

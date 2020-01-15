@@ -545,28 +545,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         $salarioPromedioCesantias = $douSalario;
                         $aplicaPorcentaje = false;
                     }
-                    $porcentaje = 100;
-//                    if ($arConfiguracion->getPrestacionesAplicaPorcentajeSalario()) {
-//                        if ($arContrato->getCodigoSalarioTipoFk() == 2 && $aplicaPorcentaje) {
-//                            $intDiasLaborados = $em->getRepository('BrasaRecursoHumanoBundle:RhuLiquidacion')->diasPrestaciones($arContrato->getFechaDesde(), $dateFechaHasta);
-//                            foreach ($arParametrosPrestacion as $arParametroPrestacion) {
-//                                if ($intDiasLaborados >= $arParametroPrestacion->getDiaDesde() && $intDiasLaborados <= $arParametroPrestacion->getDiaHasta()) {
-//                                    if ($arParametroPrestacion->getOrigen() == 'SAL') {
-//                                        if ($arContrato->getAuxilioTransporte() == 1) {
-//                                            $salarioPromedioCesantias = $douSalario + $auxilioTransporte;
-//                                        } else {
-//                                            $salarioPromedioCesantias = $douSalario;
-//                                        }
-//                                    } else {
-//                                        $porcentaje = $arParametroPrestacion->getPorcentaje();
-//                                        $salarioPromedioCesantias = ($salarioPromedioCesantias * $porcentaje) / 100;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-                    //$diasAusentismo = $em->getRepository(RhuPago::class)->diasAusentismo($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-                    $diasAusentismo = 0;
+                    $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
                     //Validar si existe la configuración de primas de movimientos y sumar los dias solo de tipo ausentismo.
 //                    if ($arConfiguracion->getDiasAusentismoPrimasMovimiento()) {
 //                        $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
@@ -579,14 +558,6 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                             $salarioPromedioCesantias = $douSalario;
                         }
                     }
-//                    if ($arConfiguracion->getLiquidarPrestacionesSalarioSuplementario()) {
-//                        $suplementario = $em->getRepository('BrasaRecursoHumanoBundle:RhuPagoDetalle')->ibpSuplementario($dateFechaDesde->format('Y-m-d'), $dateFechaHastaPago->format('Y-m-d'), $arContrato->getCodigoContratoPk());
-//                        $suplementarioPromedio = 0;
-//                        if ($intDiasSalarioPromedio > 0) {
-//                            $suplementarioPromedio = ($suplementario / $intDiasSalarioPromedio) * 30;
-//                        }
-//                        $salarioPromedioCesantias += $suplementarioPromedio;
-//                    }
                     $salarioPromedioCesantias = round($salarioPromedioCesantias);
                     $arProgramacionDetalle = new RhuProgramacionDetalle();
                     $arProgramacionDetalle->setProgramacionRel($arProgramacion);

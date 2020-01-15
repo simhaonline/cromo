@@ -101,6 +101,7 @@
                             <th>DET</th>
                             {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                 <th>CUENTA</th>
+                                <th>COD</th>
                                 <th>BANCO</th>
                             {% endif %}
                             <th><input type="checkbox" name="ChkSeleccionarTodosDetalle"
@@ -134,7 +135,7 @@
                                                autocomplete="off"
                                                class="AutoCompletado"
                                                onfocus="javascript:this.value=this.value.toUpperCase()"
-                                               style="text-align: left; width:80px;text-transform:uppercase;" size="20 ">
+                                               style="text-align: left; width:40px;text-transform:uppercase;" size="20">
                                         <a href="javascript:abrirVentana3('{{ path('tesoreria_buscar_tercero_movimiento',{'campoCodigo' : 'arrTercero['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarTercero',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
@@ -145,7 +146,7 @@
                                                name="arrCuenta[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                id="arrCuenta[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                value="{{ arMovimientoDetalle.codigoCuentaFk }}"
-                                               style="text-align: left; width:120px" size="20">
+                                               style="text-align: left; width:60px" size="20">
                                         <a href="javascript:abrirVentana3('{{ path('financiero_buscar_cuenta_asiento',{'campoCodigo' : 'arrCuenta['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarCuenta',600,900)"
                                            class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                     </td>
@@ -201,19 +202,28 @@
                                     <td>{{ arMovimientoDetalle.detalle }}</td>
                                 {% endif %}
                                 {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
-                                    <td>{{ arMovimientoDetalle.cuenta }}</td>
                                     {% if arMovimiento.estadoAutorizado == false %}
+                                        <td>
+                                            <input type="text"
+                                                   name="arrBanco[cuenta]"
+                                                   id="arrBanco[cuenta{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                                   value="{{ arMovimientoDetalle.cuenta }}"
+                                                   style="text-align: left; width:90px" size="20">
+                                        </td>
                                         <td>
                                             <input type="text"
                                                    name="arrBanco[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                    id="arrBanco[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
                                                    value="{{ arMovimientoDetalle.codigoBancoPk }}"
-                                                   style="text-align: left; width:50px" size="20">
+                                                   style="text-align: left; width:30px" size="20">
                                             <a href="javascript:abrirVentana3('{{ path('general_buscar_banco',{'campoCodigo' : 'arrBanco['~ arMovimientoDetalle.codigoMovimientoDetallePk ~']' }) }}','BuscarBanco',600,900)"
                                                class="btn-xs btn btn-default" style="height: 20px;">..</a>
                                         </td>
+                                        <td>{{ arMovimientoDetalle.banco }}</td>
                                     {% else %}
-                                        <td>{{ arMovimientoDetalle.banco  }}</td>
+                                        <td>{{ arMovimientoDetalle.cuenta }}</td>
+                                        <td>{{ arMovimientoDetalle.codigoBancoPk  }}</td>
+                                        <td>{{ arMovimientoDetalle.banco }}</td>
                                     {% endif %}
                                 {% endif %}
                                 <td style="text-align: center;"><input type="checkbox" name="ChkSeleccionar[]"

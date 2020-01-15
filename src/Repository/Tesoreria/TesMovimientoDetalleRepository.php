@@ -130,6 +130,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
             if($arrBanco[$intCodigo]){
                 $arBanco = $em->getRepository(GenBanco::class)->find($arrBanco[$intCodigo]);
                 if ($arBanco){
+                    $arMovimientoDetalle->setCuenta($arrBanco['cuenta']);
                     $arMovimientoDetalle->setBancoRel($arBanco);
                 }
             }

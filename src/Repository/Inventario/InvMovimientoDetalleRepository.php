@@ -530,7 +530,8 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->select("SUM(md.cantidad)")
             ->leftJoin("md.movimientoRel", "m")
             ->where("md.codigoRemisionDetalleFk = {$codigoRemisionDetalle} ")
-            ->andWhere('m.estadoAutorizado = 1');
+            ->andWhere('m.estadoAutorizado = 1')
+            ->andWhere('m.estadoAprobado = 1');
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         if ($resultado[1]) {
             $cantidad = $resultado[1];

@@ -28,7 +28,7 @@ class GenSegmento
     protected $turClientesSegmentoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\Usuario",mappedBy="asesorRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\Usuario",mappedBy="segmentoRel")
      */
     protected $usuariosSegmentoRel;
 
@@ -100,6 +100,23 @@ class GenSegmento
     {
         $this->usuariosSegmentoRel = $usuariosSegmentoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuariosSegmentosSegmentoRel()
+    {
+        return $this->usuariosSegmentosSegmentoRel;
+    }
+
+    /**
+     * @param mixed $usuariosSegmentosSegmentoRel
+     */
+    public function setUsuariosSegmentosSegmentoRel($usuariosSegmentosSegmentoRel): void
+    {
+        $this->usuariosSegmentosSegmentoRel = $usuariosSegmentosSegmentoRel;
+    }
+
 
 
 }

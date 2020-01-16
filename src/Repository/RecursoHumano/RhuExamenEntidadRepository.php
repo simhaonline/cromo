@@ -2,16 +2,16 @@
 
 namespace App\Repository\RecursoHumano;
 
-use App\Entity\RecursoHumano\RhuEntidadExamen;
+use App\Entity\RecursoHumano\RhuExamenEntidad;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class RhuEntidadExamenRepository extends ServiceEntityRepository
+class RhuExamenEntidadRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, RhuEntidadExamen::class);
+        parent::__construct($registry, RhuExamenEntidad::class);
     }
 
     /**
@@ -42,7 +42,7 @@ class RhuEntidadExamenRepository extends ServiceEntityRepository
             $nombre = $filtros['nombre'] ?? null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEntidadExamen::class, 'e')
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuExamenEntidad::class, 'e')
             ->select('e.codigoEntidadExamenPk')
             ->addSelect('e.nombre')
             ->addSelect('e.nit')

@@ -23,9 +23,9 @@ class RhuExamenListaPrecio
     private $codigoExamenListaPrecioPk;
 
     /**
-     * @ORM\Column(name="codigo_entidad_examen_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_examen_entidad_fk", type="integer", nullable=true)
      */
-    private $codigoEntidadExamenFk;
+    private $codigoExamenEntidadFk;
 
     /**
      * @ORM\Column(name="codigo_examen_tipo_fk", type="integer", nullable=true)
@@ -43,10 +43,10 @@ class RhuExamenListaPrecio
     private $Usuario;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuEntidadExamen", inversedBy="examenListaPreciosEntidadExamenRel")
-     * @ORM\JoinColumn(name="codigo_entidad_examen_fk", referencedColumnName="codigo_entidad_examen_pk")
+     * @ORM\ManyToOne(targetEntity="RhuExamenEntidad", inversedBy="examenListaPreciosExamenEntidadRel")
+     * @ORM\JoinColumn(name="codigo_examen_entidad_fk", referencedColumnName="codigo_examen_entidad_pk")
      */
-    protected $entidadExamenRel;
+    protected $examenEntidadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuExamenTipo", inversedBy="examenListaPreciosExamenTipoRel")
@@ -89,17 +89,17 @@ class RhuExamenListaPrecio
     /**
      * @return mixed
      */
-    public function getCodigoEntidadExamenFk()
+    public function getCodigoExamenEntidadFk()
     {
-        return $this->codigoEntidadExamenFk;
+        return $this->codigoExamenEntidadFk;
     }
 
     /**
-     * @param mixed $codigoEntidadExamenFk
+     * @param mixed $codigoExamenEntidadFk
      */
-    public function setCodigoEntidadExamenFk($codigoEntidadExamenFk): void
+    public function setCodigoExamenEntidadFk($codigoExamenEntidadFk): void
     {
-        $this->codigoEntidadExamenFk = $codigoEntidadExamenFk;
+        $this->codigoExamenEntidadFk = $codigoExamenEntidadFk;
     }
 
     /**
@@ -153,17 +153,17 @@ class RhuExamenListaPrecio
     /**
      * @return mixed
      */
-    public function getEntidadExamenRel()
+    public function getExamenEntidadRel()
     {
-        return $this->entidadExamenRel;
+        return $this->examenEntidadRel;
     }
 
     /**
-     * @param mixed $entidadExamenRel
+     * @param mixed $examenEntidadRel
      */
-    public function setEntidadExamenRel($entidadExamenRel): void
+    public function setExamenEntidadRel($examenEntidadRel): void
     {
-        $this->entidadExamenRel = $entidadExamenRel;
+        $this->examenEntidadRel = $examenEntidadRel;
     }
 
     /**

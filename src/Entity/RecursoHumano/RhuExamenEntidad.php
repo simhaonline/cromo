@@ -5,22 +5,22 @@ namespace App\Entity\RecursoHumano;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuEntidadExamenRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuExamenEntidadRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class RhuEntidadExamen
+class RhuExamenEntidad
 {
     public $infoLog = [
-        "primaryKey" => "codigoEntidadExamenPk",
+        "primaryKey" => "codigoExamenEntidadPk",
         "todos" => true,
     ];
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_entidad_examen_pk", type="integer")
+     * @ORM\Column(name="codigo_examen_entidad_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoEntidadExamenPk;
+    private $codigoExamenEntidadPk;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=120, nullable=true)
@@ -48,14 +48,14 @@ class RhuEntidadExamen
     private $usuario;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuExamen", mappedBy="entidadExamenRel")
+     * @ORM\OneToMany(targetEntity="RhuExamen", mappedBy="examenEntidadRel")
      */
-    protected $examenesEntidadExamenRel;
+    protected $examenesExamenEntidadRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuExamenListaPrecio", mappedBy="entidadExamenRel")
+     * @ORM\OneToMany(targetEntity="RhuExamenListaPrecio", mappedBy="examenEntidadRel")
      */
-    protected $examenListaPreciosEntidadExamenRel;
+    protected $examenListaPreciosExamenEntidadRel;
 
     /**
      * @return array
@@ -76,17 +76,17 @@ class RhuEntidadExamen
     /**
      * @return mixed
      */
-    public function getCodigoEntidadExamenPk()
+    public function getCodigoExamenEntidadPk()
     {
-        return $this->codigoEntidadExamenPk;
+        return $this->codigoExamenEntidadPk;
     }
 
     /**
-     * @param mixed $codigoEntidadExamenPk
+     * @param mixed $codigoExamenEntidadPk
      */
-    public function setCodigoEntidadExamenPk($codigoEntidadExamenPk): void
+    public function setCodigoExamenEntidadPk($codigoExamenEntidadPk): void
     {
-        $this->codigoEntidadExamenPk = $codigoEntidadExamenPk;
+        $this->codigoExamenEntidadPk = $codigoExamenEntidadPk;
     }
 
     /**
@@ -172,32 +172,34 @@ class RhuEntidadExamen
     /**
      * @return mixed
      */
-    public function getExamenesEntidadExamenRel()
+    public function getExamenesExamenEntidadRel()
     {
-        return $this->examenesEntidadExamenRel;
+        return $this->examenesExamenEntidadRel;
     }
 
     /**
-     * @param mixed $examenesEntidadExamenRel
+     * @param mixed $examenesExamenEntidadRel
      */
-    public function setExamenesEntidadExamenRel($examenesEntidadExamenRel): void
+    public function setExamenesExamenEntidadRel($examenesExamenEntidadRel): void
     {
-        $this->examenesEntidadExamenRel = $examenesEntidadExamenRel;
+        $this->examenesExamenEntidadRel = $examenesExamenEntidadRel;
     }
 
     /**
      * @return mixed
      */
-    public function getExamenListaPreciosEntidadExamenRel()
+    public function getExamenListaPreciosExamenEntidadRel()
     {
-        return $this->examenListaPreciosEntidadExamenRel;
+        return $this->examenListaPreciosExamenEntidadRel;
     }
 
     /**
-     * @param mixed $examenListaPreciosEntidadExamenRel
+     * @param mixed $examenListaPreciosExamenEntidadRel
      */
-    public function setExamenListaPreciosEntidadExamenRel($examenListaPreciosEntidadExamenRel): void
+    public function setExamenListaPreciosExamenEntidadRel($examenListaPreciosExamenEntidadRel): void
     {
-        $this->examenListaPreciosEntidadExamenRel = $examenListaPreciosEntidadExamenRel;
+        $this->examenListaPreciosExamenEntidadRel = $examenListaPreciosExamenEntidadRel;
     }
+
+
 }

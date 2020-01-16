@@ -22,7 +22,7 @@ class RhuExamenRepository extends ServiceEntityRepository
         $filtros = $raw['filtros'] ?? null;
 
         $codigoExamen = null;
-        $examenClase = null;
+        $examenTipo = null;
         $codigoEmpleado = null;
         $fechaDesde = null;
         $fechaHasta = null;
@@ -32,7 +32,7 @@ class RhuExamenRepository extends ServiceEntityRepository
 
         if ($filtros) {
             $codigoExamen = $filtros['codigoExamen'] ?? null;
-            $examenClase = $filtros['examenClase'] ?? null;
+            $examenTipo = $filtros['examenTipo'] ?? null;
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
@@ -43,7 +43,7 @@ class RhuExamenRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuExamen::class, 'e')
             ->select('e.codigoExamenPk')
-            ->addSelect('ec.nombre as clase')
+            ->addSelect('et.nombre as tipo')
             ->addSelect('e.fecha')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto AS empleado')
@@ -54,8 +54,8 @@ class RhuExamenRepository extends ServiceEntityRepository
             ->addSelect('e.estadoAutorizado')
             ->addSelect('e.estadoAprobado')
             ->addSelect('e.estadoAnulado')
-            ->leftJoin('e.examenClaseRel', 'ec')
-            ->leftJoin('e.entidadExamenRel', 'ee')
+            ->leftJoin('e.examenTipoRel', 'et')
+            ->leftJoin('e.examenEntidadRel', 'ee')
             ->leftJoin('e.cargoRel', 'c');
         if ($codigoExamen) {
             $queryBuilder->andWhere("e.codigoExamenPk = '{$codigoExamen}'");
@@ -63,8 +63,8 @@ class RhuExamenRepository extends ServiceEntityRepository
         if ($codigoEmpleado) {
             $queryBuilder->andWhere("e.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
-        if ($examenClase) {
-            $queryBuilder->andWhere("e.codigoExamenClaseFk = '{$examenClase}'");
+        if ($examenTipo) {
+            $queryBuilder->andWhere("e.codigoExamenTipoFk = '{$examenTipo}'");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("e.fecha >= '{$fechaDesde} 00:00:00'");
@@ -196,4 +196,27 @@ class RhuExamenRepository extends ServiceEntityRepository
         }
         return $result;
     }
+
+    public function autorizar($arExamen)
+    {
+        $em = $this->getEntityManager();
+        if (!$arExamen->getEstadoAutorizado()) {
+            $arExamen->setEstadoAutorizado(1);
+            $em->persist($arExamen);
+            $em->flush();
+        } else {
+            Mensajes::error('El examen ya esta autorizado');
+        }
+    }
+
+    public function desAutorizar($arExamen)
+    {
+        $em = $this->getEntityManager();
+        if ($arExamen->getEstadoAutorizado()) {
+            $arExamen->setEstadoAutorizado(0);
+            $em->persist($arExamen);
+            $em->flush();
+        }
+    }
+
 }

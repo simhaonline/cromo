@@ -17,19 +17,19 @@ class ExamenType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('examenClaseRel', EntityType::class, array(
+            ->add('examenTipoRel', EntityType::class, array(
                 'required' => true,
-                'class' => 'App\Entity\RecursoHumano\RhuExamenClase',
+                'class' => 'App\Entity\RecursoHumano\RhuExamenTipo',
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('ec')
-                        ->orderBy('ec.nombre', 'ASC');
+                    return $er->createQueryBuilder('et')
+                        ->orderBy('et.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'label' => ' '
             ))
-            ->add('entidadExamenRel', EntityType::class, array(
+            ->add('examenEntidadRel', EntityType::class, array(
                 'required' => true,
-                'class' => 'App\Entity\RecursoHumano\RhuEntidadExamen',
+                'class' => 'App\Entity\RecursoHumano\RhuExamenEntidad',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ee')
                         ->orderBy('ee.nombre', 'ASC');

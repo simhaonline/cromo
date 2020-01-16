@@ -23,14 +23,14 @@ class RhuExamen
     private $codigoExamenPk;
 
     /**
-     * @ORM\Column(name="codigo_examen_clase_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_examen_tipo_fk", type="integer", nullable=false)
      */
-    private $codigoExamenClaseFk;
+    private $codigoExamenTipoFk;
 
     /**
-     * @ORM\Column(name="codigo_entidad_examen_fk", type="integer", nullable=false)
+     * @ORM\Column(name="codigo_examen_entidad_fk", type="integer", nullable=false)
      */
-    private $codigoEntidadExamenFk;
+    private $codigoExamenEntidadFk;
 
     /**
      * @ORM\Column(name="codigo_cargo_fk", type="string", length=10)
@@ -109,16 +109,16 @@ class RhuExamen
     private $cobro;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuExamenClase", inversedBy="examenesExamenClaseRel")
-     * @ORM\JoinColumn(name="codigo_examen_clase_fk", referencedColumnName="codigo_examen_clase_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuExamenTipo", inversedBy="examenesExamenTipoRel")
+     * @ORM\JoinColumn(name="codigo_examen_tipo_fk", referencedColumnName="codigo_examen_tipo_pk")
      */
-    protected $examenClaseRel;
+    protected $examenTipoRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuEntidadExamen", inversedBy="examenesEntidadExamenRel")
-     * @ORM\JoinColumn(name="codigo_entidad_examen_fk", referencedColumnName="codigo_entidad_examen_pk")
+     * @ORM\ManyToOne(targetEntity="RhuExamenEntidad", inversedBy="examenesEntidadExamenRel")
+     * @ORM\JoinColumn(name="codigo_examen_entidad_fk", referencedColumnName="codigo_examen_entidad_pk")
      */
-    protected $entidadExamenRel;
+    protected $examenEntidadRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEmpleado", inversedBy="examenesEmpleadoRel")
@@ -194,17 +194,33 @@ class RhuExamen
     /**
      * @return mixed
      */
-    public function getCodigoEntidadExamenFk()
+    public function getCodigoExamenEntidadFk()
     {
-        return $this->codigoEntidadExamenFk;
+        return $this->codigoExamenEntidadFk;
     }
 
     /**
-     * @param mixed $codigoEntidadExamenFk
+     * @param mixed $codigoExamenEntidadFk
      */
-    public function setCodigoEntidadExamenFk($codigoEntidadExamenFk): void
+    public function setCodigoExamenEntidadFk($codigoExamenEntidadFk): void
     {
-        $this->codigoEntidadExamenFk = $codigoEntidadExamenFk;
+        $this->codigoExamenEntidadFk = $codigoExamenEntidadFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoExamenTipoFk()
+    {
+        return $this->codigoExamenTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoExamenTipoFk
+     */
+    public function setCodigoExamenTipoFk($codigoExamenTipoFk): void
+    {
+        $this->codigoExamenTipoFk = $codigoExamenTipoFk;
     }
 
     /**
@@ -450,33 +466,33 @@ class RhuExamen
     /**
      * @return mixed
      */
-    public function getExamenClaseRel()
+    public function getExamenTipoRel()
     {
-        return $this->examenClaseRel;
+        return $this->examenTipoRel;
     }
 
     /**
-     * @param mixed $examenClaseRel
+     * @param mixed $examenTipoRel
      */
-    public function setExamenClaseRel($examenClaseRel): void
+    public function setExamenTipoRel($examenTipoRel): void
     {
-        $this->examenClaseRel = $examenClaseRel;
+        $this->examenTipoRel = $examenTipoRel;
     }
 
     /**
      * @return mixed
      */
-    public function getEntidadExamenRel()
+    public function getExamenEntidadRel()
     {
-        return $this->entidadExamenRel;
+        return $this->examenEntidadRel;
     }
 
     /**
-     * @param mixed $entidadExamenRel
+     * @param mixed $examenEntidadRel
      */
-    public function setEntidadExamenRel($entidadExamenRel): void
+    public function setExamenEntidadRel($examenEntidadRel): void
     {
-        $this->entidadExamenRel = $entidadExamenRel;
+        $this->examenEntidadRel = $examenEntidadRel;
     }
 
     /**
@@ -526,4 +542,21 @@ class RhuExamen
     {
         $this->ciudadRel = $ciudadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExamenesExamenDetalleRel()
+    {
+        return $this->examenesExamenDetalleRel;
+    }
+
+    /**
+     * @param mixed $examenesExamenDetalleRel
+     */
+    public function setExamenesExamenDetalleRel($examenesExamenDetalleRel): void
+    {
+        $this->examenesExamenDetalleRel = $examenesExamenDetalleRel;
+    }
+
 }

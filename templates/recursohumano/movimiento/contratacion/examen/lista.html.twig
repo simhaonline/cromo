@@ -17,7 +17,7 @@
                         </div>
                         <label class=" col-sm-1 control-label">Tipo:</label>
                         <div class="col-sm-2">
-                            {{ form_widget(form.codigoExamenClaseFk) }}
+                            {{ form_widget(form.codigoExamenTipoFk) }}
                         </div>
                         <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
                         <div class="col-sm-2">
@@ -77,7 +77,7 @@
         {% for arExamen in arExamenes %}
             <tr>
                 <td>{{ arExamen.codigoExamenPk }}</td>
-                <td>{{ arExamen.clase }}</td>
+                <td>{{ arExamen.tipo }}</td>
                 <td>{{ arExamen.fecha | date('Y-m-d') }}</td>
                 <td>{{ arExamen.numeroIdentificacion }}</td>
                 <td>{{ arExamen.empleado }}</td>

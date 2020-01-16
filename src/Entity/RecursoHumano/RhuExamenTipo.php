@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class RhuExamenTipo
 {
     public $infoLog = [
-        "primaryKey" => "codigoExamenTipoPk",
+        "primaryKey" => "codigoExamenClasePk",
         "todos" => true,
     ];
 
@@ -24,28 +24,18 @@ class RhuExamenTipo
 
     /**
      * @ORM\Column(name="nombre", type="string", length=80, nullable=true)
-     */    
-    private $nombre;            
-    
-    /**     
-     * @ORM\Column(name="ingreso", type="boolean")
-     */    
+     */
+    private $nombre;
+
+    /**
+     * @ORM\Column(name="ingreso", options={"default" : false}, type="boolean")
+     */
     private $ingreso = false;
 
     /**
-     * @ORM\Column(name="arma", type="boolean", nullable=true)
+     * @ORM\OneToMany(targetEntity="RhuExamen", mappedBy="examenTipoRel")
      */
-    private $arma;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="RhuExamenDetalle", mappedBy="examenTipoRel")
-     */
-    protected $examenDetallesExamenTipoRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="RhuExamenListaPrecio", mappedBy="examenTipoRel")
-     */
-    protected $examenListaPreciosExamenTipoRel;
+    protected $examenesExamenTipoRel;
 
     /**
      * @return array
@@ -104,9 +94,9 @@ class RhuExamenTipo
     }
 
     /**
-     * @param mixed $ingreso
+     * @param bool $ingreso
      */
-    public function setIngreso($ingreso): void
+    public function setIngreso(bool $ingreso): void
     {
         $this->ingreso = $ingreso;
     }
@@ -114,48 +104,18 @@ class RhuExamenTipo
     /**
      * @return mixed
      */
-    public function getArma()
+    public function getExamenesExamenTipoRel()
     {
-        return $this->arma;
+        return $this->examenesExamenTipoRel;
     }
 
     /**
-     * @param mixed $arma
+     * @param mixed $examenesExamenTipoRel
      */
-    public function setArma($arma): void
+    public function setExamenesExamenTipoRel($examenesExamenTipoRel): void
     {
-        $this->arma = $arma;
+        $this->examenesExamenTipoRel = $examenesExamenTipoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getExamenDetallesExamenTipoRel()
-    {
-        return $this->examenDetallesExamenTipoRel;
-    }
 
-    /**
-     * @param mixed $examenDetallesExamenTipoRel
-     */
-    public function setExamenDetallesExamenTipoRel($examenDetallesExamenTipoRel): void
-    {
-        $this->examenDetallesExamenTipoRel = $examenDetallesExamenTipoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExamenListaPreciosExamenTipoRel()
-    {
-        return $this->examenListaPreciosExamenTipoRel;
-    }
-
-    /**
-     * @param mixed $examenListaPreciosExamenTipoRel
-     */
-    public function setExamenListaPreciosExamenTipoRel($examenListaPreciosExamenTipoRel): void
-    {
-        $this->examenListaPreciosExamenTipoRel = $examenListaPreciosExamenTipoRel;
-    }
 }

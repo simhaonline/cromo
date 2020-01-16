@@ -6,10 +6,9 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
-use App\Entity\RecursoHumano\RhuExamenClase;
+use App\Entity\RecursoHumano\RhuExamenTipo;
 use App\Entity\RecursoHumano\RhuExamenDetalle;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
-use App\Entity\RecursoHumano\RhuExamenTipo;
 use App\Form\Type\RecursoHumano\ExamenType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -55,17 +54,17 @@ class ExamenController extends AbstractController
             'filtros' => $session->get('filtroRhuExamen')
         ];
         $form = $this->createFormBuilder()
-            ->add('codigoExamenClaseFk', EntityType::class, [
-                'class' => RhuExamenClase::class,
+            ->add('codigoExamenTipoFk', EntityType::class, [
+                'class' => RhuExamenTipo::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('ec')
-                        ->orderBy('ec.codigoExamenClasePk', 'ASC');
+                    return $er->createQueryBuilder('et')
+                        ->orderBy('et.codigoExamenTipoPk', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
                 'attr' => ['class' => 'form-control to-select-2'],
-                'data'=>  $raw['filtros']['examenClase'] ? $em->getReference(RhuExamenClase::class, $raw['filtros']['examenClase']) : null
+                'data'=>  $raw['filtros']['examenTipo'] ? $em->getReference(RhuExamenTipo::class, $raw['filtros']['examenTipo']) : null
             ])
             ->add('codigoExamenPk', TextType::class, array('required' => false,'data' => $raw['filtros']['codigoExamen']))
             ->add('codigoEmpleadoFk', TextType::class, ['required' => false,'data' => $raw['filtros']['codigoEmpleado']])
@@ -177,20 +176,34 @@ class ExamenController extends AbstractController
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnCerrar = ['label' => 'Cerrar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnApto = ['label' => 'Apto', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBotonAprobarDetalle = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+
         if ($arExamenes->getEstadoAutorizado()) {
-            $arrBtnAutorizar['disable'] = true;
-            $arrBtnEliminar['disable'] = true;
-            $arrBtnActualizar['disable'] = true;
-            $arrBtnAprobado['disable'] = true;
-            $arrBtnDesautorizar['disable'] = false;
+            $arrBtnAutorizar['disabled'] = true;
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+            $arrBtnAprobado['disabled'] = true;
+            $arrBtnDesautorizar['disabled'] = false;
+            $arrBtnCerrar['disabled'] = false;
+            $arrBtnApto['disabled'] = false;
+            $arrBtnApto['disabled'] = false;
+            $arrBotonAprobarDetalle['disabled'] = false;
         }
         if ($arExamenes->getEstadoAprobado()) {
-            $arrBtnDesautorizar['disable'] = true;
-            $arrBtnAprobado['disable'] = true;
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnAprobado['disabled'] = true;
+            $arrBtnCerrar['disabled'] = true;
+            $arrBtnApto['disabled'] = true;
+            $arrBotonAprobarDetalle['disabled'] = true;
         }
 
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnCerrar', SubmitType::class, $arrBtnCerrar);
+        $form->add('btnApto', SubmitType::class, $arrBtnApto);
+        $form->add('btnAprobarDetalle', SubmitType::class, $arrBotonAprobarDetalle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -202,13 +215,31 @@ class ExamenController extends AbstractController
             if ($form->get('btnActualizar')->isClicked()) {
                 $em->getRepository(RhuExamenDetalle::class)->actualizarDetalles($arrControles, $form, $arExamenes);
             }
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(RhuExamen::class)->autorizar($arExamenes);
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(RhuExamen::class)->desAutorizar($arExamenes);
+            }
+            if ($form->get('btnCerrar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuExamenDetalle::class)->cerrar($arExamenes,$arrSeleccionados);
+            }
+            if ($form->get('btnApto')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuExamenDetalle::class)->apto($arExamenes,$arrSeleccionados);
+            }
+            if ($form->get('btnAprobarDetalle')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuExamenDetalle::class)->aprobar($arrSeleccionados);
+            }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_examen_detalle', ['id' => $id]));
         }
         $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
         return $this->render('recursohumano/movimiento/contratacion/examen/detalle.html.twig', array(
             'form' => $form->createView(),
+            'arExamenes' => $arExamenes,
             'arExamenDetalles' => $arExamenDetalles,
-            'arExamenes' => $arExamenes
         ));
     }
 
@@ -223,7 +254,7 @@ class ExamenController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $arExamen = $em->getRepository(RhuExamen::class)->find($codigoExamen);
-        $arExamenListaPrecios = $em->getRepository(RhuExamenListaPrecio::class)->findBy(array('codigoEntidadExamenFk' => $arExamen->getCodigoEntidadExamenFk()));
+        $arExamenListaPrecios = $em->getRepository(RhuExamenListaPrecio::class)->findBy(array('codigoExamenEntidadFk' => $arExamen->getCodigoExamenEntidadFk()));
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
@@ -277,12 +308,12 @@ class ExamenController extends AbstractController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
         ];
 
-        $arExamenClase = $form->get('codigoExamenClaseFk')->getData();
+        $arExamenTipo = $form->get('codigoExamenTipoFk')->getData();
 
-        if (is_object($arExamenClase)) {
-            $filtro['examenClase'] = $arExamenClase->getCodigoExamenClasePk();
+        if (is_object($arExamenTipo)) {
+            $filtro['examenTipo'] = $arExamenTipo->getCodigoExamenTipoPk();
         } else {
-            $filtro['examenClase'] = $arExamenClase;
+            $filtro['examenTipo'] = $arExamenTipo;
         }
         $session->set('filtroRhuExamen', $filtro);
 

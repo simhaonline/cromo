@@ -63,7 +63,7 @@ class RhuExamenDetalleRepository extends ServiceEntityRepository
             $arrCodigo = $arrControles['arrCodigo'];
             foreach ($arrCodigo as $codigoExamenDetalle) {
                 $arExamenDetalle = $this->getEntityManager()->getRepository(RhuExamenDetalle::class)->find($codigoExamenDetalle);
-                $arExamenDetalle->setVrPrecio($arrPrecio[$codigoExamenDetalle]);
+                $arExamenDetalle->setVrPrecio(floatval($arrPrecio[$codigoExamenDetalle]));
                 $em->persist($arExamenDetalle);
                 $em->flush();
             }
@@ -71,6 +71,53 @@ class RhuExamenDetalleRepository extends ServiceEntityRepository
             $em->getRepository(RhuExamen::class)->liquidar($arExamenes);
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function cerrar($arExamen, $arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados AS $codigoExamenDetalle) {
+                $arExamenDetalle = $em->getRepository(RhuExamenDetalle::class)->find($arExamen->getCodigoExamenPk());
+//                if ($arExamenDetalle->getEstadoCerrado() == 0) {
+//                    $arExamenDetalle->setEstadoCerrado(1);
+//                    $em->persist($arExamenDetalle);
+//                }
+            }
+            $em->flush();
+        } else {
+            Mensajes::error("No se ha seleccionado elementos");
+        }
+    }
+
+    public function apto($arExamen, $arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arExamen->getEstadoAutorizado() == 1 && $arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arExamenDetalle = $em->getRepository(RhuExamenDetalle::class)->find($codigo);
+                $arExamenDetalle->setEstadoApto(1);
+                $em->persist($arExamenDetalle);
+            }
+            $em->flush();
+        } else {
+            Mensajes::error("No se ha seleccionado elementos");
+        }
+    }
+
+    public function aprobar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados AS $codigoExamenDetalle) {
+                $arExamenDetalle = $this->getEntityManager()->getRepository(RhuExamenDetalle::class)->find($codigoExamenDetalle);
+                if ($arExamenDetalle->getEstadoAprobado() == 0) {
+                    $arExamenDetalle->setEstadoAprobado(1);
+                    $em->persist($arExamenDetalle);
+                }
+            }
+        }
+        $em->flush();
     }
 }
 

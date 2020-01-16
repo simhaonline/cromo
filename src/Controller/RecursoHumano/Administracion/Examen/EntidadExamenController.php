@@ -8,7 +8,7 @@ use App\Entity\RecursoHumano\RhuEntidadExamen;
 use App\Entity\RecursoHumano\RhuEntidadExamenDetalle;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
 use App\Entity\RecursoHumano\RhuExamenTipo;
-use App\Form\Type\RecursoHumano\EntidadExamenType;
+use App\Form\Type\RecursoHumano\ExamenEntidadType;
 use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EntidadExamenController extends AbstractController
 {
     protected $clase = RhuEntidadExamen::class;
-    protected $claseFormulario = EntidadExamenType::class;
+    protected $claseFormulario = ExamenEntidadType::class;
     protected $claseNombre = "RhuEntidadExamen";
     protected $modulo = "RecursoHumano";
     protected $funcion = "Administracion";
@@ -90,7 +90,7 @@ class EntidadExamenController extends AbstractController
             $arEntidadExamen->setUsuario($this->getUser()->getUserName());
         }
 
-        $form = $this->createForm(EntidadExamenType::class, $arEntidadExamen);
+        $form = $this->createForm(ExamenEntidadType::class, $arEntidadExamen);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // guardar la tarea en la base de datos

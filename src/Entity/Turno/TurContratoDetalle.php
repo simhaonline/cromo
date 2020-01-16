@@ -228,6 +228,11 @@ class TurContratoDetalle
     private $programar = false;
 
     /**
+     * @ORM\Column(name="cortesia", type="boolean", options={"default":false})
+     */
+    private $cortesia = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurContrato", inversedBy="contratosDetallesContratoRel")
      * @ORM\JoinColumn(name="codigo_contrato_fk", referencedColumnName="codigo_contrato_pk")
      */
@@ -1092,6 +1097,22 @@ class TurContratoDetalle
     public function setContratoDetallesCompuestosContratoDetalleRel($contratoDetallesCompuestosContratoDetalleRel): void
     {
         $this->contratoDetallesCompuestosContratoDetalleRel = $contratoDetallesCompuestosContratoDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
 

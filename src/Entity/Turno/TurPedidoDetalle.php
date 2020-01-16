@@ -304,6 +304,11 @@ class TurPedidoDetalle
     private $programar = false;
 
     /**
+     * @ORM\Column(name="cortesia", type="boolean", options={"default":false})
+     */
+    private $cortesia = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedido", inversedBy="pedidosDetallesPedidoRel")
      * @ORM\JoinColumn(name="codigo_pedido_fk", referencedColumnName="codigo_pedido_pk")
      */
@@ -1477,6 +1482,22 @@ class TurPedidoDetalle
     public function setProgramar($programar): void
     {
         $this->programar = $programar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
 

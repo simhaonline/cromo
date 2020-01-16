@@ -2633,7 +2633,8 @@ class MigracionController extends Controller
                     porcentaje_iva,
                     porcentaje_base_iva,
                     codigo_grupo_facturacion_fk,
-                    compuesto
+                    compuesto,
+                    no_facturar
                  FROM tur_servicio_detalle 
                  left join tur_modalidad_servicio on tur_servicio_detalle.codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
                  ORDER BY codigo_servicio_detalle_pk limit {$lote},{$rango}");
@@ -2679,6 +2680,7 @@ class MigracionController extends Controller
                 $arContratoDetalle->setPeriodo('M');
                 $arContratoDetalle->setCompuesto($row['compuesto']);
                 $arContratoDetalle->setProgramar(1);
+                $arContratoDetalle->setCortesia($row['no_facturar']);
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
@@ -2782,6 +2784,7 @@ class MigracionController extends Controller
                 $arContratoDetalleCompuesto->setDomingo($row['domingo']);
                 $arContratoDetalleCompuesto->setFestivo($row['festivo']);
                 $arContratoDetalleCompuesto->setPorcentajeIva($row['porcentaje_iva']);
+                $arContratoDetalleCompuesto->setCortesia($row['no_facturar']);
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
@@ -2934,7 +2937,8 @@ class MigracionController extends Controller
                     porcentaje_iva,
                     porcentaje_base_iva,
                     estado_programado,
-                    codigo_grupo_facturacion_fk
+                    codigo_grupo_facturacion_fk,
+                    no_facturar
                  FROM tur_pedido_detalle 
                  left join tur_modalidad_servicio on codigo_modalidad_servicio_fk = tur_modalidad_servicio.codigo_modalidad_servicio_pk 
                  ORDER BY codigo_pedido_detalle_pk limit {$lote},{$rango}");
@@ -2992,6 +2996,7 @@ class MigracionController extends Controller
                 $arPedidoDetalle->setVrSalarioBase($row['vr_salario_base']);
                 $arPedidoDetalle->setPorcentajeIva($row['porcentaje_iva']);
                 $arPedidoDetalle->setPorcentajeBaseIva($row['porcentaje_base_iva']);
+                $arPedidoDetalle->setCortesia($row['no_facturar']);
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
@@ -3102,6 +3107,7 @@ class MigracionController extends Controller
                 $arPedidoDetalleCompuesto->setDomingo($row['domingo']);
                 $arPedidoDetalleCompuesto->setFestivo($row['festivo']);
                 $arPedidoDetalleCompuesto->setPorcentajeIva($row['porcentaje_iva']);
+                $arPedidoDetalleCompuesto->setCortesia($row['no_facturar']);
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();

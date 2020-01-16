@@ -200,6 +200,11 @@ class TurPedidoDetalleCompuesto
     private $detalle;
 
     /**
+     * @ORM\Column(name="cortesia", type="boolean", options={"default":false})
+     */
+    private $cortesia = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedidoDetalle", inversedBy="pedidosDetallesCompuestosPedidoDetalleRel")
      * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
      */
@@ -855,6 +860,22 @@ class TurPedidoDetalleCompuesto
     public function setModalidadRel($modalidadRel): void
     {
         $this->modalidadRel = $modalidadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
 

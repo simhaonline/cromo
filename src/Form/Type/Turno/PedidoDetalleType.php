@@ -82,6 +82,7 @@ class PedidoDetalleType extends AbstractType
             ->add('compuesto', CheckboxType::class, array('required' => false))
             ->add('diasReales', CheckboxType::class, array('required' => false))
             ->add('programar', CheckboxType::class, array('required' => false))
+            ->add('cortesia', CheckboxType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('guardar', SubmitType::class);
     }

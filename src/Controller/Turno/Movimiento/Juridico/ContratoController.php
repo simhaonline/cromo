@@ -299,7 +299,7 @@ class ContratoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                if ($arContratoDetalle->getHoraDesde() <= $arContratoDetalle->getHoraHasta()) {
+                //if ($arContratoDetalle->getHoraDesde() <= $arContratoDetalle->getHoraHasta()) {
                     $horas = FuncionesController::horaServicio($arContratoDetalle->getHoraDesde(), $arContratoDetalle->getHoraHasta());
                     $arContratoDetalle->setHorasUnidad($horas['horas']);
                     $arContratoDetalle->setHorasDiurnasUnidad($horas['horasDiurnas']);
@@ -310,9 +310,9 @@ class ContratoController extends AbstractController
                     $em->flush();
                     $em->getRepository(TurContrato::class)->liquidar($arContrato);
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                } else {
-                    Mensajes::error("La hora desde no puede ser mayor a la hora hasta");
-                }
+                //} else {
+                //    Mensajes::error("La hora desde no puede ser mayor a la hora hasta");
+                //}
 
             }
         }

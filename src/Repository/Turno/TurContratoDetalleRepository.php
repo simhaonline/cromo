@@ -344,6 +344,11 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             } else {
                 $floVrServicio = $floVrMinimoServicio * $arContratoDetalleCompuestoActualizar->getCantidad();
             }
+            if ($arContratoDetalleCompuestoActualizar->getCortesia()) {
+                $floVrServicio = 0;
+                $precio = 0;
+            }
+
             $subTotalDetalle = $floVrServicio;
             $baseAiuDetalle = $subTotalDetalle * $arContratoDetalle->getPorcentajeBaseIva() / 100;
             $duoTotalBaseAiuDetalle += $baseAiuDetalle;

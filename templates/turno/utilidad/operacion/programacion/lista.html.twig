@@ -88,6 +88,8 @@
             <th>MOD</th>
             <th>DES</th>
             <th>HAS</th>
+            <th>H_I</th>
+            <th>H_F</th>
             <th>CANT</th>
             <th>L</th>
             <th>M</th>
@@ -110,13 +112,15 @@
             <tr>
                 <td>{{ arPedidoDetalle.codigoPedidoDetallePk }}</td>
                 <td>{{ arPedidoDetalle.cliente }}</td>
-                <td>{{ arPedidoDetalle.conceptoNombre }}</td>
+                <td>{{ arPedidoDetalle.itemNombre }}</td>
                 <td>{{ arPedidoDetalle.puestoNombre }}</td>
                 <td>{{ arPedidoDetalle.anio }}</td>
                 <td>{{ arPedidoDetalle.mes }}</td>
                 <td>{{ arPedidoDetalle.modalidadNombre }}</td>
                 <td>{{ arPedidoDetalle.diaDesde }}</td>
                 <td>{{ arPedidoDetalle.diaHasta }}</td>
+                <td>{{ arPedidoDetalle.horaDesde | date('H:i') }}</td>
+                <td>{{ arPedidoDetalle.horaHasta | date('H:i') }}</td>
                 <td>{{ arPedidoDetalle.cantidad }}</td>
                 <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
                 <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>

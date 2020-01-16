@@ -119,10 +119,12 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.vrIva')
             ->addSelect('pd.vrSubtotal')
             ->addSelect('pd.codigoContratoDetalleFk')
-            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('pd.horaDesde')
+            ->addSelect('pd.horaHasta')
+            ->addSelect('i.nombre as itemNombre')
             ->addSelect('m.nombre as modalidadNombre')
             ->addSelect('pu.nombre as puestoNombre')
-            ->leftJoin('pd.conceptoRel', 'c')
+            ->leftJoin('pd.itemRel', 'i')
             ->leftJoin('pd.modalidadRel', 'm')
             ->leftJoin('pd.pedidoRel', 'p')
             ->leftJoin('p.clienteRel', 'cl')
@@ -690,13 +692,16 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             $precio = round($precio);
             $floVrMinimoServicio = $precio;
 
-            $floVrServicio = 0;
-            $subTotalDetalle = 0;
             if ($arPedidoDetalleCompuestoActualizar->getVrPrecioAjustado() != 0) {
                 $floVrServicio = $arPedidoDetalleCompuestoActualizar->getVrPrecioAjustado() * $arPedidoDetalleCompuestoActualizar->getCantidad();
                 $precio = $arPedidoDetalleCompuestoActualizar->getVrPrecioAjustado();
             } else {
                 $floVrServicio = $floVrMinimoServicio * $arPedidoDetalle->getCantidad();
+            }
+
+            if ($arPedidoDetalleCompuestoActualizar->getCortesia()) {
+                $floVrServicio = 0;
+                $precio = 0;
             }
 
             $subTotalDetalle = $floVrServicio;

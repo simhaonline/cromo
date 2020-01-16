@@ -963,14 +963,31 @@ final class FuncionesController
         $intHoraFinal = $horaFinal->format('G');
         $intHoraFinal += $intMinutoFinal;
         if($intHoraInicio != 0 || $intHoraFinal !=0) {
-            $horasNocturnasDia = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 0, 6);
-            $horasDiurnas = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 6, 21);
-            $horasNocturnasNoche = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 21, 24);
-            $horasNocturnas =  $horasNocturnasDia + $horasNocturnasNoche;
-            $horas = $horasDiurnas + $horasNocturnas;
-            $arrHoras['horas'] = $horas;
-            $arrHoras['horasDiurnas'] = $horasDiurnas;
-            $arrHoras['horasNocturnas'] = $horasNocturnas;
+            if($intHoraInicio < $intHoraFinal) {
+                $horasNocturnasDia = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 0, 6);
+                $horasDiurnas = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 6, 21);
+                $horasNocturnasNoche = FuncionesController::calcularTiempo($intHoraInicio, $intHoraFinal, 21, 24);
+                $horasNocturnas =  $horasNocturnasDia + $horasNocturnasNoche;
+                $horas = $horasDiurnas + $horasNocturnas;
+                $arrHoras['horas'] = $horas;
+                $arrHoras['horasDiurnas'] = $horasDiurnas;
+                $arrHoras['horasNocturnas'] = $horasNocturnas;
+            } else {
+                $horasNocturnasDiaInicio = FuncionesController::calcularTiempo($intHoraInicio, 24, 0, 6);
+                $horasDiurnasInicio = FuncionesController::calcularTiempo($intHoraInicio, 24, 6, 21);
+                $horasNocturnasNocheInicio = FuncionesController::calcularTiempo($intHoraInicio, 24, 21, 24);
+
+                $horasNocturnasDiaFinal = FuncionesController::calcularTiempo(0, $intHoraFinal, 0, 6);
+                $horasDiurnasFinal = FuncionesController::calcularTiempo(0, $intHoraFinal, 6, 21);
+                $horasNocturnasNocheFinal = FuncionesController::calcularTiempo(0, $intHoraFinal, 21, 24);
+
+                $horasDiurnas = $horasDiurnasInicio + $horasDiurnasFinal;
+                $horasNocturnas =  $horasNocturnasDiaInicio + $horasNocturnasDiaFinal + $horasNocturnasNocheInicio + $horasNocturnasNocheFinal;
+                $horas = $horasDiurnas + $horasNocturnas;
+                $arrHoras['horas'] = $horas;
+                $arrHoras['horasDiurnas'] = $horasDiurnas;
+                $arrHoras['horasNocturnas'] = $horasNocturnas;
+            }
         }
         return $arrHoras;
     }

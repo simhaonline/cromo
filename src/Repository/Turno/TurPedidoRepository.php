@@ -257,6 +257,11 @@ class TurPedidoRepository extends ServiceEntityRepository
                 } else {
                     $floVrServicio = $floVrMinimoServicio * $arPedidoDetalle->getCantidad();
                 }
+                if ($arPedidoDetalleActualizar->getCortesia()) {
+                    $floVrServicio = 0;
+                    $precio = 0;
+                }
+
                 $subTotalDetalle = $floVrServicio;
                 $baseAiuDetalle = $subTotalDetalle * ($arPedidoDetalle->getPorcentajeBaseIva() / 100);
                 $ivaDetalle = $baseAiuDetalle * $arPedidoDetalle->getPorcentajeIva() / 100;

@@ -72,7 +72,6 @@ class ProgramacionController extends AbstractController
                 return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion'));
             }
         }
-        //$arPedidoDetalles = $em->getRepository(TurPedidoDetalle::class)->pendienteProgramar($raw);
         $arPedidoDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->pendienteProgramar($raw), $request->query->getInt('page', 1), 500);
         return $this->render('turno/utilidad/operacion/programacion/lista.html.twig', [
             'arPedidoDetalles' => $arPedidoDetalles,

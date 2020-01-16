@@ -38,11 +38,8 @@ class RhuExamenRestriccionMedicaDetalle
      */
     protected $examenRestriccionMedicaDetalleRel;
 
-
     /**
-     * Get codigoExamenRestriccionMedicaDetallePk
-     *
-     * @return integer
+     * @return mixed
      */
     public function getCodigoExamenRestriccionMedicaDetallePk()
     {
@@ -50,23 +47,15 @@ class RhuExamenRestriccionMedicaDetalle
     }
 
     /**
-     * Set codigoExamenRestriccionMedicaFk
-     *
-     * @param integer $codigoExamenRestriccionMedicaFk
-     *
-     * @return RhuExamenRestriccionMedicaDetalle
+     * @param mixed $codigoExamenRestriccionMedicaDetallePk
      */
-    public function setCodigoExamenRestriccionMedicaFk($codigoExamenRestriccionMedicaFk)
+    public function setCodigoExamenRestriccionMedicaDetallePk($codigoExamenRestriccionMedicaDetallePk): void
     {
-        $this->codigoExamenRestriccionMedicaFk = $codigoExamenRestriccionMedicaFk;
-
-        return $this;
+        $this->codigoExamenRestriccionMedicaDetallePk = $codigoExamenRestriccionMedicaDetallePk;
     }
 
     /**
-     * Get codigoExamenRestriccionMedicaFk
-     *
-     * @return integer
+     * @return mixed
      */
     public function getCodigoExamenRestriccionMedicaFk()
     {
@@ -74,23 +63,15 @@ class RhuExamenRestriccionMedicaDetalle
     }
 
     /**
-     * Set codigoExamenRestriccionMedicaTipoFk
-     *
-     * @param integer $codigoExamenRestriccionMedicaTipoFk
-     *
-     * @return RhuExamenRestriccionMedicaDetalle
+     * @param mixed $codigoExamenRestriccionMedicaFk
      */
-    public function setCodigoExamenRestriccionMedicaTipoFk($codigoExamenRestriccionMedicaTipoFk)
+    public function setCodigoExamenRestriccionMedicaFk($codigoExamenRestriccionMedicaFk): void
     {
-        $this->codigoExamenRestriccionMedicaTipoFk = $codigoExamenRestriccionMedicaTipoFk;
-
-        return $this;
+        $this->codigoExamenRestriccionMedicaFk = $codigoExamenRestriccionMedicaFk;
     }
 
     /**
-     * Get codigoExamenRestriccionMedicaTipoFk
-     *
-     * @return integer
+     * @return mixed
      */
     public function getCodigoExamenRestriccionMedicaTipoFk()
     {
@@ -98,23 +79,15 @@ class RhuExamenRestriccionMedicaDetalle
     }
 
     /**
-     * Set examenRestriccionMedicaTipoRel
-     *
-     * @param \Brasa\RecursoHumanoBundle\Entity\RhuExamenRestriccionMedicaTipo $examenRestriccionMedicaTipoRel
-     *
-     * @return RhuExamenRestriccionMedicaDetalle
+     * @param mixed $codigoExamenRestriccionMedicaTipoFk
      */
-    public function setExamenRestriccionMedicaTipoRel(\Brasa\RecursoHumanoBundle\Entity\RhuExamenRestriccionMedicaTipo $examenRestriccionMedicaTipoRel = null)
+    public function setCodigoExamenRestriccionMedicaTipoFk($codigoExamenRestriccionMedicaTipoFk): void
     {
-        $this->examenRestriccionMedicaTipoRel = $examenRestriccionMedicaTipoRel;
-
-        return $this;
+        $this->codigoExamenRestriccionMedicaTipoFk = $codigoExamenRestriccionMedicaTipoFk;
     }
 
     /**
-     * Get examenRestriccionMedicaTipoRel
-     *
-     * @return \Brasa\RecursoHumanoBundle\Entity\RhuExamenRestriccionMedicaTipo
+     * @return mixed
      */
     public function getExamenRestriccionMedicaTipoRel()
     {
@@ -122,26 +95,27 @@ class RhuExamenRestriccionMedicaDetalle
     }
 
     /**
-     * Set examenRestriccionMedicaDetalleRel
-     *
-     * @param \Brasa\RecursoHumanoBundle\Entity\RhuExamenRestriccionMedica $examenRestriccionMedicaDetalleRel
-     *
-     * @return RhuExamenRestriccionMedicaDetalle
+     * @param mixed $examenRestriccionMedicaTipoRel
      */
-    public function setExamenRestriccionMedicaDetalleRel(\Brasa\RecursoHumanoBundle\Entity\RhuExamenRestriccionMedica $examenRestriccionMedicaDetalleRel = null)
+    public function setExamenRestriccionMedicaTipoRel($examenRestriccionMedicaTipoRel): void
     {
-        $this->examenRestriccionMedicaDetalleRel = $examenRestriccionMedicaDetalleRel;
-
-        return $this;
+        $this->examenRestriccionMedicaTipoRel = $examenRestriccionMedicaTipoRel;
     }
 
     /**
-     * Get examenRestriccionMedicaDetalleRel
-     *
-     * @return \Brasa\RecursoHumanoBundle\Entity\RhuExamenRestriccionMedica
+     * @return mixed
      */
     public function getExamenRestriccionMedicaDetalleRel()
     {
         return $this->examenRestriccionMedicaDetalleRel;
     }
+
+    /**
+     * @param mixed $examenRestriccionMedicaDetalleRel
+     */
+    public function setExamenRestriccionMedicaDetalleRel($examenRestriccionMedicaDetalleRel): void
+    {
+        $this->examenRestriccionMedicaDetalleRel = $examenRestriccionMedicaDetalleRel;
+    }
+
 }

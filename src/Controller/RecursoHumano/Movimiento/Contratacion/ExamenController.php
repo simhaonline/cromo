@@ -228,6 +228,9 @@ class ExamenController extends AbstractController
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuExamenDetalle::class)->aprobar($arrSeleccionados);
             }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(RhuExamen::class)->aprobar($arExamenes);
+            }
             if ($form->get('btnExcel')->isClicked()) {
                 $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
                 $ExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));

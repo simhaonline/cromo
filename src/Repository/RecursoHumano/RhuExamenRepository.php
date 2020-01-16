@@ -4,6 +4,10 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuExamen;
 use App\Entity\RecursoHumano\RhuExamenDetalle;
+use App\Entity\RecursoHumano\RhuRequisito;
+use App\Entity\RecursoHumano\RhuRequisitoCargo;
+use App\Entity\RecursoHumano\RhuRequisitoConcepto;
+use App\Entity\RecursoHumano\RhuRequisitoDetalle;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -14,7 +18,6 @@ class RhuExamenRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RhuExamen::class);
     }
-
 
     public function lista($raw)
     {
@@ -216,6 +219,49 @@ class RhuExamenRepository extends ServiceEntityRepository
             $arExamen->setEstadoAutorizado(0);
             $em->persist($arExamen);
             $em->flush();
+        }
+    }
+
+    public function aprobar($arExamen)
+    {
+        $em = $this->getEntityManager();
+        if ($arExamen->getEstadoAprobado() == 0 && $arExamen->getEstadoAutorizado() == 1) {
+            $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $arExamen->getCodigoExamenPk(), 'estadoAprobado' => 0));
+            if (count($arExamenDetalles) <= 0) {
+                $arExamen->setEstadoAprobado(1);
+                $em->persist($arExamen);
+                //se crea el registro del empleado en requisitos si el examen fue aprobado satisfactoriamente
+                $arRequisito = new RhuRequisito();
+                $arRequisito->setFecha(new \ DateTime("now"));
+                $arRequisito->setCargoRel($arExamen->getCargoRel());
+                $arRequisito->setNumeroIdentificacion($arExamen->getNumeroIdentificacion());
+                $arRequisito->setNombreCorto($arExamen->getNombreCorto());
+                $arRequisito->setUsuario($arExamen->getUsuario());
+                $em->persist($arRequisito);
+                $arRequisitoConceptos = $em->getRepository(RhuRequisitoConcepto::class)->findBy(array('general' => 1));
+                foreach ($arRequisitoConceptos as $arRequisitoConcepto) {
+                    $arRequisitoDetalle = new RhuRequisitoDetalle();
+                    $arRequisitoDetalle->setRequisitoRel($arRequisito);
+                    $arRequisitoDetalle->setRequisitoConceptoRel($arRequisitoConcepto);
+                    $arRequisitoDetalle->setTipo('GENERAL');
+                    $arRequisitoDetalle->setCantidad(1);
+                    $em->persist($arRequisitoDetalle);
+                }
+                $arRequisitoCargo = $em->getRepository(RhuRequisitoCargo::class)->findBy(array('codigoCargoFk' => $arExamen->getCodigoCargoFk()));
+                foreach ($arRequisitoCargo as $arRequisitoCargo) {
+                    $arRequisitoDetalle = new RhuRequisitoDetalle();
+                    $arRequisitoDetalle->setRequisitoRel($arRequisito);
+                    $arRequisitoDetalle->setRequisitoConceptoRel($arRequisitoCargo->getRequisitoConceptoRel());
+                    $arRequisitoDetalle->setTipo('CARGO');
+                    $arRequisitoDetalle->setCantidad(1);
+                    $em->persist($arRequisitoDetalle);
+                }
+                $em->flush();
+            } else {
+                Mensajes::error("Todos los detalles del examen deben estar aprobados");
+            }
+        } else {
+            Mensajes::error("El examen ya esta aprobado o no esta autorizado");
         }
     }
 

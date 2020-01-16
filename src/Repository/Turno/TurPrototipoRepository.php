@@ -46,7 +46,7 @@ class TurPrototipoRepository extends ServiceEntityRepository
         return $arPrototipos;
     }
 
-    public function generarSimulacion($arPedidoDetalle, $fechaProgramacion) {
+    public function generarSimulacion($arPedidoDetalle, $fechaProgramacion, $usuario) {
         $em = $this->getEntityManager();
 
         $intDiaInicial = intval($fechaProgramacion->format('d'));
@@ -54,7 +54,7 @@ class TurPrototipoRepository extends ServiceEntityRepository
         $intMesInicial = intval($fechaProgramacion->format('m'));
         $arrFestivos = $em->getRepository(TurFestivo::class)->fechaArray($fechaProgramacion->format('Y-m-') . $intDiaInicial, $fechaProgramacion->format('Y-m-') . $intDiaFinal);
 
-        $arPrototipos = $em->getRepository(TurPrototipo::class)->findBy(['codigoContratoDetalleFk' => $arPedidoDetalle->getCodigoContratoDetalleFk()]);
+        $arPrototipos = $em->getRepository(TurPrototipo::class)->findBy(['codigoContratoDetalleFk' => $arPedidoDetalle->getCodigoContratoDetalleFk()], ['posicion' => 'ASC']);
         foreach ($arPrototipos as $arPrototipo) {
             $arSecuencia = $arPrototipo->getSecuenciaRel();
             $arrSecuencias = FuncionesController::turnosSecuencia($arSecuencia);
@@ -65,8 +65,7 @@ class TurPrototipoRepository extends ServiceEntityRepository
             $arSimulacion->setMes($fechaProgramacion->format('m'));
             $arSimulacion->setCodigoEmpleadoFk($arPrototipo->getCodigoEmpleadoFk());
             $arSimulacion->setNombreCorto($arPrototipo->getEmpleadoRel()->getNombreCorto());
-            //$arSimulacionDetalle->setRecursoRel($arServicioDetalleRecurso->getRecursoRel());
-            //$arSimulacionDetalle->setUsuario($usuario);
+            $arSimulacion->setUsuario($usuario);
             $fechaInicial = $arPrototipo->getFechaInicioSecuencia()->format('Y-m-d');
             $intDiaInicialRecurso = intval($arPrototipo->getFechaInicioSecuencia()->format('d'));
             $intMesInicialRecurso = intval($arPrototipo->getFechaInicioSecuencia()->format('m'));

@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -85,8 +86,13 @@ class ProgramacionController extends AbstractController
     public function prototipo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($id);
-        $fechaProgramacion = FuncionesController::primerDia(new \DateTime('now'));
+        if($session->get('filtroFechaSimulacion')) {
+            $fechaProgramacion = $session->get('filtroFechaSimulacion');
+        } else {
+            $fechaProgramacion = FuncionesController::primerDia(new \DateTime('now'));
+        }
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnGenerar = ['label' => 'Generar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnSimular = ['label' => 'Simular', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
@@ -122,7 +128,8 @@ class ProgramacionController extends AbstractController
                 $em->getRepository(TurSimulacion::class)->limpiar($id);
                 $em->getRepository(TurPrototipo::class)->actualizar($arrControles);
                 $fechaProgramacion = $form->get('fechaSimulacion')->getData();
-                $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle, $fechaProgramacion);
+                $session->set('filtroFechaSimulacion', $form->get('fechaSimulacion')->getData());
+                $em->getRepository(TurPrototipo::class)->generarSimulacion($arPedidoDetalle, $fechaProgramacion, $this->getUser()->getUsername());
                 return $this->redirect($this->generateUrl('turno_utilidad_operacion_programacion_detalle', ['id' => $id]));
             }
             if($form->get('btnGenerar')->isClicked()) {
@@ -140,7 +147,7 @@ class ProgramacionController extends AbstractController
             }
         }
         $arPrototipos = $em->getRepository(TurPrototipo::class)->listaProgramar($arPedidoDetalle->getCodigoContratoDetalleFk());
-        $arSimulaciones = $em->getRepository(TurSimulacion::class)->listaProgramar($id);
+        $arSimulaciones = $em->getRepository(TurSimulacion::class)->listaProgramar($id, $this->getUser()->getUsername());
         $arSecuencias = $em->getRepository(TurSecuencia::class)->findAll();
 
         $fechaProgramacion = new \DateTime('now');

@@ -214,6 +214,11 @@ class TurSimulacion
     private $horasNocturnas = 0;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=25, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurPedidoDetalle", inversedBy="simulacionesPedidoDetalleRel")
      * @ORM\JoinColumn(name="codigo_pedido_detalle_fk", referencedColumnName="codigo_pedido_detalle_pk")
      */
@@ -873,6 +878,22 @@ class TurSimulacion
     public function setNombreCorto($nombreCorto): void
     {
         $this->nombreCorto = $nombreCorto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

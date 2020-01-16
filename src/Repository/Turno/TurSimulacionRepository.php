@@ -17,7 +17,7 @@ class TurSimulacionRepository extends ServiceEntityRepository
         parent::__construct($registry, TurSimulacion::class);
     }
 
-    public function listaProgramar($codigoPedidoDetalle){
+    public function listaProgramar($codigoPedidoDetalle, $usuario){
         $session = new Session();
         $arSimulaciones = null;
         if($codigoPedidoDetalle) {
@@ -58,7 +58,8 @@ class TurSimulacionRepository extends ServiceEntityRepository
                 ->addSelect('s.dia29')
                 ->addSelect('s.dia30')
                 ->addSelect('s.dia31')
-                ->where("s.codigoPedidoDetalleFk = {$codigoPedidoDetalle}");
+                ->where("s.codigoPedidoDetalleFk = {$codigoPedidoDetalle}")
+            ->andWhere("s.usuario = '{$usuario}'");
             $arSimulaciones = $queryBuilder->getQuery()->getResult();
         }
         return $arSimulaciones;

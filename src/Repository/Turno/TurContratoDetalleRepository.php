@@ -61,7 +61,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->leftJoin('co.clienteRel', 'cli')
             ->where("cd.codigoContratoFk = {$id}")
             ->andWhere('cd.estadoTerminado = 0')
-            ->orderBy('cd.codigoPuestoFk');
+            ->groupBy('cd.codigoContratoDetallePk')
+            ->addGroupBy('cd.codigoPuestoFk');
 
         return $queryBuilder->getQuery()->getResult();
     }

@@ -72,6 +72,7 @@ class ContratoDetalleType extends AbstractType
             ->add('festivo', CheckboxType::class, array('required' => false))
             ->add('compuesto', CheckboxType::class, array('required' => false))
             ->add('programar', CheckboxType::class, array('required' => false))
+            ->add('cortesia', CheckboxType::class, array('required' => false))
             ->add('vrSalarioBase', NumberType::class)
             ->add('fechaDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])
             ->add('fechaHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => array('class' => 'date',)])

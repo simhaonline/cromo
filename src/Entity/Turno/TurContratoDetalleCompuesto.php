@@ -190,6 +190,11 @@ class TurContratoDetalleCompuesto
     private $dia31 = false;
 
     /**
+     * @ORM\Column(name="cortesia", type="boolean", options={"default":false})
+     */
+    private $cortesia = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="TurContratoDetalle", inversedBy="contratoDetallesCompuestosContratoDetalleRel")
      * @ORM\JoinColumn(name="codigo_contrato_detalle_fk", referencedColumnName="codigo_contrato_detalle_pk")
      */
@@ -813,6 +818,22 @@ class TurContratoDetalleCompuesto
     public function setHoraHasta($horaHasta): void
     {
         $this->horaHasta = $horaHasta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCortesia()
+    {
+        return $this->cortesia;
+    }
+
+    /**
+     * @param mixed $cortesia
+     */
+    public function setCortesia($cortesia): void
+    {
+        $this->cortesia = $cortesia;
     }
 
 

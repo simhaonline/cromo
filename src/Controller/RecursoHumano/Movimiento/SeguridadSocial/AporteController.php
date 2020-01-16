@@ -367,7 +367,7 @@ class AporteController extends AbstractController
             //3	2	8	9	A	Tipo documento el cotizante	Obligatorio. Lo suministra el aportante. Los valores validos son:
             fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getTipoDocumento(), " ", 2, "D"));
             //4	16	10	25	A	Número de identificación del cotizante	Obligatorio. Lo suministra el aportante. El operador de información validará que este campo este compuesto por letras de la A a la Z y los caracteres numéricos del Cero (0) al nueve (9). Sólo es permitido el número de identificación alfanumérico para los siguientes tipos de documentos de identidad: CE.  Cédula de Extranjería PA.  Pasaporte CD.  Carne Diplomático. Para los siguientes tipos de documento deben ser dígitos numéricos: TI.   Tarjeta de Identidad CC. Cédula de ciudadanía  SC.  Salvoconducto de permanencia RC.  Registro Civil
-            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getEmpleadoRel()->getNumeroIdentificacion(), " ", 16, "D"));
+            fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getEmpleadoRel()->getPermisoEspecial() != "" ? $arAporteDetalle->getEmpleadoRel()->getPermisoEspecial() : $arAporteDetalle->getEmpleadoRel()->getNumeroIdentificacion(), " ", 16, "D"));
             //5	2	26	27	N	Tipo de cotizante	Obligatorio. Lo suministra el aportante. Los valores validos son:
             fputs($ar, FuncionesController::RellenarNr($arAporteDetalle->getTipoCotizante(), "0", 2, "I"));
             //6	2	28	29	N	Subtipo de cotizante	Obligatorio. Lo suministra el aportante

@@ -534,6 +534,7 @@ class TurContratoRepository extends ServiceEntityRepository
                         $arPedidoDetalle->setHoraDesde($arContratoDetalle->getHoraDesde());
                         $arPedidoDetalle->setHoraHasta($arContratoDetalle->getHoraHasta());
                         $arPedidoDetalle->setProgramar($arContratoDetalle->getProgramar());
+                        $arPedidoDetalle->setCortesia($arContratoDetalle->getCortesia());
                         if ($arContratoDetalle->getFechaHasta() >= $fechaDesde) {
                             if ($diaInicial != 0 && $diaFinal != 0) {
                                 $em->persist($arPedidoDetalle);
@@ -556,6 +557,7 @@ class TurContratoRepository extends ServiceEntityRepository
                                         $arPedidoDetalleCompuesto->setFestivo($arContratoDetalleCompuesto->getFestivo());
                                         $arPedidoDetalleCompuesto->setCantidad($arContratoDetalleCompuesto->getCantidad());
                                         $arPedidoDetalleCompuesto->setVrPrecioAjustado($arContratoDetalleCompuesto->getVrPrecioAjustado());
+                                        $arPedidoDetalleCompuesto->setCortesia($arContratoDetalleCompuesto->getCortesia());
                                         //$arPedidoDetalleCompuesto->setPorcentajeIva($arContratoDetalleCompuesto->getPorcentajeIva());
                                         $strAnioMes = $arPedido->getFecha()->format('Y/m/');
                                         $dateFechaDesde = date_create($strAnioMes . "1");

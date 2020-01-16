@@ -41,6 +41,7 @@ class ContratoDetalleCompuestoType extends AbstractType
             ->add('domingo', CheckboxType::class, array('required'  => false))
             ->add('festivo', CheckboxType::class, array('required'  => false))
             ->add('dia31', CheckboxType::class, array('required'  => false))
+            ->add('cortesia', CheckboxType::class, array('required'  => false))
             ->add('horaDesde', TimeType::class)
             ->add('horaHasta', TimeType::class)
             ->add('DiasReales', CheckboxType::class, array('required'  => false))

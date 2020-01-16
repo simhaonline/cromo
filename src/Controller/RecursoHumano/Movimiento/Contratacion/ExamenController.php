@@ -6,6 +6,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
+use App\Entity\RecursoHumano\RhuExamenRestriccionMedica;
 use App\Entity\RecursoHumano\RhuExamenTipo;
 use App\Entity\RecursoHumano\RhuExamenDetalle;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
@@ -177,7 +178,6 @@ class ExamenController extends AbstractController
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnCerrar = ['label' => 'Cerrar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnApto = ['label' => 'Apto', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonAprobarDetalle = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
 
@@ -187,7 +187,6 @@ class ExamenController extends AbstractController
             $arrBtnActualizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnCerrar['disabled'] = false;
             $arrBtnApto['disabled'] = false;
             $arrBtnApto['disabled'] = false;
             $arrBotonAprobarDetalle['disabled'] = false;
@@ -195,14 +194,12 @@ class ExamenController extends AbstractController
         if ($arExamenes->getEstadoAprobado()) {
             $arrBtnDesautorizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
-            $arrBtnCerrar['disabled'] = true;
             $arrBtnApto['disabled'] = true;
             $arrBotonAprobarDetalle['disabled'] = true;
         }
 
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
-        $form->add('btnCerrar', SubmitType::class, $arrBtnCerrar);
         $form->add('btnApto', SubmitType::class, $arrBtnApto);
         $form->add('btnAprobarDetalle', SubmitType::class, $arrBotonAprobarDetalle);
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
@@ -223,10 +220,6 @@ class ExamenController extends AbstractController
             if ($form->get('btnDesautorizar')->isClicked()) {
                 $em->getRepository(RhuExamen::class)->desAutorizar($arExamenes);
             }
-            if ($form->get('btnCerrar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuExamenDetalle::class)->cerrar($arExamenes, $arrSeleccionados);
-            }
             if ($form->get('btnApto')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuExamenDetalle::class)->apto($arExamenes, $arrSeleccionados);
@@ -237,16 +230,18 @@ class ExamenController extends AbstractController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
-//                $ExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));
-                $this->exportarExcelPersonalizado($arExamenDetalles);
+                $ExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));
+                $this->exportarExcelPersonalizado($arExamenDetalles, $ExamenRestriccionesMedicas);
             }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_examen_detalle', ['id' => $id]));
         }
         $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
+        $arExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));
         return $this->render('recursohumano/movimiento/contratacion/examen/detalle.html.twig', array(
             'form' => $form->createView(),
-            'arExamenes' => $arExamenes,
+            'arExamen' => $arExamenes,
             'arExamenDetalles' => $arExamenDetalles,
+            'arExamenRestriccionesMedicas'=>$arExamenRestriccionesMedicas
         ));
     }
 
@@ -328,7 +323,7 @@ class ExamenController extends AbstractController
 
     }
 
-    public function exportarExcelPersonalizado($arExamenDetalles)
+    public function exportarExcelPersonalizado($arExamenDetalles,$ExamenRestriccionesMedicas)
     {
         $em = $this->getDoctrine()->getManager();
         set_time_limit(0);
@@ -374,7 +369,15 @@ class ExamenController extends AbstractController
                 ->setCellValue('C1', 'DIAS')
                 ->setCellValue('D1', 'FECHA VENCIMIENTO');
 
-
+            $i = 2;
+            foreach ($ExamenRestriccionesMedicas as $ExamenRestriccionesMedica) {
+                $hoja->getStyle($i)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $i, $ExamenRestriccionesMedica->getCodigoExamenRestriccionMedicaPk())
+                    ->setCellValue('B' . $i, $ExamenRestriccionesMedica->getExamenRevisionMedicaTipoRel()->getNombre())
+                    ->setCellValue('C' . $i, $ExamenRestriccionesMedica->getDias())
+                    ->setCellValue('D' . $i, $ExamenRestriccionesMedica->getFechaVence()->format('Y/m/d'));
+                $i++;
+            }
             $libro->setActiveSheetIndex(0);
             header('Content-Type: application/vnd.ms-excel');
             header("Content-Disposition: attachment;filename=examen.xls");

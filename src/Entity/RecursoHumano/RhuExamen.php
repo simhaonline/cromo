@@ -143,6 +143,12 @@ class RhuExamen
      */
     protected $examenesExamenDetalleRel;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuExamenRestriccionMedica", mappedBy="examenRel")
+     */
+    protected $examenesExamenRestriccionMedicaRel;
+
     /**
      * @return array
      */
@@ -557,6 +563,22 @@ class RhuExamen
     public function setExamenesExamenDetalleRel($examenesExamenDetalleRel): void
     {
         $this->examenesExamenDetalleRel = $examenesExamenDetalleRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExamenesExamenRestriccionMedicaRel()
+    {
+        return $this->examenesExamenRestriccionMedicaRel;
+    }
+
+    /**
+     * @param mixed $examenesExamenRestriccionMedicaRel
+     */
+    public function setExamenesExamenRestriccionMedicaRel($examenesExamenRestriccionMedicaRel): void
+    {
+        $this->examenesExamenRestriccionMedicaRel = $examenesExamenRestriccionMedicaRel;
     }
 
 }

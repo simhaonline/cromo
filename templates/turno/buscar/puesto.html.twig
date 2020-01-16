@@ -1,8 +1,7 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
     <script language="javascript">
-        function selCliente(codigo, nombre, campoCodigo, campoNombre)
-        {
+        function selCliente(codigo, nombre, campoCodigo, campoNombre) {
             opener.document.getElementById(campoCodigo).value = codigo;
             opener.document.getElementById(campoNombre).value = nombre;
             opener.document.getElementById(campoCodigo).focus();
@@ -31,7 +30,7 @@
             </div>
         </div>
     </div>
-    <table  class="table table-striped table-bordered table-condensed table-hover tabla-datos">
+    <table class="table table-striped table-bordered table-condensed table-hover tabla-datos">
         <tr>
             <th>{{ knp_pagination_sortable(arPuestos, 'CÓDIGO', 'p.codigoPuestoPk') }}</th>
             <th>NIT</th>
@@ -40,24 +39,28 @@
         </tr>
         {% for arPuesto in arPuestos %}
             <tr>
-                <td><input type="hidden" name="LblCodigo[]" value="{{ arPuesto.codigoPuestoPk }}">{{ arPuesto.codigoPuestoPk }} </td>
-                <td>{{ arPuesto.nombre  }}</td>
+                <td><input type="hidden" name="LblCodigo[]"
+                           value="{{ arPuesto.codigoPuestoPk }}">{{ arPuesto.codigoPuestoPk }} </td>
+                <td>{{ arPuesto.nombre }}</td>
                 <td>{{ arPuesto.cliente }}</td>
-                <td style="text-align: center"><a href="javascript:selCliente('{{ arPuesto.codigoPuestoPk }}','{{ arPuesto.nombre }}','{{ campoCodigo }}','{{ campoNombre }}')" ><i class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a>
-                    </td>
+                <td style="text-align: center"><a
+                            href="javascript:selCliente('{{ arPuesto.codigoPuestoPk }}','{{ arPuesto.nombre }}','{{ campoCodigo }}','{{ campoNombre }}')"><i
+                                class="fa fa-check-circle-o" style="font-size: large;color: black;"></i></a>
+                </td>
             </tr>
         {% endfor %}
     </table>
 
 
     <!-- Botones Menu Items -->
-    <div class="btn-toolbar">
-        <div class="btn-group" style="float: left">
-            <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPuestos.getTotalItemCount }}</span></div>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arPuestos.getTotalItemCount }}
+            </span>
         </div>
-        <div class="btn-group btn-sm" style="float: left;margin-left: 0px;padding-top: 0px;">
-            {{ knp_pagination_render(arPuestos) }}
-        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arPuestos) }}
     </div>
     <!-- Fin Botones Menu Items -->
     {{ form_rest(form) }}

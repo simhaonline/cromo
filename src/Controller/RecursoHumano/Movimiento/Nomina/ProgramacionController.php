@@ -197,7 +197,7 @@ class ProgramacionController extends AbstractController
         $form->add('btnImprimirResumen', SubmitType::class, $arrBtnImprimirResumen);
         $form->add('btnExcelDetalle', SubmitType::class, $arrBtnExcelDetalle);
         $form->add('btnExcelPagoDetalles', SubmitType::class, $arrBtnExcelPagoDetalles);
-        $form->add('identificacion', TextType::class,array('required' => false));
+        $form->add('identificacion', TextType::class, array('required' => false));
         $form->add('estadoMarcado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false]);
         $form->add('pagosNegativos', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false]);
         $form->add('btnFiltrar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Filtrar']);
@@ -264,12 +264,16 @@ class ProgramacionController extends AbstractController
             }
             if ($form->get('btnExcelDetalle')->isClicked()) {
                 General::get()->setExportar(($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
+                /*
+                * Este metodo solo se usa cuando un documento no se le configure la cuenta por pagar inicialmente y lo requiera
+                */
+//                $em->getRepository(RhuProgramacion::class)->generarCuentasPagar($arProgramacion);
             }
             if ($form->get('btnExcelPagoDetalles')->isClicked()) {
                 $this->generarExcelDetalle($arProgramacion->getCodigoProgramacionPk());
             }
 
-            if ($form->get('btnFiltrar')->isClicked()){
+            if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltrosDetalle($form);
             }
         }
@@ -309,7 +313,7 @@ class ProgramacionController extends AbstractController
                 $em->getRepository(RhuProgramacionDetalle::class)->actualizar($arProgramacionDetalle, $this->getUser()->getUsername());
             }
 
-            if ($form->get('btnMarcar')->isClicked()){
+            if ($form->get('btnMarcar')->isClicked()) {
                 $arProgramacionDetalle->setMarca(1);
                 $em->persist($arProgramacionDetalle);
                 $em->flush();
@@ -502,7 +506,7 @@ class ProgramacionController extends AbstractController
             'arPago' => $arPago,
             'arPagoDetalles' => $arPagoDetalles,
             'arProgramaciones' => $arProgramaciones,
-            'arAdicionales'=>$arAdicionales,
+            'arAdicionales' => $arAdicionales,
             'form' => $form->createView()
         ]);
     }
@@ -545,7 +549,7 @@ class ProgramacionController extends AbstractController
             ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
             ->getForm();
         $form->handleRequest($request);
-        $raw=[];
+        $raw = [];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnActualizar')->isClicked()) {
                 $arrHoras = $request->request->all();

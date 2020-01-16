@@ -743,6 +743,75 @@ class RhuProgramacionRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $arProgramacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function generarCuentasPagar($arProgramacion)
+    {
+        /**
+         * @var $arPago
+         */
+        $em = $this->getEntityManager();
+        $arPagoTipo = $em->getRepository(RhuPagoTipo::class)->find($arProgramacion->getCodigoPagoTipoFk());
+        $arPagos = $em->getRepository(RhuPago::class)->findBy(array('codigoProgramacionFk' => $arProgramacion->getCodigoProgramacionPk()));
+        //Verificar tercero en cuenta por pagar
+        if ($arProgramacion->getPagoTipoRel()->getGeneraTesoreria()) {
+            foreach ($arPagos as $arPago) {
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arPago->getCodigoEmpleadoFk());
+                $arTerceroCuentaPagar = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPago->getEmpleadoRel()->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPago->getEmpleadoRel()->getNumeroIdentificacion()));
+                if ($arTerceroCuentaPagar) {
+                    $bancoActual = $arTerceroCuentaPagar->getCodigoBancoFk();
+                    $cuentaActual = $arTerceroCuentaPagar->getCuenta();
+                    if ($bancoActual != $arPago->getEmpleadoRel()->getCodigoBancoFk()) {
+                        $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
+                    }
+                    if ($cuentaActual != $arEmpleado->getCuenta()) {
+                        $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
+                    }
+                }
+                if (!$arTerceroCuentaPagar) {
+                    $arTerceroCuentaPagar = new TesTercero();
+                    $arTerceroCuentaPagar->setIdentificacionRel($arEmpleado->getIdentificacionRel());
+                    $arTerceroCuentaPagar->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
+                    $arTerceroCuentaPagar->setNombre1($arEmpleado->getNombre1());
+                    $arTerceroCuentaPagar->setNombre2($arEmpleado->getNombre2());
+                    $arTerceroCuentaPagar->setApellido1($arEmpleado->getApellido1());
+                    $arTerceroCuentaPagar->setApellido2($arEmpleado->getApellido2());
+                    $arTerceroCuentaPagar->setNombreCorto($arEmpleado->getNombreCorto());
+                    $arTerceroCuentaPagar->setCiudadRel($arEmpleado->getCiudadRel());
+                    $arTerceroCuentaPagar->setCelular($arEmpleado->getCelular());
+                    $arTerceroCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
+                    $arTerceroCuentaPagar->setCuenta($arEmpleado->getCuenta());
+                    $arTerceroCuentaPagar->setCodigoCuentaTipoFk($arEmpleado->getCodigoCuentaTipoFk());
+                }
+                $em->persist($arTerceroCuentaPagar);
+
+                $arCuentaPagarTipo = $em->getRepository(TesCuentaPagarTipo::class)->find($arPago->getPagoTipoRel()->getCodigoCuentaPagarTipoFk());
+                $arCuentaPagar = New TesCuentaPagar();
+                $arCuentaPagar->setCuentaPagarTipoRel($arCuentaPagarTipo);
+                $arCuentaPagar->setTerceroRel($arTerceroCuentaPagar);
+                $arCuentaPagar->setBancoRel($arEmpleado->getBancoRel());
+                $arCuentaPagar->setCuenta($arEmpleado->getCuenta());
+                $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
+                $arCuentaPagar->setNumeroReferencia($arPago->getCodigoProgramacionFk());
+                $arCuentaPagar->setFecha($arPago->getFechaDesde());
+                $arCuentaPagar->setFechaVence($arPago->getFechaDesde());
+                $arCuentaPagar->setVrSubtotal($arPago->getVrNeto());
+                $arCuentaPagar->setVrTotal($arPago->getVrNeto());
+                $arCuentaPagar->setVrSaldo($arPago->getVrNeto());
+                $arCuentaPagar->setVrSaldoOperado($arPago->getVrNeto());
+                $arCuentaPagar->setVrSaldoOriginal($arPago->getVrNeto());
+                $arCuentaPagar->setEstadoAutorizado(1);
+                $arCuentaPagar->setEstadoAprobado(1);
+                $arCuentaPagar->setOperacion(1);
+                $em->persist($arCuentaPagar);
+            }
+        }
+        $em->flush();
+    }
+
+    /**
      * @param $arProgramacion RhuProgramacion
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException

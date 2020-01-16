@@ -25,7 +25,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ExamenController extends AbstractController
 {
@@ -64,10 +65,10 @@ class ExamenController extends AbstractController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
                 'attr' => ['class' => 'form-control to-select-2'],
-                'data'=>  $raw['filtros']['examenTipo'] ? $em->getReference(RhuExamenTipo::class, $raw['filtros']['examenTipo']) : null
+                'data' => $raw['filtros']['examenTipo'] ? $em->getReference(RhuExamenTipo::class, $raw['filtros']['examenTipo']) : null
             ])
-            ->add('codigoExamenPk', TextType::class, array('required' => false,'data' => $raw['filtros']['codigoExamen']))
-            ->add('codigoEmpleadoFk', TextType::class, ['required' => false,'data' => $raw['filtros']['codigoEmpleado']])
+            ->add('codigoExamenPk', TextType::class, array('required' => false, 'data' => $raw['filtros']['codigoExamen']))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false, 'data' => $raw['filtros']['codigoEmpleado']])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $raw['filtros']['fechaDesde'] ? date_create($raw['filtros']['fechaDesde']) : null])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $raw['filtros']['fechaHasta'] ? date_create($raw['filtros']['fechaHasta']) : null])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data' => $raw['filtros']['estadoAutorizado']])
@@ -204,6 +205,7 @@ class ExamenController extends AbstractController
         $form->add('btnCerrar', SubmitType::class, $arrBtnCerrar);
         $form->add('btnApto', SubmitType::class, $arrBtnApto);
         $form->add('btnAprobarDetalle', SubmitType::class, $arrBotonAprobarDetalle);
+        $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
@@ -223,15 +225,20 @@ class ExamenController extends AbstractController
             }
             if ($form->get('btnCerrar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuExamenDetalle::class)->cerrar($arExamenes,$arrSeleccionados);
+                $em->getRepository(RhuExamenDetalle::class)->cerrar($arExamenes, $arrSeleccionados);
             }
             if ($form->get('btnApto')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuExamenDetalle::class)->apto($arExamenes,$arrSeleccionados);
+                $em->getRepository(RhuExamenDetalle::class)->apto($arExamenes, $arrSeleccionados);
             }
             if ($form->get('btnAprobarDetalle')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuExamenDetalle::class)->aprobar($arrSeleccionados);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
+//                $ExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));
+                $this->exportarExcelPersonalizado($arExamenDetalles);
             }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_examen_detalle', ['id' => $id]));
         }
@@ -320,5 +327,62 @@ class ExamenController extends AbstractController
         return $filtro;
 
     }
+
+    public function exportarExcelPersonalizado($arExamenDetalles)
+    {
+        $em = $this->getDoctrine()->getManager();
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arExamenDetalles) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja = $libro->createSheet(0);
+            //Examen Detalle
+            $hoja->setTitle('ExamenDetalle');
+            $hoja->setCellValue('A1', 'CODIGO');
+            $hoja->setCellValue('B1', 'EXAMEN');
+            $hoja->setCellValue('C1', 'PRECIO');
+            $hoja->setCellValue('D1', 'FECHA EXAMEN');
+            $hoja->setCellValue('E1', 'VENCIMIENTO');
+            $hoja->setCellValue('F1', 'VALIDA VENCIMIENTO');
+            $hoja->setCellValue('G1', 'APROBADO');
+            $hoja->setCellValue('H1', 'CERRADO');
+            $hoja->setCellValue('I1', 'COMENTARIOS');
+            $hoja->setCellValue('J1', 'APTO');
+
+            $i = 2;
+            foreach ($arExamenDetalles as $arExamenDetalle) {
+                $hoja->getStyle($i)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $i, $arExamenDetalle->getCodigoExamenDetallePk())
+                    ->setCellValue('B' . $i, $arExamenDetalle->getExamenTipoRel()->getNombre())
+                    ->setCellValue('C' . $i, $arExamenDetalle->getVrPrecio())
+                    ->setCellValue('D' . $i, $arExamenDetalle->getFechaExamen())
+                    ->setCellValue('E' . $i, $arExamenDetalle->getFechaVence()->format('Y/m/d'))
+                    ->setCellValue('F' . $i, $arExamenDetalle->getValidarVencimiento() == 0 ? "No" : "Si")
+                    ->setCellValue('G' . $i, $arExamenDetalle->getEstadoAprobado() == 0 ? "No" : "Si")
+//                ->setCellValue('H' . $i, $arExamenDetalle->getEstadoCerrado() == 0 ? "No" : "Si")
+                    ->setCellValue('H' . $i, "")
+                    ->setCellValue('I' . $i, $arExamenDetalle->getComentario())
+                    ->setCellValue('J' . $i, $arExamenDetalle->getEstadoApto() == 0 ? "No" : "Si");
+                $i++;
+            }
+            $hoja = $libro->getActiveSheet();
+            $hoja = $libro->createSheet(1);
+            $hoja->setTitle('RestriccionesMedicas');
+            $hoja->setCellValue('A1', 'CODIGO')
+                ->setCellValue('B1', 'TIPO REVISION')
+                ->setCellValue('C1', 'DIAS')
+                ->setCellValue('D1', 'FECHA VENCIMIENTO');
+
+
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=examen.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
+    }
+
 }
 

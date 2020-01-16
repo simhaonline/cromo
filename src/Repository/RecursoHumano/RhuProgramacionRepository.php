@@ -376,6 +376,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 ->andWhere("c.estadoTerminado = 0 AND c.codigoContratoClaseFk <> 'APR' AND c.codigoContratoClaseFk <> 'PRA' AND c.salarioIntegral = 0")
                 ->getQuery()->execute();
             foreach ($arContratos as $arContrato) {
+                if($arContrato->getCodigoTiempoFk() == 'TMED'){
+                    $salarioMinimo = $salarioMinimo / 2;
+                }
                 $dateFechaDesde = $arContrato->getFechaUltimoPagoCesantias();
                 $dateFechaHasta = $arProgramacion->getFechaHasta();
                 $dateFechaHastaPago = $arContrato->getFechaUltimoPago();
@@ -482,6 +485,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 ->andWhere("c.estadoTerminado = 0 AND c.codigoContratoClaseFk <> 'APR' AND c.codigoContratoClaseFk <> 'PRA' AND c.salarioIntegral = 0")
                 ->getQuery()->execute();
             foreach ($arContratos as $arContrato) {
+                if($arContrato->getCodigoTiempoFk() == 'TMED'){
+                    $salarioMinimo = $salarioMinimo / 2;
+                }
                 $dateFechaDesde = $arContrato->getFechaUltimoPagoCesantias();
                 $dateFechaHasta = $arProgramacion->getFechaHasta();
                 $dateFechaHastaPago = $arContrato->getFechaUltimoPago();

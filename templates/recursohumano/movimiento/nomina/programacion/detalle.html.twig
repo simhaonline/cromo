@@ -116,8 +116,11 @@
                             {% if arProgramacion.codigoPagoTipoFk == 'PRI' %}
                                 <th title="Valor anticipo">ANT</th>
                             {% endif %}
+                            {% if arProgramacion.codigoPagoTipoFk == 'CES' %}
+                                <th title="Salario cesantias">SAL_CES</th>
+                                <th>AUS</th>
+                            {% endif %}
                             <th>DIAS</th>
-                            <th>AUS</th>
                             <th title="Horas diurnas">D</th>
                             <th title="Horas descanso">DS</th>
                             <th title="Horas nocturnas">N</th>
@@ -132,6 +135,9 @@
                             <th title="Recargo festivo diurno">RFD</th>
                             <th title="Recargo festivo nocturno">RFN</th>
                             <th>NETO</th>
+                            {% if arProgramacion.codigoPagoTipoFk == 'CES' %}
+                                <th></th>
+                            {% endif %}
                             <th></th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -158,8 +164,11 @@
                                 {% if arProgramacion.codigoPagoTipoFk == 'PRI' %}
                                     <td style="text-align: right">{{ arProgramacionDetalle.vrAnticipo | number_format(0, '.', ',') }}</td>
                                 {% endif %}
+                                {% if arProgramacion.codigoPagoTipoFk == 'CES' %}
+                                    <td style="text-align: right">{{ arProgramacionDetalle.vrSalarioCesantia | number_format(0, '.', ',') }}</td>
+                                    <td style="text-align: right">{{ arProgramacionDetalle.diasAusentismo | number_format(0, '.', ',') }}</td>
+                                {% endif %}
                                 <td style="text-align: right">{{ arProgramacionDetalle.dias | number_format(0, '.', ',') }}</td>
-                                <td style="text-align: right">{{ arProgramacionDetalle.diasAusentismo | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDiurnas | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasDescanso | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasNocturnas | number_format(0, '.', ',') }}</td>
@@ -174,6 +183,12 @@
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoDiurno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.horasRecargoFestivoNocturno | number_format(0, '.', ',') }}</td>
                                 <td style="text-align: right">{{ arProgramacionDetalle.vrNeto | number_format(0, '.', ',') }}</td>
+                                {% if arProgramacion.codigoPagoTipoFk == 'CES' %}
+                                    <td style="text-align: center;">
+                                        <a style="color:black" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_editar_cesantia', {'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}', 'Editar', 500, 800)"><i
+                                                    class="fa fa-edit fa-2x"></i></a>
+                                    </td>
+                                {% endif %}
                                 <td style="text-align: center;"><a
                                             href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_programacion_detalle_resumen',{ 'id': arProgramacionDetalle.codigoProgramacionDetallePk }) }}','resumen',600,1250)"><i
                                                 class="fa fa-table" style="color: black;font-size: large;"></i></a></td>

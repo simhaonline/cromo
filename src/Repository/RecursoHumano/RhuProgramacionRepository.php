@@ -418,7 +418,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         if ($intDiasSalarioPromedio > 0) {
                             $salarioPromedioCesantias = ($ibpCesantias / $intDiasSalarioPromedio) * 30;
                         } else {
-                            if ($arContrato->getAuxilioTransporte() == 1) {
+                            if ($arContrato->getAuxilioTransporte() == true && $arProgramacion->getAplicarTransporte() == true) {
                                 $salarioPromedioCesantias = $douSalario + $auxilioTransporte;
                             } else {
                                 $salarioPromedioCesantias = $douSalario;
@@ -431,7 +431,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         if ($intDiasSalarioPromedio > 0) {
                             $otrosConceptos = ($ibpConceptos / $intDiasSalarioPromedio) * 30;
                         }
-                        if ($arContrato->getAuxilioTransporte() == 1) {
+                        if ($arContrato->getAuxilioTransporte() == true && $arProgramacion->getAplicarTransporte() == true) {
                             $salarioPromedioCesantias = $douSalario + $auxilioTransporte + $otrosConceptos;
                         } else {
                             $salarioPromedioCesantias = $douSalario + $otrosConceptos;
@@ -445,7 +445,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $diasAusentismo = $em->getRepository(RhuLicencia::class)->diasAusentismoMovimiento($dateFechaDesde->format('Y-m-d'), $dateFechaHasta->format('Y-m-d'), $arContrato->getCodigoContratoPk());
 
                     if ($salarioPromedioCesantias < $salarioMinimo) {
-                        if ($arContrato->getAuxilioTransporte() == 1) {
+                        if ($arContrato->getAuxilioTransporte() == true && $arProgramacion->getAplicarTransporte() == true) {
                             $salarioPromedioCesantias = $douSalario + $auxilioTransporte;
                         } else {
                             $salarioPromedioCesantias = $douSalario;
@@ -527,7 +527,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         if ($intDiasSalarioPromedio > 0) {
                             $salarioPromedioCesantias = ($ibpCesantias / $intDiasSalarioPromedio) * 30;
                         } else {
-                            if ($arContrato->getAuxilioTransporte() == 1) {
+                            if ($arContrato->getAuxilioTransporte() == true && $arProgramacion->getAplicarTransporte() == true) {
                                 $salarioPromedioCesantias = $douSalario + $auxilioTransporte;
                             } else {
                                 $salarioPromedioCesantias = $douSalario;
@@ -540,7 +540,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                         if ($intDiasSalarioPromedio > 0) {
                             $otrosConceptos = ($ibpConceptos / $intDiasSalarioPromedio) * 30;
                         }
-                        if ($arContrato->getAuxilioTransporte() == 1) {
+                        if ($arContrato->getAuxilioTransporte() == true && $arProgramacion->getAplicarTransporte() == true) {
                             $salarioPromedioCesantias = $douSalario + $auxilioTransporte + $otrosConceptos;
                         } else {
                             $salarioPromedioCesantias = $douSalario + $otrosConceptos;
@@ -558,7 +558,7 @@ class RhuProgramacionRepository extends ServiceEntityRepository
 //                    }
 
                     if ($salarioPromedioCesantias < $salarioMinimo) {
-                        if ($arContrato->getAuxilioTransporte() == 1) {
+                        if ($arContrato->getAuxilioTransporte() == true && $arProgramacion->getAplicarTransporte() == true) {
                             $salarioPromedioCesantias = $douSalario + $auxilioTransporte;
                         } else {
                             $salarioPromedioCesantias = $douSalario;

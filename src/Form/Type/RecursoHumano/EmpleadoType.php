@@ -5,6 +5,7 @@ namespace App\Form\Type\RecursoHumano;
 use App\Entity\General\GenBanco;
 use App\Entity\RecursoHumano\RhuBanco;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuEstudioTipo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -104,6 +105,15 @@ class EmpleadoType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Rh:'
+            ])
+            ->add('empleadoEstudioTipoRel', EntityType::class, [
+                'class' => RhuEstudioTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('et')
+                        ->orderBy('et.codigoEstudioTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
             ])
             ->add('numeroIdentificacion', NumberType::class, ['required' => true, 'label' => 'numero identificacion:'])
             ->add('digitoVerificacion', NumberType::class, ['required' => true])

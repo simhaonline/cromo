@@ -27,8 +27,9 @@ class RhuEstudio
      */
     private $codigoEmpleadoFk;
 
+
     /**
-     * @ORM\Column(name="codigo_estudio_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_estudio_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoEstudioTipoFk;
 

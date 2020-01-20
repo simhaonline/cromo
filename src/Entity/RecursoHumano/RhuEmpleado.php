@@ -278,6 +278,11 @@ class RhuEmpleado
     private $permisoEspecial;
 
     /**
+     * @ORM\Column(name="codigo_estudio_tipo_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoEstudioTipoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -336,6 +341,12 @@ class RhuEmpleado
      * @ORM\JoinColumn(name="codigo_contrato_fk",referencedColumnName="codigo_contrato_pk")
      */
     protected $contratoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RhuEstudioTipo", inversedBy="empleadosEmpleadoEstudioTipoRel")
+     * @ORM\JoinColumn(name="codigo_empleado_estudio_tipo_fk", referencedColumnName="codigo_estudio_tipo_pk")
+     */
+    protected $empleadoEstudioTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
@@ -526,6 +537,7 @@ class RhuEmpleado
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCambioSalario", mappedBy="empleadoRel")
      */
     protected $cambiosSalariosEmpleadoRel;
+
 
     /**
      * @return mixed
@@ -2013,6 +2025,38 @@ class RhuEmpleado
     public function setCambiosSalariosEmpleadoRel($cambiosSalariosEmpleadoRel): void
     {
         $this->cambiosSalariosEmpleadoRel = $cambiosSalariosEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstudioTipoFk()
+    {
+        return $this->codigoEstudioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoEstudioTipoFk
+     */
+    public function setCodigoEstudioTipoFk($codigoEstudioTipoFk): void
+    {
+        $this->codigoEstudioTipoFk = $codigoEstudioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoEstudioTipoRel()
+    {
+        return $this->empleadoEstudioTipoRel;
+    }
+
+    /**
+     * @param mixed $empleadoEstudioTipoRel
+     */
+    public function setEmpleadoEstudioTipoRel($empleadoEstudioTipoRel): void
+    {
+        $this->empleadoEstudioTipoRel = $empleadoEstudioTipoRel;
     }
 
 

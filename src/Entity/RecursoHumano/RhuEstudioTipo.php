@@ -17,8 +17,7 @@ class RhuEstudioTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_estudio_tipo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_estudio_tipo_pk", type="string", length=10)
      */
     private $codigoEstudioTipoPk;
 
@@ -36,6 +35,12 @@ class RhuEstudioTipo
      * @ORM\OneToMany(targetEntity="RhuEstudio", mappedBy="estudioTipoRel")
      */
     protected $estudiosEstudioTipoRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="empleadoEstudioTipoRel")
+     */
+    protected $empleadosEmpleadoEstudioTipoRel;
+
 
     /**
      * @return array

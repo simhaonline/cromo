@@ -48,11 +48,11 @@ class RhuExamenRepository extends ServiceEntityRepository
             ->select('e.codigoExamenPk')
             ->addSelect('et.nombre as tipo')
             ->addSelect('e.fecha')
+            ->addSelect('e.fechaVence')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('e.nombreCorto AS empleado')
             ->addSelect('ee.nombre as entidad')
             ->addSelect('c.nombre as cargo')
-            ->addSelect('e.cobro')
             ->addSelect('e.vrTotal')
             ->addSelect('e.estadoAutorizado')
             ->addSelect('e.estadoAprobado')
@@ -109,11 +109,11 @@ class RhuExamenRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function liquidar($arExamenes)
+    public function liquidar($codigoExamen)
     {
         $em = $this->getEntityManager();
-        $arExamen = $em->getRepository(RhuExamen::class)->find($arExamenes);
-        $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $arExamenes));
+        $arExamen = $em->getRepository(RhuExamen::class)->find($codigoExamen);
+        $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $codigoExamen));
         $vrTotal = 0;
         foreach ($arExamenDetalles AS $arExamenDetalle) {
             $vrTotal += $arExamenDetalle->getVrPrecio();
@@ -264,5 +264,18 @@ class RhuExamenRepository extends ServiceEntityRepository
             Mensajes::error("El examen ya esta aprobado o no esta autorizado");
         }
     }
+
+    public function apto($arExamen)
+    {
+        $em = $this->getEntityManager();
+        if ($arExamen->getEstadoAutorizado() == 1) {
+            $arExamen->setEstadoApto(1);
+            $em->persist($arExamen);
+            $em->flush();
+        } else {
+            Mensajes::error("No se ha seleccionado elementos");
+        }
+    }
+
 
 }

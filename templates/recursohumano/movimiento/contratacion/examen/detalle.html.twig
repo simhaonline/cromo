@@ -15,9 +15,58 @@
         {% if arExamen.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
         {% if arExamen.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
         {% if arExamen.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+        {% if arExamen.estadoApto == true %}<span class="label label-success">Apto</span>{% endif %}
+    </div>
+    <div class="btn-group">
+        {{ form_widget(form.btnApto) }}
     </div>
     <br/><br/>
-    {% include 'recursohumano/movimiento/contratacion/examen/informacion.html.twig' %}
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">ENTIDAD:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arExamen.examenEntidadRel.nombre }}</td>
+            <td class="titulo">TIPO:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arExamen.examenTipoRel.nombre }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">IDENTIFICACION:</td>
+            <td class="td-in-well">{{ arExamen.numeroIdentificacion }}</td>
+                <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arExamen.nombreCorto }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">CARGO:</td>
+            <td class="td-in-well">{{ arExamen.cargoRel.nombre |default("") }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo">FECHA Y HORA:</td>
+            <td class="td-in-well">{{ arExamen.fecha | date('Y/m/d H:i:s') }}</td>
+            <td class="titulo">FECHA VENCE</td>
+            <td class="td-in-well">{{ arExamen.fechaVence | date('Y/m/d') }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="right"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo">TOTAL:</td>
+            <td class="numero">{{ arExamen.vrTotal | number_format(0, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIO:</td>
+            <td class="td-in-well" colspan="5">{{ arExamen.comentario }}</td>
+        </tr>
+    </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
         <li ><a href="#restricciones" data-toggle="tab">Restricción medica</a></li>
@@ -31,14 +80,9 @@
                         <tr>
                             <th>ID</th>
                             <th>CODIGO</th>
-                            <th>EXAMEN</th>
+                            <th>ITEM</th>
                             <th>PRECIO</th>
-                            <th>FECHA EXAMEN</th>
-                            <th>VENCE</th>
-                            <th>VALIDAR VENCE</th>
-                            <th>APTO</th>
                             <th title="Aprobado">APR</th>
-                            <th title="Anulado">ANU</th>
                             <th>COMENTARIO</th>
                             <th><input type="checkbox" name="ChkSeleccionarTodos"
                                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -50,13 +94,13 @@
                                 <td>{{ arExamenDetalle.codigoExamenDetallePk }}<input type="hidden" name="arrCodigo[]"
                                                                                       value="{{ arExamenDetalle.codigoExamenDetallePk }}">
                                 </td>
-                                <td>{{ arExamenDetalle.codigoExamenTipoFk }}</td>
-                                <td>{{ arExamenDetalle.examenTipoRel.nombre|default('') }}</td>
+                                <td>{{ arExamenDetalle.codigoExamenItemFk }}</td>
+                                <td>{{ arExamenDetalle.examenItemRel.nombre | default("")  }}</td>
                                 {% if arExamen.estadoAutorizado %}
                                     <td class="numero">{{ arExamenDetalle.vrPrecio }}</td>
-                                    <td>{{ arExamenDetalle.fechaExamen | date("Y/m/d") }} </td>
-                                    <td>{{ arExamenDetalle.fechaVence | date("Y/m/d") }}</td>
-                                    <td>{{ arExamenDetalle.validarVencimiento ?"SI":"NO" }}</td>
+                                    <td>{{ arExamenDetalle.estadoAprobado ? 'SI':'NO' }}</td>
+                                    <td>{{ arExamenDetalle.comentario }}</td>
+
                                 {% else %}
                                     <td class="text-center">
                                         <input type="text"
@@ -65,34 +109,15 @@
                                                style="text-align: right; width:60px"
                                                size="10">
                                     </td>
-                                    <td class="text-center">
+                                    <td>{{ arExamenDetalle.estadoAprobado ? 'SI':'NO' }}</td>
+                                    <td>
                                         <input type="text"
-                                               name="arrFechaExamen[{{ arExamenDetalle.codigoExamenDetallePk }}]"
-                                               value="{{ arExamenDetalle.fechaExamen | date("Y/m/d") }}"
-                                               style="text-align: right; width:60px"
+                                               name="arrComentario[{{ arExamenDetalle.codigoExamenDetallePk }}]"
+                                               value="{{ arExamenDetalle.comentario }}"
+                                               style="width: 100%"
                                                size="10">
                                     </td>
-                                    <td class="text-center">
-                                        <input type="text"
-                                               name="arrVence[{{ arExamenDetalle.codigoExamenDetallePk }}]"
-                                               value="{{ arExamenDetalle.fechaVence | date("Y/m/d") }}"
-                                               style="text-align: right; width:60px"
-                                               size="10"></td>
-                                    <td align="center">
-                                        <select name="cboValidarVencimiento{{ arExamenDetalle.codigoExamenDetallePk }}">
-                                            <option value="0" {% if arExamenDetalle.validarVencimiento == 0 %} selected="true" {% endif %}>
-                                                NO
-                                            </option>
-                                            <option value="1" {% if arExamenDetalle.validarVencimiento == 1 %} selected="true" {% endif %}>
-                                                SI
-                                            </option>
-                                        </select>
-                                    </td>
                                 {% endif %}
-                                <td>{{ arExamenDetalle.estadoApto ? 'SI':'NO' }}</td>
-                                <td>{{ arExamenDetalle.estadoAprobado ? 'SI':'NO' }}</td>
-                                <td>{{ arExamenDetalle.estadoAnulado ? 'SI':'NO' }}</td>
-                                <td>{{ arExamenDetalle.comentario }}</td>
                                 <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
                                                           value="{{ arExamenDetalle.codigoExamenDetallePk }}"/></td>
                             </tr>
@@ -115,9 +140,6 @@
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizar) }}
-                    </div>
-                    <div class="btn-group">
-                        {{ form_widget(form.btnApto) }}
                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnAprobarDetalle) }}
@@ -155,18 +177,37 @@
                                 <td>{{ arExamenRestriccionMedicas.fechaVence | date('Y/m/d') }}</td>
 
                                 {% if arExamen.estadoAutorizado == 1 and arExamen.estadoAprobado == 0%}
-{#                                    <td align="center"><a href="javascript:abrirVentana3('{{ path('brs_rhu_movimiento_sso_examen_restriccion_medica_editar', {'codigoExamen': arExamen.codigoExamenPk, 'codigoRestriccionMedica': arExamenRestriccionesMedicas.codigoExamenRestriccionMedicaPk }) }}', 'AgregarRestriccionMedica', 600, 900)" ><img src="{{ asset('imagenes/bootstrap/glyphicons_151_edit.png') }}" width=20 height=20></a></td>#}
-                                    <td></td>
+                                    <td align="center">
+                                        <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_contratacion_examen_restriccion_medica_editar',
+                                            {'codigoExamen': arExamen.codigoExamenPk, 'codigoRestriccionMedica': arExamenRestriccionMedicas.codigoExamenRestriccionMedicaPk }) }}', 'AgregarRestriccionMedica', 600, 900)">
+                                            <i class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                                    </td>
                                 {% else %}
                                     <td></td>
                                 {% endif %}
-{#                                <td align="center"><a href="javascript:abrirVentana3('{{ path('brs_rhu_movimiento_sso_examen_restriccion_medica_detalle', { 'codigoRestriccionMedica': arExamenRestriccionesMedicas.codigoExamenRestriccionMedicaPk }) }}', 'DetalleRestriccionMedica', 600, 900)" ><img src="{{ asset('imagenes/bootstrap/glyphicons_152_new_window.png') }}" width=20 height=20></a></td>#}
-                                <td></td>
-                                <td align="center"><input type="checkbox" name="ChkSeleccionarRestriccion[]" value="{{ arExamenRestriccionMedicas.codigoExamenRestriccionMedicaPk }}" /></td>
+                                <td align="center">
+                                    <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_contratacion_examen_restriccion_medica_detalle',
+                                        { 'codigoRestriccionMedica': arExamenRestriccionMedicas.codigoExamenRestriccionMedicaPk }) }}', 'DetalleRestriccionMedica', 600, 900)" >
+                                        <i class="fa fa-share-square-o" style="font-size: large;color: black;"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arExamenRestriccionMedicas.codigoExamenRestriccionMedicaPk  }}" />
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-toolbar" style="float: right">
+                    {% if arExamen.estadoAutorizado == 1 and arExamen.estadoAprobado == 0%}
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_contratacion_examen_restriccion_medica_nuevo', {'codigoExamen': arExamen.codigoExamenPk, 'codigoRestriccionMedica': 0 }) }}', 'AgregarRestriccionMedica', 600, 900)">Nuevo</a>
+                        </div>
+                    {% endif %}
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarRestriccion, { 'attr': {'class': 'btn btn-danger btn-sm', 'onclick': 'return confirm("Esta seguro de eliminar el registro?")'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

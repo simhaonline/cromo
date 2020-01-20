@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuExamenRestriccionMedica;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -17,5 +18,24 @@ class RhuExamenRestriccionMedicaRepository extends ServiceEntityRepository {
     {
         parent::__construct($registry, RhuExamenRestriccionMedica::class);
     }
-    
+
+    public function eliminar($arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $ar = $em->getRepository(RhuExamenRestriccionMedica::class)->find($codigo);
+                    if ($ar) {
+                        $em->remove($ar);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
+            }
+        }
+    }
 }

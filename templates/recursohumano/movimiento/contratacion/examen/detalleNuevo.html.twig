@@ -8,7 +8,6 @@
             <th>CODIGO</th>
             <th>NOMBRE</th>
             <th>PRECIO</th>
-            <th title="Ingreso">ING</th>
             <th><input type="checkbox" name="ChkSeleccionarTodos"
                        OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
         </tr>
@@ -17,11 +16,10 @@
         {% for arExamenListaPrecio in arExamenListaPrecios %}
             <tr>
                 <td>{{ arExamenListaPrecio.codigoExamenListaPrecioPk }}</td>
-                <td>{{ arExamenListaPrecio.codigoExamenTipoFk }}</td>
-                <td>{{ arExamenListaPrecio.examenTipoRel.nombre }}</td>
+                <td>{{ arExamenListaPrecio.codigoExamenItemFk }}</td>
+                <td>{{ arExamenListaPrecio.examenItemRel.nombre |default("") }}</td>
                 <td class="td-in-well"
                     align="right">{{ arExamenListaPrecio.vrPrecio | number_format(0, '.', ',') }}</td>
-                <td>{% if arExamenListaPrecio.examenTipoRel.ingreso == 1 %} SI {% else %} NO {% endif %}</td>
                 <td style="text-align: center"><input type="checkbox" name="ChkSeleccionar[]"
                                                       value="{{ arExamenListaPrecio.codigoExamenListaPrecioPk }}"/>
                 </td>

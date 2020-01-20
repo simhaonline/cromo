@@ -57,13 +57,13 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>CLASE</th>
+            <th>TIPO</th>
             <th>FECHA</th>
+            <th>FECHA VENCE</th>
             <th>IDENTIFICACION</th>
             <th>EMPLEADO</th>
             <th>CARGO</th>
             <th>ENTIDAD</th>
-            <th>COBRO</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
             <th title="Estado anulado">ANU</th>
@@ -79,18 +79,22 @@
                 <td>{{ arExamen.codigoExamenPk }}</td>
                 <td>{{ arExamen.tipo }}</td>
                 <td>{{ arExamen.fecha | date('Y-m-d') }}</td>
+                <td>{{ arExamen.fechaVence | date('Y-m-d') }}</td>
                 <td>{{ arExamen.numeroIdentificacion }}</td>
                 <td>{{ arExamen.empleado }}</td>
                 <td>{{ arExamen.cargo }}</td>
                 <td>{{ arExamen.entidad }}</td>
-                <td>{{ arExamen.cobro }}</td>
                 <td>{{ arExamen.estadoAutorizado ? 'SI':'NO' }}</td>
                 <td>{{ arExamen.estadoAprobado ? 'SI':'NO' }}</td>
                 <td>{{ arExamen.estadoAnulado ? 'SI':'NO' }}</td>
-                <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_contratacion_examen_nuevo',{'id': arExamen.codigoExamenPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arExamen.estadoAutorizado == 1 %}
+                    <td></td>
+                {% else %}
+                    <td style="text-align: center;">
+                        <a href="{{ path('recursohumano_movimiento_contratacion_examen_nuevo',{'id': arExamen.codigoExamenPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% endif %}
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_contratacion_examen_detalle',{'id' : arExamen.codigoExamenPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

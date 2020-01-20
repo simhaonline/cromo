@@ -61,9 +61,11 @@ class RhuExamenDetalleRepository extends ServiceEntityRepository
         if ($this->getEntityManager()->getRepository(RhuExamen::class)->contarDetalles($arExamenes->getCodigoExamenPk()) > 0) {
             $arrPrecio = $arrControles['arrPrecio'];
             $arrCodigo = $arrControles['arrCodigo'];
+            $arrComentario = $arrControles['arrComentario'];
             foreach ($arrCodigo as $codigoExamenDetalle) {
                 $arExamenDetalle = $this->getEntityManager()->getRepository(RhuExamenDetalle::class)->find($codigoExamenDetalle);
                 $arExamenDetalle->setVrPrecio(floatval($arrPrecio[$codigoExamenDetalle]));
+                $arExamenDetalle->setComentario($arrComentario[$codigoExamenDetalle]);
                 $em->persist($arExamenDetalle);
                 $em->flush();
             }
@@ -90,20 +92,6 @@ class RhuExamenDetalleRepository extends ServiceEntityRepository
         }
     }
 
-    public function apto($arExamen, $arrSeleccionados)
-    {
-        $em = $this->getEntityManager();
-        if ($arExamen->getEstadoAutorizado() == 1 && $arrSeleccionados) {
-            foreach ($arrSeleccionados as $codigo) {
-                $arExamenDetalle = $em->getRepository(RhuExamenDetalle::class)->find($codigo);
-                $arExamenDetalle->setEstadoApto(1);
-                $em->persist($arExamenDetalle);
-            }
-            $em->flush();
-        } else {
-            Mensajes::error("No se ha seleccionado elementos");
-        }
-    }
 
     public function aprobar($arrSeleccionados)
     {

@@ -6,11 +6,18 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
+use App\Entity\RecursoHumano\RhuExamenItem;
 use App\Entity\RecursoHumano\RhuExamenRestriccionMedica;
+use App\Entity\RecursoHumano\RhuExamenRestriccionMedicaDetalle;
+use App\Entity\RecursoHumano\RhuExamenRestriccionMedicaTipo;
 use App\Entity\RecursoHumano\RhuExamenTipo;
 use App\Entity\RecursoHumano\RhuExamenDetalle;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
 use App\Form\Type\RecursoHumano\ExamenType;
+use App\Form\Type\RecursoHumano\RhuExamenRestriccionMedicaEditarType;
+use App\Form\Type\RecursoHumano\RhuExamenRestriccionMedicaType;
+use App\Formato\RecursoHumano\Examen;
+use App\Formato\RecursoHumano\ExamenRestriccionMedica;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -136,11 +143,13 @@ class ExamenController extends AbstractController
                         $arExamen->setNombreCorto($arEmpleado->getNombreCorto());
                         $arExamen->setCiudadRel($arEmpleado->getCiudadRel());
                         $arExamen->setEmpleadoRel($arEmpleado);
-                        $arExamen->setCargoRel($arEmpleado->getCargoRel());
                         $arExamen->setCodigoSexoFk($arEmpleado->getCodigoSexoFk());
                         if ($id == 0) {
                             $arExamen->setFecha(new \DateTime('now'));
                             $arExamen->setUsuario($this->getUser()->getUserName());
+                        }
+                        if ($arEmpleado->getCargoRel()) {
+                            $arExamen->setCargoRel($arEmpleado->getCargoRel());
                         }
                         $em->persist($arExamen);
                         $em->flush();
@@ -170,38 +179,39 @@ class ExamenController extends AbstractController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $arExamenes = $em->getRepository(RhuExamen::class)->find($id);
-        $form = Estandares::botonera($arExamenes->getEstadoAutorizado(), $arExamenes->getEstadoAprobado(), $arExamenes->getEstadoAnulado());
+        $arExamen = $em->getRepository(RhuExamen::class)->find($id);
+        $form = Estandares::botonera($arExamen->getEstadoAutorizado(), $arExamen->getEstadoAprobado(), $arExamen->getEstadoAnulado());
 
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnEliminarRestriccion = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
         $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAutorizar = ['label' => 'Autorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnAprobado = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBtnDesautorizar = ['label' => 'Desautorizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
-        $arrBtnApto = ['label' => 'Apto', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        $arrBtnApto = ['label' => 'Apto', 'disabled' => true, 'attr' => ['class' => 'btn btn-sm btn-default']];
         $arrBotonAprobarDetalle = ['label' => 'Aprobado', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
 
-        if ($arExamenes->getEstadoAutorizado()) {
+        if ($arExamen->getEstadoAutorizado()) {
             $arrBtnAutorizar['disabled'] = true;
             $arrBtnEliminar['disabled'] = true;
             $arrBtnActualizar['disabled'] = true;
             $arrBtnAprobado['disabled'] = true;
             $arrBtnDesautorizar['disabled'] = false;
-            $arrBtnApto['disabled'] = false;
-            $arrBtnApto['disabled'] = false;
             $arrBotonAprobarDetalle['disabled'] = false;
-        }
-        if ($arExamenes->getEstadoAprobado()) {
-            $arrBtnDesautorizar['disabled'] = true;
-            $arrBtnAprobado['disabled'] = true;
-            $arrBtnApto['disabled'] = true;
-            $arrBotonAprobarDetalle['disabled'] = true;
+            $arrBtnApto['disabled'] = false;
         }
 
+        if ($arExamen->getEstadoAprobado()) {
+            $arrBtnDesautorizar['disabled'] = true;
+            $arrBtnAprobado['disabled'] = true;
+            $arrBotonAprobarDetalle['disabled'] = true;
+            $arrBtnApto['disabled'] = true;
+        }
         $form->add('btnActualizar', SubmitType::class, $arrBtnActualizar);
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
         $form->add('btnApto', SubmitType::class, $arrBtnApto);
         $form->add('btnAprobarDetalle', SubmitType::class, $arrBotonAprobarDetalle);
+        $form->add('btnEliminarRestriccion', SubmitType::class, $arrBtnEliminarRestriccion);
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -211,40 +221,52 @@ class ExamenController extends AbstractController
                 $em->getRepository(RhuExamenDetalle::class)->eliminar($arrDetallesSeleccionados, $id);
                 $em->getRepository(RhuExamen::class)->liquidar($id);
             }
-            if ($form->get('btnActualizar')->isClicked()) {
-                $em->getRepository(RhuExamenDetalle::class)->actualizarDetalles($arrControles, $form, $arExamenes);
-            }
             if ($form->get('btnAutorizar')->isClicked()) {
-                $em->getRepository(RhuExamen::class)->autorizar($arExamenes);
+                $em->getRepository(RhuExamen::class)->autorizar($arExamen);
             }
             if ($form->get('btnDesautorizar')->isClicked()) {
-                $em->getRepository(RhuExamen::class)->desAutorizar($arExamenes);
+                $em->getRepository(RhuExamen::class)->desAutorizar($arExamen);
             }
             if ($form->get('btnApto')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository(RhuExamenDetalle::class)->apto($arExamenes, $arrSeleccionados);
+                $em->getRepository(RhuExamen::class)->apto($arExamen);
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(RhuExamen::class)->aprobar($arExamen);
+            }
+            if ($form->get('btnActualizar')->isClicked()) {
+                $em->getRepository(RhuExamenDetalle::class)->actualizarDetalles($arrControles, $form, $arExamen);
+                $em->getRepository(RhuExamen::class)->liquidar($id);
             }
             if ($form->get('btnAprobarDetalle')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuExamenDetalle::class)->aprobar($arrSeleccionados);
-            }
-            if ($form->get('btnAprobar')->isClicked()) {
-                $em->getRepository(RhuExamen::class)->aprobar($arExamenes);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
                 $ExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));
                 $this->exportarExcelPersonalizado($arExamenDetalles, $ExamenRestriccionesMedicas);
             }
+            if ($form->get('btnEliminarRestriccion')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuExamenRestriccionMedica::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $FormatoExamen = new Examen();
+                $FormatoExamen->Generar($em, $id);
+            }
             return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_examen_detalle', ['id' => $id]));
         }
         $arExamenDetalles = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $id));
+
         $arExamenRestriccionesMedicas = $em->getRepository(RhuExamenRestriccionMedica::class)->findBy(array('codigoExamenFk' => $id));
         return $this->render('recursohumano/movimiento/contratacion/examen/detalle.html.twig', array(
             'form' => $form->createView(),
-            'arExamen' => $arExamenes,
+            'arExamen' => $arExamen,
             'arExamenDetalles' => $arExamenDetalles,
-            'arExamenRestriccionesMedicas'=>$arExamenRestriccionesMedicas
+            'arExamenRestriccionesMedicas' => $arExamenRestriccionesMedicas,
+            'clase' => array('clase' => 'RhuExamen', 'codigo' => $id),
+
         ));
     }
 
@@ -259,7 +281,6 @@ class ExamenController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $arExamen = $em->getRepository(RhuExamen::class)->find($codigoExamen);
-        $arExamenListaPrecios = $em->getRepository(RhuExamenListaPrecio::class)->findBy(array('codigoExamenEntidadFk' => $arExamen->getCodigoExamenEntidadFk()));
         $form = $this->createFormBuilder()
             ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
@@ -271,29 +292,31 @@ class ExamenController extends AbstractController
                     if ($arrSeleccionados) {
                         foreach ($arrSeleccionados AS $codigo) {
                             $arExamenListaPrecio = $em->getRepository(RhuExamenListaPrecio::class)->find($codigo);
-                            $arExamenDetalleValidar = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $codigoExamen, 'codigoExamenTipoFk' => $arExamenListaPrecio->getCodigoExamenTipoFk()));
+                            $arExamenDetalleValidar = $em->getRepository(RhuExamenDetalle::class)->findBy(array('codigoExamenFk' => $codigoExamen, 'codigoExamenItemFk' => $arExamenListaPrecio->getCodigoExamenItemFk()));
+
                             if (!$arExamenDetalleValidar) {
-                                $arExamenTipo = $em->getRepository(RhuExamenTipo::class)->find($arExamenListaPrecio->getCodigoExamenTipoFk());
+                                $arExamenItem = $em->getRepository(RhuExamenItem::class)->find($arExamenListaPrecio->getCodigoExamenItemFk());
                                 $arExamenDetalle = new RhuExamenDetalle();
-                                $arExamenDetalle->setExamenTipoRel($arExamenTipo);
+                                $arExamenDetalle->setExamenTipoRel($arExamen->getExamenTipoRel());
+                                $arExamenDetalle->setExamenItemRel($arExamenItem);
                                 $arExamenDetalle->setExamenRel($arExamen);
-                                $arExamenDetalle->setFechaExamen($arExamen->getFecha());
-                                $arExamenDetalle->setFechaVence($arExamen->getFecha());
                                 $arExamenDetalle->setVrPrecio($arExamenListaPrecio->getVrPrecio());
                                 $em->persist($arExamenDetalle);
                             }
                         }
                         $em->flush();
+                        $em->getRepository(RhuExamen::class)->liquidar($codigoExamen);
                         echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                     } else {
-                        Mensajes::error("error", "No selecciono ningun dato para guardar");
+                        Mensajes::error("No selecciono ningun dato para guardar");
                     }
                 } else {
                     echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 }
             }
         }
-        $arExamenListaPrecios = $paginator->paginate($arExamenListaPrecios, $request->query->get('page', 1), 50);
+        $arrExamenListaPrecios = $em->getRepository(RhuExamenListaPrecio::class)->findBy(array('codigoExamenEntidadFk' => $arExamen->getCodigoExamenEntidadFk()));
+        $arExamenListaPrecios = $paginator->paginate($arrExamenListaPrecios, $request->query->get('page', 1), 50);
         return $this->render('recursohumano/movimiento/contratacion/examen/detalleNuevo.html.twig', array(
             'arExamenListaPrecios' => $arExamenListaPrecios,
             'arExamen' => $arExamen,
@@ -326,7 +349,7 @@ class ExamenController extends AbstractController
 
     }
 
-    public function exportarExcelPersonalizado($arExamenDetalles,$ExamenRestriccionesMedicas)
+    public function exportarExcelPersonalizado($arExamenDetalles, $ExamenRestriccionesMedicas)
     {
         $em = $this->getDoctrine()->getManager();
         set_time_limit(0);
@@ -339,29 +362,22 @@ class ExamenController extends AbstractController
             $hoja->setTitle('ExamenDetalle');
             $hoja->setCellValue('A1', 'CODIGO');
             $hoja->setCellValue('B1', 'EXAMEN');
-            $hoja->setCellValue('C1', 'PRECIO');
-            $hoja->setCellValue('D1', 'FECHA EXAMEN');
-            $hoja->setCellValue('E1', 'VENCIMIENTO');
-            $hoja->setCellValue('F1', 'VALIDA VENCIMIENTO');
-            $hoja->setCellValue('G1', 'APROBADO');
-            $hoja->setCellValue('H1', 'CERRADO');
-            $hoja->setCellValue('I1', 'COMENTARIOS');
-            $hoja->setCellValue('J1', 'APTO');
+            $hoja->setCellValue('C1', 'ITEM');
+            $hoja->setCellValue('D1', 'PRECIO');
+            $hoja->setCellValue('E1', 'FECHA');
+            $hoja->setCellValue('F1', 'APROBADO');
+            $hoja->setCellValue('G1', 'COMENTARIOS');
 
             $i = 2;
             foreach ($arExamenDetalles as $arExamenDetalle) {
                 $hoja->getStyle($i)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $i, $arExamenDetalle->getCodigoExamenDetallePk())
                     ->setCellValue('B' . $i, $arExamenDetalle->getExamenTipoRel()->getNombre())
-                    ->setCellValue('C' . $i, $arExamenDetalle->getVrPrecio())
-                    ->setCellValue('D' . $i, $arExamenDetalle->getFechaExamen())
-                    ->setCellValue('E' . $i, $arExamenDetalle->getFechaVence()->format('Y/m/d'))
-                    ->setCellValue('F' . $i, $arExamenDetalle->getValidarVencimiento() == 0 ? "No" : "Si")
-                    ->setCellValue('G' . $i, $arExamenDetalle->getEstadoAprobado() == 0 ? "No" : "Si")
-//                ->setCellValue('H' . $i, $arExamenDetalle->getEstadoCerrado() == 0 ? "No" : "Si")
-                    ->setCellValue('H' . $i, "")
-                    ->setCellValue('I' . $i, $arExamenDetalle->getComentario())
-                    ->setCellValue('J' . $i, $arExamenDetalle->getEstadoApto() == 0 ? "No" : "Si");
+                    ->setCellValue('C' . $i, $arExamenDetalle->getExamenItemRel()->getNombre())
+                    ->setCellValue('D' . $i, $arExamenDetalle->getVrPrecio())
+                    ->setCellValue('E' . $i, $arExamenDetalle->getExamenRel()->getFecha())
+                    ->setCellValue('F' . $i, $arExamenDetalle->getEstadoAprobado() ? "SI" : "NO")
+                    ->setCellValue('G' . $i, $arExamenDetalle->getComentario());
                 $i++;
             }
             $hoja = $libro->getActiveSheet();
@@ -390,5 +406,153 @@ class ExamenController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/recursohumano/movimiento/contratacion/examen/restriccion/medica/nuevo/{codigoExamen}/{codigoRestriccionMedica}", name="recursohumano_movimiento_contratacion_examen_restriccion_medica_nuevo")
+     */
+    public function agregarRestriccionMedicaNuevo(Request $request, $codigoExamen, $codigoRestriccionMedica)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arExamen = $em->getRepository(RhuExamen::class)->find($codigoExamen);
+        $arExamenRestriccionMedica = new RhuExamenRestriccionMedica();
+        $form = $this->createForm(RhuExamenRestriccionMedicaType::class, $arExamenRestriccionMedica);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                if ($arExamen->getEstadoAutorizado() == 1) {
+                    $arUsuario = $this->getUser();
+                    $arExamenRestriccionMedica->setExamenRel($arExamen);
+                    $arExamenRestriccionMedica->setFecha(new \DateTime('now'));
+                    $arExamenRestriccionMedica->setCodigoUsuario($arUsuario->getUserName());
+                    //Fecha Vencimiento
+                    $fechaExamen = $arExamen->getFecha()->format('Y-m-d');
+                    $dias = $arExamenRestriccionMedica->getDias();
+                    $dateFechaVence = date('Y-m-d', strtotime("$fechaExamen + $dias day"));
+                    $arExamenRestriccionMedica->setFechaVence(new \DateTime($dateFechaVence));
+                    $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                    if ($arrSeleccionados) {
+                        foreach ($arrSeleccionados AS $codigoExamenRestriccionMedicaDetalle) {
+                            $arExamenRestriccionMedicaDetalle = new RhuExamenRestriccionMedicaDetalle();
+                            $arExamenRestriccionMedicaDetalle->setExamenRestriccionMedicaDetalleRel($arExamenRestriccionMedica);
+                            $arExamenRestriccionMedicaTipo = $em->getRepository(RhuExamenRestriccionMedicaTipo::class)->find($codigoExamenRestriccionMedicaDetalle);
+                            $arExamenRestriccionMedicaDetalle->setExamenRestriccionMedicaTipoRel($arExamenRestriccionMedicaTipo);
+                            $em->persist($arExamenRestriccionMedicaDetalle);
+                        }
+                        $em->persist($arExamenRestriccionMedica);
+                        $em->flush();
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }else{
+                        Mensajes::error("Debe selecionar al menos un tipo de restricción medica");
+                    }
+                }else{
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
+                }
+            }
+        }
+        $arExamenRestriccionMedicaTipos = $em->getRepository(RhuExamenRestriccionMedicaTipo::class)->findAll();
+        return $this->render('recursohumano/movimiento/contratacion/examen/agregarRestriccion.html.twig', array(
+            'form' => $form->createView(),
+            'arExamenRestriccionMedicaTipos' => $arExamenRestriccionMedicaTipos
+        ));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/contratacion/examen/restriccion/medica/editar/{codigoExamen}/{codigoRestriccionMedica}", name="recursohumano_movimiento_contratacion_examen_restriccion_medica_editar")
+     */
+    public function editarRestriccionMedicaEditar(Request $request, $codigoExamen, $codigoRestriccionMedica){
+        $em = $this->getDoctrine()->getManager();
+        $arExamen = $em->getRepository(RhuExamen::class)->find($codigoExamen);
+        $arExamenRestriccionMedica = new RhuExamenRestriccionMedica();
+        $arExamenRestriccionMedicaDetalles = new RhuExamenRestriccionMedicaDetalle();
+        if ($codigoRestriccionMedica != 0) {
+            $arExamenRestriccionMedica = $em->getRepository(RhuExamenRestriccionMedica::class)->find($codigoRestriccionMedica);
+            $arExamenRestriccionMedicaDetalles = $em->getRepository(RhuExamenRestriccionMedicaDetalle::class)->findBy(array('codigoExamenRestriccionMedicaFk' => $arExamenRestriccionMedica->getCodigoExamenRestriccionMedicaPk()));
+            $arExamenRestriccionMedicaTipo = $em->getRepository(RhuExamenRestriccionMedicaDetalle::class)->tiposRestriccionesMedicas($arExamenRestriccionMedica->getCodigoExamenRestriccionMedicaPk());
+        }
+        $form = $this->createForm(RhuExamenRestriccionMedicaEditarType::class, $arExamenRestriccionMedica);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($arExamen->getEstadoAutorizado() == 1) {
+                if ($form->get('guardar')->isClicked()) {
+                    $arUsuario = $this->getUser();
+                    $arExamenRestriccionMedica = $form->getData();
+                    $arExamenRestriccionMedica->setExamenRel($arExamen);
+                    $em->persist($arExamenRestriccionMedica);
+                    $arExamenRestriccionMedica = $form->getData();
+                    $arExamenRestriccionMedica->setExamenRel($arExamen);
+                    $arExamenRestriccionMedica->setFecha(new \DateTime('now'));
+                    $arExamenRestriccionMedica->setCodigoUsuario($arUsuario->getUserName());
+                    $fechaExamen = $arExamen->getFecha()->format('Y-m-d');
+                    $dias = $arExamenRestriccionMedica->getDias();
+                    $dateFechaVence = date('Y-m-d', strtotime("$fechaExamen + $dias day"));
+                    $arExamenRestriccionMedica->setFechaVence(new \DateTime($dateFechaVence));
+                    $arrSeleccionados = $request->request->get('ChkSeleccionarNuevo');
+                    if ($arrSeleccionados) {
+                        foreach ($arrSeleccionados AS $codigoExamenRestriccionMedicaDetalle) {
+                            $arExamenRestriccionMedicaDetalle = new RhuExamenRestriccionMedicaDetalle();
+                            $arExamenRestriccionMedicaDetalle->setExamenRestriccionMedicaDetalleRel($arExamenRestriccionMedica);
+                            $arExamenRestriccionMedicaTipo = $em->getRepository(RhuExamenRestriccionMedicaTipo::class)->find($codigoExamenRestriccionMedicaDetalle);
+                            $arExamenRestriccionMedicaDetalle->setExamenRestriccionMedicaTipoRel($arExamenRestriccionMedicaTipo);
+                            $em->persist($arExamenRestriccionMedicaDetalle);
+                        }
+                        $em->persist($arExamenRestriccionMedica);
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+                if ($form->get('eliminar')->isClicked()) {
+                    $arrSeleccionados = $request->request->get('ChkSeleccionarDetalle');
+                    if ($arrSeleccionados) {
+                        foreach ($arrSeleccionados AS $codigoExamenRestriccionMedicaDetalle) {
+                            $arExamenRestriccionMedicaDetalle = $em->getRepository(RhuExamenRestriccionMedicaDetalle::class)->find($codigoExamenRestriccionMedicaDetalle);
+                            $em->remove($arExamenRestriccionMedicaDetalle);
+                            $em->flush();
+                        }
+                        return $this->redirect($this->generateUrl('recursohumano_movimiento_contratacion_examen_restriccion_medica_editar', array('codigoExamen' => $codigoExamen, 'codigoRestriccionMedica' => $codigoRestriccionMedica)));
+                    }
+                }
+            }else {
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('recursohumano/movimiento/contratacion/examen/editarRestriccion.html.twig', array(
+            'form' => $form->createView(),
+            'arExamenRestriccionMedicaDetalles' => $arExamenRestriccionMedicaDetalles,
+            'arExamenRestriccionMedicaTipos' => $arExamenRestriccionMedicaTipo,
+        ));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/contratacion/examen/restriccion/medica/detalle/{codigoRestriccionMedica}", name="recursohumano_movimiento_contratacion_examen_restriccion_medica_detalle")
+     */
+    public function detalleRestriccionMedicaAction(Request $request, $codigoRestriccionMedica){
+        $em = $this->getDoctrine()->getManager();
+
+        $arExamenRestriccionMedica = $em->getRepository(RhuExamenRestriccionMedica::class)->find($codigoRestriccionMedica);
+        if (!$arExamenRestriccionMedica) {
+            echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+        }
+        $arExamenRestriccionMedicaDetalle = $em->getRepository(RhuExamenRestriccionMedicaDetalle::class)->findBy(array('codigoExamenRestriccionMedicaFk' => $arExamenRestriccionMedica->getCodigoExamenRestriccionMedicaPk()));
+        $form = $this->createFormBuilder()
+            ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir',))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('btnImprimir')->isClicked()) {
+                $formatoExamenRestriccionMedica = new ExamenRestriccionMedica();
+                $formatoExamenRestriccionMedica->Generar($em, $codigoRestriccionMedica, $arExamenRestriccionMedica, $arExamenRestriccionMedicaDetalle);
+            }
+        }
+
+        return $this->render('recursohumano/movimiento/contratacion/examen/detalleRestriccion.html.twig', array(
+            'arExamenRestriccionMedica' => $arExamenRestriccionMedica,
+            'arExamenRestriccionMedicaDetalle' => $arExamenRestriccionMedicaDetalle,
+            'form' => $form->createView()
+        ));
+    }
+
 }
+
 

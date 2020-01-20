@@ -27,10 +27,6 @@ class RhuExamenListaPrecio
      */
     private $codigoExamenEntidadFk;
 
-    /**
-     * @ORM\Column(name="codigo_examen_tipo_fk", type="integer", nullable=true)
-     */
-    private $codigoExamenTipoFk;
 
     /**
      * @ORM\Column(name="vr_precio", type="float")
@@ -43,16 +39,21 @@ class RhuExamenListaPrecio
     private $Usuario;
 
     /**
+     * @ORM\Column(name="codigo_examen_item_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoExamenItemFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuExamenEntidad", inversedBy="examenListaPreciosExamenEntidadRel")
      * @ORM\JoinColumn(name="codigo_examen_entidad_fk", referencedColumnName="codigo_examen_entidad_pk")
      */
     protected $examenEntidadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuExamenTipo", inversedBy="examenListaPreciosExamenTipoRel")
-     * @ORM\JoinColumn(name="codigo_examen_tipo_fk", referencedColumnName="codigo_examen_tipo_pk")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuExamenItem", inversedBy="examenItemsExamenListaPrecioRel")
+     * @ORM\JoinColumn(name="codigo_examen_item_fk", referencedColumnName="codigo_examen_item_pk")
      */
-    protected $examenTipoRel;
+    protected $examenItemRel;
 
     /**
      * @return array
@@ -105,22 +106,6 @@ class RhuExamenListaPrecio
     /**
      * @return mixed
      */
-    public function getCodigoExamenTipoFk()
-    {
-        return $this->codigoExamenTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoExamenTipoFk
-     */
-    public function setCodigoExamenTipoFk($codigoExamenTipoFk): void
-    {
-        $this->codigoExamenTipoFk = $codigoExamenTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVrPrecio()
     {
         return $this->vrPrecio;
@@ -153,6 +138,22 @@ class RhuExamenListaPrecio
     /**
      * @return mixed
      */
+    public function getCodigoExamenItemFk()
+    {
+        return $this->codigoExamenItemFk;
+    }
+
+    /**
+     * @param mixed $codigoExamenItemFk
+     */
+    public function setCodigoExamenItemFk($codigoExamenItemFk): void
+    {
+        $this->codigoExamenItemFk = $codigoExamenItemFk;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getExamenEntidadRel()
     {
         return $this->examenEntidadRel;
@@ -169,16 +170,16 @@ class RhuExamenListaPrecio
     /**
      * @return mixed
      */
-    public function getExamenTipoRel()
+    public function getExamenItemRel()
     {
-        return $this->examenTipoRel;
+        return $this->examenItemRel;
     }
 
     /**
-     * @param mixed $examenTipoRel
+     * @param mixed $examenItemRel
      */
-    public function setExamenTipoRel($examenTipoRel): void
+    public function setExamenItemRel($examenItemRel): void
     {
-        $this->examenTipoRel = $examenTipoRel;
+        $this->examenItemRel = $examenItemRel;
     }
 }

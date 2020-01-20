@@ -33,7 +33,7 @@ class RhuExamen
     private $codigoExamenEntidadFk;
 
     /**
-     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10)
+     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCargoFk;
 
@@ -104,9 +104,14 @@ class RhuExamen
     private $codigoEmpleadoFk;
 
     /**
-     * @ORM\Column(name="cobro", type="string", length=1, nullable=true)
+     * @ORM\Column(name="estado_apto", type="boolean", options={"default":false},nullable=true)
      */
-    private $cobro;
+    private $estadoApto = false;
+
+    /**
+     * @ORM\Column(name="fecha_vence", type="date")
+     */
+    private $fechaVence;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuExamenTipo", inversedBy="examenesExamenTipoRel")
@@ -142,7 +147,6 @@ class RhuExamen
      * @ORM\OneToMany(targetEntity="RhuExamenDetalle", mappedBy="examenRel")
      */
     protected $examenesExamenDetalleRel;
-
 
     /**
      * @ORM\OneToMany(targetEntity="RhuExamenRestriccionMedica", mappedBy="examenRel")
@@ -186,15 +190,15 @@ class RhuExamen
      */
     public function getCodigoExamenClaseFk()
     {
-        return $this->codigoExamenClaseFk;
+        return $this->codigoExamenTipoFk;
     }
 
     /**
-     * @param mixed $codigoExamenClaseFk
+     * @param mixed $codigoExamenTipoFk
      */
-    public function setCodigoExamenClaseFk($codigoExamenClaseFk): void
+    public function setCodigoExamenTipoFk($codigoExamenTipoFk): void
     {
-        $this->codigoExamenClaseFk = $codigoExamenClaseFk;
+        $this->codigoExamenTipoFk = $codigoExamenTipoFk;
     }
 
     /**
@@ -211,22 +215,6 @@ class RhuExamen
     public function setCodigoExamenEntidadFk($codigoExamenEntidadFk): void
     {
         $this->codigoExamenEntidadFk = $codigoExamenEntidadFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoExamenTipoFk()
-    {
-        return $this->codigoExamenTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoExamenTipoFk
-     */
-    public function setCodigoExamenTipoFk($codigoExamenTipoFk): void
-    {
-        $this->codigoExamenTipoFk = $codigoExamenTipoFk;
     }
 
     /**
@@ -454,19 +442,35 @@ class RhuExamen
     }
 
     /**
-     * @return mixed
+     * @return mixed $estadpApto
      */
-    public function getCobro()
+    public function getEstadoApto()
     {
-        return $this->cobro;
+        return $this->estadoApto;
     }
 
     /**
-     * @param mixed $cobro
+     * @param bool $estadoApto
      */
-    public function setCobro($cobro): void
+    public function setEstadoApto(bool $estadoApto): void
     {
-        $this->cobro = $cobro;
+        $this->estadoApto = $estadoApto;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaVence()
+    {
+        return $this->fechaVence;
+    }
+
+    /**
+     * @param mixed $fechaVence
+     */
+    public function setFechaVence($fechaVence): void
+    {
+        $this->fechaVence = $fechaVence;
     }
 
     /**

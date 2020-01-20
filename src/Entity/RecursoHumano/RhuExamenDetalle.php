@@ -32,10 +32,10 @@ class RhuExamenDetalle
      */
     private $codigoExamenTipoFk;
 
-    /**     
-     * @ORM\Column(name="estado_apto", type="boolean", options={"default":false},nullable=true)
-     */    
-    private $estadoApto = false;
+    /**
+     * @ORM\Column(name="codigo_examen_item_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoExamenItemFk;
 
     /**
      * @ORM\Column(name="estado_aprobado", type="boolean")
@@ -43,30 +43,10 @@ class RhuExamenDetalle
     private $estadoAprobado = 0;
 
     /**     
-     * @ORM\Column(name="estado_anulado", type="boolean")
-     */    
-    private $estadoAnulado = 0;
-    
-    /**     
      * @ORM\Column(name="vr_precio", type="float")
      */    
     private $vrPrecio;
-    
-    /**
-     * @ORM\Column(name="fecha_vence", type="date")
-     */    
-    private $fechaVence;    
-    
-    /**     
-     * @ORM\Column(name="validar_vencimiento", type="boolean")
-     */    
-    private $validarVencimiento = 0;
-    
-    /**
-     * @ORM\Column(name="fecha_examen", type="date", nullable=true)
-     */    
-    private $fechaExamen;
-    
+
     /**
      * @ORM\Column(name="comentario", type="text", nullable=true)
      */    
@@ -83,6 +63,12 @@ class RhuExamenDetalle
      * @ORM\JoinColumn(name="codigo_examen_tipo_fk", referencedColumnName="codigo_examen_tipo_pk")
      */
     protected $examenTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuExamenItem", inversedBy="examenItemsExamenDetalleRel")
+     * @ORM\JoinColumn(name="codigo_examen_item_fk", referencedColumnName="codigo_examen_item_pk")
+     */
+    protected $examenItemRel;
 
     /**
      * @return array
@@ -151,50 +137,35 @@ class RhuExamenDetalle
     /**
      * @return mixed
      */
-    public function getEstadoApto()
+    public function getCodigoExamenItemFk()
     {
-        return $this->estadoApto;
+        return $this->codigoExamenItemFk;
     }
 
     /**
-     * @param mixed $estadoApto
+     * @param mixed $codigoExamenItemFk
      */
-    public function setEstadoApto($estadoApto): void
+    public function setCodigoExamenItemFk($codigoExamenItemFk): void
     {
-        $this->estadoApto = $estadoApto;
+        $this->codigoExamenItemFk = $codigoExamenItemFk;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getEstadoAprobado()
+    public function getEstadoAprobado(): int
     {
         return $this->estadoAprobado;
     }
 
     /**
-     * @param mixed $estadoAprobado
+     * @param int $estadoAprobado
      */
-    public function setEstadoAprobado($estadoAprobado): void
+    public function setEstadoAprobado(int $estadoAprobado): void
     {
         $this->estadoAprobado = $estadoAprobado;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEstadoAnulado()
-    {
-        return $this->estadoAnulado;
-    }
-
-    /**
-     * @param mixed $estadoAnulado
-     */
-    public function setEstadoAnulado($estadoAnulado): void
-    {
-        $this->estadoAnulado = $estadoAnulado;
-    }
 
     /**
      * @return mixed
@@ -210,54 +181,6 @@ class RhuExamenDetalle
     public function setVrPrecio($vrPrecio): void
     {
         $this->vrPrecio = $vrPrecio;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaVence()
-    {
-        return $this->fechaVence;
-    }
-
-    /**
-     * @param mixed $fechaVence
-     */
-    public function setFechaVence($fechaVence): void
-    {
-        $this->fechaVence = $fechaVence;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValidarVencimiento()
-    {
-        return $this->validarVencimiento;
-    }
-
-    /**
-     * @param mixed $validarVencimiento
-     */
-    public function setValidarVencimiento($validarVencimiento): void
-    {
-        $this->validarVencimiento = $validarVencimiento;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaExamen()
-    {
-        return $this->fechaExamen;
-    }
-
-    /**
-     * @param mixed $fechaExamen
-     */
-    public function setFechaExamen($fechaExamen): void
-    {
-        $this->fechaExamen = $fechaExamen;
     }
 
     /**
@@ -307,4 +230,22 @@ class RhuExamenDetalle
     {
         $this->examenTipoRel = $examenTipoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExamenItemRel()
+    {
+        return $this->examenItemRel;
+    }
+
+    /**
+     * @param mixed $examenItemRel
+     */
+    public function setExamenItemRel($examenItemRel): void
+    {
+        $this->examenItemRel = $examenItemRel;
+    }
+
+
 }

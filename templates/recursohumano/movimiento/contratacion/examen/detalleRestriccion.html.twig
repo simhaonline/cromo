@@ -1,0 +1,57 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <section class="content-header">
+        <h1>
+            Recurso humano
+            <small>Examen : detalle restricción</small>
+        </h1>
+    </section>
+    <section class="content">
+        {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">Información general</div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <tr>
+                        <td class="titulo">CÓDIGO:</td>
+                        <td class="td-in-well">{{ arExamenRestriccionMedica.CodigoExamenRestriccionMedicaPk}}</td>
+                        <td class="titulo">TIPO REVISIÓN:</td>
+                        <td class="td-in-well">{{ arExamenRestriccionMedica.examenRevisionMedicaTipoRel.nombre }}</td>
+                    </tr>
+                    <tr>
+                        <td class="titulo">DÍAS RESTRICCIÓN:</td>
+                        <td class="td-in-well">{{ arExamenRestriccionMedica.dias}}</td>
+                        <td class="titulo">FECHA VENCE:</td>
+                        <td class="td-in-well">{{ arExamenRestriccionMedica.fechaVence | date('Y-m-d') }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+            <thead>
+                <tr>
+                    <th colspan="2">DETALLE</th>
+                </tr>
+                <tr>
+                    <th>CÓDIGO</th>
+                    <th>NOMBRE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for arExamenRestriccionMedicaDetalle in arExamenRestriccionMedicaDetalle %}
+                    <tr>
+                        <td>{{arExamenRestriccionMedicaDetalle.codigoExamenRestriccionMedicaDetallePk}}</td>
+                        <td>{{arExamenRestriccionMedicaDetalle.examenRestriccionMedicaTipoRel.nombre}}</td>
+                    </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+
+        <div class="modal-footer">
+            {{ form_widget(form.btnImprimir, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+        </div>
+        {{ form_end(form) }}
+        <br/><br/><br/><br/>
+    </section>
+{% endblock %}

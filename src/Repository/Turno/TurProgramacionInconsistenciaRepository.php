@@ -87,13 +87,14 @@ class   TurProgramacionInconsistenciaRepository extends ServiceEntityRepository
             ->andWhere("p.mes = '{$mes}'")
             ->andWhere("p.complementario = 0 OR p.complementario IS NULL")
             ->leftJoin("p.empleadoRel", "e")
+            ->leftJoin("e.contratoRel", "c")
             ->orderBy("p.codigoEmpleadoFk");
         $queryBuilder->groupBy("p.codigoEmpleadoFk,e.nombreCorto,e.numeroIdentificacion");
         if ($codigoEmpleado) {
             $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
         if ($codigoGrupo) {
-            $queryBuilder->andWhere("e.codigoGrupoFk = '{$codigoGrupo}'");
+            $queryBuilder->andWhere("c.codigoGrupoFk = '{$codigoGrupo}'");
         }
         for ($i = $primerDia; $i <= $ultimoDia; $i++) {
             $queryBuilder->addSelect("SUM(CASE WHEN (p.dia{$i} IS NOT NULL AND NOT COALESCE(p.dia{$i})='') THEN 1 ELSE 0 END) AS dia{$i} ");

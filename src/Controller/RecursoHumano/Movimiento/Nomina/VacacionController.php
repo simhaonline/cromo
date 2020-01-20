@@ -393,7 +393,7 @@ class VacacionController extends AbstractController
                 'class' => RhuConcepto::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('pc')
-                        ->where("pc.adicionalTipo = 'DES'")
+                        ->where("pc.adicionalTipo = 'BON'")
                         ->orderBy('pc.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',

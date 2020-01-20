@@ -82,6 +82,8 @@ class EmpleadoController extends AbstractController
                 General::get()->setExportar($em->getRepository(RhuEmpleado::class)->listaProvicional($raw), "Empleados");
             }
             if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $em->getRepository(RhuEmpleado::class)->eliminar($arrSeleccionados);
             }
         }
         $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->listaProvicional($raw), $request->query->getInt('page', 1), 30);

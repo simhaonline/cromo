@@ -367,7 +367,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
-    private function diasReconocimiento($diasIncapacidad, $prorroga = false, $tipo = 1, $diasProrroga): array
+    private function diasReconocimiento($diasIncapacidad, $prorroga = false, $tipo = "GEN", $diasProrroga): array
     {
         $intDiasEntidad = 0;
         $intDiasEmpresa = 0;
@@ -395,7 +395,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                 }
             }
         }
-        if ($tipo == "LAB") {
+        if ($tipo == "LAB" || $tipo == "ACL") {
             if ($diasIncapacidad > 1) {
                 if ($prorroga) {
                     $intDiasEntidad = $diasIncapacidad;

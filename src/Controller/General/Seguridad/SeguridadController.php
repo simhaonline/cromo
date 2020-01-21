@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Seguridad;
 
+use App\Entity\Seguridad\SegGrupo;
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteOperacion;
 use App\Form\Type\General\UsuarioType;
@@ -127,6 +128,19 @@ class SeguridadController extends AbstractController
             'placeholder' => "",
             'data' => ""
         ];
+        $arrPropiedadesGrupoRel = [
+            'required' => false,
+            'class' => SegGrupo::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('g')
+                    ->orderBy('g.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'label' => 'Nombre:',
+            'empty_data' => "",
+            'placeholder' => "",
+            'data' => ""
+        ];
         if ($arUsuario->getOperacionRel()) {
             $arrPropiedadesOperacionRel["data"] = $em->getReference(TteOperacion::class, $arUsuario->getCodigoOperacionFk());
         }
@@ -136,11 +150,15 @@ class SeguridadController extends AbstractController
         if ($arUsuario->getSegmentoRel()) {
             $arrPropiedadesSegmentoRel["data"] = $em->getReference(Usuario::class, $arUsuario->getCodigoSegmentoFk());
         }
+        if ($arUsuario->getGrupoRel()) {
+            $arrPropiedadesGrupoRel["data"] = $em->getReference(SegGrupo::class, $arUsuario->getCodigoGrupoFk());
+        }
         //se crea el formulario acá por que el campo rol genera error con el core de symfony
         $form = $this->createFormBuilder()
             ->add('operacionRel', EntityType::class, $arrPropiedadesOperacionRel)
             ->add('asesorRel', EntityType::class, $arrPropiedadesAsesorRel)
             ->add('segmentoRel', EntityType::class, $arrPropiedadesSegmentoRel)
+            ->add('grupoRel', EntityType::class, $arrPropiedadesGrupoRel)
             ->add('txtUser', TextType::class, ['data' => $arUsuario->getUsername(), 'required' => true, 'constraints' => array(
                 new NotBlank(array("message" => "El nombre de usuario es obligatorio")),
                 new Regex(array('pattern' => "/[A-Za-z0-9]/", 'message' => "El nombre de usuario no puedo contener caracteres")),
@@ -154,7 +172,7 @@ class SeguridadController extends AbstractController
             ])
             ->add('txtCargo', TextType::class, ['data' => $arUsuario->getCargo(), 'required' => false])
             ->add('txtNombreCorto', TextType::class, ['data' => $arUsuario->getNombreCorto(), 'required' => false])
-            ->add('txtIdentificacion', NumberType::class, ['data' => $arUsuario->getNumeroIdentificacion(), 'required' => false])
+            ->add('txtIdentificacion', TextType::class, ['data' => $arUsuario->getNumeroIdentificacion(), 'required' => false])
             ->add('txtTelefono', TextType::class, ['data' => $arUsuario->getTelefono(), 'required' => false])
             ->add('txtExtension', TextType::class, ['data' => $arUsuario->getExtension(), 'required' => false])
             ->add('txtClaveEscritorio', TextType::class, ['data' => $arUsuario->getClaveEscritorio(), 'required' => false])

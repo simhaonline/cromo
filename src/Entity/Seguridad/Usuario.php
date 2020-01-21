@@ -98,6 +98,11 @@ class Usuario implements UserInterface, \Serializable
     private $codigoSegmentoFk;
 
     /**
+     * @ORM\Column(name="codigo_grupo_fk", type="integer", nullable=true)
+     */
+    private $codigoGrupoFk;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean",options={"default":false})
      */
     private $isActive;
@@ -144,6 +149,12 @@ class Usuario implements UserInterface, \Serializable
      * @ORM\JoinColumn(name="codigo_asesor_fk", referencedColumnName="codigo_asesor_pk")
      */
     protected $asesorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Seguridad\SegGrupo", inversedBy="usuariosGrupoRel")
+     * @ORM\JoinColumn(name="codigo_grupo_fk", referencedColumnName="codigo_grupo_pk")
+     */
+    protected $grupoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenSegmento", inversedBy="usuariosSegmentoRel")
@@ -615,6 +626,54 @@ class Usuario implements UserInterface, \Serializable
     public function setUtilizaSegmento(bool $utilizaSegmento): void
     {
         $this->utilizaSegmento = $utilizaSegmento;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoGrupoFk()
+    {
+        return $this->codigoGrupoFk;
+    }
+
+    /**
+     * @param mixed $codigoGrupoFk
+     */
+    public function setCodigoGrupoFk($codigoGrupoFk): void
+    {
+        $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGrupoRel()
+    {
+        return $this->grupoRel;
+    }
+
+    /**
+     * @param mixed $grupoRel
+     */
+    public function setGrupoRel($grupoRel): void
+    {
+        $this->grupoRel = $grupoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuariosSegmentosSegmento()
+    {
+        return $this->usuariosSegmentosSegmento;
+    }
+
+    /**
+     * @param mixed $usuariosSegmentosSegmento
+     */
+    public function setUsuariosSegmentosSegmento($usuariosSegmentosSegmento): void
+    {
+        $this->usuariosSegmentosSegmento = $usuariosSegmentosSegmento;
     }
 
 

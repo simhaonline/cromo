@@ -287,15 +287,9 @@ class AdicionalPeriodoController extends AbstractController
                                     $arAdicional->setContratoRel($arEmpleado->getContratoRel());
                                     $arAdicional->setVrValor($carga['valor']);
                                     $arAdicional->setDetalle($carga['detalle']);
-                                    $arAdicional->setFecha($fechaActual);
-                                    if ($codigoPeriodo != 0 && $codigoPeriodo != "") {
-                                        $arAdicional->setPermanente(0);
-                                        $arAdicional->setAdicionalPeriodoRel($arAdicionalPeriodo);
-                                    }else{
-                                        $arAdicional->setPermanente(1);
-
-                                    }
+                                    $arAdicional->setAdicionalPeriodoRel($arAdicionalPeriodo);
                                     $arAdicional->setAplicaNomina(1);
+                                    $arAdicional->setFecha($arAdicionalPeriodo->getFecha());
                                     $em->persist($arAdicional);
                                 } else {
                                     $conceptosNoEncontrados[] = $carga['concepto'];

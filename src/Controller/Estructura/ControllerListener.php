@@ -2,6 +2,9 @@
 
 namespace  App\Controller\Estructura;
 
+use App\Controller\MaestroController;
+use App\Entity\General\GenModelo;
+use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,8 +40,23 @@ class ControllerListener extends Controller{
         $em=$this->em;
         $url=$this->routeActual;
         $this->routeActual=$event->getRequest()->get('_route');
-        $controller = $event->getController();
-        if($controller[0] instanceof ControllerListenerGeneral){
+        $controlador = $event->getController();
+        if($controlador[0] instanceof MaestroController){
+            if(isset($controlador[0]) && isset($controlador[1])){
+                $controladorInformacion = $controlador[0];
+                $tipo = $controladorInformacion->tipo;
+                $metodo = $controlador[1];
+                if($tipo == 'movimiento') {
+                    $modelo = $controladorInformacion->modelo;
+                    $this->getPermisoModelo($em, $modelo, $metodo, $controlador, $event, $url);
+                }
+                if($controladorInformacion->tipo == 'proceso') {
+
+                }
+            }
+        }
+
+        /*if($controller[0] instanceof ControllerListenerGeneral){
             if(is_array($controller)){
                 if(isset($controller[0]) && isset($controller[1])){
                     if($controller[0]->getProceso()){
@@ -49,8 +67,7 @@ class ControllerListener extends Controller{
                     }
                 }
             }
-
-        }
+        }*/
     }
 
     /**
@@ -59,16 +76,46 @@ class ControllerListener extends Controller{
      * @param $event
      * @param $url
      */
-    public function getPermisoModelo($em,$controller, $event, $url){
-        $requestPhp=$_REQUEST;
-        $funcionesProtegidas=array('lista','nuevo','detalle','aprobar','autorizar','anular');
+    public function getPermisoModelo($em, $modelo, $metodo, $controller, $event, $url){
+        $requestPhp = $_REQUEST;
+        $funcionesProtegidas = array('lista','nuevo','detalle','aprobar','autorizar','anular');
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
         $arUsuario=$this->user->getToken()->getUser();
-        $arGenModelo=$em->getRepository('App:General\GenModelo')->find($controller[0]->getClaseNombre());
-        if($arGenModelo) {
-            $arSeguridadUsuarioModelo = $em->getRepository('App:Seguridad\SegUsuarioModelo')->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $arGenModelo->getCodigoModeloPk()]);
-
-            $permisos = [];
+        $arModelo = $em->getRepository(GenModelo::class)->find($modelo);
+        if($arModelo) {
+            if($arUsuarioRol=="ROLE_ADMIN") {
+                return;
+            } else {
+                $arUsuarioModelo = $em->getRepository(SegUsuarioModelo::class)->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $modelo]);
+                if($arUsuarioModelo) {
+                    switch ($metodo) {
+                        case "lista":
+                            if($arUsuarioModelo->getLista()) {
+                                return;
+                            } else {
+                                $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
+                            }
+                            break;
+                        case "nuevo":
+                            if($arUsuarioModelo->getNuevo()) {
+                                return;
+                            } else {
+                                $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
+                            }
+                            break;
+                        case "detalle":
+                            if($arUsuarioModelo->getDetalle()) {
+                                return;
+                            } else {
+                                $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
+                            }
+                            break;
+                    }
+                } else {
+                    $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
+                }
+            }
+            /*$permisos = [];
             if ($arSeguridadUsuarioModelo) {
                 $permisos = array(
                     'lista' => $arSeguridadUsuarioModelo->getLista(),
@@ -78,9 +125,9 @@ class ControllerListener extends Controller{
                     'autorizar' => $arSeguridadUsuarioModelo->getAutorizar(),
                     'anular' => $arSeguridadUsuarioModelo->getAnular(),
                 );
-            }
+            }*/
         }
-        if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
+        /*if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
             if($controller[1]==="detalle"){
                 foreach ($permisos as $key=>$permiso){
                     $permisoMayuscula=ucfirst($key);
@@ -98,7 +145,7 @@ class ControllerListener extends Controller{
         }
         else{
             $this->redireccionar($event, $url, "No tiene permisos para esta funcionalidad '{$controller[1]}'");
-        }
+        }*/
     }
 
     /**

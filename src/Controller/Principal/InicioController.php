@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class InicioController extends Controller
 {
+    protected $tipo = "inicio";
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

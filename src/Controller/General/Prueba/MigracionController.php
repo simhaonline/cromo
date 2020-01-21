@@ -22,6 +22,7 @@ use App\Entity\General\GenTipoPersona;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
+use App\Entity\RecursoHumano\RhuCambioSalario;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuCargoSupervigilancia;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
@@ -151,6 +152,9 @@ class MigracionController extends Controller
                         case 'rhu_contrato':
                             $this->rhuContrato($conn);
                             break;
+                        case 'rhu_cambio_salario':
+                            $this->rhuCambioSalario($conn);
+                            break;
                         case 'rhu_adicional':
                             $this->rhuAdicional($conn);
                             break;
@@ -241,6 +245,7 @@ class MigracionController extends Controller
         $arrProcesos = [
             ['clase' => 'rhu_empleado', 'registros' => $this->contarRegistros('RhuEmpleado', 'RecursoHumano', 'codigoEmpleadoPk')],
             ['clase' => 'rhu_contrato', 'registros' => $this->contarRegistros('RhuContrato', 'RecursoHumano', 'codigoContratoPk')],
+            ['clase' => 'rhu_cambio_salario', 'registros' => $this->contarRegistros('RhuCambioSalario', 'RecursoHumano', 'codigoCambioSalarioPk')],
             ['clase' => 'rhu_adicional', 'registros' => $this->contarRegistros('RhuAdicional', 'RecursoHumano', 'codigoAdicionalPk')],
             ['clase' => 'rhu_embargo', 'registros' => $this->contarRegistros('RhuEmbargo', 'RecursoHumano', 'codigoEmbargoPk')],
             ['clase' => 'rhu_credito', 'registros' => $this->contarRegistros('RhuCredito', 'RecursoHumano', 'codigoCreditoPk')],
@@ -680,6 +685,52 @@ class MigracionController extends Controller
                 $arContrato->setEntidadCesantiaRel($arEntidadCesantia);
                 $em->persist($arContrato);
                 $metadata = $em->getClassMetaData(get_class($arContrato));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+
+
+    }
+
+    private function rhuCambioSalario($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_cambio_salario_pk FROM rhu_cambio_salario ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                    codigo_cambio_salario_pk,
+                    codigo_empleado_fk,
+                    codigo_contrato_fk,
+                    fecha,
+                    vr_salario_anterior,
+                    vr_salario_nuevo,
+                    detalle,
+                    codigo_usuario,
+                    fecha_inicio
+                  FROM rhu_cambio_salario 
+                  ORDER BY codigo_cambio_salario_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arCambioSalario = new RhuCambioSalario();
+                $arCambioSalario->setCodigoCambioSalarioPk($row['codigo_cambio_salario_pk']);
+                $arCambioSalario->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_fk']));
+                $arCambioSalario->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                $arCambioSalario->setFecha(date_create($row['fecha']));
+                $arCambioSalario->setFechaInicio(date_create($row['fecha_inicio']));
+                $arCambioSalario->setVrSalarioAnterior($row['vr_salario_anterior']);
+                $arCambioSalario->setVrSalarioNuevo($row['vr_salario_nuevo']);
+                $arCambioSalario->setDetalle(utf8_encode($row['detalle']));
+                $arCambioSalario->setUsuario(utf8_encode($row['codigo_usuario']));
+                $em->persist($arCambioSalario);
+                $metadata = $em->getClassMetaData(get_class($arCambioSalario));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             }

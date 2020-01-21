@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuContrato;
@@ -39,8 +40,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProgramacionController extends AbstractController
+class ProgramacionController extends MaestroController
 {
+    public $tipo = "movimiento";
+    public $modelo = "RhuProgramacion";
+
     protected $clase = RhuProgramacion::class;
     protected $claseNombre = "RhuProgramacion";
     protected $modulo = "RecursoHumano";

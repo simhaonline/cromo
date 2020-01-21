@@ -224,7 +224,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                             $arCuenta = $em->getRepository(FinCuenta::class)->find($arMovimientoDetalle->getCodigoCuentaFk());
                             if ($arCuenta) {
                                 if ($arCuenta->getExigeCentroCosto() && $arMovimientoDetalle->getCodigoCentroCostoFk() == null) {
-                                    Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoIngresoDetallePk() . " la cuenta exige centro de costos y no tiene");
+                                    Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " la cuenta exige centro de costos y no tiene");
                                     $error = true;
                                     break;
                                 }

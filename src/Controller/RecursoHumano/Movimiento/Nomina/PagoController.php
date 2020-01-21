@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
@@ -53,6 +54,17 @@ class PagoController extends AbstractController
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('rt')
                         ->orderBy('rt.codigoPagoTipoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2']
+            ])
+            ->add('codigoGrupoFk', EntityType::class, [
+                'class' => RhuGrupo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->orderBy('g.nombre', 'ASC');
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
@@ -175,11 +187,18 @@ class PagoController extends AbstractController
         ];
 
         $arPagoTipo = $form->get('codigoPagoTipoFk')->getData();
+        $arGrupo = $form->get('codigoGrupoFk')->getData();
 
         if (is_object($arPagoTipo)) {
             $filtro['pagoTipo'] = $arPagoTipo->getCodigoPagoTipoPk();
         } else {
             $filtro['pagoTipo'] = $arPagoTipo;
+        }
+
+        if (is_object($arGrupo)) {
+            $filtro['codigoGrupo'] = $arGrupo->getCodigoGrupoPk();
+        } else {
+            $filtro['codigoGrupo'] = $arGrupo;
         }
 
         return $filtro;

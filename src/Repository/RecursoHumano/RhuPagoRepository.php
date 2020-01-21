@@ -51,6 +51,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $fechaDesde = null;
         $fechaHasta = null;
         $estadoContabilizado = null;
+        $codigoGrupo = null;
         if ($filtros) {
             $codigoPago = $filtros['codigoPago'] ?? null;
             $numero = $filtros['numero'] ?? null;
@@ -59,6 +60,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
             $estadoContabilizado = $filtros['estadoContabilizado'] ?? null;
+            $codigoGrupo = $filtros['codigoGrupo'] ?? null;
         }
 
         $session = new Session();
@@ -100,6 +102,9 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         if ($numero) {
             $queryBuilder->andWhere("p.numero = '{$numero}'");
+        }
+        if ($codigoGrupo) {
+            $queryBuilder->andWhere("p.codigoGrupoFk = '{$codigoGrupo}'");
         }
         if ($fechaDesde) {
             $queryBuilder->andWhere("p.fechaDesde >= '{$fechaDesde} 00:00:00'");

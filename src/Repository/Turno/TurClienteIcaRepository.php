@@ -16,18 +16,8 @@ class TurClienteIcaRepository extends ServiceEntityRepository
         parent::__construct($registry, TurClienteIca::class);
     }
 
-    public function lista($raw)
+    public function lista($id)
     {
-        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
-        $filtros = $raw['filtros'] ?? null;
-
-        $codigoClienteIca= null;
-        $numeroIdentificacion= null;
-
-        if ($filtros) {
-            $codigoClienteIca = $filtros['codigoClienteIca'] ?? null;
-            $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
-        }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurClienteIca::class, 'ci')
             ->select('ci.codigoClienteIcaPk')
@@ -36,21 +26,14 @@ class TurClienteIcaRepository extends ServiceEntityRepository
             ->addSelect('ci.tarIca')
             ->addSelect('ci.porIca')
             ->addSelect('c.numeroIdentificacion')
-            ->addSelect('c.nombreCorto')
             ->addSelect('ciu.nombre as ciudad')
             ->addSelect('i.nombre  as item')
             ->leftJoin('ci.clienteRel', 'c')
             ->leftJoin('ci.ciudadRel', 'ciu')
-            ->leftJoin('ci.itemRel', 'i');
+            ->leftJoin('ci.itemRel', 'i')
+            ->where("ci.codigoClienteFk ={$id}");
 
-        if ($codigoClienteIca) {
-            $queryBuilder->andWhere("ci.codigoClienteIcaPk = '{$codigoClienteIca}'");
-        }
-        if ($numeroIdentificacion) {
-            $queryBuilder->andWhere("c.numeroIdentificacion = '{$numeroIdentificacion}'");
-        }
         $queryBuilder->addOrderBy('ci.codigoClienteIcaPk', 'DESC');
-        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
 
     }

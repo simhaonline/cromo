@@ -55,7 +55,6 @@ class ClienteIcaController extends AbstractController
                 $em->getRepository(TurClienteIca::class)->eliminar($arrSeleccionados);
             }
         }
-        $arClientesIca = $paginator->paginate($em->getRepository(TurClienteIca::class)->lista($raw), $request->query->getInt('page', 1), 30);
 
         return $this->render('turno/administracion/comercial/clienteica/lista.html.twig', [
             'arClientesIca' => $arClientesIca,
@@ -63,45 +62,7 @@ class ClienteIcaController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/turno/administracion/comercial/cliente/ica/nuevo/{id}", name="turno_administracion_comercial_cliente_ica_nuevo")
-     */
-    public function nuevo(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $arClienteIca = new TurClienteIca();
-        if ($id != 0) {
-            $arClienteIca = $em->getRepository(TurClienteIca::class)->find($id);
-            if (!$arClienteIca) {
-                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_ica_lista'));
-            }
-        }
-        $form = $this->createForm(ClienteIcaType::class, $arClienteIca);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('guardar')->isClicked()) {
-                $arClienteIca = $form->getData();
-                $arrControles = $request->request->All();
-                $arCliente = $em->getRepository(TurCliente::class)->find($arrControles['form_codigoCliente']);
-                if ($arCliente) {
-                    $codigoDane = $arClienteIca->getCiudadRel()->getDepartamentoRel()->getCodigoDane() . '' . $arClienteIca->getCiudadRel()->getCodigoDane();
-                    $arClienteIca->setCodigoDane($codigoDane);
-                    $arClienteIca->setCodigoInterface($arClienteIca->getItemRel()->getcodigoInterface());
-                    $arClienteIca->setClienteRel($arCliente);
-                    $em->persist($arClienteIca);
-                    $em->flush();
-                }else{
-                    Mensajes::error("No existe un cliente {$arrControles['txtNit']}, por favor intentelo nuevamente.");
 
-                }
-                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_ica_detalle', array('id' => $arClienteIca->getCodigoClienteIcaPk())));
-            }
-        }
-        return $this->render('turno/administracion/comercial/clienteica/nuevo.html.twig', [
-            'arClienteIca' => $arClienteIca,
-            'form' => $form->createView()
-        ]);
-    }
 
     /**
      * @Route("/turno/administracion/comercial/cliente/ica/detalle/{id}", name="turno_administracion_comercial_cliente_ica_detalle")

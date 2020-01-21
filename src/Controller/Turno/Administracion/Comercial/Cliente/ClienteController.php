@@ -6,10 +6,14 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Entity\Turno\TurCliente;
+use App\Entity\Turno\TurClienteIca;
 use App\Entity\Turno\TurPuesto;
+use App\Form\Type\Turno\ClienteIcaType;
 use App\Form\Type\Turno\ClienteType;
 use App\Form\Type\Turno\PuestoType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -21,7 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ClienteController extends ControllerListenerGeneral
+class ClienteController extends AbstractController
 {
     protected $clase = TurCliente::class;
     protected $claseNombre = "TurCliente";
@@ -37,12 +41,11 @@ class ClienteController extends ControllerListenerGeneral
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/turno/administracion/comercial/cliente/lista", name="turno_administracion_comercial_cliente_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
         $session = new Session();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, array('required' => false, 'data' => $session->get('filtroTurClienteCodigo')))
             ->add('txtNumeroIdentificacion', TextType::class, array('required' => false, 'data' => $session->get('filtroTurClienteIdentificacion')))
@@ -106,12 +109,13 @@ class ClienteController extends ControllerListenerGeneral
     /**
      * @Route("/turno/administracion/comercial/cliente/detalle/{id}", name="turno_administracion_comercial_cliente_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request,  PaginatorInterface $paginator,$id)
     {
         $em = $this->getDoctrine()->getManager();
         $arCliente = $em->getRepository(TurCliente::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
+            ->add('btnEliminarIca', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -120,10 +124,17 @@ class ClienteController extends ControllerListenerGeneral
                 $this->get('UtilidadesModelo')->eliminar(TurPuesto::class, $arrSeleccionados);
                 return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_detalle', ['id' => $id]));
             }
+            if ($form->get('btnEliminarIca')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarIca');
+                $em->getRepository(TurClienteIca::class)->eliminar($arrSeleccionados);
+            }
         }
         $arPuestos = $em->getRepository(TurPuesto::class)->cliente($id);
+        $arClientesIca = $paginator->paginate($em->getRepository(TurClienteIca::class)->lista($id), $request->query->getInt('page', 1), 30);
+
         return $this->render('turno/administracion/comercial/cliente/detalle.html.twig', array(
             'arCliente' => $arCliente,
+            'arClientesIca'=>$arClientesIca,
             'arPuestos' => $arPuestos,
             'form' => $form->createView()
 
@@ -156,6 +167,45 @@ class ClienteController extends ControllerListenerGeneral
         }
         return $this->render('turno/administracion/comercial/cliente/nuevoPuesto.html.twig', [
             'arTurno' => $arPuesto,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/turno/administracion/comercial/cliente/ica/nuevo/{id}/{codigoCliente}", name="turno_administracion_comercial_cliente_ica_nuevo")
+     */
+    public function nuevoIca(Request $request, $id, $codigoCliente)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arClienteIca = new TurClienteIca();
+        if ($id != 0) {
+            $arClienteIca = $em->getRepository(TurClienteIca::class)->find($id);
+            if (!$arClienteIca) {
+                return $this->redirect($this->generateUrl('turno_administracion_comercial_cliente_ica_lista'));
+            }
+        }
+        $form = $this->createForm(ClienteIcaType::class, $arClienteIca);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('guardar')->isClicked()) {
+                $arClienteIca = $form->getData();
+                $arCliente = $em->getRepository(TurCliente::class)->find($codigoCliente);
+                if ($arCliente) {
+                    $codigoDane = $arClienteIca->getCiudadRel()->getDepartamentoRel()->getCodigoDane() . '' . $arClienteIca->getCiudadRel()->getCodigoDane();
+                    $arClienteIca->setCodigoDane($codigoDane);
+                    $arClienteIca->setCodigoInterface($arClienteIca->getItemRel()->getcodigoInterface());
+                    $arClienteIca->setClienteRel($arCliente);
+                    $em->persist($arClienteIca);
+                    $em->flush();
+                }else{
+                    Mensajes::error("No existe un cliente, por favor intentelo nuevamente.");
+
+                }
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        return $this->render('turno/administracion/comercial/cliente/nuevoIca.html.twig', [
+            'arClienteIca' => $arClienteIca,
             'form' => $form->createView()
         ]);
     }

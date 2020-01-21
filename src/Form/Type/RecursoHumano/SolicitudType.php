@@ -3,6 +3,7 @@
 namespace App\Form\Type\RecursoHumano;
 
 
+use App\Entity\RecursoHumano\RhuEstudioTipo;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -76,7 +77,7 @@ class SolicitudType extends AbstractType
             ])
             ->add('estudioTipoRel',EntityType::class,[
                 'required' => true,
-                'class' => 'App\Entity\General\GenEstudioTipo',
+                'class' => RhuEstudioTipo::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('et')
                         ->orderBy('et.nombre', 'ASC');

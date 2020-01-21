@@ -17,7 +17,7 @@ class RhuEstudioTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_estudio_tipo_pk", type="string", length=10)
+     * @ORM\Column(name="codigo_estudio_tipo_pk", type="string", length=20)
      */
     private $codigoEstudioTipoPk;
 
@@ -40,6 +40,12 @@ class RhuEstudioTipo
      * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="empleadoEstudioTipoRel")
      */
     protected $empleadosEmpleadoEstudioTipoRel;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="estudioTipoRel")
+     */
+    protected $rhuSolicitudesEstudioTiposRel;
 
 
     /**

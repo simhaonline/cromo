@@ -225,7 +225,7 @@ class RhuSolicitud
     protected $ciudadRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenEstudioTipo", inversedBy="rhuSolicitudesEstudioTiposRel")
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuEstudioTipo", inversedBy="rhuSolicitudesEstudioTiposRel")
      * @ORM\JoinColumn(name="codigo_estudio_tipo_fk", referencedColumnName="codigo_estudio_tipo_pk")
      */
     protected $estudioTipoRel;

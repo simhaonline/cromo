@@ -24,7 +24,7 @@
         <tr>
             <td class="titulo">ID:</td>
             <td class="td-in-well">{{ arSeleccionado.codigoSeleccionPk }}</td>
-                <td class="titulo">TIPO:</td>
+            <td class="titulo">TIPO:</td>
             <td class="td-in-well">{{ arSeleccionado.seleccionTipoRel.nombre }}</td>
             <td class="titulo">CARGO:</td>
             <td class="td-in-well">{{ arSeleccionado.cargoRel.nombre }}</td>
@@ -35,7 +35,7 @@
             <td class="titulo">RH:</td>
             <td class="td-in-well">{{ arSeleccionado.rhRel.nombre }}</td>
             <td class="titulo">CIUDAD:</td>
-            <td class="td-label" >{{ arSeleccionado.ciudadRel.nombre }}</td>
+            <td class="td-label">{{ arSeleccionado.ciudadRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">IDENTIFICACICIÓN:</td>
@@ -55,7 +55,7 @@
         </tr>
         <tr>
             <td class="titulo">NOMBRE 1</td>
-            <td class="td-in-well">{{  arSeleccionado.nombre1 }} </td>
+            <td class="td-in-well">{{ arSeleccionado.nombre1 }} </td>
             <td class="titulo">FECHA NACIMIENTO</td>
             <td class="td-label">{{ arSeleccionado.fechaNacimiento | date("Y-m-d") }}</td>
             <td class="titulo">ESTADO APROBADO</td>
@@ -63,34 +63,204 @@
         </tr>
         <tr>
             <td class="titulo">NOMBRE 2</td>
-            <td class="td-in-well">{{  arSeleccionado.nombre2 }} </td>
+            <td class="td-in-well">{{ arSeleccionado.nombre2 }} </td>
             <td class="titulo">BARRIO</td>
-            <td class="td-in-well">{{arSeleccionado.barrio }} </td>
+            <td class="td-in-well">{{ arSeleccionado.barrio }} </td>
             <td class="titulo">PRESENTA PRUEBAS</td>
             <td class="td-in-well">{{ arSeleccionado.presentaPruebas ? "SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">APELLIDO 1</td>
-            <td class="td-in-well">{{  arSeleccionado.apellido1 }} </td>
+            <td class="td-in-well">{{ arSeleccionado.apellido1 }} </td>
             <td class="titulo">DIRECCION</td>
-            <td class="td-in-well">{{arSeleccionado.direccion }} </td>
+            <td class="td-in-well">{{ arSeleccionado.direccion }} </td>
             <td class="titulo">REFERENCIAS VERIFICADAS</td>
             <td class="td-in-well">{{ arSeleccionado.referenciasVerificadas ? "SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">APELLIDO 2</td>
-            <td class="td-in-well">{{  arSeleccionado.apellido2 }} </td>
+            <td class="td-in-well">{{ arSeleccionado.apellido2 }} </td>
             <td class="titulo"></td>
-            <td class="td-in-well"> </td>
+            <td class="td-in-well"></td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS</td>
-            <td class="td-in-well" COLSPAN="5">{{  arSeleccionado.comentarios }} </td>
+            <td class="td-in-well" COLSPAN="5">{{ arSeleccionado.comentarios }} </td>
         </tr>
-
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#entrevista" data-toggle="tab">Entrevista</a></li>
+        <li><a href="#prueba" data-toggle="tab">Prueba</a></li>
+        <li><a href="#referencia" data-toggle="tab">Referencias</a></li>
+        <li><a href="#visitas" data-toggle="tab">Visitas</a></li>
+        <li><a href="#antecentes" data-toggle="tab">Antecedentes</a></li>
+        <li><a href="#comentarios" data-toggle="tab">Comentarios</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="entrevista">
+            <div style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>FECHA/HORA</th>
+                        <th>TIPO ENTREVISTA</th>
+                        <th>RESULTADO CUALITATIVO</th>
+                        <th>RESULTADO CUANTITATIVO</th>
+                        <th>ENTREVISTADO POR</th>
+                        <th>COMENTARIOS</th>
+                        <th></th>
+                        <th></th>
+                        <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                  onclick="ChequearTodosTabla(this, 'ChkSeleccionarEntrevista[]');">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arSeleccion.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_entrevista', {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionEntrevista': 0}) }}', 'AgregarSeleccionEntrevista', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarEntrevista, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="prueba">
+            <div style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>FECHA/HORA</th>
+                        <th>TIPO PRUEBA</th>
+                        <th>RESULTADO CUALITATIVO</th>
+                        <th>RESULTADO CUANTITATIVO</th>
+                        <th>PRUEBA ASIGNADA POR</th>
+                        <th>COMENTARIOS</th>
+                        <th></th>
+                        <th></th>
+                        <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                  onclick="ChequearTodosTabla(this, 'ChkSeleccionarPrueba[]');">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="referencia">
+            <div style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>TIPO REFERENCIA</th>
+                        <th>NOMBRE</th>
+                        <th>CELULAR</th>
+                        <th>TELEFONO</th>
+                        <th>DIRECCION</th>
+                        <th>CIUDAD</th>
+                        <th>VERIFICADA</th>
+                        <th>COMENTARIOS</th>
+                        <th></th>
+                        <th></th>
+                        <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                  onclick="ChequearTodosTabla(this, 'ChkSeleccionarReferencia[]');">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="visitas">
+            <div style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>FECHA/HORA</th>
+                        <th>PERSONA REALIZA VISITA</th>
+                        <th>COMENTARIOS</th>
+                        <th></th>
+                        <th></th>
+                        <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                  onclick="ChequearTodosTabla(this, 'ChkSeleccionarVisita[]');">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="antecentes">
+            <div style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>FECHA/HORA</th>
+                        <th>PERSONA SUMINISTRA</th>
+                        <th>VERIFICADO</th>
+                        <th>COMENTARIOS</th>
+                        <th></th>
+                        <th></th>
+                        <th align="center">
+                            <input type="checkbox" name="ChkSeleccionarTodos"
+                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarAntecedentes[]');">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="comentarios">
+            <div style="width: 100%"><br>
+                <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+                    <thead>
+                    <tr>
+                        <th>CÓDIGO</th>
+                        <th>FECHA/HORA</th>
+                        <th>COMENTARIO</th>
+                        <th>USUARIO</th>
+                        <th align="center">
+                            <input type="checkbox" name="ChkSeleccionarTodos"
+                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarComentario[]');">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="detalles">
+            <div id="detalles" style="width: 100%"><br>
+            </div>
+        </div>
+    </div>
     <br/><br/><br/>
     {{ form_end(form) }}
 {% endblock %}

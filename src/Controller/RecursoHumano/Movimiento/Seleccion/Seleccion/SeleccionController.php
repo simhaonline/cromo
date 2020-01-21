@@ -117,6 +117,7 @@ class SeleccionController extends AbstractController
             }
         }
         $form = Estandares::botonera($arSeleccionado->getEstadoAutorizado(), $arSeleccionado->getEstadoAprobado(), $arSeleccionado->getEstadoAnulado());
+        $form->add('btnEliminarEntrevista', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -147,5 +148,12 @@ class SeleccionController extends AbstractController
 
     }
 
+    /**
+     * @Route("recursohumano/movimiento/seleccion/seleccion/agregar/entrevista/{codigoSeleccion}/{codigoSeleccionEntrevista}", name="recursohumano_movimiento_seleccion_seleccion_agregar_entrevista")
+     */
+    public function agregarEntrevistaAction(Request $request, $codigoSeleccion, $codigoSeleccionEntrevista)
+    {
+
+    }
 }
 

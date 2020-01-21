@@ -26,6 +26,11 @@ class RhuTipoCotizante
     private $nombre;
 
     /**
+     * @ORM\Column(name="orden" ,type="integer")
+     */
+    private $orden = 0;
+
+    /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="tipoCotizanteRel")
      */
     protected $contratosTipoCotizanteRel;
@@ -60,6 +65,22 @@ class RhuTipoCotizante
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * @param int $orden
+     */
+    public function setOrden(int $orden): void
+    {
+        $this->orden = $orden;
     }
 
     /**

@@ -128,7 +128,7 @@ class ContratoType extends AbstractType
                 'class' => RhuTipoCotizante::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'DESC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true
@@ -137,7 +137,7 @@ class ContratoType extends AbstractType
                 'class' => RhuSubtipoCotizante::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                        ->orderBy('r.nombre', 'ASC');
+                        ->orderBy('r.orden', 'DESC');
                 },
                 'choice_label' => 'nombre',
                 'required' => true

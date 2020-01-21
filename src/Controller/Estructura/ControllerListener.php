@@ -37,7 +37,7 @@ class ControllerListener extends Controller{
 
 
     public function getPermissionFunction(FilterControllerEvent $event){
-        $em=$this->em;
+        /*$em=$this->em;
         $url=$this->routeActual;
         $this->routeActual=$event->getRequest()->get('_route');
         $controlador = $event->getController();
@@ -54,7 +54,7 @@ class ControllerListener extends Controller{
 
                 }
             }
-        }
+        }*/
 
         /*if($controller[0] instanceof ControllerListenerGeneral){
             if(is_array($controller)){

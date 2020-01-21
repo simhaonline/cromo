@@ -133,6 +133,12 @@
                     {{ form_widget(form.direccion, { 'attr': {'class': 'form-control', 'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()'} }) }}
                     {{ form_errors(form.direccion) }}
                 </div>
+                <label for="form_direccion" class="col-sm-2 control-label">Número de hijos:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.numeroHijos, { 'attr': {'class': 'form-control',} }) }}
+                    {{ form_errors(form.numeroHijos) }}
+                </div>
+
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_telefono" class="col-sm-2 control-label">Teléfono:</label>

@@ -195,6 +195,12 @@ class RhuEmpleado
     private $libretaMilitar;
 
     /**
+     * @ORM\Column(name="numero_hijos", type="integer", nullable=true)
+     */
+    private $numeroHijos = 0;
+
+
+    /**
      * @ORM\Column(name="codigo_ciudad_fk", type="integer", nullable=true)
      */
     private $codigoCiudadFk;
@@ -2057,6 +2063,22 @@ class RhuEmpleado
     public function setEmpleadoEstudioTipoRel($empleadoEstudioTipoRel): void
     {
         $this->empleadoEstudioTipoRel = $empleadoEstudioTipoRel;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumeroHijos()
+    {
+        return $this->numeroHijos;
+    }
+
+    /**
+     * @param int $numeroHijos
+     */
+    public function setNumeroHijos(int $numeroHijos): void
+    {
+        $this->numeroHijos = $numeroHijos;
     }
 
 

@@ -460,7 +460,7 @@ class ContratoController extends AbstractController
             $libro = new Spreadsheet();
             $hoja = $libro->getActiveSheet();
             $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
-            $hoja->setTitle('Movimientos');
+            $hoja->setTitle('CONTRATOS');
             $j = 0;
             $arrColumnas = [
                 'ID', 'COD EMP', 'DOCUMENTO', 'TIPO COMPENSACION', 'EMPLEADO', 'TIPO', 'FECHA', 'GRUPO DE PAGO', 'ENTIDAD SALUD',

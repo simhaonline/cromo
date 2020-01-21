@@ -28,62 +28,62 @@
             <td class="td-in-well">{{ arEmpleado.estadoCivilRel.nombre | default('') }}</td>
             <td class="titulo">SEXO:</td>
             <td class="td-in-well">{% if arEmpleado.codigoSexoFk == "M" %} MASCULINO {% else %} FEMENINO{% endif %}</td>
-            <td class="titulo">TELÉFONO:</td>
-            <td class="td-in-well" style="text-transform: uppercase;">{{ arEmpleado.telefono }}</td>
+            <td class="titulo">RH:</td>
+            <td class="td-in-well">{{ arEmpleado.rhRel.nombre | default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">CABEZA DE HOGAR:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.cabezaHogar) }}</td>
             <td class="titulo">DISCAPACIDAD:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.discapacidad) }}</td>
-            <td class="titulo">RH:</td>
-            <td class="td-in-well">{{ arEmpleado.rhRel.nombre | default('') }}</td>
+            <td class="titulo">CARRO:</td>
+            <td class="td-in-well">{{ validarBooleano(arEmpleado.carro) }}</td>
         </tr>
         <tr>
             <td class="titulo">MOTO:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.moto) }}</td>
             <td class="titulo">PADRE DE FAMILIA:</td>
             <td class="td-in-well">{{ validarBooleano(arEmpleado.padreFamilia) }}</td>
-            <td class="titulo">CARRO:</td>
-            <td class="td-in-well">{{ validarBooleano(arEmpleado.carro) }}</td>
+            <td class="titulo">TALLA CALZADO</td>
+            <td class="td-in-well">{{ arEmpleado.tallaCalzado }}</td>
         </tr>
         <tr>
             <td class="titulo">TALLA CAMISA:</td>
             <td class="td-in-well">{{ arEmpleado.tallaCamisa }}</td>
             <td class="titulo">TALLA PANTALON:</td>
             <td class="td-in-well">{{ arEmpleado.tallaPantalon }}</td>
-            <td class="titulo">TALLA CALZADO</td>
-            <td class="td-in-well">{{ arEmpleado.tallaCalzado }}</td>
+            <td class="titulo">DIRECCIÓN:</td>
+            <td class="td-in-well">{{ arEmpleado.direccion }}</td>
         </tr>
         <tr>
             <td class="titulo">CIUDAD:</td>
             <td class="td-in-well">{{ arEmpleado.ciudadRel.nombre | default('') }}</td>
             <td class="titulo">BARRIO</td>
             <td class="td-in-well">{{ arEmpleado.barrio }}</td>
-            <td class="titulo">DIRECCIÓN:</td>
-            <td class="td-in-well">{{ arEmpleado.direccion }}</td>
+            <td class="titulo">ESTATURA:</td>
+            <td class="td-in-well">{{ arEmpleado.estatura }}</td>
         </tr>
         <tr>
             <td class="titulo">CORREO:</td>
             <td class="td-in-well">{{ arEmpleado.correo }}</td>
             <td class="titulo">PESO:</td>
             <td class="td-in-well">{{ arEmpleado.peso }}</td>
-            <td class="titulo">ESTATURA:</td>
-            <td class="td-in-well">{{ arEmpleado.estatura }}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well">{{ arEmpleado.cuenta }}</td>
         </tr>
         <tr>
             <td class="titulo">TELEFONO:</td>
             <td class="td-in-well">{{ arEmpleado.telefono }}</td>
             <td class="titulo">CELULAR:</td>
             <td class="td-in-well">{{ arEmpleado.celular }}</td>
-            <td class="titulo">CUENTA:</td>
-            <td class="td-in-well">{{ arEmpleado.cuenta }}</td>
+            <td class="titulo">NUMERO DE HIJOS</td>
+            <td class="td-in-well">{{ arEmpleado.numeroHijos }}</td>
         </tr>
         <tr>
             <td class="titulo">BANCO:</td>
             <td class="td-in-well">{{ arEmpleado.bancoRel.nombre | default('') }}</td>
             <td class="titulo">NIVEL DE ESTUDIO</td>
-            <td class="td-in-well">{{ arEmpleado.empleadoEstudioTipoRel.nombre }}</td>
+            <td class="td-in-well">{{ arEmpleado.empleadoEstudioTipoRel.nombre  | default('') }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
         </tr>

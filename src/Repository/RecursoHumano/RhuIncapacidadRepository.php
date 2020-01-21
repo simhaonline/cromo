@@ -196,6 +196,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         $arContrato = $arIncapacidad->getContratoRel();
         $anioActual = (new \DateTime('now'))->format("Y");
         $anioIncapacidad = $arIncapacidad->getFecha()->format("Y");
+        $salarioMinimo = $arConfiguracion->getVrSalarioMinimo();
         $salario = $arConfiguracion->getVrSalarioMinimo();
         if ($arIncapacidad->getVrSalario()) {
             $salario = $arIncapacidad->getVrSalario();
@@ -332,6 +333,10 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
             $douVrHora = ($floVrIncapacidadEmpleado / $intDias) / 8;
             $douVrHoraEmpresa = (($intDias * $douVrDia) / $intDias) / 8;
             $douVrHoraEmpresa = $douVrHoraEmpresa * $douPorcentajePagoEmpresa / 100;
+            $vrHoraSalarioMinimo = $salarioMinimo / 30 / 8;
+            if($douVrHoraEmpresa < $vrHoraSalarioMinimo) {
+                $douVrHoraEmpresa = $vrHoraSalarioMinimo;
+            }
             $arIncapacidad->setVrHora($douVrHora);
             $arIncapacidad->setVrHoraEmpresa($douVrHoraEmpresa);
             $arIncapacidad->setVrCobro($floVrIncapacidad);

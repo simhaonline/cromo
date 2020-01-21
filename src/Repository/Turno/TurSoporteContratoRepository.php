@@ -1355,6 +1355,37 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
             }
             $em->persist($arSoporteContrato);
         }
+
+        if($arSoporteContrato->getCodigoDistribucionFk() == 'DP003') {
+            $dias = $arSoporteContrato->getDiasTransporte();
+            $horas = $dias * 8;
+            $arSoporteContrato->setHoras($horas);
+            $arSoporteContrato->setHorasDescanso(0);
+            $arSoporteContrato->setHorasDiurnas($horas);
+            $arSoporteContrato->setHorasNocturnas(0);
+            $arSoporteContrato->setHorasFestivasDiurnas(0);
+            $arSoporteContrato->setHorasFestivasNocturnas(0);
+            $arSoporteContrato->setHorasExtrasOrdinariasDiurnas(0);
+            $arSoporteContrato->setHorasExtrasOrdinariasNocturnas(0);
+            $arSoporteContrato->setHorasExtrasFestivasDiurnas(0);
+            $arSoporteContrato->setHorasExtrasFestivasNocturnas(0);
+            $arSoporteContrato->setHorasRecargoNocturno(0);
+            $arSoporteContrato->setHorasRecargoFestivoDiurno(0);
+            $arSoporteContrato->setHorasRecargoFestivoNocturno(0);
+            $em->getRepository(TurSoporteContrato::class)->valorizar($arSoporteContrato);
+            $vrAdicionalDevengadoPactado = ($arSoporteContrato->getVrDevengadoPactado() / 30) * $dias;
+            $vrAdicionalDevengadoPactado -= $arSoporteContrato->getVrDiurna();
+            if($vrAdicionalDevengadoPactado > 0) {
+                $vrAdicionalDevengadoPactado -= $arSoporteContrato->getVrAuxilioTransportePago();
+                $vrAdicional1 = $arSoporteContrato->getVrAuxilioTransportePago();
+                $arSoporteContrato->setVrAdicionalDevengadoPactado($vrAdicionalDevengadoPactado);
+                $arSoporteContrato->setVrAdicional1($vrAdicional1);
+            } else {
+                $arSoporteContrato->setVrAdicionalDevengadoPactado(0);
+                $arSoporteContrato->setVrAdicional1(0);
+            }
+            $em->persist($arSoporteContrato);
+        }
     }
 
     /**

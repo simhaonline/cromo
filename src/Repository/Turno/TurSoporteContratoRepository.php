@@ -1223,17 +1223,17 @@ class TurSoporteContratoRepository extends ServiceEntityRepository
         }
 
         if($arSoporteContrato->getCodigoDistribucionFk() == '1TE01') {
-            $descanso = $arGrupo->getDescansoDistribucion();
+            $descanso = $arSoporte->getDomingos() + $arSoporte->getFestivos();
             $diasPeriodo = $arSoporte->getDias();
             $diasDescansoSoportePago = $arSoporte->getDomingos() + $arSoporte->getFestivos();
             //Descansos de compensacion
             $descansoCompensacion = $arSoporte->getDomingos() + $arSoporte->getFestivos();
 
             //Si son propuestos por el usuario prevalece
-            if ($descanso > 0) {
+            /*if ($descanso > 0) {
                 $diasDescansoSoportePago = $descanso;
                 $descansoCompensacion = $descanso;
-            }
+            }*/
 
 
             $novedadesIngresoRetiro = $arSoporteContrato->getIngreso() + $arSoporteContrato->getRetiro();

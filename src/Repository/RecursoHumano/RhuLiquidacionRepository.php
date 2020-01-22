@@ -482,8 +482,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 //Liquidar cesantias
                 $salarioPromedioCesantiasAnterior = 0;
                 $diasCesantiaAnterior = 0;
-                $cesantiaAnterior = 0;
-                $interesCesantiaAnterior = 0;
+                $cesantiaAnterior = $arLiquidacion->getVrCesantiasAnterior();
+                $interesCesantiaAnterior = $arLiquidacion->getVrInteresesCesantiasAnterior();
                 $diasCesantiaAusentismoAnterior = 0;
                 //Validar si la fecha de terminacion del contrato es mayor a la fecha del ultimo pago de cesantias que liquide las cesantias de lo contrario no debe liquidar, ya que estas fueron pagadas.
                 if ($arLiquidacion->getFechaHasta() >= $arLiquidacion->getFechaUltimoPagoCesantias()) {
@@ -500,36 +500,33 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             //$arLiquidacion->setCodigoProgramacionPagoDetalleFk(null);
                             //$arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk(null);
                             // validacion y liquidacion de cesantias año anterior
-                            if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
-                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'CES', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
-                                if ($arPago) {
-                                    $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
-                                    if ($arProgramacionPagoDetalle) {
-                                        $cesantiaAnterior = $arProgramacionPagoDetalle->getVrNetoPagar();
-                                        $diasCesantiaAusentismoAnterior = $arProgramacionPagoDetalle->getDiasAusentismo() + $arProgramacionPagoDetalle->getDiasAusentismoAdicional();
-                                        $salarioPromedioCesantiasAnterior = $arProgramacionPagoDetalle->getVrSalarioCesantia();
-                                        if ($arProgramacionPagoDetalle->getVrSalarioCesantiaPropuesto() > 0) {
-                                            $salarioPromedioCesantiasAnterior = $arProgramacionPagoDetalle->getVrSalarioCesantiaPropuesto();
-                                        }
-                                        $fechaUltimoPago = $arProgramacionPagoDetalle->getFechaDesde();
-                                        $arLiquidacion->setCodigoProgramacionPagoDetalleFk($arPago->getCodigoProgramacionPagoDetalleFk());
-                                    }
-                                    $arLiquidacion->setCodigoPagoFk($arPago->getCodigoPagoPk());
-                                }
-                            }
-                            // validacion y liquidacion de intereses cesantias año anterior
-                            if ($arLiquidacion->getOmitirInteresCesantiasAnterior() == false) {
-                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 6, 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
-                                if ($arPago) {
-                                    $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
-                                    if ($arProgramacionPagoDetalle) {
-                                        $interesCesantiaAnterior = $arProgramacionPagoDetalle->getVrInteresCesantia();
-                                        $fechaUltimoPago = $arProgramacionPagoDetalle->getFechaDesde();
-                                        $arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk($arPago->getCodigoProgramacionPagoDetalleFk());
-                                    }
-                                    $arLiquidacion->setCodigoPagoInteresFk($arPago->getCodigoPagoPk());
-                                }
-                            }
+//                            if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
+//                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'CES', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoEgreso' => 0));
+//                                if ($arPago) {
+//                                    $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
+//                                    if ($arProgramacionPagoDetalle) {
+//                                        $cesantiaAnterior = $arProgramacionPagoDetalle->getVrNeto();
+//                                        $diasCesantiaAusentismoAnterior = $arProgramacionPagoDetalle->getDiasAusentismo();
+//                                        $salarioPromedioCesantiasAnterior = $arProgramacionPagoDetalle->getVrSalarioCesantia();
+//                                        $fechaUltimoPago = $arProgramacionPagoDetalle->getFechaDesde();
+////                                        $arLiquidacion->setCodigoProgramacionDetalleFk($arPago->getCodigoProgramacionDetalleFk());
+//                                    }
+//                                    //codigoPagoCesantiaAnteriorFk
+////                                    $arLiquidacion->setCodigoPagoFk($arPago->getCodigoPagoPk());
+//                                }
+//                            }
+//                            // validacion y liquidacion de intereses cesantias año anterior
+//                            if ($arLiquidacion->getOmitirInteresCesantiasAnterior() == false) {
+//                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'INT', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoEgreso' => 0));
+//                                if ($arPago) {
+//                                    $interesCesantiaAnterior = $arPago->getVrNeto();
+//                                    $fechaUltimoPago = $arProgramacionPagoDetalle->getFechaDesde();
+////                                        $arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk($arPago->getCodigoProgramacionPagoDetalleFk());
+//
+//                                    //codigoPagoCesantiaInteresAnteriorFk
+////                                    $arLiquidacion->setCodigoPagoInteresFk($arPago->getCodigoPagoPk());
+//                                }
+//                            }
 
 
 //                                if ($arLiquidacion->getOmitirCesantiasAnterior() == false || $arLiquidacion->getOmitirInteresCesantiasAnterior() == false) {
@@ -1320,6 +1317,16 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     $em->getRepository(RhuPago::class)->liquidar($arPago);
                     $em->flush();
                     $em->getRepository(RhuPago::class)->generarCuentaPagar($arPago);
+                    //Verificamos si existe un pago de censatias del año anterior e intereses que se usaron para anularlos en tesoreria y en pagos
+                    if($arLiquidacion->getCodigoPagoCesantiaAnteriorFk()){
+                        $arPagoAnular = $em->getRepository(RhuPago::class)->find($arLiquidacion->getCodigoPagoCesantiaAnteriorFk());
+                        $em->getRepository(RhuPago::class)->anularCensatiaAnterior($arPagoAnular);
+                    }
+                    if($arLiquidacion->getCodigoPagoCesantiaInteresAnteriorFk()){
+                        $arPagoAnular = $em->getRepository(RhuPago::class)->find($arLiquidacion->getCodigoPagoCesantiaAnteriorFk());
+                        $em->getRepository(RhuPago::class)->find($arPagoAnular);
+                        $em->getRepository(RhuPago::class)->anularInteresCensatiaAnterior($arPagoAnular);
+                    }
                     $em->flush();
                 } else {
                     Mensajes::error($arrConceptos['error']);
@@ -1827,7 +1834,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
                 $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'NOM', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoAprobado' => 0));
                 if ($arPago) {
-                    $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionPagoDetalleFk());
+                    $arProgramacionPagoDetalle = $em->getRepository(RhuProgramacionDetalle::class)->find($arPago->getCodigoProgramacionDetalleFk());
                     return $arProgramacionPagoDetalle;
                 } else {
                     return null;

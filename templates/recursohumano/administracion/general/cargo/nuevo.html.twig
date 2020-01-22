@@ -4,12 +4,12 @@
     <div class="panel panel-default">
         <div class="panel-heading">Información general</div>
         <div class="panel-body">
-                <label class="col-sm-2 control-label">Codigo</label>
+                <label class="col-sm-2 control-label">Codigo:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.codigoCargoPk,{ 'attr' : {'class' : 'form-control'}}) }}
                     <div style="color:red;">{{ form_errors(form.codigoCargoPk) }}</div>
                 </div>
-                <label class="col-sm-2 control-label">Ciudad</label>
+                <label class="col-sm-2 control-label">Nombre:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.nombre, { 'attr': {'class' : 'form-control'} }) }}
                     <div style="color:red;">{{ form_errors(form.nombre) }}</div>

@@ -12,6 +12,7 @@ use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\Transporte\TteDespacho;
 use App\Form\Type\RecursoHumano\LiquidacionParametrosType;
 use App\Form\Type\RecursoHumano\LiquidacionType;
 use App\Form\Type\RecursoHumano\PagoType;
@@ -368,27 +369,19 @@ class LiquidacionController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
         $form = $this->createFormBuilder()
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
-        $raw['filtros'] = [
-
-        ];
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnGuardar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if ($arrSeleccionados) {
-                    foreach ($arrSeleccionados as $codigo) {
-                        $arPago = $em->getRepository(RhuPago::class)->find($codigo);
-                        $arLiquidacion->setCodigoPagoCesantiaAnteriorFk($arPago->getCodigoPagoPk());
-                        $arLiquidacion->setVrCesantiasAnterior($arPago->getVrNeto());
-                        $em->persist($arLiquidacion);
-                    }
-                    $em->flush();
-                    if ($form->get('btnGuardar')->isClicked()) {
-                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                    }
-                }
+            if ($request->request->get('OpSeleccionar')) {
+                $codigo = $request->request->get('OpSeleccionar');
+                $arPago = $em->getRepository(RhuPago::class)->find($codigo);
+                $arLiquidacion->setCodigoPagoCesantiaAnteriorFk($arPago->getCodigoPagoPk());
+                $arLiquidacion->setVrCesantiasAnterior($arPago->getVrNeto());
+                $em->persist($arLiquidacion);
+                $em->flush();
+                $em->getRepository(RhuLiquidacion::class)->liquidar($codigoLiquidacion);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+
             }
         }
         $arPagosCesantiasAnterior = $em->getRepository(RhuPago::class)->cesantiasAnterior($arLiquidacion->getCodigoEmpleadoFk());
@@ -406,27 +399,19 @@ class LiquidacionController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
         $form = $this->createFormBuilder()
-            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+
             ->getForm();
         $form->handleRequest($request);
-        $raw['filtros'] = [
-
-        ];
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('btnGuardar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                if ($arrSeleccionados) {
-                    foreach ($arrSeleccionados as $codigo) {
-                        $arPago = $em->getRepository(RhuPago::class)->find($codigo);
-                        $arLiquidacion->setCodigoPagoCesantiaInteresAnteriorFk($arPago->getCodigoPagoPk());
-                        $arLiquidacion->setVrInteresesCesantiasAnterior($arPago->getVrNeto());
-                        $em->persist($arLiquidacion);
-                    }
-                    $em->flush();
-                    if ($form->get('btnGuardar')->isClicked()) {
-                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-                    }
-                }
+            if ($request->request->get('OpSeleccionar')) {
+                $codigo = $request->request->get('OpSeleccionar');
+                $arPago = $em->getRepository(RhuPago::class)->find($codigo);
+                $arLiquidacion->setCodigoPagoCesantiaInteresAnteriorFk($arPago->getCodigoPagoPk());
+                $arLiquidacion->setVrInteresesCesantiasAnterior($arPago->getVrNeto());
+                $em->persist($arLiquidacion);
+                $em->flush();
+                $em->getRepository(RhuLiquidacion::class)->liquidar($codigoLiquidacion);
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
         }
         $arPagosInteresesCesantiasAnterior = $em->getRepository(RhuPago::class)->interesesCesantiasAnterior($arLiquidacion->getCodigoEmpleadoFk());

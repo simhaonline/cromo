@@ -651,6 +651,10 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                             $arContrato->setFechaUltimoPagoPrimas($arProgramacion->getFechaHasta());
                             $em->persist($arContrato);
                         }
+                        if ($arProgramacion->getCodigoPagoTipoFk() == 'CES') {
+                            $arContrato->setFechaUltimoPagoCesantias($arProgramacion->getFechaHasta());
+                            $em->persist($arContrato);
+                        }
                     }
                 }
 

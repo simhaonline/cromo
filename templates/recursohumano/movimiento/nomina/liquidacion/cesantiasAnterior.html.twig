@@ -26,17 +26,15 @@
                                 <td>{{ arPagoCesantiasAnterior.fechaDesde | date ('Y-m-d') }}</td>
                                 <td>{{ arPagoCesantiasAnterior.fechaHasta | date ('Y-m-d') }}</td>
                                 <td>{{ arPagoCesantiasAnterior.numero }}</td>
-                                <td class="numero">{{ arPagoCesantiasAnterior.vrNeto }}</td>
+                                <td class="numero">{{ arPagoCesantiasAnterior.vrNeto | number_format }}</td>
                                 <td class="text-center">
-                                    <input type="checkbox" name="ChkSeleccionar[]"
-                                           value="{{ arPagoCesantiasAnterior.codigoPagoPk }}"/>
+                                    <button class="btn btn-default btn-xs" type="submit" name="OpSeleccionar" value="{{ arPagoCesantiasAnterior.codigoPagoPk }}">Seleccionar</button>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
                 {{ form_end(form) }}
                 <br/><br/><br/>
             </div>

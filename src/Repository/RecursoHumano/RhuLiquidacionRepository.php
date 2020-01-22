@@ -494,12 +494,12 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             $arLiquidacion->getContratoRel()->setFechaUltimoPagoCesantias($fechaActualUltimoPagoCesantias);
                         }
                         $fechaUltimoPago = $arLiquidacion->getContratoRel()->getFechaUltimoPagoCesantias();
-                        if ($arConfiguracion->getLiquidarCesantiaAnioAnterior()) {
-                            //$arLiquidacion->setCodigoPagoFk(null);
-                            //$arLiquidacion->setCodigoPagoInteresFk(null);
-                            //$arLiquidacion->setCodigoProgramacionPagoDetalleFk(null);
-                            //$arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk(null);
-                            // validacion y liquidacion de cesantias año anterior
+//                        if ($arConfiguracion->getLiquidarCesantiaAnioAnterior()) {
+//                            $arLiquidacion->setCodigoPagoFk(null);
+//                            $arLiquidacion->setCodigoPagoInteresFk(null);
+//                            $arLiquidacion->setCodigoProgramacionPagoDetalleFk(null);
+//                            $arLiquidacion->setCodigoProgramacionPagoDetalleInteresFk(null);
+//                             validacion y liquidacion de cesantias año anterior
 //                            if ($arLiquidacion->getOmitirCesantiasAnterior() == false) { // validacion y liquidacion de cesantias año anterior
 //                                $arPago = $em->getRepository(RhuPago::class)->findOneBy(array('codigoPagoTipoFk' => 'CES', 'codigoEmpleadoFk' => $arLiquidacion->getCodigoEmpleadoFk(), 'estadoEgreso' => 0));
 //                                if ($arPago) {
@@ -527,8 +527,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
 ////                                    $arLiquidacion->setCodigoPagoInteresFk($arPago->getCodigoPagoPk());
 //                                }
 //                            }
-
-
+//
+//
 //                                if ($arLiquidacion->getOmitirCesantiasAnterior() == false || $arLiquidacion->getOmitirInteresCesantiasAnterior() == false) {
 //                                    $arProgramacionPagoDetalle = $em->getRepository('BrasaRecursoHumanoBundle:RhuProgramacionPagoDetalle')->find($arPago->getCodigoProgramacionPagoDetalleFk());
 //                                    if ($arProgramacionPagoDetalle) {
@@ -549,7 +549,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
 //                                    $arLiquidacion->setCodigoPagoFk($arPago->getCodigoPagoPk());
 //                                }
 //                            }
-                        }
+//                        }
                         $arLiquidacion->setDiasCesantiasAnterior($diasCesantiaAnterior);
                         $arLiquidacion->setVrCesantiasAnterior($cesantiaAnterior);
                         $arLiquidacion->setVrInteresesCesantiasAnterior($interesCesantiaAnterior);
@@ -723,10 +723,11 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         // No quitar por favor, esto tiene su logica, ingreso del dia 30dic
                         $fechaDesdePrimas = date_create($dateFechaDesde->format('Y-m-d'));
                         if ($fechaDesdePrimas > $arLiquidacion->getContratoRel()->getFechaDesde()) {
-                            if ($fechaDesdePrimas->format('m-d') == '06-30') {
+                            if ($fechaDesdePrimas->format('m-d') == '06-30' || $fechaDesdePrimas->format('m-d') == '12-30') {
                                 $fechaDesdePrimas->modify('+1 day');
                             } else {
-                                $fechaDesdePrimas->modify('+2 day');
+                                //No se porque se le suman 2 dias
+                                //$fechaDesdePrimas->modify('+2 day');
                             }
                         }
                         $intDiasPrima = $this->diasPrestaciones($fechaDesdePrimas, $dateFechaHasta);

@@ -2460,7 +2460,8 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.grupoRel', 'g')
             ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
-            ->andWhere("p.codigoPagoTipoFk = 'CES'");
+            ->andWhere("p.codigoPagoTipoFk = 'CES'")
+        ->andWhere("p.estadoAprobado=1");
         $queryBuilder->addOrderBy('p.codigoPagoPk', 'DESC');
         return $queryBuilder->getQuery()->getResult();
     }
@@ -2479,7 +2480,8 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->leftJoin('p.empleadoRel', 'e')
             ->leftJoin('p.grupoRel', 'g')
             ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
-            ->andWhere("p.codigoPagoTipoFk = 'INT'");
+            ->andWhere("p.codigoPagoTipoFk = 'INT'")
+            ->andWhere("p.estadoAprobado=1");
         $queryBuilder->addOrderBy('p.codigoPagoPk', 'DESC');
         return $queryBuilder->getQuery()->getResult();
     }

@@ -100,8 +100,11 @@
             <td class="titulo">ULTIMO PAGO CESANTIAS(ANT):</td>
             <td class="numero">{{ arLiquidacion.fechaUltimoPagoCesantiasAnterior|date("Y/m/d") }}</td>
             <td class="titulo"  style="display:flex; align-items: center; justify-content: space-between;">CESANTIAS(ANT):
+                {% if arLiquidacion.estadoAutorizado == 0 %}
                 <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_cesantiasanterior',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle cesantias',600,1300)">
-                    ...</a></td>
+                    ...</a>
+                {% endif %}
+            </td>
             <td class="numero">$ {{ arLiquidacion.vrCesantiasAnterior | number_format(0, '.', ',') }}</td>
             <td class="titulo">DIAS(AUS):</td>
             <td class="numero">{{ arLiquidacion.diasCesantiasAnterior }}
@@ -114,9 +117,11 @@
             <td class="titulo"></td>
             <td class="numero"></td>
             <td class="titulo" style="display:flex; align-items: center; justify-content: space-between;">INTERESES(ANT):
+                {% if arLiquidacion.estadoAutorizado == 0 %}
                 <a class="btn btn-default btn-xs"
                    href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_interesescesantiasanterior',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle cesantias',600,1300)">
                     ...</a></td>
+            {% endif %}
             <td class="numero">
                 $ {{ arLiquidacion.vrInteresesCesantiasAnterior | number_format(0, '.', ',') }}</td>
             <td class="titulo"></td>

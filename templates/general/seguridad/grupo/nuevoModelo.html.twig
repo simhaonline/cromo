@@ -1,0 +1,83 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    <script type="text/javascript">
+        function ChequearTodos()
+        {
+            var chks = ["checkLista", "checkNuevo", "checkDetalle", "checkAutorizar", "checkAprobar",
+                "checkAnular"];
+            var form = "form_"
+            var cant = chks.length;
+            for (let i = 0; i < cant; i++)
+            {
+                var seleccionar = form.concat(chks[i]);
+                if (document.getElementById('ChkSeleccionarTodos').checked)
+                {
+                    document.getElementById(seleccionar).checked = true;
+                } else
+                {
+                    document.getElementById(seleccionar).checked = false;
+                }
+            }
+        }
+    </script>
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-3 control-label">
+                    Seleccionar todos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="ChkSeleccionarTodos" id="ChkSeleccionarTodos" OnClick="ChequearTodos();"/>
+                </label>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkLista) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkNuevo) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkDetalle) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkAutorizar) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkAprobar) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_widget(form.checkAnular) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover tabla-datos">
+            <thead>
+            <tr>
+                <th>MODELO</th>
+                <th>TIPO</th>
+                <th><input type="checkbox" name="ChkSeleccionarTodos"
+                           OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for arGenModelo in arGenModelos %}
+                <tr>
+                    <td>{{ arGenModelo.codigoModuloFk }}</td>
+                    <td>{{ arGenModelo.codigoModeloPk }}</td>
+                    <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                              value="{{ arGenModelo.codigoModeloPk }}"/></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnGuardar, { 'attr': {'style':'float:right'} }) }}
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/>
+{% endblock %}

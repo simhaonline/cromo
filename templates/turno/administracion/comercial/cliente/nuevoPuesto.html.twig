@@ -63,16 +63,6 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
-                    <label for="form_apellido2" class="col-sm-2 control-label">Latitud</label>
-                    <div class="col-sm-4">
-                        {{ form_widget(form.latitud) }}
-                    </div>
-                    <label for="form_apellido1" class="col-sm-2 control-label">Longitud</label>
-                    <div class="col-sm-4">
-                        {{ form_widget(form.longitud) }}
-                    </div>
-                </div>
-                <div class="form-group form-group-sm">
                     <label for="form_movil" class="col-sm-2 control-label">Comentario:</label>
                     <div class="col-sm-10">
                         {{ form_widget(form.comentario) }}
@@ -80,6 +70,56 @@
                 </div>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Información control</div>
+            <div class="panel-body">
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Supervisor:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.supervisorRel) }}
+                        {{ form_errors(form.supervisorRel) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Zona:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.zonaRel) }}
+                        {{ form_errors(form.zonaRel) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Operacion:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.operacionRel) }}
+                        {{ form_errors(form.operacionRel) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Latitud:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.latitud) }}
+                        {{ form_errors(form.latitud) }}
+                    </div>
+
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.controlPuesto) }}
+                        {{ form_errors(form.controlPuesto) }}
+                    </div>
+                    <label class="col-sm-2 control-label">Longitud:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.longitud) }}
+                        {{ form_errors(form.longitud) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Coordinador:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.coordinadorRel) }}
+                        {{ form_errors(form.coordinadorRel) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal-footer">
             {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
         </div>

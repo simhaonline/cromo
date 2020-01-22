@@ -85,6 +85,10 @@
                             <th title="CENTRO COSTRO">C_C</th>
                             <th>SALARIO</th>
                             <th>CONTACTO</th>
+                            <th>SUPERVISOR</th>
+                            <th>ZONA</th>
+                            <th>OPERACIÓN</th>
+                            <th>COORDINADOR</th>
                             <th>ACT</th>
                             <th></th>
                             <th></th>
@@ -103,6 +107,10 @@
                                     <td>{{ arPuesto.codigoCentroCostoFk }}</td>
                                     <td>{{ arPuesto.salario }}</td>
                                     <td>{{ arPuesto.contacto }}</td>
+                                    <td>{{ arPuesto.supervisor }}</td>
+                                    <td>{{ arPuesto.zona }}</td>
+                                    <td>{{ arPuesto.operacion }}</td>
+                                    <td>{{ arPuesto.coordinador }}</td>
                                     <td>{{ arPuesto.estadoInactivo ? "SI": "NO" }}</td>
                                     <td style="text-align: center;">
                                         <a  href="javascript:abrirVentana3('{{ path('turno_administracion_comercial_puesto_nuevo', {'id': arPuesto.codigoPuestoPk, 'codigoCliente':arCliente.codigoClientePk}) }}', 'Editar puesto', 600, 1200) "><i class="fa fa-edit" style="color: black;font-size: large;"></i>

@@ -32,9 +32,17 @@ class TurPuestoRepository extends ServiceEntityRepository
             ->addSelect('p.estadoInactivo')
             ->addSelect('p.contacto')
             ->addSelect('s.nombre as salario')
+            ->addSelect('su.nombre as supervisor')
+            ->addSelect('z.nombre as zona')
+            ->addSelect('op.nombre as operacion')
+            ->addSelect('coo.nombre as coordinador')
             ->leftJoin('p.programadorRel', 'pro')
             ->leftJoin('p.ciudadRel', 'c')
             ->leftJoin('p.salarioRel', 's')
+            ->leftJoin('p.supervisorRel', 'su')
+            ->leftJoin('p.zonaRel', 'z')
+            ->leftJoin('p.operacionRel', 'op')
+            ->leftJoin('p.coordinadorRel', 'coo')
             ->where('p.codigoClienteFk = ' . $id);
         $arPuestos = $queryBuilder->getQuery()->getResult();
         return $arPuestos;

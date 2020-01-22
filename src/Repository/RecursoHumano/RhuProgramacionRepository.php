@@ -743,6 +743,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                     $arCuentaPagar->setEstadoAutorizado(1);
                     $arCuentaPagar->setEstadoAprobado(1);
                     $arCuentaPagar->setOperacion(1);
+                    $arCuentaPagar->setModulo('rhu');
+                    $arCuentaPagar->setModelo('RhuPago');
+                    $arCuentaPagar->setCodigoDocumento($arPago->getCodigoPagoPk());
                     $em->persist($arCuentaPagar);
                 }
             }
@@ -815,6 +818,9 @@ class RhuProgramacionRepository extends ServiceEntityRepository
                 $arCuentaPagar->setEstadoAutorizado(1);
                 $arCuentaPagar->setEstadoAprobado(1);
                 $arCuentaPagar->setOperacion(1);
+                $arCuentaPagar->setModulo('rhu');
+                $arCuentaPagar->setModelo('RhuPago');
+                $arCuentaPagar->setCodigoDocumento($arPago->getCodigoPagoPk());
                 $em->persist($arCuentaPagar);
             }
         }

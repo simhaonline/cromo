@@ -1324,7 +1324,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         $em->getRepository(RhuPago::class)->anularCensatiaAnterior($arPagoAnular);
                     }
                     if($arLiquidacion->getCodigoPagoCesantiaInteresAnteriorFk()){
-                        $arPagoAnular = $em->getRepository(RhuPago::class)->find($arLiquidacion->getCodigoPagoCesantiaAnteriorFk());
+                        $arPagoAnular = $em->getRepository(RhuPago::class)->find($arLiquidacion->getCodigoPagoCesantiaInteresAnteriorFk());
                         $em->getRepository(RhuPago::class)->find($arPagoAnular);
                         $em->getRepository(RhuPago::class)->anularInteresCensatiaAnterior($arPagoAnular);
                     }

@@ -29,6 +29,11 @@ class RhuSeleccionEntrevistaTipo
     private $nombre;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuSeleccionEntrevista", mappedBy="seleccionEntrevistaTipoRel")
+     */
+    protected $seleccionesEntrevistasSelecionEntrevistaTipoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSeleccionEntrevistaTipoPk()
@@ -58,6 +63,22 @@ class RhuSeleccionEntrevistaTipo
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesEntrevistasSelecionEntrevistaTipoRel()
+    {
+        return $this->seleccionesEntrevistasSelecionEntrevistaTipoRel;
+    }
+
+    /**
+     * @param mixed $seleccionesEntrevistasSelecionEntrevistaTipoRel
+     */
+    public function setSeleccionesEntrevistasSelecionEntrevistaTipoRel($seleccionesEntrevistasSelecionEntrevistaTipoRel): void
+    {
+        $this->seleccionesEntrevistasSelecionEntrevistaTipoRel = $seleccionesEntrevistasSelecionEntrevistaTipoRel;
     }
 
 

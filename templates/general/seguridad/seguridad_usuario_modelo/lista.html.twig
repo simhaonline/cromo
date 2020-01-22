@@ -95,46 +95,22 @@
                             {{ arSeguridadUsuarioModelo.modelo }}
                         </td>
                         <td class="text-center">
-                            {% if arSeguridadUsuarioModelo.lista %}
-                                {{ "Si" }}
-                            {% else %}
-                                {{ "No" }}
-                            {% endif %}
+                            {{ arSeguridadUsuarioModelo.lista ? "SI":"NO" }}
                         </td>
                         <td class="text-center">
-                            {% if arSeguridadUsuarioModelo.detalle %}
-                                {{ "Si" }}
-                            {% else %}
-                                {{ "No" }}
-                            {% endif %}
+                            {{ arSeguridadUsuarioModelo.detalle ? "SI":"NO" }}
                         </td>
                         <td class="text-center">
-                            {% if arSeguridadUsuarioModelo.nuevo %}
-                                {{ "Si" }}
-                            {% else %}
-                                {{ "No" }}
-                            {% endif %}
+                            {{ arSeguridadUsuarioModelo.nuevo ? "SI":"NO" }}
                         </td>
                         <td class="text-center">
-                            {% if arSeguridadUsuarioModelo.autorizar %}
-                                {{ "Si" }}
-                            {% else %}
-                                {{ "No" }}
-                            {% endif %}
+                            {{ arSeguridadUsuarioModelo.autorizar ? "SI":"NO" }}
                         </td>
                         <td class="text-center">
-                            {% if arSeguridadUsuarioModelo.aprobar %}
-                                {{ "Si" }}
-                            {% else %}
-                                {{ "No" }}
-                            {% endif %}
+                            {{ arSeguridadUsuarioModelo.aprobar ? "SI":"NO" }}
                         </td>
                         <td class="text-center">
-                            {% if arSeguridadUsuarioModelo.anular %}
-                                {{ "Si" }}
-                            {% else %}
-                                {{ "No" }}
-                            {% endif %}
+                            {{ arSeguridadUsuarioModelo.anular ? "SI":"NO" }}
                         </td>
                         <td style="text-align: center;">
                             <a title="Cambiar permisos"

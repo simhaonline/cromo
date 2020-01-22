@@ -4,11 +4,15 @@
 namespace App\Form\Type\Turno;
 
 
+use App\Entity\Financiero\FinArea;
 use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Turno\TurCoordinador;
+use App\Entity\Turno\TurOperacion;
 use App\Entity\Turno\TurProgramador;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurPuestoTipo;
 use App\Entity\Turno\TurSalario;
+use App\Entity\Turno\TurSupervisor;
 use Doctrine\ORM\EntityRepository;
 
 use Proxies\__CG__\App\Entity\General\GenCiudad;
@@ -71,17 +75,60 @@ class PuestoType  extends AbstractType
                 'choice_label' => 'nombre',
                 'placeholder' => ''
             ])
+            ->add('supervisorRel',EntityType::class,[
+                'class' => TurSupervisor::class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'placeholder' => ''
+            ])
+            ->add('zonaRel',EntityType::class,[
+                'class' => TurSupervisor::class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'placeholder' => ''
+            ])
+            ->add('operacionRel',EntityType::class,[
+                'class' => TurOperacion::class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'placeholder' => ''
+            ])
+            ->add('coordinadorRel',EntityType::class,[
+                'class' => TurCoordinador::class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'placeholder' => ''
+            ])
 
             ->add('nombre', TextType::class)
             ->add('longitud', NumberType::class)
             ->add('latitud', NumberType::class)
             ->add('nombre', TextType::class)
             ->add('direccion', TextType::class, ['required' => false])
+            ->add('longitud', TextType::class, ['required' => false])
+            ->add('latitud', TextType::class, ['required' => false])
             ->add('telefono', TextType::class, ['required' => false])
             ->add('celular', TextType::class, ['required' => false])
             ->add('comunicacion', TextType::class, ['required' => false])
             ->add('comentario', TextareaType::class, ['required' => false])
             ->add('estadoInactivo', CheckboxType::class, ['required' => false])
+            ->add('controlPuesto', CheckboxType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 

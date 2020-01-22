@@ -12,74 +12,74 @@
         {% include 'estructura/botonera.html.twig' %}
     </div>
     <div style="float:right">
-        {% if arSeleccionado.estadoAutorizado == 1 %}<span
+        {% if arSeleccion.estadoAutorizado == 1 %}<span
                 class="label label-default">Autorizado</span>{% endif %}
-        {% if arSeleccionado.estadoAprobado == 1 %}<span
+        {% if arSeleccion.estadoAprobado == 1 %}<span
                 class="label label-default">Aprobado</span>{% endif %}
-        {% if arSeleccionado.estadoAnulado == 1 %}<span
+        {% if arSeleccion.estadoAnulado == 1 %}<span
                 class="label label-default">Anulado</span>{% endif %}
     </div>
     <br/><br/>
     <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo">ID:</td>
-            <td class="td-in-well">{{ arSeleccionado.codigoSeleccionPk }}</td>
+            <td class="td-in-well">{{ arSeleccion.codigoSeleccionPk }}</td>
             <td class="titulo">TIPO:</td>
-            <td class="td-in-well">{{ arSeleccionado.seleccionTipoRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.seleccionTipoRel.nombre }}</td>
             <td class="titulo">CARGO:</td>
-            <td class="td-in-well">{{ arSeleccionado.cargoRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.cargoRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">ESTADO CIVIL:</td>
-            <td class="td-in-well">{{ arSeleccionado.estadoCivilRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.estadoCivilRel.nombre }}</td>
             <td class="titulo">RH:</td>
-            <td class="td-in-well">{{ arSeleccionado.rhRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.rhRel.nombre }}</td>
             <td class="titulo">CIUDAD:</td>
-            <td class="td-label">{{ arSeleccionado.ciudadRel.nombre }}</td>
+            <td class="td-label">{{ arSeleccion.ciudadRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">IDENTIFICACICIÓN:</td>
-            <td class="td-label">{{ arSeleccionado.codigoIdentificacionFk }}</td>
+            <td class="td-label">{{ arSeleccion.codigoIdentificacionFk }}</td>
             <td class="titulo">FECHA:</td>
-            <td class="td-label">{{ arSeleccionado.fecha | date("Y-m-d") }}</td>
+            <td class="td-label">{{ arSeleccion.fecha | date("Y-m-d") }}</td>
             <td class="titulo">CIUDAD DE EXPEDICIÓN:</td>
-            <td class="td-in-well">{{ arSeleccionado.ciudadExpedicionRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.ciudadExpedicionRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO IDENTIFICACION:</td>
-            <td class="td-in-well">{{ arSeleccionado.numeroIdentificacion }}</td>
+            <td class="td-in-well">{{ arSeleccion.numeroIdentificacion }}</td>
             <td class="titulo">FECHA EXPEDICION:</td>
-            <td class="td-label">{{ arSeleccionado.fechaExpedicion | date("Y-m-d") }}</td>
+            <td class="td-label">{{ arSeleccion.fechaExpedicion | date("Y-m-d") }}</td>
             <td class="titulo">CIUDAD DE EXPEDICIÓN:</td>
-            <td class="td-in-well">{{ arSeleccionado.ciudadExpedicionRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.ciudadExpedicionRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">NOMBRE 1</td>
-            <td class="td-in-well">{{ arSeleccionado.nombre1 }} </td>
+            <td class="td-in-well">{{ arSeleccion.nombre1 }} </td>
             <td class="titulo">FECHA NACIMIENTO</td>
-            <td class="td-label">{{ arSeleccionado.fechaNacimiento | date("Y-m-d") }}</td>
+            <td class="td-label">{{ arSeleccion.fechaNacimiento | date("Y-m-d") }}</td>
             <td class="titulo">ESTADO APROBADO</td>
-            <td class="td-in-well">{{ arSeleccionado.estadoAprobado ? "SI":"NO" }}</td>
+            <td class="td-in-well">{{ arSeleccion.estadoAprobado ? "SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">NOMBRE 2</td>
-            <td class="td-in-well">{{ arSeleccionado.nombre2 }} </td>
+            <td class="td-in-well">{{ arSeleccion.nombre2 }} </td>
             <td class="titulo">BARRIO</td>
-            <td class="td-in-well">{{ arSeleccionado.barrio }} </td>
+            <td class="td-in-well">{{ arSeleccion.barrio }} </td>
             <td class="titulo">PRESENTA PRUEBAS</td>
-            <td class="td-in-well">{{ arSeleccionado.presentaPruebas ? "SI":"NO" }}</td>
+            <td class="td-in-well">{{ arSeleccion.presentaPruebas ? "SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">APELLIDO 1</td>
-            <td class="td-in-well">{{ arSeleccionado.apellido1 }} </td>
+            <td class="td-in-well">{{ arSeleccion.apellido1 }} </td>
             <td class="titulo">DIRECCION</td>
-            <td class="td-in-well">{{ arSeleccionado.direccion }} </td>
+            <td class="td-in-well">{{ arSeleccion.direccion }} </td>
             <td class="titulo">REFERENCIAS VERIFICADAS</td>
-            <td class="td-in-well">{{ arSeleccionado.referenciasVerificadas ? "SI":"NO" }}</td>
+            <td class="td-in-well">{{ arSeleccion.referenciasVerificadas ? "SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">APELLIDO 2</td>
-            <td class="td-in-well">{{ arSeleccionado.apellido2 }} </td>
+            <td class="td-in-well">{{ arSeleccion.apellido2 }} </td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
             <td class="titulo"></td>
@@ -87,7 +87,7 @@
         </tr>
         <tr>
             <td class="titulo">COMENTARIOS</td>
-            <td class="td-in-well" COLSPAN="5">{{ arSeleccionado.comentarios }} </td>
+            <td class="td-in-well" COLSPAN="5">{{ arSeleccion.comentarios }} </td>
         </tr>
     </table>
     <ul class="nav nav-tabs">
@@ -126,7 +126,8 @@
                     <div class="btn-group">
                         {% if arSeleccion.estadoAutorizado == 0 %}
                             <a class="btn btn-default btn-sm"
-                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_entrevista', {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionEntrevista': 0}) }}', 'AgregarSeleccionEntrevista', 600, 900)">Nuevo</a>
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_entrevista',
+                               {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionEntrevista': 0}) }}', 'AgregarSeleccionEntrevista', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">

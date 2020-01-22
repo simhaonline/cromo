@@ -292,6 +292,11 @@ class RhuSeleccion
     protected $sexoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="RhuSeleccionEntrevista", mappedBy="seleccionRel")
+     */
+    protected $seleccionesEntrevistasSeleccionRel;
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -1042,4 +1047,22 @@ class RhuSeleccion
     {
         $this->sexoRel = $sexoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesEntrevistasSeleccionRel()
+    {
+        return $this->seleccionesEntrevistasSeleccionRel;
+    }
+
+    /**
+     * @param mixed $seleccionesEntrevistasSeleccionRel
+     */
+    public function setSeleccionesEntrevistasSeleccionRel($seleccionesEntrevistasSeleccionRel): void
+    {
+        $this->seleccionesEntrevistasSeleccionRel = $seleccionesEntrevistasSeleccionRel;
+    }
+
+
 }

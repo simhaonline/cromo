@@ -2445,4 +2445,76 @@ class RhuPagoRepository extends ServiceEntityRepository
         }
         return $vrPago;
     }
+
+    public function cesantiasAnterior($codigoEmpleado)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->addSelect('p.numero')
+            ->addSelect('pt.nombre as pagoTipo')
+            ->addSelect('p.vrNeto')
+            ->addSelect('p.fechaDesde')
+            ->addSelect('p.fechaHasta')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.grupoRel', 'g')
+            ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
+            ->andWhere("p.codigoPagoTipoFk = 'CES'");
+        $queryBuilder->addOrderBy('p.codigoPagoPk', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function interesesCesantiasAnterior($codigoEmpleado)
+    {
+        $session = new Session();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuPago::class, 'p')
+            ->select('p.codigoPagoPk')
+            ->addSelect('p.numero')
+            ->addSelect('pt.nombre as pagoTipo')
+            ->addSelect('p.vrNeto')
+            ->addSelect('p.fechaDesde')
+            ->addSelect('p.fechaHasta')
+            ->leftJoin('p.pagoTipoRel', 'pt')
+            ->leftJoin('p.empleadoRel', 'e')
+            ->leftJoin('p.grupoRel', 'g')
+            ->where("p.codigoEmpleadoFk = {$codigoEmpleado}")
+            ->andWhere("p.codigoPagoTipoFk = 'INT'");
+        $queryBuilder->addOrderBy('p.codigoPagoPk', 'DESC');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param $arPago RhuPago
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function anularCensatiaAnterior($arPago)
+    {
+        $em = $this->getEntityManager();
+        $arPago->setVrDevengado(0);
+        $arPago->setVrDeduccion(0);
+        $arPago->setVrNeto(0);
+        $arPago->setEstadoAnulado(1);
+        $arPago->setComentario("Anulacion por pago en liquidacion");
+        $em->persist($arPago);
+        $em->flush();
+    }
+
+    /**
+     * @param $arPago RhuPago
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function anularInteresCensatiaAnterior($arPago)
+    {
+        $em = $this->getEntityManager();
+        $arPago->setVrDevengado(0);
+        $arPago->setVrDeduccion(0);
+        $arPago->setVrNeto(0);
+        $arPago->setEstadoAnulado(1);
+        $arPago->setComentario("Anulacion por pago en liquidacion");
+        $em->persist($arPago);
+        $em->flush();
+    }
 }

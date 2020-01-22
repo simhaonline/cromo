@@ -1,0 +1,47 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <section class="content">
+        <div class="tab-content">
+            <div id="detalles" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TIPO</th>
+                            <th>DESDE</th>
+                            <th>HASTA</th>
+                            <th>NUMERO</th>
+                            <th>NETO</th>
+                            <th></th>
+                        </thead>
+                        </tr>
+                        <tbody>
+                        {% for arPagoCesantiasAnterior in arPagosCesantiasAnterior %}
+
+                            <tr>
+                                <td>{{ arPagoCesantiasAnterior.codigoPagoPk }}</td>
+                                <td>{{ arPagoCesantiasAnterior.pagoTipo }}</td>
+                                <td>{{ arPagoCesantiasAnterior.fechaDesde | date ('Y-m-d') }}</td>
+                                <td>{{ arPagoCesantiasAnterior.fechaHasta | date ('Y-m-d') }}</td>
+                                <td>{{ arPagoCesantiasAnterior.numero }}</td>
+                                <td class="numero">{{ arPagoCesantiasAnterior.vrNeto }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="ChkSeleccionar[]"
+                                           value="{{ arPagoCesantiasAnterior.codigoPagoPk }}"/>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {{ form_widget(form.btnGuardar,{'attr':{'style':'float: right;'}}) }}
+                {{ form_end(form) }}
+                <br/><br/><br/>
+            </div>
+        </div>
+        </div>
+        <br/><br/>
+    </section>
+{% endblock %}

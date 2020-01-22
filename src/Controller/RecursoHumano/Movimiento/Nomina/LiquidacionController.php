@@ -104,9 +104,9 @@ class LiquidacionController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                    $em->persist($arLiquidacion);
-                    $em->flush();
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', ['id' => $arLiquidacion->getCodigoLiquidacionPk()]));
+                $em->persist($arLiquidacion);
+                $em->flush();
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', ['id' => $arLiquidacion->getCodigoLiquidacionPk()]));
             }
         }
         return $this->render('recursohumano/movimiento/nomina/liquidacion/nuevo.html.twig', [
@@ -357,6 +357,82 @@ class LiquidacionController extends AbstractController
         $arDetalleVacaciones = $em->getRepository(RhuLiquidacion::class)->detalleVacacion($codigoLiquidacion);
         return $this->render('recursohumano/movimiento/nomina/liquidacion/detalleVacaciones.html.twig', array(
             'arDetalleVacaciones' => $arDetalleVacaciones
+        ));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/liquidacion/detalle/cesantiasanterior/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_cesantiasanterior")
+     */
+    public function cesantiasAnterior(Request $request, $codigoLiquidacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw['filtros'] = [
+
+        ];
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados as $codigo) {
+                        $arPago = $em->getRepository(RhuPago::class)->find($codigo);
+                        $arLiquidacion->setCodigoPagoCesantiaAnteriorFk($arPago->getCodigoPagoPk());
+                        $arLiquidacion->setVrCesantiasAnterior($arPago->getVrNeto());
+                        $em->persist($arLiquidacion);
+                    }
+                    $em->flush();
+                    if ($form->get('btnGuardar')->isClicked()) {
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }
+                }
+            }
+        }
+        $arPagosCesantiasAnterior = $em->getRepository(RhuPago::class)->cesantiasAnterior($arLiquidacion->getCodigoEmpleadoFk());
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/cesantiasAnterior.html.twig', array(
+            'arPagosCesantiasAnterior' => $arPagosCesantiasAnterior,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/recursohumano/movimiento/nomina/liquidacion/detalle/interesescesantiasanterior/{codigoLiquidacion}", name="recursohumano_movimiento_nomina_liquidacion_detalle_interesescesantiasanterior")
+     */
+    public function interesesAnterior(Request $request, $codigoLiquidacion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
+        $form = $this->createFormBuilder()
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
+        $form->handleRequest($request);
+        $raw['filtros'] = [
+
+        ];
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('btnGuardar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if ($arrSeleccionados) {
+                    foreach ($arrSeleccionados as $codigo) {
+                        $arPago = $em->getRepository(RhuPago::class)->find($codigo);
+                        $arLiquidacion->setCodigoPagoCesantiaInteresAnteriorFk($arPago->getCodigoPagoPk());
+                        $arLiquidacion->setVrInteresesCesantiasAnterior($arPago->getVrNeto());
+                        $em->persist($arLiquidacion);
+                    }
+                    $em->flush();
+                    if ($form->get('btnGuardar')->isClicked()) {
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }
+                }
+            }
+        }
+        $arPagosInteresesCesantiasAnterior = $em->getRepository(RhuPago::class)->interesesCesantiasAnterior($arLiquidacion->getCodigoEmpleadoFk());
+        return $this->render('recursohumano/movimiento/nomina/liquidacion/interesesCesantiasAnterior.html.twig', array(
+            'arPagosInteresesCesantiasAnterior' => $arPagosInteresesCesantiasAnterior,
+            'form' => $form->createView()
         ));
     }
 

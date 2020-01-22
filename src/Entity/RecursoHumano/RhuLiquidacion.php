@@ -48,6 +48,16 @@ class RhuLiquidacion
     private $codigoContratoFk;
 
     /**
+     * @ORM\Column(name="codigo_pago_cesantia_interes_anterior_fk", type="integer", nullable=true)
+     */
+    private $codigoPagoCesantiaInteresAnteriorFk;
+
+    /**
+     * @ORM\Column(name="codigo_pago_cesantia_anterior_fk", type="integer", nullable=true)
+     */
+    private $codigoPagoCesantiaAnteriorFk;
+
+    /**
      * @ORM\Column(name="codigo_grupo_fk", type="string", length=10, nullable=true)
      */
     private $codigoGrupoFk;
@@ -1778,6 +1788,38 @@ class RhuLiquidacion
     public function setPagosLiquidacionRel($pagosLiquidacionRel): void
     {
         $this->pagosLiquidacionRel = $pagosLiquidacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPagoCesantiaInteresAnteriorFk()
+    {
+        return $this->codigoPagoCesantiaInteresAnteriorFk;
+    }
+
+    /**
+     * @param mixed $codigoPagoCesantiaInteresAnteriorFk
+     */
+    public function setCodigoPagoCesantiaInteresAnteriorFk($codigoPagoCesantiaInteresAnteriorFk): void
+    {
+        $this->codigoPagoCesantiaInteresAnteriorFk = $codigoPagoCesantiaInteresAnteriorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPagoCesantiaAnteriorFk()
+    {
+        return $this->codigoPagoCesantiaAnteriorFk;
+    }
+
+    /**
+     * @param mixed $codigoPagoCesantiaAnteriorFk
+     */
+    public function setCodigoPagoCesantiaAnteriorFk($codigoPagoCesantiaAnteriorFk): void
+    {
+        $this->codigoPagoCesantiaAnteriorFk = $codigoPagoCesantiaAnteriorFk;
     }
 
 

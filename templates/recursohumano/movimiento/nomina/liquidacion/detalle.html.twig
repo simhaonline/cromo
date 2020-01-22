@@ -1,4 +1,4 @@
-    {% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
@@ -99,7 +99,9 @@
             <td class="numero">$ {{ arLiquidacion.vrSalario | number_format(0, '.', ',') }}</td>
             <td class="titulo">ULTIMO PAGO CESANTIAS(ANT):</td>
             <td class="numero">{{ arLiquidacion.fechaUltimoPagoCesantiasAnterior|date("Y/m/d") }}</td>
-            <td class="titulo">CESANTIAS(ANT):</td>
+            <td class="titulo"  style="display:flex; align-items: center; justify-content: space-between;">CESANTIAS(ANT):
+                <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_cesantiasanterior',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle cesantias',600,1300)">
+                    ...</a></td>
             <td class="numero">$ {{ arLiquidacion.vrCesantiasAnterior | number_format(0, '.', ',') }}</td>
             <td class="titulo">DIAS(AUS):</td>
             <td class="numero">{{ arLiquidacion.diasCesantiasAnterior }}
@@ -109,11 +111,12 @@
         <tr>
             <td class="titulo">CONTRATO:</td>
             <td>{{ arLiquidacion.codigoContratoFk }}</td>
-            {#                        <a href="{{ path('brs_rhu_base_contratos_detalles', { 'codigoContrato': arLiquidacion.codigoContratoFk }) }}"#}
-            {#                           target="_blanck">{{ arLiquidacion.codigoContratoFk }}</a></td>#}
             <td class="titulo"></td>
             <td class="numero"></td>
-            <td class="titulo">INTERESES(ANT):</td>
+            <td class="titulo" style="display:flex; align-items: center; justify-content: space-between;">INTERESES(ANT):
+                <a class="btn btn-default btn-xs"
+                   href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_interesescesantiasanterior',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle cesantias',600,1300)">
+                    ...</a></td>
             <td class="numero">
                 $ {{ arLiquidacion.vrInteresesCesantiasAnterior | number_format(0, '.', ',') }}</td>
             <td class="titulo"></td>
@@ -174,9 +177,9 @@
             <td class="titulo">SALARIO VACACIONES:</td>
             <td class="numero">
                 {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}</td>
-{#                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_vacaciones',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">#}
-{#                    $ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}#}
-{#                </a>#}
+            {#                <a href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_liquidacion_detalle_vacaciones',{'codigoLiquidacion' : arLiquidacion.codigoLiquidacionPk}) }}','Detalle vacacion',600,1300)">#}
+            {#                    $ {{ arLiquidacion.vrSalarioVacaciones | number_format(0, '.', ',') }}#}
+            {#                </a>#}
             </td>
             <td class="titulo"></td>
             <td class="numero"></td>

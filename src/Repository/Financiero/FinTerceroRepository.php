@@ -123,7 +123,7 @@ class FinTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.apellido2')
             ->addSelect('t.direccion')
             ->addSelect('c.nombre as ciudadNombre')
-            ->addSelect('c.codigoDaneCompleto as codigoDaneCompleto')
+            ->addSelect('c.codigoDane as codigoDaneCiudad')
             ->addSelect('t.telefono')
             ->addSelect('d.codigoDane as codigoDaneDepartamento')
             ->addSelect('t.email')

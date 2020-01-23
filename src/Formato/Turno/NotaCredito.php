@@ -28,7 +28,7 @@ class NotaCredito extends \FPDF
         self::$codigoFactura = $codigoFactura;
         $arFactura = $em->getRepository(TurFactura::class)->find($codigoFactura);
         ob_clean();
-        $pdf = new Factura2();
+        $pdf = new NotaCredito();
         $pdf->AliasNbPages();
         $pdf->AddPage();
         $pdf->SetFont('Times', '', 12);
@@ -272,20 +272,11 @@ class NotaCredito extends \FPDF
         $this->Text(20, 206, "Fecha y Nombre:");
         $this->Text(20, 211, "Sello:");
         $this->Text(20, 221, "Actividad Comercial");
-//        $this->Text(60, 221, utf8_decode($arFactura->getClienteRel()->getSectorComercialRel()->getNombre()));
         $this->Text(60, 221, utf8_decode(""));
         $this->Text(90, 221, "Estrato =");
         $this->Ln(4);
         $this->SetFont('Arial', '', 8);
-        //$this->Text(20, $this->GetY($this->SetY(244)), $arConfiguracion->getInformacionPagoFactura());
         $this->SetXY(30, 239);
-//        $this->MultiCell(110, 5, $arConfiguracion->getInformacionPagoFactura(), 0, 'L');
-        $this->MultiCell(110, 5,"", 0, 'L');
-        $this->Ln();
-        $this->SetFont('Arial', 'B', 8);
-        $this->Text(30, 254, "Observacion: Si efectura retencion en la fuente, favor aplicar tarifa del 2% Sobre Base Gravable");
-        $this->SetFont('Arial', '', 7);
-        $this->Text(50, 264, "Favor remitir copia de la consignacion a los correos a.mona@seracis.com y d.mejia@seracis.com");
 
         //Número de página
         $this->Text(188, 273, 'Pagina ' . $this->PageNo() . ' de {nb}');

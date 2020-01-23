@@ -9,6 +9,8 @@ use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,40 +20,35 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PedidoController extends  Controller
+class PedidoController extends  AbstractController
 {
     /**
      * @Route("/turno/informe/comercial/pedido/lista", name="turno_informe_comercial_pedido_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+        $raw = [];
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class,['required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeAsesorVentasFechaDesde') ? date_create($session->get('filtroInvInformeAsesorVentasFechaDesde')): null])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroInvInformeAsesorVentasFechaHasta') ? date_create($session->get('filtroInvInformeAsesorVentasFechaHasta')): null])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add( 'btnExcel', SubmitType::class, ['label'=>'Excel', 'attr'=>['class'=> 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $arCliente = $em->getRepository(TurCliente::class)->find($form->get('txtCodigoCliente')->getData()??0);
-                if ($arCliente) {
-                    $session->set('filtroTurInformeComercialPedidoClienteCodigo',  $arCliente->getCodigoClientePk());
-                }
-                $session->set('filtroTurInformeComercialPedidoClienteCodigoFechaDesde',  $form->get('fechaDesde')->getData() ?$form->get('fechaDesde')->getData()->format('Y-m-d'): null);
-                $session->set('filtroTurInformeComercialPedidoClienteCodigoFechaHasta', $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d'): null);
+                $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                General::get()->setExportar($em->getRepository(TurPedido::class)->lista(), "Pedidos");
+                General::get()->setExportar($em->getRepository(TurPedido::class)->lista($raw), "Pedidos");
             }
         }
-        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista(), $request->query->getInt('page', 1), 30);
+        $arPedidos = $paginator->paginate($em->getRepository(TurPedido::class)->lista($raw), $request->query->getInt('page', 1), 30);
         return $this->render('turno/informe/comercial/pedido.html.twig', [
             'arPedidos' => $arPedidos,
             'form' => $form->createView()
@@ -109,6 +106,17 @@ class PedidoController extends  Controller
             'arPedidos' => $arPedidos,
             'form' => $form->createView()
         ]);
+    }
+
+    public function getFiltros($form)
+    {
+        $filtro = [
+            'codigoCliente' => $form->get('txtCodigoCliente')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+        ];
+        return $filtro;
+
     }
 
 

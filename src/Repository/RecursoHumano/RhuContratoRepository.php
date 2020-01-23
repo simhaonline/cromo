@@ -3,10 +3,17 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Controller\Turno\Informe\Juridico\contratoController;
+use App\Entity\RecursoHumano\RhuCambioSalario;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
+use App\Entity\RecursoHumano\RhuIncapacidad;
+use App\Entity\RecursoHumano\RhuLicencia;
+use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
+use App\Entity\RecursoHumano\RhuVacacion;
+use App\Entity\Turno\TurProgramacion;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -542,5 +549,61 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->where("c.estadoTerminado = 0")
             ->andWhere("c.fechaDesde <= '{$fechaHasta}' AND c.vrSalario <= " . $vrSalarioMinimo);
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados AS $codigo) {
+                $arPagos = $em->getRepository(RhuPago::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                if (!$arPagos) {
+                    $arCambioSalario = $em->getRepository(RhuCambioSalario::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                    if (!$arCambioSalario) {
+                        $arLicencias = $em->getRepository(RhuLicencia::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                        if (!$arLicencias) {
+                            $arVacaciones = $em->getRepository(RhuVacacion::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                            if (!$arVacaciones) {
+                                $arIncapacidades = $em->getRepository(RhuIncapacidad::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                                if (!$arIncapacidades) {
+                                    $arProgramacionDetalle = $em->getRepository(RhuProgramacionDetalle::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                                    if (!$arProgramacionDetalle) {
+                                        $arProgramacionTurnos = $em->getRepository(TurProgramacion::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                                        if (!$arProgramacionTurnos) {
+                                            $arContrato = $em->getRepository(RhuContrato::class)->find($codigo);
+                                            if ($arContrato) {
+                                                if ($arContrato->getEstadoTerminado() == 0) {
+                                                    /** @var $arEmpleado RhuEmpleado */
+                                                    $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
+                                                    $arEmpleado->setContratoRel(null);
+                                                    $arEmpleado->setEstadoContrato(0);
+                                                    $em->persist($arEmpleado);
+                                                    $em->remove($arContrato);
+                                                    $em->flush();
+                                                }
+                                            }
+                                        } else {
+                                            Mensajes::error("El contrato " . $codigo . " tiene programacionesde turnos cod " . $arProgramacionTurnos->getCodigoProgramacionPk() . ", por favor verificar.");
+                                        }
+                                    } else {
+                                        Mensajes::error("El contrato " . $codigo . " tiene programaciones de pago asociadas cod " . $arProgramacionDetalle->getCodigoProgramacionFk() . ", por favor verificar.");
+                                    }
+                                } else {
+                                    Mensajes::error("El contrato " . $codigo . " tiene incapacidades asociadas, por favor verificar.");
+                                }
+                            } else {
+                                Mensajes::error("El contrato " . $codigo . " tiene vacaciones asociadas, por favor verificar.");
+                            }
+                        } else {
+                            Mensajes::error("El contrato " . $codigo . " tiene licencias asociadas, por favor verificar.");
+                        }
+                    } else {
+                        Mensajes::error("El contrato " . $codigo . " tiene cambios de salario asociados, por favor verificar.");
+                    }
+                } else {
+                    Mensajes::error("El contrato " . $codigo . " tiene pagos relacionados");
+                }
+            }
+        }
     }
 }

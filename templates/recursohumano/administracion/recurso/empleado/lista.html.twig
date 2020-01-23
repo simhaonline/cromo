@@ -74,7 +74,7 @@
                 <td>{{ arEmpleado.telefono }}</td>
                 <td>{{ arEmpleado.correo }}</td>
                 <td>{{ arEmpleado.direccion }}</td>
-                <td>{{ arEmpleado.estadoContrato ?"NO":"SI" }}</td>
+                <td>{{ arEmpleado.estadoContrato ? "SI":"NO" }}</td>
                 <td class="text-center">
                     <a href="{{ path('recursohumano_administracion_recurso_empleado_nuevo',{'id':arEmpleado.codigoEmpleadoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>

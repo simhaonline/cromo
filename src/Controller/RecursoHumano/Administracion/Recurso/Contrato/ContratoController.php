@@ -74,6 +74,7 @@ class ContratoController extends AbstractController
             ->add('cboGrupo', EntityType::class, $em->getRepository(RhuGrupo::class)->llenarCombo())
             ->add('cboContratoTipo', EntityType::class, $em->getRepository(RhuContratoTipo::class)->llenarCombo())
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -101,6 +102,10 @@ class ContratoController extends AbstractController
         if ($form->get('btnExcel')->isClicked()) {
             $arContratos = $em->getRepository(RhuContrato::class)->lista();
             $this->exportarExcelPersonalizado($arContratos);
+        }
+        if ($form->get('btnEliminar')->isClicked()) {
+            $arrSeleccionados = $request->get('ChkSeleccionar');
+            $em->getRepository(RhuContrato::class)->eliminar($arrSeleccionados);
         }
         $arContratos = $paginator->paginate($em->getRepository(RhuContrato::class)->lista(), $request->query->getInt('page', 1), 50);
         return $this->render('recursohumano/administracion/recurso/contrato/lista.html.twig',

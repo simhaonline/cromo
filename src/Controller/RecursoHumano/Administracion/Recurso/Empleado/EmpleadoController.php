@@ -67,7 +67,6 @@ class EmpleadoController extends AbstractController
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -82,7 +81,7 @@ class EmpleadoController extends AbstractController
                 General::get()->setExportar($em->getRepository(RhuEmpleado::class)->listaProvicional($raw), "Empleados");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->query->get('ChkSeleccionar');
+                $arrSeleccionados = $request->get('ChkSeleccionar');
                 $em->getRepository(RhuEmpleado::class)->eliminar($arrSeleccionados);
             }
         }

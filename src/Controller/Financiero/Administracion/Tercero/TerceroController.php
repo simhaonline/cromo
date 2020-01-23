@@ -8,6 +8,7 @@ use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Financiero\TerceroType;
 use App\General\General;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -45,8 +46,8 @@ class TerceroController extends AbstractController
                 $raw['filtros'] = $this->getFiltros($form);
             }
             if ($form->get('btnExcel')->isClicked()) {
-                $raw['filtros'] = $this->getFiltros($form);
-                General::get()->setExportar($em->getRepository(FinTercero::class)->listaPrincipal($raw)->getQuery()->execute(), "Terceros");
+                $arContratos = $em->getRepository(FinTercero::class)->listaIntercambio()->getQuery()->getResult();
+                $this->exportarExcelPersonalizado($arContratos);
             }
             if ($form->get('btnEliminar')->isClicked()) {
 //                $arrSeleccionados = $request->query->get('ChkSeleccionar');
@@ -111,5 +112,69 @@ class TerceroController extends AbstractController
             'numeroIdentificacion' => $form->get('numeroIdentificacion')->getData(),
             'nombreCorto' => $form->get('nombreCorto')->getData(),
         ];
+    }
+
+    public function exportarExcelPersonalizado($arTerceros)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arTerceros) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Terceros');
+            $j = 0;
+            $arrColumnas = [
+                'NIT', 'TIPO', 'NOMBRE', 'DIRECCION', 'CIUDAD', 'TELEFONO', 'MUNICIPIO', 'ACTIVO', 'TIENE RUT', 'PAIS', 'EMAIL', 'CELULAR', 'PLAZO', 'ACTIVIDAD ECONOMICA',
+                'INDICATIVO', 'NATURALEZA'
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arTerceros as $arTercero) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                if($arTercero['codigoIdentificacionFk'] == 'NI'){
+                    $tipoDocumento = 'A';
+                }elseif ($arTercero['codigoIdentificacionFk'] == 'CC') {
+                    $tipoDocumento = 'C';
+                }
+                if($arTercero['estadoInactivo'] == 0){
+                    $estadoActivo = 'S';
+                }else
+                    $estadoActivo = 'N';
+                $hoja->setCellValue('A' . $j, $arTercero['numeroIdentificacion']);
+                $hoja->setCellValue('B' . $j, $tipoDocumento);
+                $hoja->setCellValue('C' . $j, $arTercero['nombreCorto']);
+                $hoja->setCellValue('D' . $j, $arTercero['direccion']);
+                $hoja->setCellValue('E' . $j, $arTercero['ciudadNombre']);
+                $hoja->setCellValue('F' . $j, $arTercero['telefono']);
+                $hoja->setCellValue('G' . $j, $arTercero['codigoDaneCompleto']);
+                $hoja->setCellValue('H' . $j, $estadoActivo);
+                $hoja->setCellValue('I' . $j, 'S');
+                $hoja->setCellValue('J' . $j, '169');
+                $hoja->setCellValue('K' . $j, $arTercero['nombre1']);
+                $hoja->setCellValue('L' . $j, $arTercero['nombre2']);
+                $hoja->setCellValue('M' . $j, $arTercero['apellido1']);
+                $hoja->setCellValue('N' . $j, $arTercero['apellido2']);
+                $hoja->setCellValue('O' . $j, $arTercero['email']);
+                $hoja->setCellValue('P' . $j, $arTercero['celular']);
+                $hoja->setCellValue('Q' . $j, '');
+                $hoja->setCellValue('R' . $j, '');
+                $hoja->setCellValue('S' . $j, '');
+                $hoja->setCellValue('T' . $j, '');
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=terceros.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 }

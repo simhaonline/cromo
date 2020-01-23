@@ -53,6 +53,41 @@ class FinTerceroRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function excel($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+        $codigoTerceroPk = null;
+        $numeroIdentificacion = null;
+        $nombreCorto = null;
+        if ($filtros){
+            $codigoTerceroPk = $filtros['codigoTerceroPk']??null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
+            $nombreCorto = $filtros['nombreCorto']??null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(FinTercero::class, 't')
+            ->select('t.numeroIdentificacion')
+            ->addSelect('t.digitoVerificacion')
+            ->addSelect('t.telefono')
+            ->addSelect('i.nombre as identificacion')
+            ->addSelect('c.nombre as ciudad')
+            ->where('t.codigoTerceroPk <> 0')
+            ->leftJoin('t.identificacionRel', 'i')
+            ->leftJoin('t.ciudadRel', 'c')
+            ->orderBy('t.codigoTerceroPk', 'DESC');
+        if ($nombreCorto) {
+            $queryBuilder->andWhere("t.nombreCorto LIKE '%{$nombreCorto}%' ");
+        }
+        if ($numeroIdentificacion) {
+            $queryBuilder->andWhere("t.numeroIdentificacion LIKE '%{$numeroIdentificacion}%' ");
+        }
+        if ($codigoTerceroPk) {
+            $queryBuilder->andWhere("t.codigoTerceroPk LIKE '%{$codigoTerceroPk}%' ");
+        }
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder;
+    }
+
     public function lista()
     {
         $session = new Session();
@@ -88,11 +123,12 @@ class FinTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.apellido2')
             ->addSelect('t.direccion')
             ->addSelect('c.nombre as ciudadNombre')
-            ->addSelect('c.codigoDane as codigoDaneCiudad')
+            ->addSelect('c.codigoDaneCompleto as codigoDaneCompleto')
             ->addSelect('t.telefono')
             ->addSelect('d.codigoDane as codigoDaneDepartamento')
             ->addSelect('t.email')
             ->addSelect('t.celular')
+            ->addSelect('t.estadoInactivo')
             ->addSelect('t.numeroIdentificacion')
             ->where('t.estadoInactivo = 0');
     }

@@ -131,13 +131,18 @@ class ProgramacionController extends AbstractController
             ->getForm();
 
         $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnLimpiar = ['label' => 'Limpiar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-warning']];
         $form->add('btnEliminar', SubmitType::class, $arrBtnEliminar);
+        $form->add('btnLimpiar', SubmitType::class, $arrBtnLimpiar);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->all();
             $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
             if ($form->get('btnEliminar')->isClicked()) {
                 $em->getRepository(TurProgramacion::class)->eliminar($arrDetallesSeleccionados);
+            }
+            if ($form->get('btnLimpiar')->isClicked()) {
+                $em->getRepository(TurProgramacion::class)->limpiarSeleccionados($arrDetallesSeleccionados);
             }
             return $this->redirect($this->generateUrl('turno_movimiento_operacion_programacion_detalle', ['id' => $id]));
         }

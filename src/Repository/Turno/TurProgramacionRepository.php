@@ -1082,7 +1082,6 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         return true;
     }
 
-
     /**
      * @param TurNovedadInconsistencia $arNovedadInconsistencia
      * @param $desde
@@ -1420,6 +1419,77 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         $em->persist($arProgramacion);
         $em->flush();
         return true;
+    }
+
+    /**
+     * Esta función recorre todos los detalles seleccionados y se encarga de limpiar
+     * cada uno de los turnos programados en sus correspondientes días.
+     * @param array $arrSeleccionados
+     */
+    public function limpiarSeleccionados($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if (count($arrSeleccionados) == 0) {
+            return true;
+        }
+        foreach ($arrSeleccionados AS $codigoDetalle) {
+            $arProgramacionDetalle = $em->getRepository(TurProgramacion::class)->find($codigoDetalle);
+            $arPedidoDetalle = $arProgramacionDetalle->getPedidoDetalleRel();
+            $diurnasPedido = $arPedidoDetalle->getHorasDiurnasProgramadas();
+            $nocturnasPedido = $arPedidoDetalle->getHorasNocturnasProgramadas();
+            $inicioContrato = $this->getInicioContrato($arProgramacionDetalle);
+            # Limpiamos cada uno de los días programados para el detalle.
+            for ($i = 1; $i <= 31; $i++) {
+                if ($i < $inicioContrato) {
+                    continue;
+                }
+                # tomamos el turno para el día.
+                $turno = call_user_func_array([$arProgramacionDetalle, "getDia{$i}"], []);
+                if ($turno != '') {
+                    $arTurno = $em->getRepository(TurTurno::class)->find($turno);
+                    if ($arTurno) {
+                        $diurnasPedido -= $arTurno->getHorasDiurnas();
+                        $nocturnasPedido -= $arTurno->getHorasNocturnas();
+                    }
+                }
+                # call_user_fun_array invoca un método de un objeto, utilizando un string que indica cual es el nombre del método.
+                call_user_func_array([$arProgramacionDetalle, "setDia{$i}"], [null]);
+            }
+
+            $arPedidoDetalle->setHorasNocturnasProgramadas($nocturnasPedido);
+            $arPedidoDetalle->setHorasDiurnasProgramadas($diurnasPedido);
+            $arPedidoDetalle->setHorasProgramadas($nocturnasPedido + $diurnasPedido);
+
+            $arProgramacionDetalle->setHorasDiurnas(0);
+            $arProgramacionDetalle->setHorasNocturnas(0);
+            $arProgramacionDetalle->setHoras(0);
+            $em->persist($arProgramacionDetalle);
+        }
+        $em->flush();
+    }
+
+    /**
+     * Esta función permite obtener la fecha de inicio del contrato del recurso.
+     * @param TurProgramacion $arProgramacion
+     */
+    private function getInicioContrato($arProgramacion)
+    {
+        $em = $this->getEntityManager();
+        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arProgramacion->getCodigoEmpleadoFk());
+        $codigoContrato = $arEmpleado->getEstadoContrato() ? $arEmpleado->getCodigoContratoFk() : $arEmpleado->getCodigoContratoUltimoFk();
+        $arContrato = $em->getRepository(RhuContrato::class)->find($codigoContrato);
+        if ($arContrato) {
+            $mes = $arProgramacion->getMes();
+            $anio = $arProgramacion->getAnio();
+            $mesContrato = intval($arContrato->getFechaDesde()->format("m"));
+            $anioContrato = intval($arContrato->getFechaDesde()->format("Y"));
+            $desde = intval($arContrato->getFechaDesde()->format("d"));
+            if (($anio != $anioContrato || $mes != $mesContrato)) {
+                return 0;
+            }
+            return $desde;
+        }
+        return 0;
     }
 }
 

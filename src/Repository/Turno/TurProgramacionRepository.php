@@ -457,11 +457,16 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
 
     }
 
-    public function validacionTurnos($codigoEmpleado, $anio, $mes, $fechaDesde, $fechaHasta) {
+    public function validacionTurnos($codigoEmpleado, $anio, $mes, $diaDesde, $diaHasta) {
         $em = $this->getEntityManager();
+        if($codigoEmpleado == 4409) {
+            echo "hola";
+        }
+        //Turnos invalidos es porque mezcla novedad o descanso con turno normal
         $arrValidacionTurnos = [
                 'faltantes' => "",
                 'dobles' => "",
+                'invalidos' => ""
             ];
         $queryBuilder = $em->createQueryBuilder()->from(TurProgramacion::class, 'p')
             ->select('p.codigoProgramacionPk')
@@ -474,7 +479,7 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
         $arrProgramaciones = $queryBuilder->getQuery()->getResult();
         if($arrProgramaciones) {
             $numeroProgramaciones = count($arrProgramaciones);
-            for ($j= $fechaDesde; $j<= $fechaHasta; $j++) {
+            for ($j= $diaDesde; $j<= $diaHasta; $j++) {
                 $turnoFaltante = true;
                 $turnoDoble = false;
                 $arrTurnos = [];
@@ -486,6 +491,18 @@ ON tur_programacion.dia_2 =tdia2.codigo_turno_pk";
                         }
                         $arrTurnos[] = $turno;
                         $turnoFaltante = false;
+                    }
+                }
+                //Validar turnos normales mezclados con novedad con novedad o descanso
+                if($arrTurnos) {
+                    if(count($arrTurnos) > 1) {
+                        foreach ($arrTurnos as $turno) {
+                            $arTurno = $em->getRepository(TurTurno::class)->find($turno);
+                            if($arTurno->getNovedad() || $arTurno->getDescanso()) {
+                                $arrValidacionTurnos['invalidos'] .= $j . " ";
+                                break;
+                            }
+                        }
                     }
                 }
                 if($turnoFaltante) {

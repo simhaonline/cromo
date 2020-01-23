@@ -1,5 +1,6 @@
 {% extends 'base_sin_menu.html.twig' %}
 {% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">Archivos</div>
@@ -32,7 +33,11 @@
                 <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
                     {{ knp_pagination_render(arInconsistencias) }}
                 </div>
+                <div class="btn-group" style="float: right; margin-right: 5px !important;">
+                    {{ form_widget(form.btnValidar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                </div>
             </div>
         </div>
     </div>
+    {{ form_end(form) }}
 {% endblock %}

@@ -288,7 +288,7 @@ class TurSoporteRepository extends ServiceEntityRepository
         ini_set("memory_limit", -1);
         $em = $this->getEntityManager();
         if ($arSoporte->getEstadoAutorizado() == 1 && $arSoporte->getEstadoAprobado() == 0) {
-            $validar = $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte);
+            $validar = $em->getRepository(TurSoporte::class)->validarAprobado($arSoporte->getCodigoSoportePk());
             if($validar) {
                 $arSoporte->setEstadoAprobado(1);
                 $em->persist($arSoporte);
@@ -432,13 +432,9 @@ class TurSoporteRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-    /**
-     * @param $arSoporte TurSoporte
-     * @return bool
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function validarAprobado($arSoporte) {
+    public function validarAprobado($codigoSoporte) {
         $em = $this->getEntityManager();
+        $arSoporte = $em->getRepository(TurSoporte::class)->find($codigoSoporte);
         $em->getRepository(GenInconsistencia::class)->limpiar('TurSoporte', $arSoporte->getCodigoSoportePk());
 
         $arrInconsistencias = array();
@@ -585,6 +581,15 @@ class TurSoporteRepository extends ServiceEntityRepository
             if($arrValidacionTurnos['dobles']) {
                 $arrInconsistencias[] = [
                     'descripcion' => "El empleado tiene turnos duplicados dias: " . $arrValidacionTurnos['dobles'],
+                    'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
+                    'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
+                    'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()
+                ];
+            }
+            //Turnos invalidos es porque mezcla novedad o descanso con turno normal
+            if($arrValidacionTurnos['invalidos']) {
+                $arrInconsistencias[] = [
+                    'descripcion' => "El empleado tiene turnos invalidos porque mezcla turno novedad o descanso con tuno normal dias: " . $arrValidacionTurnos['invalidos'],
                     'referencia' => $arSoporteContrato->getEmpleadoRel()->getNumeroIdentificacion(),
                     'nombreReferencia' => $arSoporteContrato->getEmpleadoRel()->getNombreCorto(),
                     'codigoReferencia' => $arSoporteContrato->getCodigoEmpleadoFk()

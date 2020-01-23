@@ -9,6 +9,7 @@ use App\Entity\Documental\DocImagen;
 use App\Entity\Documental\DocMasivo;
 use App\Entity\General\GenInconsistencia;
 use App\Entity\General\GenLog;
+use App\Entity\General\GenModelo;
 use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,13 +30,15 @@ class InconsistenciaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
+            ->add('btnValidar', SubmitType::class, array('label' => 'Validar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /*if($form->get('btnExcel')->isClicked()){
-                ob_clean();
-                $this->generarExcelLogComparativo($detalleSeguimiento,"LogExtendido");
-            }*/
+            if($form->get('btnValidar')->isClicked()){
+                $arModelo = $em->getRepository(GenModelo::class)->find($entidad);
+                $repositorio = "App:{$arModelo->getCodigoModuloFk()}\\{$entidad}";
+                $em->getRepository($repositorio)->validarAprobado($codigo);
+            }
         }
         $arInconsistencias = $paginator->paginate($em->getRepository(GenInconsistencia::class)->lista($entidad, $codigo), $request->query->getInt('page', 1), 1000);
         return $this->render('general/utilidad/inconsistencia/ver.html.twig', [

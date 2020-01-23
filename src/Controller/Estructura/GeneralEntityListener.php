@@ -52,9 +52,11 @@ class GeneralEntityListener
             }, array_keys($dataObj)));
             $insert = "INSERT INTO gen_log ({$columnas}) VALUES ";
             foreach ($queries as $valores) {
-                $sql =  $insert . implode(', ', $valores);
-                $statement = $em->getConnection()->prepare($sql);
-                $statement->execute();
+                if($valores){
+                    $sql =  $insert . implode(', ', $valores);
+                    $statement = $em->getConnection()->prepare($sql);
+                    $statement->execute();
+                };
             }
             $sesion->remove("cola-registro-log");
         }

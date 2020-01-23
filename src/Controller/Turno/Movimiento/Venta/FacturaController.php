@@ -266,7 +266,7 @@ class FacturaController extends AbstractController
                     }
                 }
                 if($arFactura->getCodigoFacturaClaseFk() == 'NC'){
-                    switch ($arConfiguracion->getCodigoFormatoFactura()){
+                    switch ($arConfiguracion->getCodigoFormatoNotaCredito()){
                         case 1:
                             $formatoFactura = new NotaCredito();
                             $formatoFactura->Generar($em, $id);

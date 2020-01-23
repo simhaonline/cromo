@@ -148,7 +148,9 @@ class RhuCreditoRepository extends ServiceEntityRepository
             $arCreditoPago = $query->getQuery()->getResult();
             $abonos = 0;
             if($arCreditoPago) {
-                $abonos = $arCreditoPago[0]['pago'];
+                if($arCreditoPago[0]['pago']) {
+                    $abonos = $arCreditoPago[0]['pago'];
+                }
             }
             $saldo = $arCredito->getVrCredito() - $abonos;
             $arCredito->setVrSaldo($saldo);

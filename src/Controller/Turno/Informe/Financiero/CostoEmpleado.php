@@ -50,7 +50,7 @@ class CostoEmpleado extends Controller
                 $session->set('filtroRhuEmpleadoCodigoEmpleado', $form->get('txtEmpleado')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TurProgramacion::class)->programaciones()->execute(), "programaciones");
+                General::get()->setExportar($em->getRepository(TurProgramacion::class)->programaciones(), "programaciones");
             }
         }
         $arCostosEmpleadoServicio = $paginator->paginate($em->getRepository(TurCostoEmpleadoServicio::class)->informe(), $request->query->getInt('page', 1), 1000);

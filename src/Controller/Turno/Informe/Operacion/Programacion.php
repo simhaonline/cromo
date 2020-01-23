@@ -57,7 +57,7 @@ class Programacion extends AbstractController
                 $session->set('filtroTurProgramacionNuemeroPedido', $form->get('nuemeroPedido')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
-                $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones()->getResult();
+                $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones();
                 $this->exportarExcelPersonalizado($arProgramaciones);
             }
             if ($form->get('btnImprimir')->isClicked()) {

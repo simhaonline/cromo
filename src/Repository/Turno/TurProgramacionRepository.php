@@ -291,6 +291,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->addSelect('p.mes')
             ->addSelect('p.codigoEmpleadoFk')
             ->addSelect('p.codigoPuestoFk')
+            ->addSelect('p.horas')
             ->addSelect('e.nombreCorto as empleadoNombreCorto')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('cl.nombreCorto as cliente')

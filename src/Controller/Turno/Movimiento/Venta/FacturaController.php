@@ -18,6 +18,7 @@ use App\Form\Type\Turno\FacturaType;
 use App\Formato\Turno\Factura1;
 use App\Formato\Turno\Factura2;
 use App\Formato\Turno\Factura3;
+use App\Formato\Turno\NotaCredito;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
@@ -187,6 +188,9 @@ class FacturaController extends AbstractController
      */
     public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
+        /**
+         * @var $arFactura TurFactura
+         */
         $em = $this->getDoctrine()->getManager();
         $arFactura = $em->getRepository(TurFactura::class)->find($id);
         $form = Estandares::botonera($arFactura->getEstadoAutorizado(), $arFactura->getEstadoAprobado(), $arFactura->getEstadoAnulado());
@@ -242,23 +246,37 @@ class FacturaController extends AbstractController
             }
             if ($form->get('btnImprimir')->isClicked()) {
                 $arConfiguracion = $em->getRepository(TurConfiguracion::class)->find(1);
-                switch ($arConfiguracion->getCodigoFormatoFactura()){
-                    case 1:
-                        $formatoFactura = new Factura1();
-                        $formatoFactura->Generar($em, $id, $arFactura->getNumero(), $this->getUser());
-                        break;
-                    case 2:
-                        $formatoFactura = new Factura2();
-                        $formatoFactura->Generar($em, $id);
-                        break;
-                    case 3:
-                        $formatoFactura = new Factura3();
-                        $formatoFactura->Generar($em, $id);
-                        break;
-                    default:
-                        Mensajes::error("SIN FORMATO DE FACTURA");
-                        break;
+                if($arFactura->getCodigoFacturaClaseFk() == 'FA'){
+                    switch ($arConfiguracion->getCodigoFormatoFactura()){
+                        case 1:
+                            $formatoFactura = new Factura1();
+                            $formatoFactura->Generar($em, $id, $arFactura->getNumero(), $this->getUser());
+                            break;
+                        case 2:
+                            $formatoFactura = new Factura2();
+                            $formatoFactura->Generar($em, $id);
+                            break;
+                        case 3:
+                            $formatoFactura = new Factura3();
+                            $formatoFactura->Generar($em, $id);
+                            break;
+                        default:
+                            Mensajes::error("SIN FORMATO DE FACTURA");
+                            break;
+                    }
                 }
+                if($arFactura->getCodigoFacturaClaseFk() == 'NC'){
+                    switch ($arConfiguracion->getCodigoFormatoFactura()){
+                        case 1:
+                            $formatoFactura = new NotaCredito();
+                            $formatoFactura->Generar($em, $id);
+                            break;
+                        default:
+                            Mensajes::error("SIN FORMATO DE NOTA CREDITO");
+                            break;
+                    }
+                }
+
             }
         }
         $arImpuestosIva = $em->getRepository(GenImpuesto::class)->findBy(array('codigoImpuestoTipoFk' => 'I'));

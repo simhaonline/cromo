@@ -39,6 +39,11 @@ class TurConfiguracion
     private $codigoFormatoFactura;
 
     /**
+     * @ORM\Column(name="codigo_formato_nota_credito", type="integer", nullable=true)
+     */
+    private $codigoFormatoNotaCredito;
+
+    /**
      * @ORM\Column(name="redondear_valor_factura", type="boolean", nullable=true)
      */
     private $redondearValorFactura = false;
@@ -142,6 +147,38 @@ class TurConfiguracion
     public function setValidarHorasProgramacion($validarHorasProgramacion): void
     {
         $this->validarHorasProgramacion = $validarHorasProgramacion;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoFormatoNotaCredito()
+    {
+        return $this->codigoFormatoNotaCredito;
+    }
+
+    /**
+     * @param mixed $codigoFormatoNotaCredito
+     */
+    public function setCodigoFormatoNotaCredito($codigoFormatoNotaCredito): void
+    {
+        $this->codigoFormatoNotaCredito = $codigoFormatoNotaCredito;
     }
 
 

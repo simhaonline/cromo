@@ -1523,7 +1523,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
         $arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
         $arCuentaPagar->setModulo('rhu');
-        $arCuentaPagar->setModulo('RhuPago');
+        $arCuentaPagar->setModelo('RhuPago');
         $arCuentaPagar->setCodigoDocumento($arPago->getCodigoPagoPk());
         $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
         $arCuentaPagar->setFecha($arPago->getFechaDesde());

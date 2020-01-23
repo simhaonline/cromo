@@ -3,6 +3,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuCredito;
+use App\Entity\RecursoHumano\RhuCreditoPago;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -133,5 +134,27 @@ class RhuCreditoRepository extends ServiceEntityRepository
             ->andWhere("c.codigoEmpleadoFk = {$codigoEmpleado}")
             ->leftJoin('c.creditoTipoRel', 'ct');
         return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    public function regenerar()
+    {
+        $em = $this->getEntityManager();
+        /** @var $arCredito RhuCredito */
+        $arCreditos = $em->getRepository(RhuCredito::class)->findAll();
+        foreach ($arCreditos as $arCredito) {
+            $query = $em->createQueryBuilder()->from(RhuCreditoPago::class,"cp")
+                ->select("SUM(cp.vrPago) as pago")
+                ->where("cp.codigoCreditoFk = {$arCredito->getCodigoCreditoPk()}");
+            $arCreditoPago = $query->getQuery()->getResult();
+            $abonos = 0;
+            if($arCreditoPago) {
+                $abonos = $arCreditoPago[0]['pago'];
+            }
+            $saldo = $arCredito->getVrCredito() - $abonos;
+            $arCredito->setVrSaldo($saldo);
+            $arCredito->setVrAbonos($abonos);
+            $em->persist($arCredito);
+        }
+        $em->flush();
     }
 }

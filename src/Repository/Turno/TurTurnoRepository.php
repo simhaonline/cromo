@@ -34,6 +34,7 @@ class TurTurnoRepository extends ServiceEntityRepository
             ->addSelect('t.retiro ')
             ->addSelect('t.induccion ')
             ->addSelect('t.ausentismo ')
+            ->addSelect('t.complementario')
             ->addSelect('t.dia ')
             ->addSelect('t.noche ');
         if ($session->get('filtroTurTurnoCodigoTurno') != '') {

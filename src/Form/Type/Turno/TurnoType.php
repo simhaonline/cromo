@@ -37,6 +37,7 @@ class TurnoType extends   AbstractType
             ->add('ingreso', CheckboxType::class, ['required' => false,'label' => 'Ingreso'])
             ->add('induccion', CheckboxType::class, ['required' => false,'label' => 'Induccion'])
             ->add('ausentismo', CheckboxType::class, ['required' => false,'label' => 'Ausentismo'])
+            ->add('complementario', CheckboxType::class, ['required' => false,'label' => 'Complementario'])
             ->add('dia', CheckboxType::class, ['required' => false,'label' => 'Dia'])
             ->add('noche', CheckboxType::class, ['required' => false,'label' => 'Noche'])
             ->add('guardar', SubmitType::class, array('label' => 'Guardar',))

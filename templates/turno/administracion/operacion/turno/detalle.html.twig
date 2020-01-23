@@ -31,43 +31,43 @@
             <td class="titulo">HORAS NOCTURNAS:</td>
             <td class="td-in-well">{{ arTurno.horasNocturnas | date('h:m') }}</td>
             <td class="titulo">NOVEDAD:</td>
-            <td class="td-in-well">{{ arTurno.novedad?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.novedad?"SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">DESCANSO:</td>
             <td class="td-in-well">{{ arTurno.descanso?"si":"no" }}</td>
             <td class="titulo">INCAPACIDAD:</td>
-            <td class="td-in-well">{{ arTurno.incapacidad?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.incapacidad?"SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">LICENCIA:</td>
-            <td class="td-in-well">{{ arTurno.licencia?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.licencia?"SI":"NO" }}</td>
             <td class="titulo">VACACIONES:</td>
-            <td class="td-in-well">{{ arTurno.vacacion?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.vacacion?"SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">INGRESO:</td>
-            <td class="td-in-well">{{ arTurno.ingreso?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.ingreso?"SI":"NO" }}</td>
             <td class="titulo">RETIRO:</td>
-            <td class="td-in-well">{{ arTurno.retiro?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.retiro?"SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">INDUCCIÓN:</td>
-            <td class="td-in-well">{{ arTurno.induccion?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.induccion?"SI":"NO" }}</td>
             <td class="titulo">AUSENTISMO:</td>
-            <td class="td-in-well">{{ arTurno.ausentismo?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.ausentismo?"SI":"NO" }}</td>
         </tr>
         <tr>
             <td class="titulo">DÍA:</td>
-            <td class="td-in-well">{{ arTurno.dia?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.dia?"SI":"NO" }}</td>
             <td class="titulo">NOCHE:</td>
-            <td class="td-in-well">{{ arTurno.noche?"si":"no" }}</td>
+            <td class="td-in-well">{{ arTurno.noche?"SI":"NO" }}</td>
         </tr>
-{#            <td class="td-in-well">{{ arTurno.fecha| date('Y-m-d') }}</td>#}
-{#            <td class="titulo">VALOR:</td>#}
-{#            <td class="numero">{{ arTurno.VALOR | number_format(0, '.', ',') }}</td>#}
-{#            <td class="titulo">CLIENTE:</td>#}
-{#            <td class="td-in-well">{{ arTurno.clienteRel.nombreCorto|default("") }}</td>#}
+        <tr>
+            <td class="titulo">COOMPLEMENTARIO:</td>
+            <td class="td-in-well">{{ arTurno.complementario?"SI":"NO" }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
         </tbody>
     </table>
 {% endblock %}

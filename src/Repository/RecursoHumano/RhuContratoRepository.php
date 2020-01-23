@@ -476,7 +476,6 @@ class RhuContratoRepository extends ServiceEntityRepository
 
     public function informeContratoFechaRetiro($raw)
     {
-        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
 
         $codigoEmpleado = null;
@@ -484,7 +483,6 @@ class RhuContratoRepository extends ServiceEntityRepository
         $fechaHasta = null;
         $codigoContratoTipo = null;
         $codigoGrupo = null;
-        $codigoSegmento = null;
 
         if ($filtros) {
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
@@ -492,7 +490,6 @@ class RhuContratoRepository extends ServiceEntityRepository
             $fechaHasta = $filtros['fechaHasta'] ?? null;
             $codigoContratoTipo = $filtros['codigoContratoTipo'] ?? null;
             $codigoGrupo = $filtros['codigoGrupo'] ?? null;
-            $codigoSegmento = $filtros['codigoSegmento'] ?? null;
         }
 
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuContrato::class, 'c')
@@ -506,11 +503,13 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect("cc.nombre as centroCosto")
             ->addSelect('cg.nombre as cargo')
             ->addSelect('cm.motivo')
+            ->addSelect('g.nombre AS grupo')
             ->leftJoin("c.contratoTipoRel", "ct")
             ->leftJoin("c.empleadoRel", "e")
             ->leftJoin("c.cargoRel", "cg")
             ->leftJoin("c.centroCostoRel", "cc")
             ->leftJoin("c.contratoMotivoRel", 'cm')
+            ->leftJoin('c.grupoRel', 'g')
             ->where("c.codigoContratoPk <> 0")
             ->andWhere("c.estadoTerminado = 1");
 
@@ -518,24 +517,20 @@ class RhuContratoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("c.codigoEmpleadoFk = '{$codigoEmpleado}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("c.fechaHasta >= '{$fechaDesde} 00:00:00'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("c.fechaHasta <= '{$fechaHasta} 23:59:59'");
         }
         if ($codigoContratoTipo) {
             $queryBuilder->andWhere("c.codigoContratoTipoFk = '{$codigoContratoTipo}'");
         }
         if ($codigoGrupo) {
-            $queryBuilder->andWhere("c.codigoContratoTipoFk = '{$codigoGrupo}'");
-        }
-        if ($codigoSegmento) {
-            $queryBuilder->andWhere("c.codigoSegmectoFk = '{$codigoSegmento}'");
+            $queryBuilder->andWhere("c.codigoGrupoFk = '{$codigoGrupo}'");
         }
 
 
         $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
-        $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
 
     }

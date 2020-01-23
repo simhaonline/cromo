@@ -34,7 +34,6 @@ class FechaRetiroController extends AbstractController
             'filtros'=> $session->get('filtroInformeTurPedido')
         ];
         $form = $this->createFormBuilder()
-            ->add('codigoEmpleadoFk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoClienteFk'] ))
             ->add('contratoTipoRel', EntityType::class, [
                 'class' => RhuContratoTipo::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -52,18 +51,6 @@ class FechaRetiroController extends AbstractController
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
                         ->orderBy('g.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'required' => false,
-                'empty_data' => "",
-                'placeholder' => "TODOS",
-                'data' => ""
-            ])
-            ->add('segmentoRel', EntityType::class, [
-                'class' => GenSegmento::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('s')
-                        ->orderBy('s.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'required' => false,
@@ -101,14 +88,12 @@ class FechaRetiroController extends AbstractController
         $session = new Session();
 
         $filtro = [
-            'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
         ];
 
         $arContratoTipo = $form->get('contratoTipoRel')->getData();
         $arGrupo = $form->get('grupoRel')->getData();
-        $arSegmento = $form->get('segmentoRel')->getData();
 
         if (is_object($arContratoTipo)) {
             $filtro['codigoContratoTipo'] = $arContratoTipo->getCodigoContratoTipoPk();
@@ -121,15 +106,6 @@ class FechaRetiroController extends AbstractController
         } else {
             $filtro['codigoGrupo'] = $arGrupo;
         }
-
-        if (is_object($arSegmento)) {
-            $filtro['codigoSegmento'] = $arSegmento->getCodigoSegmentoPk();
-        } else {
-            $filtro['codigoSegmento'] = $arSegmento;
-        }
-
-
-
         $session->set('filtroInformeTurPedido', $filtro);
         return $filtro;
 

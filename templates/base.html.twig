@@ -410,8 +410,26 @@
         }
     </script>
 {% endblock %}
-{% block javascriptsPersonales %}
-
-{% endblock %}
+{% block javascriptsPersonales %}{% endblock %}
+<script>
+    function autocompletar(informacion) {
+        $.ajax({
+            dataType: 'json',
+            type: "POST",
+            url: informacion['url'],
+            data: informacion['dataAjax']
+        }).done( (respuesta)  => {
+            if (respuesta != null) {
+                var availableTags = respuesta;
+                $( ".AutoCompletado" ).autocomplete({
+                    source: availableTags,
+                    open: function(){
+                        $('.ui-autocomplete').css('width', '500px'); // HERE
+                    }
+                });
+            }
+        }).fail(function () {});
+    }
+</script>
 </body>
 </html>

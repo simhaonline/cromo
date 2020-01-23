@@ -4,7 +4,8 @@
         <div class="row">
             <div class="col-sm-2">
                 <div class="input-group">
-                    {{ form_widget(form.codigoEmpleadoFk) }}
+                    {{ form_widget(form.codigoEmpleadoFk, { 'attr': {'class': 'AutoCompletado',
+                                                                    'autocomplete':"off"}} ) }}
                 </div>
             </div>
             <div class="col-sm-10">

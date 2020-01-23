@@ -425,5 +425,31 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         }
 
     }
+
+
+    public function autoCompletar($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'];
+        $filtros = $raw['filtros'] ?? null;
+        $nombreCorto = null;
+        $numeroIdentificacion = null;
+        if ($filtros){
+            $nombreCorto = $filtros['nombreCorto']??null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
+        }
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmpleado::class, 'e')
+            ->select('e.codigoEmpleadoPk as value')
+            ->addSelect("CONCAT(e.nombreCorto, ' ', e.numeroIdentificacion)  as label")
+            ->orderBy('e.nombreCorto', 'ASC');
+        if($nombreCorto){
+            $queryBuilder->orWhere("e.nombreCorto LIKE '%{$nombreCorto}%'");
+        }
+        if($numeroIdentificacion){
+            $queryBuilder->orWhere("e.numeroIdentificacion LIKE '%{$numeroIdentificacion}%'");
+        }
+        $queryBuilder->addOrderBy('e.codigoEmpleadoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
 

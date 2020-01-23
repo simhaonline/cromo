@@ -121,3 +121,19 @@
     <br/><br/>
     {{ form_end(form) }}
 {% endblock %}
+{% block javascriptsPersonales %}
+    <script>
+        $(document).ready(function () {
+            $('.AutoCompletado').keyup((evento)=> {
+                informacion = {
+                    url: "{{ path('recursohumanoAutocompletarEmpleado') }}",
+                    dataAjax: {
+                        rawText: evento.target.value,
+                        inputId:  evento.target.id,
+                    }
+                };
+                autocompletar(informacion);
+            })
+        });
+    </script>
+{% endblock %}

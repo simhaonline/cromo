@@ -8,6 +8,7 @@ use App\Controller\Estructura\FuncionesController;
 
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
+use App\Formato\Turno\informeProgramacion;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -42,6 +43,7 @@ class Programacion extends AbstractController
             ->add('codigoPuesto', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('nuemeroPedido', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
+            ->add('btnImprimir', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -57,6 +59,11 @@ class Programacion extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones()->getResult();
                 $this->exportarExcelPersonalizado($arProgramaciones);
+            }
+            if ($form->get('btnImprimir')->isClicked()) {
+                $programacion = $em->getRepository(TurProgramacion::class)->programaciones();
+                $formatoProgramacion = new informeProgramacion();
+                $formatoProgramacion->Generar($em, $programacion);
             }
         }
         $arrDiaSemana = FuncionesController::diasMes($dateFecha, $em->getRepository(TurFestivo::class)->festivos($dateFecha->format('Y-m-') . '01', $dateFecha->format('Y-m-t')));

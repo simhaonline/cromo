@@ -294,14 +294,22 @@ class TurProgramacionRepository extends ServiceEntityRepository
             ->addSelect('e.nombreCorto as empleadoNombreCorto')
             ->addSelect('e.numeroIdentificacion')
             ->addSelect('cl.nombreCorto as cliente')
-            ->addSelect('ped.codigoClienteFk')
+            ->addSelect('pe.codigoClienteFk')
             ->addSelect('pu.nombre as puestoNombre')
+            ->addSelect('pu.direccion as puestoDireccion')
+            ->addSelect('pu.codigoZonaFk as codigoZona')
             ->addSelect('p.complementario')
+            ->addSelect('z.codigoZonaPk')
+            ->addSelect('z.nombre as zonaNombre')
+            ->addSelect('it.nombre as itemNombre')
             ->leftJoin('p.empleadoRel', 'e')
-            ->leftJoin('p.pedidoRel', 'ped')
-            ->leftJoin('ped.clienteRel', 'cl')
+            ->leftJoin('p.pedidoRel', 'pe')
+            ->leftJoin('p.pedidoDetalleRel', 'ped')
+            ->leftJoin('ped.itemRel', 'it')
+            ->leftJoin('pe.clienteRel', 'cl')
             ->leftJoin('p.puestoRel', 'pu')
-            ->groupBy('ped.codigoClienteFk')
+            ->leftJoin('pu.zonaRel', 'z')
+            ->groupBy('pe.codigoClienteFk')
             ->groupBy('p.codigoPuestoFk')
             ->groupBy('p.codigoProgramacionPk');
         for ($i = 1; $i <= 31; $i++) {
@@ -317,7 +325,7 @@ class TurProgramacionRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("p.codigoEmpleadoFk = '{$session->get('filtroRhuEmpleadoCodigoEmpleado')}'");
         }
         if ($session->get('filtroTurCodigoCliente') != null) {
-            $queryBuilder->andWhere("ped.codigoClienteFk = '{$session->get('filtroTurCodigoCliente')}'");
+            $queryBuilder->andWhere("cl.codigoClientePk = '{$session->get('filtroTurCodigoCliente')}'");
         }
         if ($session->get('filtroTurProgramacionCodigoPuesto') !=null){
             $queryBuilder->andWhere("p.codigoPuestoFk = '{$session->get('filtroTurProgramacionCodigoPuesto')}'");
@@ -326,7 +334,8 @@ class TurProgramacionRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("p.codigoPedidoFk = '{$session->get('filtroTurProgramacionNuemeroPedido')}'");
         }
 
-        return $queryBuilder->setMaxResults(5000)->getQuery();
+        $queryBuilder->setMaxResults(5000);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function programacionEmpleado($codigoEmpleado, $anio, $mes)

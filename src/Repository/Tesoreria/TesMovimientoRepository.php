@@ -629,7 +629,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.codigoMovimientoClaseFk = '{$codigoMovimientoClase}'");
             }
         }
-
+        $queryBuilder->orderBy('m.numero');
         return $queryBuilder->getQuery()->getResult();
 
     }

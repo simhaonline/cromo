@@ -78,6 +78,7 @@
                 <th>CARGO</th>
                 <th>GRUPO PAGO</th>
                 <th>HASTA</th>
+                <th>MOTIVO</th>
                 <th>COMENTARIO</th>
             </tr>
         </thead>
@@ -92,6 +93,7 @@
                     <td>{{ arContrato.cargo }}</td>
                     <td>{{ arContrato.centroCosto  }}</td>
                     <td>{{ arContrato.fechaHasta |date("Y/m/d")  }}</td>
+                    <td>{{ arContrato.motivo  }}</td>
                     <td>{{ arContrato.comentarioTerminacion  }}</td>
                 </tr>
             {% endfor %}

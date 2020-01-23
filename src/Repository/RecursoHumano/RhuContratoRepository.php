@@ -505,10 +505,12 @@ class RhuContratoRepository extends ServiceEntityRepository
             ->addSelect("e.nombreCorto as nombreEmpleado")
             ->addSelect("cc.nombre as centroCosto")
             ->addSelect('cg.nombre as cargo')
+            ->addSelect('cm.nombre as motivo')
             ->leftJoin("c.contratoTipoRel", "ct")
             ->leftJoin("c.empleadoRel", "e")
             ->leftJoin("c.cargoRel", "cg")
             ->leftJoin("c.centroCostoRel", "cc")
+            ->leftJoin("c.contratoMotivoRel", 'cm')
             ->where("c.codigoContratoPk <> 0")
             ->andWhere("c.estadoTerminado = 1");
 

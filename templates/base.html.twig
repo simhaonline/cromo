@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Cromo!{% endblock %}</title>
+
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('css/general.css') }}">
         <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/bootstrap.min.css') }}">
@@ -69,6 +69,7 @@
     {% set funcion = '' %}
     {% set grupo = '' %}
     {% set entidad = '' %}
+    {% set titulo = 'Cromo!' %}
     {% set licencia = app.session.get('licencia')%}
     {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
         {% set modulo = arrRuta.0 %}
@@ -80,6 +81,7 @@
         {% endif %}
         {% if arrRuta | length > 3 and arrRuta.3 is defined %}
             {% set entidad = arrRuta.3 %}
+            {% set titulo = arrRuta.3 %}
         {% endif %}
     {% endif %}
     {% if arrRuta | length > 0 and arrRuta.0 is defined and arrRuta.0 != 'administracion' %}
@@ -172,7 +174,7 @@
     {% include 'base_comunidad.html.twig' %}
     {% include 'base_documentacion.html.twig' %}
     {% include 'base_blog.html.twig' %}
-
+    <title>{% block title %}{{ titulo |capitalize }}{% endblock %}</title>
     <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 
 </aside>

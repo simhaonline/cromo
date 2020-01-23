@@ -11,6 +11,7 @@ use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuConfiguracionCuenta;
+use App\Entity\RecursoHumano\RhuConfiguracionLiquidacion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
@@ -310,6 +311,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $objFunciones = new FuncionesController();
         $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
+        $arConfiguracionLiquidacion = $em->getRepository(RhuConfiguracionLiquidacion::class)->find(1);
         $arLiquidacion = $em->getRepository(RhuLiquidacion::class)->find($codigoLiquidacion);
         $salarioMinimo = $arConfiguracion->getVrSalarioMinimo();
         $auxilioTransporte = $arConfiguracion->getVrAuxilioTransporte();
@@ -874,6 +876,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                 //Liquidar vacaciones
                 if ($arLiquidacion->getContratoRel()->getFechaUltimoPagoVacaciones() <= $arLiquidacion->getFechaHasta()) {
                     if ($arLiquidacion->getLiquidarVacaciones() == 1) {
+
                         $dateFechaDesde = $arLiquidacion->getContratoRel()->getFechaUltimoPagoVacaciones();
                         $dateFechaHasta = $arLiquidacion->getContratoRel()->getFechaHasta();
                         $recargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosFecha($dateFechaDesde, $dateFechaHasta, $arLiquidacion->getContratoRel()->getCodigoContratoPk());
@@ -1011,10 +1014,27 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             }
                         }
 
-
                         if ($arLiquidacion->getVrSalarioVacacionPropuesto() > 0) {
                             $salarioVacaciones = $arLiquidacion->getVrSalarioVacacionPropuesto();
                         }
+
+                        if($arConfiguracionLiquidacion->getAplicar()) {
+                            $recargosNocturnos = 0;
+                            if($arConfiguracionLiquidacion->getRecargoNocturno() == 'PERIODO') {
+                                $fechaDesdeRecargo = $arLiquidacion->getFechaUltimoPagoVacacion();
+                                $fechaHastaRecargo = $arLiquidacion->getFechaHasta();
+                                $diasVacacionesRecargo = $this->diasPrestaciones($dateFechaDesde, $dateFechaHasta);
+                                $diasVacacionesRecargo = $diasVacacionesRecargo - $intDiasAusentismo;
+                                $baseRecargosNocturnos = $em->getRepository(RhuPagoDetalle::class)->recargosNocturnosIbp($fechaDesdeRecargo->format('Y-m-d'), $fechaHastaRecargo->format('Y-m-d'), $arContrato->getCodigoContratoPk());
+                                if ($intDiasVacacionesRecargo > 360) {
+                                    $recargosNocturnos = $baseRecargosNocturnos / 360 * 30;
+                                } else {
+                                    $recargosNocturnos = $baseRecargosNocturnos / $diasVacacionesRecargo * 30;
+                                }
+                            }
+                            $salarioVacaciones = $arContrato->getVrSalario() + $recargosNocturnos;
+                        }
+
                         $salarioVacaciones = round($salarioVacaciones);
                         $douVacaciones = ($salarioVacaciones * $intDiasVacacionesLiquidar) / 720;
                         $douVacaciones = round($douVacaciones);

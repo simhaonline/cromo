@@ -1523,6 +1523,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arCuentaPagar->setBancoRel($arPago->getEmpleadoRel()->getBancoRel());
         $arCuentaPagar->setCuenta($arPago->getEmpleadoRel()->getCuenta());
         $arCuentaPagar->setModulo('rhu');
+        $arCuentaPagar->setModulo('RhuPago');
         $arCuentaPagar->setCodigoDocumento($arPago->getCodigoPagoPk());
         $arCuentaPagar->setNumeroDocumento($arPago->getNumero());
         $arCuentaPagar->setFecha($arPago->getFechaDesde());
@@ -2501,6 +2502,25 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setComentario("Anulacion por pago en liquidacion");
         $em->persist($arPago);
         $em->flush();
+
+        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['codigoDocumento' => $arPago->getCodigoPagoPk(), 'modelo' => 'RhuPago']);
+        if($arCuentaPagar) {
+            if ($arCuentaPagar->getVrAbono() <= 0) {
+                $arCuentaPagar->setEstadoAnulado(1);
+                $arCuentaPagar->setVrSubtotal(0);
+                $arCuentaPagar->setVrIva(0);
+                $arCuentaPagar->setVrRetencionFuente(0);
+                $arCuentaPagar->setVrRetencionIva(0);
+                $arCuentaPagar->setVrTotal(0);
+                $arCuentaPagar->setVrSaldo(0);
+                $arCuentaPagar->setVrSaldoOriginal(0);
+                $arCuentaPagar->setVrSaldoOperado(0);
+                $em->persist($arCuentaPagar);
+                $em->flush();
+            } else {
+                Mensajes::error("La cuenta por pagar tenia abonos y se pago en la liquidacion nuevamente");
+            }
+        }
     }
 
     /**
@@ -2518,5 +2538,23 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPago->setComentario("Anulacion por pago en liquidacion");
         $em->persist($arPago);
         $em->flush();
+        $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['codigoDocumento' => $arPago->getCodigoPagoPk(), 'modelo' => 'RhuPago']);
+        if($arCuentaPagar) {
+            if ($arCuentaPagar->getVrAbono() <= 0) {
+                $arCuentaPagar->setEstadoAnulado(1);
+                $arCuentaPagar->setVrSubtotal(0);
+                $arCuentaPagar->setVrIva(0);
+                $arCuentaPagar->setVrRetencionFuente(0);
+                $arCuentaPagar->setVrRetencionIva(0);
+                $arCuentaPagar->setVrTotal(0);
+                $arCuentaPagar->setVrSaldo(0);
+                $arCuentaPagar->setVrSaldoOriginal(0);
+                $arCuentaPagar->setVrSaldoOperado(0);
+                $em->persist($arCuentaPagar);
+                $em->flush();
+            } else {
+                Mensajes::error("La cuenta por pagar tenia abonos y se pago en la liquidacion nuevamente");
+            }
+        }
     }
 }

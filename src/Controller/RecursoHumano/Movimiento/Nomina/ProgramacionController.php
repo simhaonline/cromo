@@ -268,11 +268,11 @@ class ProgramacionController extends MaestroController
                 }
             }
             if ($form->get('btnExcelDetalle')->isClicked()) {
-                //General::get()->setExportar(($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
+                General::get()->setExportar(($em->getRepository(RhuProgramacionDetalle::class)->exportar($id))->execute(), "ProgramacionDetalle");
                 /*
                 * Este metodo solo se usa cuando un documento no se le configure la cuenta por pagar inicialmente y lo requiera
                 */
-                $em->getRepository(RhuProgramacion::class)->generarCuentasPagar($arProgramacion);
+                //$em->getRepository(RhuProgramacion::class)->generarCuentasPagar($arProgramacion);
             }
             if ($form->get('btnExcelPagoDetalles')->isClicked()) {
                 $this->generarExcelDetalle($arProgramacion->getCodigoProgramacionPk());

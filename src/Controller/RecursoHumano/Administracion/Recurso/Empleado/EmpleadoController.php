@@ -136,18 +136,22 @@ class EmpleadoController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('guardar')->isClicked()) {
-                $nombreCorto = $arEmpleado->getNombre1();
-                if ($arEmpleado->getNombre2()) {
-                    $nombreCorto .= " " . $arEmpleado->getNombre2();
+                $booEmpleado = $em->getRepository(RhuEmpleado::class)->ValidarNumeroIdentificacion($arEmpleado);
+                if ($booEmpleado) {
+                    $nombreCorto = $arEmpleado->getNombre1();
+                    if ($arEmpleado->getNombre2()) {
+                        $nombreCorto .= " " . $arEmpleado->getNombre2();
+                    }
+                    $nombreCorto .= " " . $arEmpleado->getApellido1();
+                    if ($arEmpleado->getApellido2()) {
+                        $nombreCorto .= " " . $arEmpleado->getApellido2();
+                    }
+
+                    $arEmpleado->setNombreCorto($nombreCorto);
+                    $em->persist($arEmpleado);
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
                 }
-                $nombreCorto .= " " . $arEmpleado->getApellido1();
-                if ($arEmpleado->getApellido2()) {
-                    $nombreCorto .= " " . $arEmpleado->getApellido2();
-                }
-                $arEmpleado->setNombreCorto($nombreCorto);
-                $em->persist($arEmpleado);
-                $em->flush();
-                return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_empleado_detalle', ['id' => $arEmpleado->getCodigoEmpleadoPk()]));
             }
         }
         return $this->render('recursohumano/administracion/recurso/empleado/nuevo.html.twig', [

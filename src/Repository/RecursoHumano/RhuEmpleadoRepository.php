@@ -400,5 +400,30 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             }
         }
     }
+
+    public function ValidarNumeroIdentificacion($arEmpleado)
+    {
+        if ($arEmpleado){
+            if ($arEmpleado->getCodigoEmpleadoPK()){
+                $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
+                    ->select('e')
+                    ->where("e.numeroIdentificacion = {$arEmpleado->getNumeroIdentificacion()}")
+                    ->andWhere("e.codigoEmpleadoPk <> {$arEmpleado->getCodigoEmpleadoPK()}");
+                $arEmpleado = $queryBuilder->getQuery()->getResult();
+            } else {
+                $arEmpleado = $this->_em->getRepository(RhuEmpleado::class)->findBy(['numeroIdentificacion'=>$arEmpleado->getNumeroIdentificacion()]);
+            }
+            if (!$arEmpleado){
+                return true;
+            }else{
+                Mensajes::error("Ya existe un empleado con número de identificación");
+                return false;
+            }
+        }else{
+            Mensajes::error("Es necesario un número de identificación");
+            return false;
+        }
+
+    }
 }
 

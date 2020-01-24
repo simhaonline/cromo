@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Movimiento\Anticipo;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarAnticipo;
 use App\Entity\Cartera\CarAnticipoConcepto;
 use App\Entity\Cartera\CarAnticipoDetalle;
@@ -35,8 +36,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class AnticipoController extends AbstractController
+class AnticipoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CarAnticipio";
+
+
     protected $clase = CarAnticipo::class;
     protected $claseNombre = "CarAnticipo";
     protected $modulo = "Cartera";

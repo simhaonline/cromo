@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -23,8 +24,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdicionalController extends AbstractController
+class AdicionalController extends MaestroController
 {
+
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuAdicional";
+
+
     protected $clase = RhuAdicional::class;
     protected $claseFormulario = AdicionalType::class;
     protected $claseNombre = "RhuAdicional";

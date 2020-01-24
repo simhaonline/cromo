@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
 use App\Form\Type\RecursoHumano\CreditoTipoType;
@@ -16,8 +17,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreditoTipoController extends AbstractController
+class CreditoTipoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuCreditoTipo";
+
+    protected $clase = RhuCreditoTipo::class;
+    protected $claseNombre = "RhuCreditoTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "CreditoTipo";
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/creditoTipo/lista", name="recursohumano_administracion_nomina_creditoTipo_lista")
      */

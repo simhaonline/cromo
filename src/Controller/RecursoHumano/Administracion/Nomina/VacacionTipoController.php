@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
@@ -22,8 +23,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class VacacionTipoController extends AbstractController
+class VacacionTipoController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "RhuVacacionTipo";
+
     protected $clase = RhuVacacionTipo::class;
     protected $claseNombre = "RhuVacacionTipo";
     protected $modulo = "RecursoHumano";

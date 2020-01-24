@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Recurso\Visita;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
@@ -32,13 +33,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class VisitaController extends AbstractController
+class VisitaController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuVisita";
+
+
     protected $clase = RhuVisita::class;
     protected $claseFormulario = VisitaType::class;
     protected $claseNombre = "RhuVisita";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Recurso";
     protected $nombre = "Visita";
 

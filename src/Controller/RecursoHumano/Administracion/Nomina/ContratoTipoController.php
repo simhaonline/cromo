@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContratoClase;
 use App\Entity\RecursoHumano\RhuContratoTipo;
 use App\Form\Type\RecursoHumano\ContratoTipoType;
@@ -17,8 +18,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ContratoTipoController extends AbstractController
+class ContratoTipoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuContratoTipo";
+
+    protected $clase = RhuContratoTipo::class;
+    protected $claseNombre = "RhuContratoTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "ContratoTipo";
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/contratoTipo/lista", name="recursohumano_administracion_nomina_contratoTipo_lista")
      */

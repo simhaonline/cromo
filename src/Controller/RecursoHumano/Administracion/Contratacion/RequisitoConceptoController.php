@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Contratacion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuRequisitoConcepto;
 use App\Form\Type\RecursoHumano\RequisitoConceptoType;
 use App\General\General;
@@ -15,8 +16,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class RequisitoConceptoController extends AbstractController
+class RequisitoConceptoController extends MaestroController
+
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuRequisitoConcepto";
+
+
+    protected $clase = RhuRequisitoConcepto::class;
+    protected $claseNombre = "RhuRequisitoConcepto";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Contratacion";
+    protected $nombre = "RequisitoConcepto";
+
+
+
     /**
      * @Route("/recursohumano/administracion/contratacion/requisitoconcepto/lista", name="recursohumano_administracion_contratacion_requisitoconcepto_lista")
      */

@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuTiempo;
 use App\Form\Type\RecursoHumano\TiempoType;
 use App\General\General;
@@ -15,8 +16,23 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class TiempoController extends AbstractController
+class TiempoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuTiempo";
+
+    protected $clase = RhuTiempo::class;
+    protected $claseNombre = "RhuTiempo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "Tiempo";
+
+
+
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/tiempo/lista", name="recursohumano_administracion_nomina_tiempo_lista")
      */

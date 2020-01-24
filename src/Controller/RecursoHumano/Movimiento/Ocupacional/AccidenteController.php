@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Ocupacional;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAccidente;
 use App\Form\Type\RecursoHumano\AccidenteType;
 use App\General\General;
@@ -18,8 +19,18 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class AccidenteController extends AbstractController
+class AccidenteController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "RhuAccidente";
+
+    protected $class = RhuAccidente::class;
+    protected $claseNombre = "RhuAccidente";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Ocupacional";
+    protected $nombre = "Accidente";
+
     /**
      * @Route("recursohumano/movimiento/ocupacional/accidente/lista", name="recursohumano_movimiento_ocupacional_accidente_lista")
      */

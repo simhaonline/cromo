@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Administracion\Operacion;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurSecuencia;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\TurnoType;
@@ -16,8 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Type\Turno\SecuenciaType;
 use Symfony\Component\HttpFoundation\Request;
 
-class SecuenciaController  extends ControllerListenerGeneral
+class SecuenciaController  extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TurSecuencia";
+
     protected $clase = TurSecuencia::class;
     protected $claseFormulario = SecuenciaType::class;
     protected $claseNombre = "TurSecuencia";

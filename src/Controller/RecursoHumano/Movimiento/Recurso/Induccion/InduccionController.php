@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Induccion;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuInduccion;
@@ -21,13 +22,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class InduccionController extends AbstractController
+class InduccionController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "RhuInduccion";
+
+
     protected $clase = RhuInduccion::class;
     protected $claseFormulario = PermisoType::class;
     protected $claseNombre = "RhuInduccion";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Recurso";
     protected $nombre = "Induccion";
 

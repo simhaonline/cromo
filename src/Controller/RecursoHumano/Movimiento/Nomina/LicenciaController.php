@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
@@ -28,12 +29,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LicenciaController extends AbstractController
+class LicenciaController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "RhuLicencia";
+
+
     protected $clase = RhuLicencia::class;
     protected $claseNombre = "RhuLicencia";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Licencia";
     protected $nombre = "Licencia";
 

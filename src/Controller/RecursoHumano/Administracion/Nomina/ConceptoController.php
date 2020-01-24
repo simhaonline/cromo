@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConceptoCuenta;
@@ -20,8 +21,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ConceptoController extends AbstractController
+class ConceptoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuConcepto";
+
     protected $clase = RhuConcepto::class;
     protected $claseNombre = "RhuConcepto";
     protected $modulo = "RecursoHumano";

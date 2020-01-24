@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Disciplinario;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuDesempeno;
 use App\Entity\RecursoHumano\RhuDisciplinario;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -24,8 +25,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-class DisciplinarioController extends AbstractController
+class DisciplinarioController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuDisciplinario";
+
+    protected $clase = RhuDisciplinario::class;
+    protected $claseNombre = "RhuDisciplinario";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recurso";
+    protected $nombre = "Disciplinario";
+
 
     /**
      * @Route("recursohumano/movimiento/recurso/disciplinario/lista", name="recursohumano_movimiento_recurso_disciplinario_lista")

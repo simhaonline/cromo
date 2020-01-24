@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Movimiento\Compromiso;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCompromiso;
 use App\Entity\Cartera\CarCompromisoDetalle;
@@ -31,8 +32,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class CompromisoController extends AbstractController
+class CompromisoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CarCompromiso";
+
     protected $clase = CarCompromiso::class;
     protected $claseNombre = "CarCompromiso";
     protected $modulo = "Cartera";

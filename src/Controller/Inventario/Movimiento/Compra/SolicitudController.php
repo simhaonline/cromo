@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Compra;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvOrdenTipo;
 use App\Entity\Inventario\InvSolicitud;
@@ -29,8 +30,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\SolicitudType;
 
-class SolicitudController extends AbstractController
+class SolicitudController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "InvSolicitud";
+
+
     protected $class= InvSolicitud::class;
     protected $claseNombre = "InvSolicitud";
     protected $modulo = "Inventario";

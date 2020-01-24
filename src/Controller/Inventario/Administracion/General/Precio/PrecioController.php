@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Administracion\General\Precio;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvPrecio;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\Form\Type\Inventario\PrecioType;
@@ -23,8 +24,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class PrecioController extends AbstractController
+class PrecioController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "InvPrecio";
+
+
     protected $class = InvPrecio::class;
     protected $claseNombre = "InvPrecio";
     protected $modulo = "Inventario";

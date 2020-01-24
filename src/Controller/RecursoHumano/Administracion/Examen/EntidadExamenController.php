@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Administracion\Examen;
 
 
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuEntidadExamen;
 use App\Entity\RecursoHumano\RhuEntidadExamenDetalle;
 use App\Entity\RecursoHumano\RhuExamenListaPrecio;
@@ -17,8 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EntidadExamenController extends AbstractController
+class EntidadExamenController extends MaestroController
 {
+
+
+
     protected $clase = RhuEntidadExamen::class;
     protected $claseFormulario = ExamenEntidadType::class;
     protected $claseNombre = "RhuEntidadExamen";

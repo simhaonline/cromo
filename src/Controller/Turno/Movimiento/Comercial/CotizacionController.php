@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Movimiento\Comercial;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
@@ -37,8 +38,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CotizacionController extends AbstractController
+class CotizacionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TurCotizacion";
+
     protected $clase = TurCotizacion::class;
     protected $claseNombre = "TurCotizacion";
     protected $modulo = "Turno";

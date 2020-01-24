@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteDocumental;
 use App\Entity\Transporte\TteGuia;
@@ -29,8 +30,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DocumentalController extends AbstractController
+class DocumentalController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TteDocumental";
+
+
     protected $clase = TteDocumental::class;
     protected $claseNombre = "TteDocumental";
     protected $modulo = "Transporte";

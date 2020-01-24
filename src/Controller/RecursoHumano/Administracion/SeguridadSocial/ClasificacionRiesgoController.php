@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\SeguridadSocial;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
 use App\Form\Type\RecursoHumano\ClasificacionRiesgoType;
 use App\General\General;
@@ -14,8 +15,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ClasificacionRiesgoController  extends AbstractController
+class ClasificacionRiesgoController  extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "RhuClasificacionRiesgo";
+
+    protected $clase = RhuClasificacionRiesgo::class;
+    protected $claseNombre = "RhuClasificacionRiesgo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "SeguridadSocial";
+    protected $nombre = "ClasificacionRiesgoController";
+
+
+
     /**
      * @Route("recursohumano/administracion/seguridadsocial/clasificacion/lista", name="recursohumano_administracion_seguridadsocial_clasificacion_lista")
      */

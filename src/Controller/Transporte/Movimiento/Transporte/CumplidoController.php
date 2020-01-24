@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCumplido;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
@@ -26,8 +27,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CumplidoController extends AbstractController
+class CumplidoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteCumplido";
+
+
     protected $clase= TteCumplido::class;
     protected $claseNombre = "TteCumplido";
     protected $modulo = "Transporte";

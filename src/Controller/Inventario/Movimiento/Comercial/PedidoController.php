@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvPedido;
 use App\Entity\Inventario\InvPedidoDetalle;
@@ -28,8 +29,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\PedidoType;
 
-class PedidoController extends AbstractController
+class PedidoController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "InvPedido";
+
     protected $class = InvPedido::class;
     protected $claseNombre = "InvPedido";
     protected $modulo = "Inventario";

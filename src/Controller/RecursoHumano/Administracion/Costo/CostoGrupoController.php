@@ -4,6 +4,8 @@
 namespace App\Controller\RecursoHumano\Administracion\Costo;
 
 
+use App\Controller\MaestroController;
+use App\Entity\RecursoHumano\RhuCosto;
 use App\Entity\RecursoHumano\RhuCostoGrupo;
 use App\Form\Type\RecursoHumano\CostoGrupoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,8 +18,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class CostoGrupoController extends  AbstractController
+class CostoGrupoController extends  MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuCostoGrupo";
+
+
+    protected $clase = RhuCostoGrupo::class;
+    protected $claseNombre = "RhuCostoGrupo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Costo";
+    protected $nombre = "CostoGrupo";
+
+
     /**
      * @Route("recursohumano/adminsitracion/costo/grupo/lista", name="recursohumano_administracion_costo_grupo_lista")
      */

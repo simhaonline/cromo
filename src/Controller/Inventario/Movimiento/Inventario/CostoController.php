@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Inventario;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvCostoCosto;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvCosto;
@@ -28,8 +29,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Type\Inventario\CostoType;
 
-class CostoController extends AbstractController
+class CostoController extends MaestroController
 {
+
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvCosto";
+
+
     protected $class = InvCosto::class;
     protected $claseNombre = "InvCosto";
     protected $modulo = "Inventario";

@@ -5,6 +5,7 @@ namespace App\Controller\Crm\Administracion\Control\Visita;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Crm\CrmVisitaTipo;
 use App\Form\Type\Crm\VisitaTipoType;
 use App\General\General;
@@ -12,8 +13,13 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class VisitaTipoController extends ControllerListenerGeneral
+class VisitaTipoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "CrmVisitaTipo";
+
+
     protected $clase= CrmVisitaTipo::class;
     protected $claseFormulario = VisitaTipoType::class;
     protected $claseNombre = "CrmVisitaTipo";
@@ -28,7 +34,7 @@ class VisitaTipoController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = MaestroController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);

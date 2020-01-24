@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Administracion\Comercial\Cliente;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Transporte\TteCondicionManejo;
 use App\Form\Type\Transporte\CondicionFleteType;
@@ -24,8 +25,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ClienteController extends ControllerListenerGeneral
+class ClienteController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TteCliente";
+
+
     protected $class = TteCliente::class;
     protected $claseNombre = "TteCliente";
     protected $modulo = "Transporte";

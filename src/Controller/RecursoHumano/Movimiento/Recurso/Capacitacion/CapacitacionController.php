@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Capacitacion;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuCapacitacion;
 use App\Form\Type\RecursoHumano\CapacitacionType;
 use App\General\General;
@@ -20,8 +21,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-class CapacitacionController extends AbstractController
+class CapacitacionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuCapacitacion";
+
+    protected $clase = RhuCapacitacion::class;
+    protected $claseNombre = "RhuCapacitacion";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "movimiento";
+    protected $grupo = "Recurso";
+    protected $nombre = "Capacitacion";
+
     /**
      * @Route("recursohumano/movimiento/recurso/capacitacion/lista", name="recursohumano_movimiento_recurso_capacitacion_lista")
      */

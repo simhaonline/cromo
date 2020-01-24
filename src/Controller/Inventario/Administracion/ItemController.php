@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Administracion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\General\FuncionesGeneralesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\ItemType;
 use App\General\General;
@@ -17,8 +18,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ItemController extends AbstractController
+class ItemController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "InvItem";
+
+
     var $query = '';
     protected $class= InvItem::class;
     protected $claseNombre = "InvItem";

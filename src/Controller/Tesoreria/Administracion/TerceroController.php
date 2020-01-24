@@ -3,6 +3,7 @@
 namespace App\Controller\Tesoreria\Administracion;
 
 use App\Controller\BaseController;
+use App\Controller\MaestroController;
 use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Tesoreria\TerceroType;
 use App\General\General;
@@ -15,8 +16,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TerceroController extends AbstractController
+class TerceroController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TesTercero";
+
     protected $clase = TesTercero::class;
     protected $claseNombre = "TesTercero";
     protected $modulo = "Tesoreria";

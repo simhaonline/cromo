@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Compra;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvMarca;
 use App\Entity\Inventario\InvOrden;
@@ -32,8 +33,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class OrdenController extends AbstractController
+class OrdenController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvOrden";
+
     protected $class = InvOrden::class;
     protected $claseNombre = "InvOrden";
     protected $modulo = "Inventario";

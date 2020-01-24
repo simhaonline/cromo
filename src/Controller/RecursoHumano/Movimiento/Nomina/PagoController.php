@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -28,13 +29,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class PagoController extends AbstractController
+class PagoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuPago";
+
     protected $clase = RhuPago::class;
     protected $claseFormulario = PagoType::class;
     protected $claseNombre = "RhuPago";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Nomina";
     protected $nombre = "Pago";
 

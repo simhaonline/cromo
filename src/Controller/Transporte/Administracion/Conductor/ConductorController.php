@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\Conductor;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteConductor;
 use App\Form\Type\Transporte\ConductorType;
 use App\Formato\Transporte\HojaVidaConductor;
@@ -18,8 +19,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ConductorController extends ControllerListenerGeneral
+class ConductorController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TteConductor";
+
     protected $class = TteConductor::class;
     protected $claseNombre = "TteConductor";
     protected $modulo = "Transporte";
@@ -38,7 +43,7 @@ class ConductorController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = MaestroController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);

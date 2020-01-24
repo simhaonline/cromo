@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\Vehiculo;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Formato\Transporte\Vehiculo;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -18,8 +19,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class VehiculoController extends ControllerListenerGeneral
+class VehiculoController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TteVehiculo";
+
     protected $class = TteVehiculo::class;
     protected $claseNombre = "TteVehiculo";
     protected $modulo = "Transporte";
@@ -38,7 +42,7 @@ class VehiculoController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = MaestroController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);

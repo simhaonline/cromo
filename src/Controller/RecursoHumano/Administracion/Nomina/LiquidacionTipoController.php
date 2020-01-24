@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuLiquidacionTipo;
 use App\Form\Type\RecursoHumano\LiquidacionTipoType;
@@ -17,8 +18,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-class LiquidacionTipoController extends AbstractController
+class LiquidacionTipoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuLiquidacionTipo";
+
+
+    protected $clase = RhuLiquidacionTipo::class;
+    protected $claseNombre = "RhuLiquidacionTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "LiquidacionTipo";
+
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/liquidaciontipo/lista", name="recursohumano_administracion_nomina_liquidaciontipo_lista")
      */

@@ -4,6 +4,7 @@ namespace App\Controller\General\Administracion\Tarea;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\General\GenTarea;
 use App\Entity\General\GenTareaPrioridad;
 use App\Entity\Seguridad\Usuario;
@@ -18,8 +19,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TareaController extends ControllerListenerGeneral
+class TareaController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "GenTarea";
+
     protected $clase = GenTarea::class;
     protected $claseNombre = "GenTarea";
     protected $modulo = "General";

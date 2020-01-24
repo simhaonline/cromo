@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvContacto;
 use App\Entity\Inventario\InvCotizacionDetalle;
@@ -32,8 +33,12 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class CotizacionController extends AbstractController
+class CotizacionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvCotizacion";
+
     protected $class = InvCotizacion::class;
     protected $claseNombre = "InvCotizacion";
     protected $modulo = "Inventario";

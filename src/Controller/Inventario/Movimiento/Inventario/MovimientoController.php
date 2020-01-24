@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Inventario;
 use App\Controller\Estructura\ControllerListener;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenAsesor;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Inventario\InvBodega;
@@ -49,8 +50,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\General\General;
 
-class MovimientoController extends ControllerListenerGeneral
+class MovimientoController extends MaestroController
 {
+
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvMovimiento";
+
+
     protected $clase = InvMovimiento::class;
     protected $claseNombre = "InvMovimiento";
     protected $modulo = "Inventario";

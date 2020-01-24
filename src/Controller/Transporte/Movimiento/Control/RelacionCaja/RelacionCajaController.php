@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Control\RelacionCaja;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRelacionCaja;
 use App\Form\Type\Transporte\RelacionCajaType;
@@ -21,8 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class RelacionCajaController extends AbstractController
+class RelacionCajaController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteRelacionCaja";
+
     protected $clase= TteRelacionCaja::class;
     protected $claseNombre = "TteRelacionCaja";
     protected $modulo = "Transporte";

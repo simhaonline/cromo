@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Monitoreo\Monitoreo;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteMonitoreo;
 use App\Entity\Transporte\TteMonitoreoDetalle;
@@ -28,8 +29,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class MonitoreoController extends AbstractController
+class MonitoreoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteMonitoreo";
+
     protected $clase= TteMonitoreo::class;
     protected $claseNombre = "TteMonitoreo";
     protected $modulo = "Transporte";

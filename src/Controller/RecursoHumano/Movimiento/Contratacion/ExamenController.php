@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Contratacion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
 use App\Entity\RecursoHumano\RhuExamenItem;
@@ -36,8 +37,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExamenController extends AbstractController
+class ExamenController extends MaestroController
 {
+
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuExamen";
+
+
     protected $clase = RhuExamen::class;
     protected $claseNombre = "RhuExamen";
     protected $modulo = "RecursoHumano";

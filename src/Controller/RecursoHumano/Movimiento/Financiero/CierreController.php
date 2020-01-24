@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Financiero;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuCosto;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuCierre;
@@ -26,12 +27,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class CierreController extends AbstractController
+class CierreController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuCierre";
+
+
     protected $clase = RhuCierre::class;
     protected $claseNombre = "RhuCierre";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Financiero";
     protected $nombre = "Cierre";
 

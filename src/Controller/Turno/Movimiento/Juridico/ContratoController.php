@@ -3,6 +3,7 @@
 namespace App\Controller\Turno\Movimiento\Juridico;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
@@ -24,8 +25,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ContratoController extends AbstractController
+class ContratoController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TurContrato";
+
     protected $clase = TurContrato::class;
     protected $claseNombre = "TurContrato";
     protected $modulo = "Turno";

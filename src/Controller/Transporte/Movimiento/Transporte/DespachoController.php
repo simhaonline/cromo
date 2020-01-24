@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenProceso;
 use App\Entity\Seguridad\SegUsuarioProceso;
@@ -53,8 +54,11 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class DespachoController extends AbstractController
+class DespachoController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TteDespacho";
+
     protected $clase = TteDespacho::class;
     protected $proceso = "0006";
     protected $procestoTipo = "P";

@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Contratacion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
 use App\Entity\RecursoHumano\RhuExamenDetalle;
@@ -33,8 +34,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class RequisitosController extends AbstractController
+class RequisitosController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuRequisito";
+
     protected $clase = RhuRequisito::class;
     protected $claseNombre = "RhuRequisito";
     protected $modulo = "RecursoHumano";

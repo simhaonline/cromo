@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Form\Type\RecursoHumano\SaludType;
 use Knp\Component\Pager\PaginatorInterface;
@@ -14,8 +15,21 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\General\General;
 
-class SaludController extends AbstractController
+class SaludController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuSalud";
+
+
+    protected $class = RhuSalud::class;
+    protected $claseNombre = "RhuSalud";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "Salud";
+
+
 
     /**
      * @Route("recursohumano/adminsitracion/nomina/salud/lista", name="recursohumano_administracion_nomina_salud_lista")

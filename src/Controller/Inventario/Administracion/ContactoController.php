@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Administracion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvContacto;
 use App\Entity\Inventario\InvSucursal;
 use App\Entity\Inventario\InvTercero;
@@ -19,8 +20,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ContactoController extends AbstractController
+class ContactoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "InvContacto";
+
     protected $class = InvTercero::class;
     protected $claseNombre = "InvContacto";
     protected $modulo = "Inventario";

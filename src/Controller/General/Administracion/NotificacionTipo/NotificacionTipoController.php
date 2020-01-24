@@ -4,6 +4,7 @@ namespace App\Controller\General\Administracion\NotificacionTipo;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenModulo;
 use App\Entity\General\GenNotificacionTipo;
 use App\Utilidades\Mensajes;
@@ -19,8 +20,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class NotificacionTipoController extends BaseController
+class NotificacionTipoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "GenNotificacionTipo";
+
     protected $clase = GenNotificacionTipo::class;
     protected $claseNombre = "GenNotificacionTipo";
     protected $modulo = "General";

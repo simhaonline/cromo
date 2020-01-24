@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Seleccion\Aspirante;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAspirante;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Form\Type\RecursoHumano\AspiranteType;
@@ -22,8 +23,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class AspiranteController extends AbstractController
+class AspiranteController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuAspirante";
+
 
     protected $clase = RhuAspirante::class;
     protected $claseFormulario = AspiranteType::class;

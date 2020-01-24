@@ -4,6 +4,7 @@ namespace App\Controller\Cartera\Movimiento\Movimiento;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
@@ -32,8 +33,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MovimientoController extends BaseController
+class MovimientoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CarMovimiento";
+
+
     protected $clase = CarMovimiento::class;
     protected $claseNombre = "CarMovimiento";
     protected $modulo = "Cartera";

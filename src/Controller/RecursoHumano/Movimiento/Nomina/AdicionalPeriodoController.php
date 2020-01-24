@@ -7,6 +7,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuAdicionalPeriodo;
@@ -27,8 +28,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AdicionalPeriodoController extends AbstractController
+class AdicionalPeriodoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuAdicionalPeriodo";
+
     protected $clase = RhuAdicionalPeriodo::class;
     protected $claseFormulario = AdicionalPeriodoType::class;
     protected $claseNombre = "RhuAdicionalPeriodo";

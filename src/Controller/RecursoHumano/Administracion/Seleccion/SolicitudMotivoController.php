@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Seleccion;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuSolicitudMotivo;
 use App\Form\Type\RecursoHumano\SolicitudMotivoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +16,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class SolicitudMotivoController extends AbstractController
+class SolicitudMotivoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuSolicitudMotivo";
+
+    protected $clase = RhuSolicitudMotivo::class;
+
+    protected $claseNombre = "RhuSolicitudMotivo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Seleccion";
+    protected $nombre = "SolicitudMotivo";
+
+
 
     /**
      * @Route("recursohumano/administracion/seleccion/solicitudmotivo/lista", name="recursohumano_administracion_seleccion_solicitudmotivo_lista")

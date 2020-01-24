@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Desempeño;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuDesempeno;
 use App\Form\Type\RecursoHumano\DesempenoType;
 use App\General\General;
@@ -21,8 +22,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
-class DesempenoController extends AbstractController
+class DesempenoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuDesempeno";
+
+    protected $clase = RhuDesempeno::class;
+    protected $claseNombre = "RhuDesempeno";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recurso";
+    protected $nombre = "Desempeno";
+
 
     /**
      * @Route("recursohumano/movimiento/recurso/desempeno/lista", name="recursohumano_movimiento_recurso_desempeno_lista")

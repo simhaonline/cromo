@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
@@ -38,13 +39,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class VacacionController extends AbstractController
+class VacacionController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "RhuVacacion";
+
     protected $clase = RhuVacacion::class;
     protected $claseFormulario = VacacionType::class;
     protected $claseNombre = "RhuVacacion";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Nomina";
     protected $nombre = "Vacacion";
 

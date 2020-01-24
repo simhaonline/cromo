@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuNovedadTipo;
 use App\Form\Type\RecursoHumano\NovedadTipoType;
 use App\General\General;
@@ -14,8 +15,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class NovedadTipoController extends AbstractController
+class NovedadTipoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuNovedadTipo";
+
+
+    protected $clase = RhuNovedadTipo::class;
+    protected $claseNombre = "RhuNovedadTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "NovedadTipo";
+
+
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/novedadTipo/lista", name="recursohumano_administracion_nomina_novedadTipo_lista")
      */

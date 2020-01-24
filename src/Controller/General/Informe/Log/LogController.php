@@ -4,6 +4,7 @@ namespace App\Controller\General\Informe\Log;
 
 use App\Controller\Estructura\AdministracionController;
 use App\Controller\Estructura\EntityListener;
+use App\Controller\MaestroController;
 use App\Entity\General\GenLog;
 use App\Entity\General\GenModelo;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -20,7 +21,21 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
-class LogController extends Controller {
+class LogController extends MaestroController {
+
+
+
+    public $tipo = "Administracion";
+    public $modelo = "GenLog";
+
+    protected $class = GenLog::class;
+    protected $claseNombre = "GenLog";
+    protected $modulo = "General";
+    protected $funcion = "Informe";
+    protected $grupo = "Log";
+    protected $nombre = "Log";
+
+
 
     var $strDqlLista = "";
 

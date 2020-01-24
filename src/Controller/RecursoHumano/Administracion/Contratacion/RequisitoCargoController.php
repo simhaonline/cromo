@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Administracion\Contratacion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuExamen;
@@ -28,8 +29,22 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class RequisitoCargoController extends AbstractController
+class RequisitoCargoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuRequisitoCargo";
+
+
+    protected $clase = RhuRequisitoCargo::class;
+    protected $claseNombre = "RhuRequisitoCargo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Contratacion";
+    protected $nombre = "RequisitoCargo";
+
+
+
     /**
      * @Route("/recursohumano/administracion/contratacion/requisitocargo/lista", name="recursohumano_administracion_contratacion_requisitocargo_lista")
      */

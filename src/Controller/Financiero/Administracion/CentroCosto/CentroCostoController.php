@@ -4,6 +4,7 @@
 namespace App\Controller\Financiero\Administracion\CentroCosto;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinCentroCosto;
 use App\Form\Type\Financiero\CentroCostoType;
 use App\General\General;
@@ -15,8 +16,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CentroCostoController extends AbstractController
+class CentroCostoController extends MaestroController
 {
+
+
+
+    public $tipo = "Administracion";
+    public $modelo = "FinCentroCosto";
+
+
+    protected $clase= FinCentroCosto::class;
+    protected $claseNombre = "FinCentroCosto";
+    protected $modulo   = "Financiero";
+    protected $funcion  = "Administracion";
+    protected $grupo    = "CentroCosto";
+    protected $nombre   = "Centro";
+
+
+
+
     /**
      * @Route("/financiero/administracion/centrocosto/lista", name="financiero_administracion_centrocosto_lista")
      */

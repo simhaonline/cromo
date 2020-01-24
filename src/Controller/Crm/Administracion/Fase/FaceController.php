@@ -7,6 +7,7 @@ namespace App\Controller\Crm\Administracion\Fase;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Crm\CrmFase;
 use App\Form\Type\Crm\FaseType;
 use App\Utilidades\Mensajes;
@@ -14,14 +15,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FaceController extends ControllerListenerGeneral
+class FaceController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "CrmFase";
+
     protected $clase = CrmFase::class;
     protected $claseFormulario = FaseType::class;
     protected $claseNombre = "CrmFase";
     protected $modulo = "Crm";
-    protected $funcion = "administracion";
-    protected $grupo = "fase";
+    protected $funcion = "Administracion";
+    protected $grupo = "Fase";
     protected $nombre = "Fase";
     /**
      * @Route("/crm/administracion/fase/lista", name="crm_administracion_fase_fase_lista")

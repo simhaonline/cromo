@@ -5,7 +5,8 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
-use App\Controller\Estructura\MensajesController;
+
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteRecaudoDevolucion;
@@ -20,8 +21,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecaudoDevolucionController extends ControllerListenerGeneral
+class RecaudoDevolucionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteRecaudoDevolucion";
+
     protected $clase= TteRecaudoDevolucion::class;
     protected $claseNombre = "TteRecaudoDevolucion";
     protected $modulo = "Transporte";
@@ -35,7 +40,7 @@ class RecaudoDevolucionController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = MaestroController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);

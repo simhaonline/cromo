@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Acreditacion;
 
 
+use App\Controller\MaestroController;
 use App\DataFixtures\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAcreditacion;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -25,8 +26,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class AcreditacionController extends AbstractController
+class AcreditacionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuAcreditacion";
+
+    protected $class = RhuAcreditacion::class;
+    protected $claseNombre = "RhuAcreditacion";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recurso";
+    protected $nombre = "Acreditacion";
+
     /**
      * @Route("recursohumano/movimiento/recurso/acreditacion/lista", name="recursohumano_movimiento_recurso_acreditacion_lista")
      */

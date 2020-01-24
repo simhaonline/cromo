@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Movimiento\Financiero;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
@@ -37,8 +38,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CierreController extends AbstractController
+class CierreController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TurCierre";
+
     protected $clase = TurCierre::class;
     protected $claseNombre = "TurCierre";
     protected $modulo = "Turno";

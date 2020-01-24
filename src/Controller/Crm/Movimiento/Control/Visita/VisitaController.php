@@ -5,6 +5,7 @@ namespace App\Controller\Crm\Movimiento\Control\Visita;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmVisita;
 use App\Entity\Crm\CrmVisitaReporte;
@@ -26,8 +27,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class VisitaController extends AbstractController
+class VisitaController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CrmVisita";
+
+
     protected $clase = CrmVisita::class;
     protected $claseNombre = "CrmVisita";
     protected $modulo = "Crm";

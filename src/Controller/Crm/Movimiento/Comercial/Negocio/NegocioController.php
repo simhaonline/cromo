@@ -6,6 +6,7 @@ namespace App\Controller\Crm\Movimiento\Comercial\Negocio;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Crm\CrmCliente;
 use App\Entity\Crm\CrmContacto;
 use App\Entity\Crm\CrmNegocio;
@@ -21,13 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class NegocioController extends AbstractController
+class NegocioController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "CrmNegocio";
+
     protected $clase = CrmNegocio::class;
     protected $claseFormulario = NegocioType::class;
     protected $claseNombre = "CrmNegocio";
     protected $modulo = "Crm";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "comercial";
     protected $nombre = "Negocio";
 

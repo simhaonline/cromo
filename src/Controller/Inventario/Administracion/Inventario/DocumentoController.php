@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Administracion\Inventario;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\DocumentoType;
@@ -18,8 +19,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DocumentoController extends AbstractController
+class DocumentoController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "InvDocumento";
+
+
     protected $class= InvDocumento::class;
     protected $claseNombre = "InvDocumento";
     protected $modulo = "Inventario";

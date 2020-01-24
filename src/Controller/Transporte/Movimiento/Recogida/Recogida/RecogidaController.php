@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Recogida\Recogida;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteFactura;
@@ -28,8 +29,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class RecogidaController extends AbstractController
+class RecogidaController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteRecogida";
+
     protected $clase = TteRecogida::class;
     protected $claseNombre = "TteRecogida";
     protected $modulo = "Transporte";

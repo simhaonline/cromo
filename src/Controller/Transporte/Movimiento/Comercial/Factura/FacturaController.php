@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Comercial\Factura;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
@@ -61,8 +62,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use App\Utilidades\Mensajes;
 
-class FacturaController extends AbstractController
+class FacturaController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TteFactura";
+
+
     protected $clase = TteFactura::class;
     protected $claseNombre = "TteFactura";
     protected $modulo = "Transporte";

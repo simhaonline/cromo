@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Administracion\Poseedor;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TtePoseedor;
 use App\Form\Type\Transporte\PoseedorType;
 use App\General\General;
@@ -11,8 +12,12 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PoseedorController extends BaseController
+class PoseedorController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TtePoseedor";
+
     protected $clase= TtePoseedor::class;
     protected $claseNombre = "TtePoseedor";
     protected $modulo = "Transporte";
@@ -26,7 +31,7 @@ class PoseedorController extends BaseController
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = MaestroController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);

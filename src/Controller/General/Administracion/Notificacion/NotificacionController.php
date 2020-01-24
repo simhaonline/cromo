@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Administracion\Notificacion;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenNotificacion;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,8 +11,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class NotificacionController extends Controller
+class NotificacionController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "GenNotificacion";
+
+    protected $class = GenNotificacion::class;
+    protected $claseNombre = "GenNotificacion";
+    protected $modulo = "General";
+    protected $funcion = "Administracion";
+    protected $grupo = "Notificacion";
+    protected $nombre = "Notificacion";
+
+
+
     /**
      * @Route("/general/administracion/notificacion/notificacion", name="general_administracion_notificacion_notificacion")
      */

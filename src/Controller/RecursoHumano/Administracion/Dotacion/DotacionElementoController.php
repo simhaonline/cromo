@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Administracion\Dotacion;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuDotacionElemento;
 use App\Form\Type\RecursoHumano\DotacionElementoType;
 use App\General\General;
@@ -18,8 +19,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class DotacionElementoController extends AbstractController
+class DotacionElementoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuDotacionElemento";
+
+
+    protected $clase = RhuDotacionElemento::class;
+    protected $claseNombre = "RhuDotacionElemento";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Dotacion";
+    protected $nombre = "DotacionElemento";
+
+
 
     /**
      * @Route("recursohumano/administracion/dotacion/dotacionelemento/lista", name="recursohumano_administracion_dotacion_dotacionelemento_lista")

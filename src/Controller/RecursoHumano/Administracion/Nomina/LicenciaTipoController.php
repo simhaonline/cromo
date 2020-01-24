@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuLicenciaTipo;
 use App\Form\Type\RecursoHumano\LicenciaTipoType;
 use App\General\General;
@@ -15,8 +16,22 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class LicenciaTipoController extends AbstractController
+class LicenciaTipoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuLicenciaTipo";
+
+
+    protected $clase = RhuLicenciaTipo::class;
+    protected $claseNombre = "RhuLicenciaTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "LicenciaTipo";
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/licenciaTipo/lista", name="recursohumano_administracion_nomina_licenciaTipo_lista")
      */

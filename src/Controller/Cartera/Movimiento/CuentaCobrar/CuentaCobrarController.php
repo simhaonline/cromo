@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Movimiento\CuentaCobrar;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
@@ -27,8 +28,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class CuentaCobrarController extends AbstractController
+class CuentaCobrarController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CarCuentaCobrar";
+
+
     protected $clase = CarCuentaCobrar::class;
     protected $claseNombre = "CarCuentaCobrar";
     protected $modulo = "Cartera";

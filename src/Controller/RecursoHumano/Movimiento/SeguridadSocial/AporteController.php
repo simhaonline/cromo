@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Movimiento\SeguridadSocial;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteContrato;
@@ -30,8 +31,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AporteController extends AbstractController
+class AporteController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuAporte";
+
+
     protected $clase = RhuAporte::class;
     protected $claseNombre = "RhuAporte";
     protected $modulo = "RecursoHumano";

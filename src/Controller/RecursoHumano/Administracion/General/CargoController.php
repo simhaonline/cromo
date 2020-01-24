@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\General;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Form\Type\RecursoHumano\CargoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +16,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class CargoController  extends AbstractController
+class CargoController  extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuCargo";
+
+    protected $clase = RhuCargo::class;
+    protected $claseNombre = "RhuCargo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "General";
+    protected $nombre = "Cargo";
+
     /**
      * @param Request $request
      * @Route("recursohumano/adminsitracion/general/cargo/lista", name="recursohumano_administracion_general_cargo_lista")

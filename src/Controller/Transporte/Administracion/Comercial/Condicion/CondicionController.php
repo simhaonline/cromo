@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Administracion\Comercial\Condicion;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteCondicionFlete;
@@ -19,8 +20,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class CondicionController extends ControllerListenerGeneral
+class CondicionController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TteCondicion";
+
     protected $class= TteCondicion::class;
     protected $claseNombre = "TteCondicion";
     protected $modulo = "Transporte";

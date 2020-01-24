@@ -4,6 +4,7 @@
 namespace App\Controller\Cartera\Administracion\General;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCliente;
 use App\Form\Type\Cartera\ClienteType;
 use App\General\General;
@@ -14,8 +15,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ClienteController extends AbstractController
+class ClienteController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "CarCliente";
+
+    protected $clase = CarCliente::class;
+    protected $claseNombre = "CarCliente";
+    protected $modulo = "Cartera";
+    protected $funcion = "Administracion";
+    protected $grupo = "Cliente";
+    protected $nombre = "Cliente";
+
+
     /**
      * @Route("/cartera/administracion/general/cliente/lista", name="cartera_administracion_general_cliente_lista")
      */

@@ -6,6 +6,7 @@ namespace App\Controller\Transporte\Administracion\Guia;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteDestinatario;
 use App\Entity\Transporte\TteZona;
 use App\Form\Type\Transporte\DestinatarioType;
@@ -16,8 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
 
-class DestinatarioController extends ControllerListenerGeneral
+class DestinatarioController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TteDestinatario";
+
     protected $clase = TteDestinatario::class;
     protected $claseFormulario = DestinatarioType::class;
     protected $claseNombre = "TteDestinatario";
@@ -37,7 +42,7 @@ class DestinatarioController extends ControllerListenerGeneral
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = BaseController::botoneraLista();
+        $formBotonera = MaestroController::botoneraLista();
         $formBotonera->handleRequest($request);
         $formFiltro = $this->getFiltroLista();
         $formFiltro->handleRequest($request);

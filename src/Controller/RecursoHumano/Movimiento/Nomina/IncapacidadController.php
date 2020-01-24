@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -33,8 +34,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IncapacidadController extends AbstractController
+class IncapacidadController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "RhuIncapacidadController";
+
+
     protected $clase = RhuIncapacidad::class;
     protected $claseNombre = "RhuIncapacidad";
     protected $modulo = "RecursoHumano";

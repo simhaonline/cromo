@@ -5,6 +5,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteNovedadTipo;
 use App\General\General;
@@ -22,8 +23,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class NovedadController extends AbstractController
+class NovedadController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteNovedad";
+
     protected $class= TteNovedad::class;
     protected $claseNombre = "TteNovedad";
     protected $modulo = "Transporte";

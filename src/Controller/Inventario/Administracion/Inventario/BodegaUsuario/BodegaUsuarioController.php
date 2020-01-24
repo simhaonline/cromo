@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Administracion\Inventario\BodegaUsuario;
 
 
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
 use App\Entity\Seguridad\Usuario;
@@ -21,8 +22,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BodegaUsuarioController extends AbstractController
+class BodegaUsuarioController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "InvBodegaUsuario";
+
+    protected $clase = InvBodegaUsuario::class;
+    protected $claseNombre = "InvBodegaUsuario";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "BodegaUsuario";
+
+
     /**
      * @Route("/inventario/administracion/inventario/bodegausuario/lista", name="inventario_administracion_inventario_bodegausuario_lista")
      */

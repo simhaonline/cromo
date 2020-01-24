@@ -4,6 +4,7 @@ namespace App\Controller\Financiero\Movimiento\Contabilidad\Asiento;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinCentroCosto;
@@ -17,6 +18,7 @@ use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use mysql_xdevapi\CollectionAdd;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,8 +30,21 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class AsientoController extends AbstractController
+class AsientoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "FinAsiento";
+
+
+    protected $clase = FinAsiento::class;
+    protected $claseNombre = "FinAsiento";
+    protected $modulo = "Financiero";
+    protected $funcion = "Administracion";
+    protected $grupo = "Contabilidad";
+    protected $nombre = "Asiento";
+
 
     /**
      * @param Request $request

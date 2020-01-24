@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Administracion\Comercial\Precio;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteProducto;
@@ -23,8 +24,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class PrecioController extends ControllerListenerGeneral
+class PrecioController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TtePrecio";
+
     protected $class = TtePrecio::class;
     protected $claseNombre = "TtePrecio";
     protected $modulo = "Transporte";

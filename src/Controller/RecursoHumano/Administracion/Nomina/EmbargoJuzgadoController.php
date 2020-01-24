@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
 use App\Form\Type\RecursoHumano\EmbargoJuzgadoType;
 use App\General\General;
@@ -15,8 +16,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EmbargoJuzgadoController extends AbstractController
+class EmbargoJuzgadoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuEmbargoJuzgado";
+
+    protected $clase = RhuEmbargoJuzgado::class;
+    protected $claseNombre = "RhuEmbargoJuzgado";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "EmbargoJuzgado";
+
+
+
     /**
      * @Rest\Route("recursohumano/adminsitracion/nomina/embargo/juzgado/lista", name="recursohumano_administracion_nomina_embargojuzgado_lista")
      */

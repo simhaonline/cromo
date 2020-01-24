@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Incidente;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuIncidente;
@@ -26,13 +27,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class IncidenteController extends AbstractController
+class IncidenteController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuIncidenteController";
+
+
     protected $clase = RhuIncidente::class;
     protected $claseFormulario = IncidenteType::class;
     protected $claseNombre = "RhuIncidente";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Recurso";
     protected $nombre = "Incidente";
 

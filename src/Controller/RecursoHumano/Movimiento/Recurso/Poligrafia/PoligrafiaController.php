@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Recurso\Poligrafia;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
@@ -38,13 +39,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class PoligrafiaController extends AbstractController
+class PoligrafiaController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuPoligrafo";
+
     protected $clase = RhuPoligrafia::class;
     protected $claseFormulario = PermisoType::class;
     protected $claseNombre = "RhuPoligrafia";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Recurso";
     protected $nombre = "Poligrafia";
 

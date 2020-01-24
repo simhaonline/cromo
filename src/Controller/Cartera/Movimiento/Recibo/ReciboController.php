@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Movimiento\Recibo;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarDescuentoConcepto;
@@ -32,8 +33,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ReciboController extends AbstractController
+class ReciboController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CarRecibo";
+
     protected $clase = CarRecibo::class;
     protected $claseNombre = "CarRecibo";
     protected $modulo = "Cartera";

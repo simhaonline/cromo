@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Movimiento\Financiero;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteIntermediacion;
 use App\Entity\Transporte\TteIntermediacionCompra;
@@ -25,8 +26,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class IntermediacionController extends AbstractController
+class IntermediacionController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TteIntermediacion";
+
     protected $clase = TteIntermediacion::class;
     protected $claseNombre = "TteIntermediacion";
     protected $modulo = "Transporte";

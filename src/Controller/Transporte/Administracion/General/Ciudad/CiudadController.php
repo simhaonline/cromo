@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\General\Ciudad;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCiudad;
 use App\Form\Type\Transporte\CiudadType;
 use App\General\General;
@@ -15,8 +16,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CiudadController extends AbstractController
+class CiudadController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TteCiudad";
+
     protected $clase= TteCiudad::class;
     protected $claseNombre = "TteCiudad";
     protected $modulo = "Transporte";

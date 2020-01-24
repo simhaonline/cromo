@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Movimiento\Venta;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConfiguracion;
 use App\Entity\Turno\TurContrato;
@@ -36,8 +37,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class PedidoController extends AbstractController
+class PedidoController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TurPedido";
+
     protected $clase = TurPedido::class;
     protected $claseNombre = "TurPedido";
     protected $modulo = "Turno";

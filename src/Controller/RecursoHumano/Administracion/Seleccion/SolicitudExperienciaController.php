@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Seleccion;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuSolicitudExperiencia;
 use App\Form\Type\RecursoHumano\SolicitudExperienciaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +16,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class SolicitudExperienciaController extends AbstractController
+class SolicitudExperienciaController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuSolicitudExperiencia";
+
+    protected $clase = RhuSolicitudExperiencia::class;
+
+    protected $claseNombre = "RhuSolicitudExperiencia";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Seleccion";
+    protected $nombre = "SolicitudExperiencia";
+
+
 
     /**
      * @Route("recursohumano/administracion/seleccion/solicitudadexperiencia/lista", name="recursohumano_administracion_seleccion_solicitudadexperiencia_lista")

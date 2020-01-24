@@ -4,6 +4,7 @@
 namespace App\Controller\Turno\Administracion\Operacion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\TurnoType;
 use App\General\General;
@@ -13,8 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TurnoController extends ControllerListenerGeneral
+class TurnoController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TurTurno";
+
     protected $clase = TurTurno::class;
 	protected $claseFormulario = TurnoType::class;
 	protected $claseNombre = "TurTurno";

@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Administracion\Calidad;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenFormato;
 use App\Form\Type\General\CalidadFormatoType;
 use App\General\General;
@@ -20,8 +21,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class FormatoController extends ControllerListenerGeneral
+class FormatoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "GenCalidadFormato";
+
     protected $class = GenFormato::class;
     protected $claseNombre = "GenCalidadFormato";
     protected $modulo = "General";

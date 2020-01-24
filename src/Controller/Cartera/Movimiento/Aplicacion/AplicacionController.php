@@ -5,6 +5,7 @@ namespace App\Controller\Cartera\Movimiento\Aplicacion;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarAnticipo;
 use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarReciboDetalle;
@@ -21,8 +22,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class AplicacionController extends AbstractController
+class AplicacionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "CarAplicacion";
+
+
     protected $clase = CarAplicacion::class;
     protected $claseNombre = "CarAplicacion";
     protected $modulo = "Cartera";

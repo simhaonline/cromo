@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuEmbargoTipo;
 use App\Form\Type\RecursoHumano\EmbargoTipoType;
 use App\General\General;
@@ -14,8 +15,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EmbargoTipoController extends AbstractController
+class EmbargoTipoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuEmbargoTipo";
+
+    protected $clase = RhuEmb::class;
+    protected $claseNombre = "RhuEmbargoTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "EmbargoTipo";
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/embargotipo/lista", name="recursohumano_administracion_nomina_embargotipo_lista")
      */

@@ -4,6 +4,7 @@ namespace App\Controller\Financiero\Movimiento\Contabilidad\Registro;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinAsiento;
 use App\Entity\Financiero\FinAsientoDetalle;
 use App\Entity\Financiero\FinComprobante;
@@ -29,8 +30,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class RegistroController extends AbstractController
+class RegistroController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "FinRegistro";
+
+
     protected $clase = FinRegistro::class;
     protected $claseNombre = "FinRegistro";
     protected $modulo = "Financiero";

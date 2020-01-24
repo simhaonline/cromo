@@ -6,6 +6,7 @@ namespace App\Controller\Transporte\Administracion\General\Operacion;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteOperacion;
 use App\Form\Type\Transporte\OperacionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,8 +16,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class OperacionController extends ControllerListenerGeneral
+class OperacionController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TteOperacion";
+
     protected $clase = TteOperacion::class;
     protected $claseNombre = "TteOperacion";
     protected $modulo = "Transporte";

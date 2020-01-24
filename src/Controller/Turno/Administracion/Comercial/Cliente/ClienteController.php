@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Administracion\Comercial\Cliente;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurClienteIca;
 use App\Entity\Turno\TurPuesto;
@@ -25,8 +26,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ClienteController extends AbstractController
+class ClienteController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TurCliente";
+
     protected $clase = TurCliente::class;
     protected $claseNombre = "TurCliente";
     protected $modulo = "Turno";

@@ -4,6 +4,7 @@
 namespace App\Controller\Turno\Administracion\Comercial;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\turno\turnoCliente;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Form\Type\Turno\PedidoTipoType;
@@ -15,8 +16,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class PedidoTipoController extends ControllerListenerGeneral
+class PedidoTipoController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TurPedidoTipo";
+
     protected $clase = TurPedidoTipo::class;
     protected $claseFormulario = PedidoTipoType::class;
     protected $claseNombre = "TurPedidoTipo";

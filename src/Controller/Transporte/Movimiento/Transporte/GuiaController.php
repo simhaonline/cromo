@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Transporte;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Centro;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
@@ -40,8 +41,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class GuiaController extends ControllerListenerGeneral
+class GuiaController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TteGuia";
+
     protected $clase = TteGuia::class;
     protected $claseNombre = "TteGuia";
     protected $modulo = "Transporte";

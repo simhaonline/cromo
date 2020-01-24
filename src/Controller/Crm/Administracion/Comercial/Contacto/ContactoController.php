@@ -5,6 +5,7 @@ namespace App\Controller\Crm\Administracion\Comercial\Contacto;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Crm\CrmCliente;
 use App\Entity\Crm\CrmContacto;
 use App\Form\Type\Crm\ContactoType;
@@ -14,8 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ContactoController extends ControllerListenerGeneral
+class ContactoController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "CrmContacto";
+
     protected $clase= CrmContacto::class;
     protected $claseFormulario = ContactoType::class;
     protected $claseNombre = "CrmContacto";

@@ -5,6 +5,7 @@ namespace App\Controller\Tesoreria\Movimiento;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\General\GenBanco;
@@ -29,8 +30,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CuentaPagarController extends AbstractController
+class CuentaPagarController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "TesCuentaPagar";
+
+
     protected $clase = TesCuentaPagar::class;
     protected $claseNombre = "TesCuentaPagar";
     protected $modulo = "Tesoreria";

@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Extranjero;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvImportacionCosto;
 use App\Entity\Inventario\InvItem;
 use App\Entity\Inventario\InvImportacion;
@@ -28,8 +29,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Type\Inventario\ImportacionType;
 
-class ImportacionController extends AbstractController
+class ImportacionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvImportacion";
+
     protected $class = InvImportacion::class;
     protected $claseNombre = "InvImportacion";
     protected $modulo = "Inventario";

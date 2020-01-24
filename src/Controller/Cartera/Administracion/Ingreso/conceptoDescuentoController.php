@@ -4,6 +4,7 @@
 namespace App\Controller\Cartera\Administracion\Ingreso;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Form\Type\Cartera\DescuentoConceptoType;
 use App\General\General;
@@ -14,8 +15,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class conceptoDescuentoController extends  AbstractController
+class conceptoDescuentoController extends  MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "CarDescuentoConcepto";
+
+    protected $clase = CarDescuentoConcepto::class;
+    protected $claseNombre = "CarDescuentoConcepto";
+    protected $modulo = "Cartera";
+    protected $funcion = "Administracion";
+    protected $grupo = "Ingreso";
+    protected $nombre = "ConceptoDescuento";
+
+
     /**
      * @Route("/cartera/administracion/ingreso/concepto/descuento/lista", name="cartera_administracion_ingreso_concepto_descuento_lista")
      */

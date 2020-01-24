@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
 use App\Entity\RecursoHumano\RhuEmbargoTipo;
@@ -23,13 +24,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmbargoController extends AbstractController
+class EmbargoController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuEmbargo";
+
     protected $clase = RhuEmbargo::class;
     protected $claseFormulario = EmbargoType::class;
     protected $claseNombre = "RhuEmbargo";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Nomina";
     protected $nombre = "Embargo";
 

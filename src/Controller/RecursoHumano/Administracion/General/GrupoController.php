@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\General;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Form\Type\RecursoHumano\GrupoType;
 use App\General\General;
@@ -16,9 +17,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class GrupoController extends  AbstractController
+class GrupoController extends  MaestroController
 {
-	/**
+
+
+    public $tipo = "Movimiento";
+    public $modelo = "RhuGrupoController";
+
+
+    protected $clase = RhuGrupoController::class;
+    protected $claseNombre = "RhuGrupo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "General";
+    protected $nombre = "Grupo";
+
+
+    /**
 	 * @param Request $request
 	 * @Route("recursohumano/adminsitracion/general/grupo/lista", name="recursohumano_administracion_general_grupo_lista")
 	 */

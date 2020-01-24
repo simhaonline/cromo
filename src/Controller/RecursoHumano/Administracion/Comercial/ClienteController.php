@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Comercial;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuCliente;
 use App\Form\Type\RecursoHumano\ClienteType;
 use App\General\General;
@@ -15,8 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ClienteController extends AbstractController
+class ClienteController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuClientes";
+
+
     protected $clase = RhuCliente::class;
     protected $claseNombre = "RhuCliente";
     protected $modulo = "RecursoHumano";

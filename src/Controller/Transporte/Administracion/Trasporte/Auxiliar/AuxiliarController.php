@@ -4,6 +4,7 @@
 namespace App\Controller\Transporte\Administracion\Trasporte\Auxiliar;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteAuxiliar;
 use App\Form\Type\Transporte\AuxiliarType;
 use App\General\General;
@@ -15,8 +16,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AuxiliarController extends AbstractController
+class AuxiliarController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "TteAuxiliar";
+
+    protected $clase = TteAuxiliar::class;
+    protected $claseNombre = "TteAuxiliar";
+    protected $modulo = "Transporte";
+    protected $funcion = "Administracion";
+    protected $grupo = "Transporte";
+    protected $nombre = "Auxiliar";
+
     /**
      * @Route("/transporte/administracion/transporte/auxiliar/lista", name="transporte_administracion_transporte_auxiliar_lista")
      */

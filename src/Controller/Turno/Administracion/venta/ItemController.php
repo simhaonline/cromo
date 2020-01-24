@@ -6,6 +6,7 @@ namespace App\Controller\Turno\Administracion\venta;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurItem;
 use App\Form\Type\RecursoHumano\EmpleadoType;
 use App\Form\Type\Turno\ItemType;
@@ -18,8 +19,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ItemController extends  AbstractController
+class ItemController extends  MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "TurItem";
+
+    protected $clase = TurItem::class;
+    protected $claseNombre = "TurItem";
+    protected $modulo = "Turno";
+    protected $funcion = "Administracion";
+    protected $grupo = "Venta";
+    protected $nombre = "Item";
+
     /**
      * @Route("/turno/administracion/venta/item/lista", name="turno_administracion_venta_item_lista")
      */

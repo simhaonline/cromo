@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Control;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvServicio;
 use App\Entity\Inventario\InvServicioTipo;
 use App\Form\Type\Inventario\ServicioType;
@@ -21,8 +22,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ServicioController extends AbstractController
+class ServicioController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvServicio";
+
     protected $clase= InvServicio::class;
     protected $claseFormulario = ServicioType::class;
     protected $claseNombre = "InvServicio";

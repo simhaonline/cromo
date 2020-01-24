@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuPension;
 use App\Form\Type\RecursoHumano\PensionType;
 use App\General\General;
@@ -15,8 +16,21 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class PensionController extends AbstractController
+class PensionController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuPension";
+
+    protected $clase = RhuPension::class;
+    protected $claseNombre = "RhuPension";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "Pension";
+
+
+
     /**
      * @Route("recursohumano/adminsitracion/nomina/pension/lista", name="recursohumano_administracion_nomina_pension_lista")
      */

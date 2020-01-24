@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Movimiento\Recogida\Despacho;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
@@ -36,8 +37,11 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\Count;
 
-class DespachoRecogidaController extends AbstractController
+class DespachoRecogidaController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TteDespachoRecogida";
+
     protected $clase = TteDespachoRecogida::class;
     protected $claseNombre = "TteDespachoRecogida";
     protected $modulo = "Transporte";

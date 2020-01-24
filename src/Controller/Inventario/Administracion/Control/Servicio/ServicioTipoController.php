@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\GeneralEntityListener;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvServicioTipo;
 use App\Form\Type\Inventario\ServicioTipoType;
 use App\General\General;
@@ -19,8 +20,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ServicioTipoController extends AbstractController
+class ServicioTipoController extends MaestroController
 {
+    public $tipo = "Administracion";
+    public $modelo = "InvServicioTipo";
+
     protected $clase= InvServicioTipo::class;
     protected $claseFormulario = ServicioTipoType::class;
     protected $claseNombre = "InvServicioTipo";

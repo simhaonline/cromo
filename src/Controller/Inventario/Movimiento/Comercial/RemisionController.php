@@ -5,6 +5,7 @@ namespace App\Controller\Inventario\Movimiento\Comercial;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvConfiguracion;
@@ -37,8 +38,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Form\Type\Inventario\PedidoType;
 
-class RemisionController extends AbstractController
+class RemisionController extends MaestroController
 {
+
+    public $tipo = "Movimiento";
+    public $modelo = "InvRemision";
+
     protected $class = InvRemision::class;
     protected $claseNombre = "InvRemision";
     protected $modulo = "Inventario";

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Tesoreria\Movimiento;
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinCuenta;
 use App\Entity\General\GenBanco;
 use App\Entity\General\GenConfiguracion;
@@ -37,8 +38,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MovimientoController extends AbstractController
+class MovimientoController extends MaestroController
 {
+    public $tipo = "Movimiento";
+    public $modelo = "TesMovimiento";
+
+
     protected $clase = TesMovimiento::class;
     protected $claseNombre = "TesMovimiento";
     protected $modulo = "Tesoreria";

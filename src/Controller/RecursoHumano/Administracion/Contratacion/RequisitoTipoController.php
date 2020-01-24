@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Contratacion;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuRequisitoTipo;
 use App\Form\Type\RecursoHumano\RequisitoTipoType;
 use App\General\General;
@@ -14,8 +15,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RequisitoTipoController extends AbstractController
+class RequisitoTipoController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuRequisitoTipo";
+
+
+    protected $clase = RhuRequisitoTipo::class;
+    protected $claseNombre = "RhuRequisitoTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Contratacion";
+    protected $nombre = "RequisitoTipo";
+
+
+
     /**
      * @Route("/recursohumano/administracion/contratacion/requisitostipo/lista", name="recursohumano_administracion_contratacion_requisitostipo_lista")
      */

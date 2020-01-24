@@ -4,6 +4,7 @@
 namespace App\Controller\General\Administracion\General;
 
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenResolucion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
 use App\Form\Type\General\ResolucionType;
@@ -16,8 +17,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ResolucionController extends AbstractController
+class ResolucionController extends MaestroController
 {
+
+
+    public $tipo = "Administracion";
+    public $modelo = "GenResolucion";
+
+
+
     protected $clase = GenResolucion::class;
     protected $claseNombre = "GenResolucion";
     protected $modulo = "General";

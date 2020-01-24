@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuCambioSalario;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
@@ -18,8 +19,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class cambioSalarioController extends AbstractController
+class cambioSalarioController extends MaestroController
 {
+
+    public $tipo = "Administracion";
+    public $modelo = "RhuCambioSalario";
+
+    protected $clase = RhuCambioSalario::class;
+    protected $claseNombre = "RhuCambioSalario";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Contrato";
+    protected $nombre = "CambioSalario";
+
+
+
 
     /**
      * @Route("/recursohumano/cambiosalario/nuevo/{codigoContrato}/{codigoCambioSalario}", name="recursohumano_cambio_salario_nuevo")

@@ -4,6 +4,7 @@ namespace App\Controller\General\Prueba;
 
 use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\Financiero\FinCuenta;
+use App\Entity\General\GenBanco;
 use App\Entity\General\GenCiudad;
 use App\Entity\General\GenCobertura;
 use App\Entity\General\GenDepartamento;
@@ -35,6 +36,7 @@ use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
+use App\Entity\RecursoHumano\RhuDepartamento;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
 use App\Entity\RecursoHumano\RhuEmbargoTipo;
@@ -54,12 +56,14 @@ use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuPension;
 use App\Entity\RecursoHumano\RhuRh;
 use App\Entity\RecursoHumano\RhuSalud;
+use App\Entity\RecursoHumano\RhuSector;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
 use App\Entity\RecursoHumano\RhuSucursal;
 use App\Entity\RecursoHumano\RhuTiempo;
 use App\Entity\RecursoHumano\RhuTipoCotizante;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
+use App\Entity\RecursoHumano\RhuZona;
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConcepto;
@@ -483,18 +487,17 @@ class MigracionController extends Controller
                 codigo_empleado_pk,
                 numero_identificacion,
                 codigo_ciudad_fk,
-                codigo_clasificacion_riesgo_fk,
-                /*codigo_empleado_tipo_fk,*/
+                codigo_clasificacion_riesgo_fk,                
                 codigo_contrato_activo_fk,
                 codigo_contrato_ultimo_fk,
-                /*codigo_cuenta_tipo_fk,*/
                 numero_identificacion,
                 discapacidad,
                 estado_contrato_activo, /*aparece con el nombre de estado_contracto en cromo*/
-                /*carro,
-                moto,*/
+                carro,
+                moto,
                 padre_familia,
                 cabeza_hogar,
+                libreta_militar,
                 nombre_corto,
                 nombre1,
                 nombre2,
@@ -514,15 +517,18 @@ class MigracionController extends Controller
                 codigo_ciudad_nacimiento_fk,
                 codigo_estado_civil_fk,
                 cuenta,
-                /*codigo_banco_fk,*/
+                codigo_banco_fk,
                 camisa, /*aparece con el nombre de talla_camisa en cromo*/
                 jeans, /*aparece con el nombre de talla_pantalon en cromo*/
                 calzado, /*aparece con el nombre de talla_calzado en cromo*/
                 estatura,
                 peso, 
                 pagado_entidad_salud,
-                digito_verificacion
-                /*codigo_cargo_fk*/ FROM rhu_empleado 
+                digito_verificacion,
+                codigo_zona_fk,
+                codigo_subzona_fk,
+                codigo_departamento_empresa_fk
+                FROM rhu_empleado 
                 ORDER BY codigo_empleado_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 $arEmpleado = new RhuEmpleado();
@@ -561,6 +567,26 @@ class MigracionController extends Controller
                 $arEmpleado->setEstatura($row['estatura']);
                 $arEmpleado->setPeso($row['peso']);
                 $arEmpleado->setDigitoVerificacion($row['digito_verificacion']);
+                $arEmpleado->setCarro($row['carro']);
+                $arEmpleado->setMoto($row['moto']);
+                $arEmpleado->setCodigoContratoUltimoFk($row['codigo_contrato_ultimo_fk']);
+                /*if($row['codigo_contrato_activo_fk']) {
+                    $arEmpleado->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_activo_fk']));
+                }*/
+                $arEmpleado->setCodigoContratoUltimoFk($row['codigo_contrato_ultimo_fk']);
+                if($row['codigo_zona_fk']) {
+                    $arEmpleado->setZonaRel($em->getReference(RhuZona::class, $row['codigo_zona_fk']));
+                }
+                if($row['codigo_subzona_fk']) {
+                    $arEmpleado->setSectorRel($em->getReference(RhuSector::class, $row['codigo_subzona_fk']));
+                }
+                $arEmpleado->setLibretaMilitar($row['libreta_militar']);
+                if($row['codigo_banco_fk']) {
+                    $arEmpleado->setBancoRel($em->getReference(GenBanco::class, $row['codigo_banco_fk']));
+                }
+                if($row['codigo_departamento_empresa_fk']) {
+                    $arEmpleado->setDepartamentoRel($em->getReference(RhuDepartamento::class, $row['codigo_departamento_empresa_fk']));
+                }
                 $em->persist($arEmpleado);
                 $metadata = $em->getClassMetaData(get_class($arEmpleado));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

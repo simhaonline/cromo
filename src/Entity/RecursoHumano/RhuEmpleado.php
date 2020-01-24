@@ -289,6 +289,21 @@ class RhuEmpleado
     private $codigoEstudioTipoFk;
 
     /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoZonaFk;
+
+    /**
+     * @ORM\Column(name="codigo_sector_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoSectorFk;
+
+    /**
+     * @ORM\Column(name="codigo_departamento_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoDepartamentoFk;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuEmpleadosIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -353,6 +368,24 @@ class RhuEmpleado
      * @ORM\JoinColumn(name="codigo_empleado_estudio_tipo_fk", referencedColumnName="codigo_estudio_tipo_pk")
      */
     protected $empleadoEstudioTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuZona", inversedBy="empleadosZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    protected $zonaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSector", inversedBy="empleadosSectorRel")
+     * @ORM\JoinColumn(name="codigo_sector_fk", referencedColumnName="codigo_sector_pk")
+     */
+    protected $sectorRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuDepartamento", inversedBy="empleadosDepartamentoRel")
+     * @ORM\JoinColumn(name="codigo_departamento_fk", referencedColumnName="codigo_departamento_pk")
+     */
+    protected $departamentoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="empleadoRel")
@@ -2079,6 +2112,102 @@ class RhuEmpleado
     public function setNumeroHijos(int $numeroHijos): void
     {
         $this->numeroHijos = $numeroHijos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSectorFk()
+    {
+        return $this->codigoSectorFk;
+    }
+
+    /**
+     * @param mixed $codigoSectorFk
+     */
+    public function setCodigoSectorFk($codigoSectorFk): void
+    {
+        $this->codigoSectorFk = $codigoSectorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSectorRel()
+    {
+        return $this->sectorRel;
+    }
+
+    /**
+     * @param mixed $sectorRel
+     */
+    public function setSectorRel($sectorRel): void
+    {
+        $this->sectorRel = $sectorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDepartamentoFk()
+    {
+        return $this->codigoDepartamentoFk;
+    }
+
+    /**
+     * @param mixed $codigoDepartamentoFk
+     */
+    public function setCodigoDepartamentoFk($codigoDepartamentoFk): void
+    {
+        $this->codigoDepartamentoFk = $codigoDepartamentoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartamentoRel()
+    {
+        return $this->departamentoRel;
+    }
+
+    /**
+     * @param mixed $departamentoRel
+     */
+    public function setDepartamentoRel($departamentoRel): void
+    {
+        $this->departamentoRel = $departamentoRel;
     }
 
 

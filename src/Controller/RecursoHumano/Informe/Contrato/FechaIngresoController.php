@@ -105,7 +105,7 @@ class FechaIngresoController extends AbstractController
             }
             $libro->setActiveSheetIndex(0);
             header('Content-Type: application/vnd.ms-excel');
-            header("Content-Disposition: attachment;filename=soportes.xls");
+            header("Content-Disposition: attachment;filename=FechaIngreso.xls");
             header('Cache-Control: max-age=0');
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
             $writer->save('php://output');

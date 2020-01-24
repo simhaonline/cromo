@@ -93,7 +93,7 @@
         <div class="tab-pane active" id="detalles">
             <div id="detalles" style="width: 100%"><br>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-condensed tabla-datos">
+                    <table  id="tablaDetalle" class="table table-striped table-bordered table-condensed tabla-datos">
                         <thead>
                         <tr>
                             <th colspan="2">EMPLEADO</th>
@@ -210,3 +210,12 @@
     <br /><br />
     {{ form_end(form) }}
 {% endblock %}
+{% block javascriptsPersonales %}
+    <script>
+        $(document).ready(function () {
+            var offset = $('.navbar').height();
+            $("html:not(.legacy) table#tablaDetalle").stickyTableHeaders({fixedOffset: offset});
+        });
+    </script>
+{% endblock %}
+

@@ -29,5 +29,23 @@ class ComprobanteType extends AbstractType
         ]);
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoComprobantePk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del comprobante",       "titulo":"NOMBRE"},
+            {"campo":"consecutivo",                  "tipo":"texto"  ,"ayuda":"Consecutivo",       "titulo":"CONSECUTIVO"}          
+                                                                          
+        ]';
+        return $campos;
+    }
 
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoComprobantePk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
+            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del comprobante",       "titulo":"NOMBRE"}                               
+        ]';
+        return $campos;
+    }
 }

@@ -46,4 +46,31 @@ class CuentaCobrarTipoType extends AbstractType {
         return 'App_cartera';
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoCuentaCobrarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"prefijo",            "tipo":"texto"  ,"ayuda":"prefijo",     "titulo":"PREFIJO"},
+            {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
+            {"campo":"codigoCuentaClienteFk",            "tipo":"texto"  ,"ayuda":"cuenta cliente",     "titulo":"CUENTA CLIENTE"},
+            {"campo":"codigoCuentaAplicacionFk",            "tipo":"texto"  ,"ayuda":"cuenta aplicacion",     "titulo":"CUENTA APLICACION"},
+            {"campo":"saldoInicial",            "tipo":"bool"  ,"ayuda":"Saldo inicial",     "titulo":"SI"}      
+                                                                          
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoCuentaCobrarTipoPk",         "tipo":"pk"     ,"ayuda":"Codigo del registro",           "titulo":"ID"},
+            {"campo":"nombre",                           "tipo":"texto"  ,"ayuda":"Nombre del tipo de anticipo",   "titulo":"NOMBRE"},
+            {"campo":"codigoCuentaClienteFk",            "tipo":"texto"  ,"ayuda":"cuenta cliente",     "titulo":"CUENTA CLIENTE"},
+            {"campo":"codigoCuentaRetencionFuenteFk",            "tipo":"texto"  ,"ayuda":"cuenta retencion fuente",     "titulo":"CUENTA RETENCION FUENTE"},
+            {"campo":"codigoCuentaRetencionIvaFk",            "tipo":"texto"  ,"ayuda":"cuenta retencion fuente",     "titulo":"CUENTA RETENCION IVA"},
+            {"campo":"codigoCuentaAjustePesoFk",            "tipo":"texto"  ,"ayuda":"cuenta retencion fuente",     "titulo":"CUENTA RETENCION ICA"}                                          
+        ]';
+        return $campos;
+    }
+
 }

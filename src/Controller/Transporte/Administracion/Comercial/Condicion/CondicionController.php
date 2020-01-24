@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class CondicionController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TteCondicion";
 
     protected $class= TteCondicion::class;

@@ -20,7 +20,7 @@ class LicenciaTipoController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuLicenciaTipo";
 
 

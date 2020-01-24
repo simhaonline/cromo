@@ -19,7 +19,7 @@ class EmbargoTipoController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuEmbargoTipo";
 
     protected $clase = RhuEmb::class;

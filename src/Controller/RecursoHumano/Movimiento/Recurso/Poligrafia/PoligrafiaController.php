@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PoligrafiaController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuPoligrafo";
 
     protected $clase = RhuPoligrafia::class;

@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Contrato;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuCambioSalario;
@@ -42,8 +43,13 @@ use Symfony\Component\HttpFoundation\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ContratoController extends AbstractController
+class ContratoController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "RhuContrato";
+
+
     protected $clase = RhuContrato::class;
     protected $claseFormulario = ContratoType::class;
     protected $claseNombre = "RhuContrato";

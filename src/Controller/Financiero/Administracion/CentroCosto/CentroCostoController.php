@@ -21,7 +21,7 @@ class CentroCostoController extends MaestroController
 
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "FinCentroCosto";
 
 

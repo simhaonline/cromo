@@ -39,7 +39,7 @@ use Symfony\Component\Validator\Constraints\Count;
 
 class DespachoRecogidaController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteDespachoRecogida";
 
     protected $clase = TteDespachoRecogida::class;

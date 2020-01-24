@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class TiempoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuTiempo";
 
     protected $clase = RhuTiempo::class;

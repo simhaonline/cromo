@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class RecogidaController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteRecogida";
 
     protected $clase = TteRecogida::class;

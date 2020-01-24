@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ServicioTipoController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "InvServicioTipo";
 
     protected $clase= InvServicioTipo::class;

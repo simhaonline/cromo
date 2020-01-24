@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TerceroController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "InvTercero";
 
 

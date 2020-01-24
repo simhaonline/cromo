@@ -19,7 +19,7 @@ use App\General\General;
 class SolicitudExperienciaController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuSolicitudExperiencia";
 
     protected $clase = RhuSolicitudExperiencia::class;

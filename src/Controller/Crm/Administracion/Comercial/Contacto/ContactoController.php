@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContactoController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "CrmContacto";
 
     protected $clase= CrmContacto::class;

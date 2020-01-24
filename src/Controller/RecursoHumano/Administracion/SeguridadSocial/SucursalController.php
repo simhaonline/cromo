@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\SeguridadSocial;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuSucursal;
 use App\Form\Type\RecursoHumano\SucursalType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,8 +18,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class SucursalController extends AbstractController
+class SucursalController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "RhuSucursal";
+
+    protected $clase = RhuSucursal::class;
+    protected $claseNombre = "RhuSucursal";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "administracion";
+    protected $grupo = "SeguridadSocial";
+    protected $nombre = "Sucursal";
+
+
+
+
     /**
      * @Route("recursohumano/administracion/seguridadsocial/sucursal/lista", name="recursohumano_administracion_seguridadsocial_sucursal_lista")
      */

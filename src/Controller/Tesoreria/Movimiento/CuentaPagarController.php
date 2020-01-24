@@ -33,7 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CuentaPagarController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TesCuentaPagar";
 
 
@@ -41,7 +41,7 @@ class CuentaPagarController extends MaestroController
     protected $claseNombre = "TesCuentaPagar";
     protected $modulo = "Tesoreria";
     protected $funcion = "Movimiento";
-    protected $grupo = "CuentaPagar";
+    protected $grupo = "Movimiento";
     protected $nombre = "CuentaPagar";
 
     /**

@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VacacionController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuVacacion";
 
     protected $clase = RhuVacacion::class;

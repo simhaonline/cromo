@@ -20,7 +20,7 @@ class ClienteController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuClientes";
 
 

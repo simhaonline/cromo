@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class cambioSalarioController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuCambioSalario";
 
     protected $clase = RhuCambioSalario::class;

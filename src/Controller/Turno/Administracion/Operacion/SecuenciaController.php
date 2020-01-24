@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SecuenciaController  extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TurSecuencia";
 
     protected $clase = TurSecuencia::class;

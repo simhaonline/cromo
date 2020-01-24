@@ -6,6 +6,7 @@ namespace App\Controller\Turno\Administracion\Comercial\Puesto;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurPuesto;
@@ -23,8 +24,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PuestoController extends AbstractController
+class PuestoController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "TurPuesto";
+
+    protected $clase = TurPuesto::class;
+    protected $claseNombre = "TurPuesto";
+    protected $modulo = "Turno";
+    protected $funcion = "Administracion";
+    protected $grupo = "Comercial";
+    protected $nombre = "Puesto";
+
+
 
     /**
      * @param Request $request

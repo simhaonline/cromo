@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DotacionElementoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuDotacionElemento";
 
 

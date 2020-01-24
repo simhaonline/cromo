@@ -5,6 +5,7 @@ namespace App\Controller\Transporte\Administracion\General\Ciudad;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteFrecuencia;
 use App\Form\Type\Transporte\CiudadType;
@@ -17,8 +18,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FrecuenciaController extends AbstractController
+class FrecuenciaController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "TteFrecuencia";
+
     protected $clase = TteFrecuencia::class;
     protected $claseNombre = "TteFrecuencia";
     protected $modulo = "Transporte";

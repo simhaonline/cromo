@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class NovedadTipoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuNovedadTipo";
 
 

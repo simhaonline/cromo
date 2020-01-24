@@ -24,7 +24,7 @@ class NotificacionTipoController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "GenNotificacionTipo";
 
     protected $clase = GenNotificacionTipo::class;

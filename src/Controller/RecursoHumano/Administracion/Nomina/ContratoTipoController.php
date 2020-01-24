@@ -22,7 +22,7 @@ class ContratoTipoController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuContratoTipo";
 
     protected $clase = RhuContratoTipo::class;

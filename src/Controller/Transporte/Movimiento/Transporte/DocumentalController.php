@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class DocumentalController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteDocumental";
 
 

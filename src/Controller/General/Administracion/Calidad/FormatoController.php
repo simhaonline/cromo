@@ -25,11 +25,11 @@ class FormatoController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
-    public $modelo = "GenCalidadFormato";
+    public $tipo = "administracion";
+    public $modelo = "GenFormato";
 
     protected $class = GenFormato::class;
-    protected $claseNombre = "GenCalidadFormato";
+    protected $claseNombre = "GenFormato";
     protected $modulo = "General";
     protected $funcion = "Administracion";
     protected $grupo = "Calidad";

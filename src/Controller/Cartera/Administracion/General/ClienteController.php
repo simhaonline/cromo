@@ -19,7 +19,7 @@ class ClienteController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "CarCliente";
 
     protected $clase = CarCliente::class;

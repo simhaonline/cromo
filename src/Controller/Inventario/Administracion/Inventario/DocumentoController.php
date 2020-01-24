@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DocumentoController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "InvDocumento";
 
 

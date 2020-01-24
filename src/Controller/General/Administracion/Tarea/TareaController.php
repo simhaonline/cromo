@@ -23,7 +23,7 @@ class TareaController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "GenTarea";
 
     protected $clase = GenTarea::class;

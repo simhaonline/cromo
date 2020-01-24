@@ -39,7 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class AnticipoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "CarAnticipio";
 
 

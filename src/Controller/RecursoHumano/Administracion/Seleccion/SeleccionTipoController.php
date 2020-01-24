@@ -18,6 +18,18 @@ use App\General\General;
 class SeleccionTipoController extends AbstractController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "RhuSeleccionTipo";
+
+    protected $clase = RhuSeleccionTipo::class;
+    protected $claseNombre = "RhuSeleccionTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Seleccion";
+    protected $nombre = "SeleccionTipoController";
+
+
+
     /**
      * @Route("recursohumano/administracion/seleccion/selecciontipo/lista", name="recursohumano_administracion_seleccion_selecciontipo_lista")
      */

@@ -32,7 +32,7 @@ use App\Form\Type\Inventario\SolicitudType;
 
 class SolicitudController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvSolicitud";
 
 

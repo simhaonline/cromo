@@ -26,7 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PrecioController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TtePrecio";
 
     protected $class = TtePrecio::class;

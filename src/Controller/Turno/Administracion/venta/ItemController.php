@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ItemController extends  MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TurItem";
 
     protected $clase = TurItem::class;

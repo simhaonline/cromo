@@ -21,7 +21,7 @@ use App\General\General;
 class CostoGrupoController extends  MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuCostoGrupo";
 
 

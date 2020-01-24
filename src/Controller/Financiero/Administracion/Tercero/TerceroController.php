@@ -3,6 +3,7 @@
 
 namespace App\Controller\Financiero\Administracion\Tercero;
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Financiero\TerceroType;
@@ -19,8 +20,22 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class TerceroController extends AbstractController
+class TerceroController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "FinTercero";
+
+
+    protected $clase = FinTercero::class;
+    protected $claseNombre = "FinTercero";
+    protected $modulo = "Financiero";
+    protected $funcion = "administracion";
+    protected $grupo = "Tercero";
+    protected $nombre = "Tercero";
+
+
+
     /**
      * @Route("/financiero/administracion/tercero/lista", name="financiero_administracion_tercero_lista")
      */

@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ConceptoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuConcepto";
 
     protected $clase = RhuConcepto::class;

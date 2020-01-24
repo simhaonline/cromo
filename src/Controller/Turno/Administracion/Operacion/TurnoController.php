@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TurnoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TurTurno";
 
     protected $clase = TurTurno::class;

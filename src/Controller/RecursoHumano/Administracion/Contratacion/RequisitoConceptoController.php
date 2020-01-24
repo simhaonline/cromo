@@ -21,7 +21,7 @@ class RequisitoConceptoController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuRequisitoConcepto";
 
 

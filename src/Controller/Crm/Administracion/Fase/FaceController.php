@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FaceController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "CrmFase";
 
     protected $clase = CrmFase::class;

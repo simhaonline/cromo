@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClasificacionRiesgoController  extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuClasificacionRiesgo";
 
     protected $clase = RhuClasificacionRiesgo::class;

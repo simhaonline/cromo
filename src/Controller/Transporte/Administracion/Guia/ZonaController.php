@@ -17,7 +17,7 @@ use App\Controller\BaseController;
 
 class ZonaController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TteZona";
 
     protected $clase = TteZona::class;

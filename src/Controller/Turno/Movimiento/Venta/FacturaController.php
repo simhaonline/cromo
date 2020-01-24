@@ -40,6 +40,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class FacturaController extends AbstractController
 {
+
+
+
     protected $clase = TurFactura::class;
     protected $claseNombre = "TurFactura";
     protected $modulo = "Turno";

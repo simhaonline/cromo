@@ -19,7 +19,7 @@ use App\General\General;
 class CargoController  extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuCargo";
 
     protected $clase = RhuCargo::class;

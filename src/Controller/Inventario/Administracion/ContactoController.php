@@ -23,10 +23,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "InvContacto";
 
-    protected $class = InvTercero::class;
+    protected $class = InvContacto::class;
     protected $claseNombre = "InvContacto";
     protected $modulo = "Inventario";
     protected $funcion = "Administracion";

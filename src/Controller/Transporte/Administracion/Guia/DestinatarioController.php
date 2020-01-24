@@ -20,7 +20,7 @@ use App\Controller\BaseController;
 class DestinatarioController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TteDestinatario";
 
     protected $clase = TteDestinatario::class;

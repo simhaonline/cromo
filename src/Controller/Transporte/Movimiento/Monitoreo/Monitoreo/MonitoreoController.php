@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class MonitoreoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteMonitoreo";
 
     protected $clase= TteMonitoreo::class;

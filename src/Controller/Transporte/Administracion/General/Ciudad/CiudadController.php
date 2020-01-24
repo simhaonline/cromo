@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CiudadController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TteCiudad";
 
     protected $clase= TteCiudad::class;

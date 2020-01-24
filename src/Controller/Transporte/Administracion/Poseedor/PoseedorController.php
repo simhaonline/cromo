@@ -15,14 +15,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class PoseedorController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TtePoseedor";
 
     protected $clase= TtePoseedor::class;
     protected $claseNombre = "TtePoseedor";
     protected $modulo = "Transporte";
     protected $funcion = "Administracion";
-    protected $grupo = "Transporte";
+    protected $grupo = "Poseedor";
     protected $nombre = "Poseedor";
     /**
      * @Route("/transporte/administracion/poseedor/lista", name="transporte_administracion_poseedor_lista")

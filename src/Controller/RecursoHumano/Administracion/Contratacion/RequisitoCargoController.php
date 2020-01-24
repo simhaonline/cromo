@@ -32,7 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class RequisitoCargoController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "RhuRequisitoCargo";
 
 

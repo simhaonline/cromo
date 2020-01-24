@@ -20,7 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EntidadExamenController extends MaestroController
 {
-
+    public $tipo = "administracion";
+    public $modelo = "RhuEntidadExamen";
 
 
     protected $clase = RhuEntidadExamen::class;

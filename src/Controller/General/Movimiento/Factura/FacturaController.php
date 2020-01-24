@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Movimiento\Factura;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenFactura;
 use App\Entity\General\GenFacturaDetalle;
@@ -15,8 +16,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FacturaController extends Controller
+class FacturaController extends MaestroController
 {
+
+    public $tipo = "movimiento";
+    public $modelo = "GenFactura";
+
+
+protected $clase = GenFactura::class;
+    protected $claseNombre = "GenFactura";
+    protected $modulo = "General";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Factura";
+    protected $nombre = "Factura";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

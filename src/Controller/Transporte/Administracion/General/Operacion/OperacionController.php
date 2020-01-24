@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OperacionController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TteOperacion";
 
     protected $clase = TteOperacion::class;

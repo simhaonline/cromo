@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PedidoTipoController extends MaestroController
 {
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TurPedidoTipo";
 
     protected $clase = TurPedidoTipo::class;

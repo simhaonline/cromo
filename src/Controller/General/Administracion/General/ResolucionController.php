@@ -21,7 +21,7 @@ class ResolucionController extends MaestroController
 {
 
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "GenResolucion";
 
 

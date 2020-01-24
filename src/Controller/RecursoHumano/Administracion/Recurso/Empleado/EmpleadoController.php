@@ -4,6 +4,7 @@ namespace App\Controller\RecursoHumano\Administracion\Recurso\Empleado;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -27,8 +28,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmpleadoController extends AbstractController
+class EmpleadoController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "RhuEmpleado";
+
+
     protected $clase = RhuEmpleado::class;
     protected $claseFormulario = EmpleadoType::class;
     protected $claseNombre = "RhuEmpleado";

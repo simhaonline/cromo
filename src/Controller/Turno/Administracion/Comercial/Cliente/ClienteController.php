@@ -29,7 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ClienteController extends MaestroController
 {
 
-    public $tipo = "Administracion";
+    public $tipo = "administracion";
     public $modelo = "TurCliente";
 
     protected $clase = TurCliente::class;

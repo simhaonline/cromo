@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuContrato;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,6 +32,7 @@ class FechaIngresoController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$dateFechaDesde])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$dateFechaHasta])
+            ->add('estadoTerminado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false ])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
@@ -63,6 +65,8 @@ class FechaIngresoController extends AbstractController
 
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
+            'estadoTerminado' => $form->get('estadoTerminado')->getData(),
+
         ];
 
         return $filtro;

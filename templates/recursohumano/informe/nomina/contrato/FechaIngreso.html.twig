@@ -14,6 +14,10 @@
                         <div class="col-sm-4">
                             {{ form_widget(form.fechaDesde) }}
                         </div>
+                        <label class=" col-sm-2 control-label">Terminado:</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.estadoTerminado) }}
+                        </div>
                     </div>
                     <div class="form-group form-group-sm">
                         <label class=" col-sm-2 control-label">Fecha desde:</label>
@@ -21,6 +25,7 @@
                             {{ form_widget(form.fechaHasta) }}
                         </div>
                     </div>
+
                 </div>
                 <div class="form-group form-group-sm">
                     <div class="col-sm-offset-2 col-sm-10">

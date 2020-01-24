@@ -423,11 +423,13 @@ class RhuContratoRepository extends ServiceEntityRepository
         $filtros = $raw['filtros'] ?? null;
         $fechaDesde = null;
         $fechaHasta = null;
+        $estadoTerminado = null;
 
 
         if ($filtros) {
             $fechaDesde = $filtros['fechaDesde'] ?? null;
             $fechaHasta = $filtros['fechaHasta'] ?? null;
+            $estadoTerminado = $filtros['estadoTerminado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuContrato::class, 'c')
@@ -447,9 +449,20 @@ class RhuContratoRepository extends ServiceEntityRepository
         if ($fechaDesde) {
             $queryBuilder->andWhere("c.fecha >= '{$fechaDesde} 00:00:00'");
         }
+
         if ($fechaHasta) {
             $queryBuilder->andWhere("c.fecha <= '{$fechaHasta} 23:59:59'");
         }
+
+        switch ($estadoTerminado) {
+            case '0':
+                $queryBuilder->andWhere("c.estadoTerminado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("c.estadoTerminado = 1");
+                break;
+        }
+
         $queryBuilder->addOrderBy('c.codigoContratoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();

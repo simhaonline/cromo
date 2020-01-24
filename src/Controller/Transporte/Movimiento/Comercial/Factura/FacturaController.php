@@ -142,7 +142,6 @@ class FacturaController extends MaestroController
         }
 
         $arFacturas = $paginator->paginate($em->getRepository(TteFactura::class)->listaProvicional($raw), $request->query->getInt('page', 1), 30);
-
         return $this->render('transporte/movimiento/comercial/factura/lista.html.twig', [
             'arFacturas' => $arFacturas,
             'form' => $form->createView(),

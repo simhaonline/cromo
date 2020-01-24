@@ -66,7 +66,10 @@ class RegistroController extends MaestroController
 					    ->orderBy('c.codigoComprobantePk', 'ASC');
 			    },
 			    'required' => false,
-			    'choice_label' => 'nombre',
+			    'choice_label' =>  function($er){
+                    $codigoCentroCosto = $er->getCodigoComprobantePk();
+                    return $codigoCentroCosto.' - '.$er->getNombre();
+                },
 			    'placeholder' => 'TODOS'
 		    ])
 		    ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
@@ -172,7 +175,6 @@ class RegistroController extends MaestroController
 		} else {
 			$filtro['codigoComprobante'] = $arComprobante;
 		}
-
 		return $filtro;
 
 	}

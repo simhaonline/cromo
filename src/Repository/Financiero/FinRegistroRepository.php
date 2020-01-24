@@ -67,7 +67,7 @@ class FinRegistroRepository extends ServiceEntityRepository
 			$queryBuilder->andWhere("r.numero = {$numero}");
 		}
 		if ($codigoComprobante) {
-			$queryBuilder->andWhere("r.codigoTerceroFk = {$codigoComprobante}");
+			$queryBuilder->andWhere("r.codigoComprobanteFk = {$codigoComprobante}");
 		}
 		if ($fechaDesde) {
 			$queryBuilder->andWhere("r.fecha >= '{$fechaDesde} 00:00:00'");

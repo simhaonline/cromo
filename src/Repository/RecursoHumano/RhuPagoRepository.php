@@ -1662,7 +1662,7 @@ class RhuPagoRepository extends ServiceEntityRepository
         return $arPagos;
     }
 
-    public function regenerarProvision($fechaDesde, $fechaHasta)
+    public function regenerarProvision($fechaDesde, $fechaHasta, $codigo)
     {
         $em = $this->getEntityManager();
         $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->provision();
@@ -1675,6 +1675,9 @@ class RhuPagoRepository extends ServiceEntityRepository
             ->select('p.codigoPagoPk')
             ->where("p.fechaDesde >= '{$fechaDesde}' AND p.fechaDesde <= '{$fechaHasta}'")
             ->andWhere('p.estadoContabilizado = 0');
+        if($codigo) {
+            $queryBuilder->andWhere('p.codigoPagoPk = ' . $codigo);
+        }
         $arPagos = $queryBuilder->getQuery()->getResult();
         foreach ($arPagos as $arPago) {
             $arPago = $em->getRepository(RhuPago::class)->find($arPago['codigoPagoPk']);

@@ -14,6 +14,7 @@ use App\Utilidades\Mensajes;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,6 +32,7 @@ class ProvisionController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
+            ->add('codigo', TextType::class, array('required' => false))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' =>  new \DateTime('now')])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => new \DateTime('now')])
             ->add('btnRegenerar', SubmitType::class, ['label' => 'Regenerar provision', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -42,7 +44,8 @@ class ProvisionController extends AbstractController
                 ini_set("memory_limit", -1);
                 $fechaDesde = $form->get('fechaDesde')->getData();
                 $fechaHasta = $form->get('fechaHasta')->getData();
-                $em->getRepository(RhuPago::class)->regenerarProvision($fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'));
+                $codigo = $form->get('codigo')->getData();
+                $em->getRepository(RhuPago::class)->regenerarProvision($fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'), $codigo);
                 Mensajes::success("Proceso terminado");
             }
         }

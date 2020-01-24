@@ -38,11 +38,6 @@ class TurOperacion
     private $codigoClienteFk;
 
     /**
-     * @ORM\Column(name="codigo_proyecto_fk", type="integer", nullable=true)
-     */
-    private $codigoProyectoFk;
-
-    /**
      * @ORM\ManyToOne(targetEntity="TurCliente", inversedBy="operacionesClienteRel")
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
@@ -131,22 +126,6 @@ class TurOperacion
     public function setCodigoClienteFk($codigoClienteFk): void
     {
         $this->codigoClienteFk = $codigoClienteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoProyectoFk()
-    {
-        return $this->codigoProyectoFk;
-    }
-
-    /**
-     * @param mixed $codigoProyectoFk
-     */
-    public function setCodigoProyectoFk($codigoProyectoFk): void
-    {
-        $this->codigoProyectoFk = $codigoProyectoFk;
     }
 
     /**

@@ -45,4 +45,21 @@ class ReciboTipoType extends AbstractType {
         return 'App_cartera';
     }
 
+    public function getEstructuraPropiedadesLista()
+    {
+        $campos = '[
+            {"campo":"codigoReciboTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
+
+    public function getEstructuraPropiedadesExportar()
+    {
+        $campos = '[
+            {"campo":"codigoReciboTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
+            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
+        ]';
+        return $campos;
+    }
 }

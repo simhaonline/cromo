@@ -10,6 +10,7 @@ use App\Entity\Turno\TurSecuencia;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\TurnoType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -33,12 +34,11 @@ class SecuenciaController  extends MaestroController
     /**
      * @Route("/turno/administracion/operacion/secuencia/lista", name="turno_administracion_operacion_secuencia_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtSecuencia', TextType::class, ['required' => false, 'data' => $session->get('filtroTurSecuenciaCodigoSecuencia')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTurSecuenciaNombre')])

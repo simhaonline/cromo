@@ -8,6 +8,8 @@ use App\Controller\MaestroController;
 use App\Entity\Turno\TurTurno;
 use App\Form\Type\Turno\TurnoType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +33,11 @@ class TurnoController extends MaestroController
     /**
      * @Route("/turno/administracion/operacion/turno/lista", name="turno_administracion_operacion_turno_lista")
      */
-	public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtTurno', TextType::class, ['required' => false, 'data' => $session->get('filtroTurTurnoCodigoTurno')])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTurTurnoNombre')])
@@ -58,7 +59,9 @@ class TurnoController extends MaestroController
             if ($form->get('btnExcel')->isClicked()) {
                 set_time_limit(0);
                 ini_set("memory_limit", -1);
-                General::get()->setExportar($em->getRepository(TurTurno::class)->lista(), "Turnos");
+                $arTurnos = $this->getDoctrine()->getRepository(TurTurno::class)->lista();
+                $this->exportarExcelPersonalizado($arTurnos);
+
             }
         }
         $arTurnos = $paginator->paginate($em->getRepository(TurTurno::class)->lista(), $request->query->getInt('page', 1), 50);
@@ -111,5 +114,58 @@ class TurnoController extends MaestroController
         return $this->render('turno/administracion/operacion/turno/detalle.html.twig', [
             'arTurno' => $arTurno
         ]);
+    }
+
+    public function exportarExcelPersonalizado($arTurnos)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arTurnos) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Movimientos');
+            $j = 0;
+            $arrColumnas = ['ID','NOMBRE','HORAS','DESDE','HASTA','HORASDIURNAS','HORASNOCTURNAS','NOVEDAD','DESCANSO',
+                'INCAPACIDAD','LICENCIA','VACACION','INGRESO','RETIRO','INDUCCION','AUSENTISMO','COMPLEMENTARIO',
+                'DIA','NOCHE'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arTurnos as $arTurno) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arTurno['codigoTurnoPk']);
+                $hoja->setCellValue('B' . $j, $arTurno['nombre']);
+                $hoja->setCellValue('C' . $j, $arTurno['horas']);
+                $hoja->setCellValue('D' . $j, $arTurno['horaDesde']->format('H:i'));
+                $hoja->setCellValue('E' . $j, $arTurno['horaHasta']->format('H:i'));
+                $hoja->setCellValue('F' . $j, $arTurno['horasDiurnas']);
+                $hoja->setCellValue('G' . $j, $arTurno['horasNocturnas']);
+                $hoja->setCellValue('H' . $j, $arTurno['novedad']);
+                $hoja->setCellValue('I' . $j, $arTurno['descanso']);
+                $hoja->setCellValue('J' . $j, $arTurno['incapacidad']);
+                $hoja->setCellValue('K' . $j, $arTurno['licencia']);
+                $hoja->setCellValue('L' . $j, $arTurno['vacacion']);
+                $hoja->setCellValue('M' . $j, $arTurno['ingreso']);
+                $hoja->setCellValue('N' . $j, $arTurno['retiro']);
+                $hoja->setCellValue('O' . $j, $arTurno['induccion']);
+                $hoja->setCellValue('P' . $j, $arTurno['ausentismo']);
+                $hoja->setCellValue('Q' . $j, $arTurno['complementario']);
+                $hoja->setCellValue('R' . $j, $arTurno['dia']);
+                $hoja->setCellValue('S' . $j, $arTurno['noche']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=Turnos.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 }

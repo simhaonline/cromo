@@ -248,6 +248,11 @@ class RhuSolicitud
     protected $sexoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitudAspirante", mappedBy="seleccionRequisitoRel")
+     */
+    protected $solicitudesAspirantesSolicitudRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoSolicitudPk()
@@ -934,4 +939,38 @@ class RhuSolicitud
     {
         $this->sexoRel = $sexoRel;
     }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesAspirantesSolicitudRel()
+    {
+        return $this->solicitudesAspirantesSolicitudRel;
+    }
+
+    /**
+     * @param mixed $solicitudesAspirantesSolicitudRel
+     */
+    public function setSolicitudesAspirantesSolicitudRel($solicitudesAspirantesSolicitudRel): void
+    {
+        $this->solicitudesAspirantesSolicitudRel = $solicitudesAspirantesSolicitudRel;
+    }
+
+
 }

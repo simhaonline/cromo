@@ -272,6 +272,12 @@ class RhuAspirante
     protected $cargoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitudAspirante", mappedBy="aspiranteRel")
+     */
+    protected $solicitudesAspiranteRel;
+
+
+    /**
      * @return array
      */
     public function getInfoLog(): array
@@ -926,4 +932,22 @@ class RhuAspirante
     {
         $this->cargoRel = $cargoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesAspiranteRel()
+    {
+        return $this->solicitudesAspiranteRel;
+    }
+
+    /**
+     * @param mixed $solicitudesAspiranteRel
+     */
+    public function setSolicitudesAspiranteRel($solicitudesAspiranteRel): void
+    {
+        $this->solicitudesAspiranteRel = $solicitudesAspiranteRel;
+    }
+
+
 }

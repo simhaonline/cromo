@@ -3,21 +3,16 @@
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
 
     <div class="btn-toolbar" style="float:left">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_seleccion_seleccion_lista') }}">Volver</a>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_seleccion_lista') }}"
-               style="float:left">Volver</a>
+            {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
-    <div class="btn-group">
-        {% include 'estructura/botonera.html.twig' %}
-    </div>
     <div style="float:right">
-        {% if arSeleccion.estadoAutorizado == 1 %}<span
-                class="label label-default">Autorizado</span>{% endif %}
-        {% if arSeleccion.estadoAprobado == 1 %}<span
-                class="label label-default">Aprobado</span>{% endif %}
-        {% if arSeleccion.estadoAnulado == 1 %}<span
-                class="label label-default">Anulado</span>{% endif %}
+        {% if arSeleccion.estadoAutorizado == 1 %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arSeleccion.estadoAprobado == 1 %}<span class="label label-default">Aprobado</span>{% endif %}
+        {% if arSeleccion.estadoAnulado == 1 %}<span class="label label-default">Anulado</span>{% endif %}
     </div>
     <br/><br/>
     <table widtd="100%" class="table table-condensed table-bordered tabla-informacion">
@@ -27,7 +22,7 @@
             <td class="titulo">TIPO:</td>
             <td class="td-in-well">{{ arSeleccion.seleccionTipoRel.nombre }}</td>
             <td class="titulo">CARGO:</td>
-            <td class="td-in-well">{{ arSeleccion.cargoRel.nombre }}</td>
+            <td class="td-in-well">{{ arSeleccion.cargoRel.nombre | default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">ESTADO CIVIL:</td>

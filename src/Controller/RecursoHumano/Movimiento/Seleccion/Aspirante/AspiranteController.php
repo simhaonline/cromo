@@ -9,6 +9,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAspirante;
 use App\Entity\RecursoHumano\RhuSolicitud;
+use App\Entity\RecursoHumano\RhuSolicitudAspirante;
 use App\Form\Type\RecursoHumano\AspiranteType;
 use App\General\General;
 use App\Utilidades\Estandares;
@@ -153,25 +154,28 @@ class AspiranteController extends MaestroController
      */
     public function aplicar(Request $request, $id)
     {
+        /**
+         * @var $arAspirante RhuAspirante
+         */
         $em = $this->getDoctrine()->getManager();
         $arAspirante = $em->getRepository(RhuAspirante::class)->find($id);
         $arrSolicitudesRel = array('class' => RhuSolicitud::class,
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('sr')
                     ->where('sr.estadoAnulado = 0')
-                    ->andWhere('sr.estadoAprobado = 1')
+                    ->andWhere('sr.estadoAutorizado = 1')
                     ->orderBy('sr.nombre', 'ASC');
             },
             'choice_label' => 'nombre',
             'required' => true,
             'disabled' => false);
         $ctrlBoton = false;
-        $arSolicitudes = $em->getRepository(RhuSolicitud::class)->findBy(['estadoAprobado' => 1]);
+        $arSolicitudes = $em->getRepository(RhuSolicitud::class)->findBy(['estadoAutorizado' => 1]);
 
         if (count($arSolicitudes) == 0) {
             $arrSolicitudesRel['disabled'] = true;
             $ctrlBoton = true;
-            Mensajes::error('No se encontraron solicitudes aprobadas');
+            Mensajes::error('No se encontraron solicitudes autorizadas');
 
         }
         $form = $this->createFormBuilder()
@@ -181,8 +185,11 @@ class AspiranteController extends MaestroController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $arSolicitudAspirante = new RhuSolicitudAspirante();
+            $arSolicitudAspirante->setAspiranteRel($arAspirante);
+            $em->persist($arSolicitudAspirante);
             $arSolicitud = $form->get('solicitudRel')->getData();
-            if ($arAspirante->getBloqueado() == 0) {
+            if ($arAspirante->getEstadoBloqueado() == 0) {
                 if ($arSolicitud->getEstadoAnulado() == 0) {
                     //Calculo edad
                     $varFechaNacimientoAnio = $arAspirante->getFechaNacimiento()->format('Y');

@@ -2,14 +2,11 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}">Volver</a>
+        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_aspirante_aplicar', {'id': arAspirante.codigoAspirantePk }) }}', 'Aplicar', 500, 700)" >Aplicar</a>
         <div class="btn-group">
-            <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}"
-               style="float:left">Volver</a>
-            <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_aspirante_aplicar', {'id': arAspirante.codigoAspirantePk }) }}', 'Aplicar', 500, 700)" >Aplicar</a>
+            {% include 'estructura/botonera.html.twig' %}
         </div>
-    </div>
-    <div class="btn-group">
-        {% include 'estructura/botonera.html.twig' %}
     </div>
     <div style="float:right">
         {% if arAspirante.estadoAutorizado == 1 %}<span

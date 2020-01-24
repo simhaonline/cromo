@@ -82,7 +82,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function Autorizar($arSolicitud)
+    public function autorizar($arSolicitud)
     {
         $em = $this->getEntityManager();
         if (!$arSolicitud->getEstadoAutorizado()) {
@@ -90,7 +90,19 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             $em->persist($arSolicitud);
             $em->flush();
         } else {
-            Mensajes::error('El aspirante ya esta autorizado');
+            Mensajes::error('La solicitud ya esta autorizado');
+        }
+    }
+
+    public function desautorizar($arSolicitud)
+    {
+        if ($arSolicitud->getEstadoAutorizado()) {
+            $arSolicitud->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arSolicitud);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El documento no esta autorizado');
+
         }
     }
 

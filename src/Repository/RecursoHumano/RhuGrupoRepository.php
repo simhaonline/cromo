@@ -33,7 +33,9 @@ class RhuGrupoRepository extends ServiceEntityRepository
 			->addSelect ('g.cargarContrato')
 			->addSelect ('g.cargarSoporte')
             ->addSelect('g.generaPedido')
-			->addSelect ('g.codigoDistribucionFk');
+			->addSelect ('g.codigoDistribucionFk')
+            ->addSelect('p.nombre as periodoNombre')
+        ->leftJoin('g.periodoRel', 'p');
 		if ($codigoGrupo) {
 			$queryBuilder->andWhere ("g.codigoGrupoPk = '{$codigoGrupo}'");
 		}

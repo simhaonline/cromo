@@ -33,6 +33,7 @@
             <tr>
                 <th>ID</th>
                 <th>NOMBRE</th>
+                <th>PERIODO</th>
                 <th>DISTRIBUCIÓN</th>
                 <th title="Carga contratos">CC</th>
                 <th title="Carga soportes">CS</th>
@@ -47,6 +48,7 @@
             <tr>
                 <td>{{ arGrupo.codigoGrupoPk }}</td>
                 <td>{{ arGrupo.nombre }}</td>
+                <td>{{ arGrupo.periodoNombre }}</td>
                 <td>{{ arGrupo.codigoDistribucionFk }}</td>
                 <td>{{ arGrupo.cargarContrato ? "SI": "NO" }}</td>
                 <td>{{ arGrupo.cargarSoporte ? "SI": "NO" }}</td>

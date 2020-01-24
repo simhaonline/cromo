@@ -4,6 +4,7 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuDistribucion;
 use App\Entity\RecursoHumano\RhuGrupo;
+use App\Entity\RecursoHumano\RhuPeriodo;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -18,8 +19,6 @@ class GrupoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoGrupoPk',TextType::class,['label' => 'Codigo grupo:', 'required' => true])
-            ->add('nombre',TextType::class,['label' => 'Nombre:', 'required' => true])
             ->add('distribucionRel', EntityType::class, [
                 'class' => RhuDistribucion::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -30,6 +29,18 @@ class GrupoType extends AbstractType
                 'required' => false,
                 'label' => 'Distribucion:'
             ])
+            ->add('periodoRel', EntityType::class, [
+                'class' => RhuPeriodo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'label' => 'Periodo:'
+            ])
+            ->add('codigoGrupoPk',TextType::class,['label' => 'Codigo grupo:', 'required' => true])
+            ->add('nombre',TextType::class,['label' => 'Nombre:', 'required' => true])
             ->add('cargarContrato', CheckboxType::class, ['required' => false])
             ->add('cargarSoporte', CheckboxType::class, ['required' => false])
             ->add('generaPedido', CheckboxType::class, ['required' => false])

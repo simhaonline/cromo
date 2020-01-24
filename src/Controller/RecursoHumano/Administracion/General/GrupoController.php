@@ -22,7 +22,7 @@ class GrupoController extends  MaestroController
 
 
     public $tipo = "Movimiento";
-    public $modelo = "RhuGrupoController";
+    public $modelo = "RhuGrupo";
 
 
     protected $clase = RhuGrupoController::class;

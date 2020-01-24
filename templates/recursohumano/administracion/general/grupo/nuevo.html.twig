@@ -22,12 +22,19 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="" class="col-sm-2 control-label">Periodo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.periodoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <div class="col-sm-offset-2 col-sm-4">
                     {{ form_widget(form.cargarContrato) }}
                     {{ form_widget(form.cargarSoporte) }}
+                    {{ form_widget(form.generaPedido) }}
                 </div>
                 <div class="col-sm-4">
-                    {{ form_widget(form.generaPedido) }}
+
                 </div>
             </div>
         </div>

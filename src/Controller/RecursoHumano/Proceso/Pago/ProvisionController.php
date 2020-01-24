@@ -38,6 +38,8 @@ class ProvisionController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnRegenerar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $fechaDesde = $form->get('fechaDesde')->getData();
                 $fechaHasta = $form->get('fechaHasta')->getData();
                 $em->getRepository(RhuPago::class)->regenerarProvision($fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'));

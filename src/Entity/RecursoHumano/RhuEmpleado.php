@@ -23,11 +23,6 @@ class RhuEmpleado
     private $codigoEmpleadoPk;
 
     /**
-     * @ORM\Column(name="codigo_clasificacion_riesgo_fk", type="integer", nullable=true)
-     */
-    private $codigoClasificacionRiesgoFk;
-
-    /**
      * @ORM\Column(name="codigo_identificacion_fk", type="string", length=3, nullable=true)
      */
     private $codigoIdentificacionFk;
@@ -270,11 +265,6 @@ class RhuEmpleado
     private $codigoBancoFk;
 
     /**
-     * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
-     */
-    private $codigoCargoFk;
-
-    /**
      * @ORM\Column(name="permiso_especial", type="string", length=15, nullable=true)
      * * @Assert\Length(
      *     max=15,
@@ -338,12 +328,6 @@ class RhuEmpleado
      * @ORM\JoinColumn(name="codigo_estado_civil_fk",referencedColumnName="codigo_estado_civil_pk")
      */
     protected $estadoCivilRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RhuCargo", inversedBy="empleadosCargoRel")
-     * @ORM\JoinColumn(name="codigo_cargo_fk",referencedColumnName="codigo_cargo_pk")
-     */
-    protected $cargoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuRh", inversedBy="empleadosRhRel")
@@ -577,7 +561,6 @@ class RhuEmpleado
      */
     protected $cambiosSalariosEmpleadoRel;
 
-
     /**
      * @return mixed
      */
@@ -592,22 +575,6 @@ class RhuEmpleado
     public function setCodigoEmpleadoPk($codigoEmpleadoPk): void
     {
         $this->codigoEmpleadoPk = $codigoEmpleadoPk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoClasificacionRiesgoFk()
-    {
-        return $this->codigoClasificacionRiesgoFk;
-    }
-
-    /**
-     * @param mixed $codigoClasificacionRiesgoFk
-     */
-    public function setCodigoClasificacionRiesgoFk($codigoClasificacionRiesgoFk): void
-    {
-        $this->codigoClasificacionRiesgoFk = $codigoClasificacionRiesgoFk;
     }
 
     /**
@@ -1045,6 +1012,38 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getLibretaMilitar()
+    {
+        return $this->libretaMilitar;
+    }
+
+    /**
+     * @param mixed $libretaMilitar
+     */
+    public function setLibretaMilitar($libretaMilitar): void
+    {
+        $this->libretaMilitar = $libretaMilitar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumeroHijos()
+    {
+        return $this->numeroHijos;
+    }
+
+    /**
+     * @param mixed $numeroHijos
+     */
+    public function setNumeroHijos($numeroHijos): void
+    {
+        $this->numeroHijos = $numeroHijos;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoCiudadFk()
     {
         return $this->codigoCiudadFk;
@@ -1237,17 +1236,81 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getCodigoCargoFk()
+    public function getPermisoEspecial()
     {
-        return $this->codigoCargoFk;
+        return $this->permisoEspecial;
     }
 
     /**
-     * @param mixed $codigoCargoFk
+     * @param mixed $permisoEspecial
      */
-    public function setCodigoCargoFk($codigoCargoFk): void
+    public function setPermisoEspecial($permisoEspecial): void
     {
-        $this->codigoCargoFk = $codigoCargoFk;
+        $this->permisoEspecial = $permisoEspecial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoEstudioTipoFk()
+    {
+        return $this->codigoEstudioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoEstudioTipoFk
+     */
+    public function setCodigoEstudioTipoFk($codigoEstudioTipoFk): void
+    {
+        $this->codigoEstudioTipoFk = $codigoEstudioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSectorFk()
+    {
+        return $this->codigoSectorFk;
+    }
+
+    /**
+     * @param mixed $codigoSectorFk
+     */
+    public function setCodigoSectorFk($codigoSectorFk): void
+    {
+        $this->codigoSectorFk = $codigoSectorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDepartamentoFk()
+    {
+        return $this->codigoDepartamentoFk;
+    }
+
+    /**
+     * @param mixed $codigoDepartamentoFk
+     */
+    public function setCodigoDepartamentoFk($codigoDepartamentoFk): void
+    {
+        $this->codigoDepartamentoFk = $codigoDepartamentoFk;
     }
 
     /**
@@ -1349,22 +1412,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getCargoRel()
-    {
-        return $this->cargoRel;
-    }
-
-    /**
-     * @param mixed $cargoRel
-     */
-    public function setCargoRel($cargoRel): void
-    {
-        $this->cargoRel = $cargoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getRhRel()
     {
         return $this->rhRel;
@@ -1408,6 +1455,70 @@ class RhuEmpleado
     public function setContratoRel($contratoRel): void
     {
         $this->contratoRel = $contratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadoEstudioTipoRel()
+    {
+        return $this->empleadoEstudioTipoRel;
+    }
+
+    /**
+     * @param mixed $empleadoEstudioTipoRel
+     */
+    public function setEmpleadoEstudioTipoRel($empleadoEstudioTipoRel): void
+    {
+        $this->empleadoEstudioTipoRel = $empleadoEstudioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSectorRel()
+    {
+        return $this->sectorRel;
+    }
+
+    /**
+     * @param mixed $sectorRel
+     */
+    public function setSectorRel($sectorRel): void
+    {
+        $this->sectorRel = $sectorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartamentoRel()
+    {
+        return $this->departamentoRel;
+    }
+
+    /**
+     * @param mixed $departamentoRel
+     */
+    public function setDepartamentoRel($departamentoRel): void
+    {
+        $this->departamentoRel = $departamentoRel;
     }
 
     /**
@@ -1717,6 +1828,22 @@ class RhuEmpleado
     /**
      * @return mixed
      */
+    public function getAdicionalesTurnoEmpleadoRel()
+    {
+        return $this->adicionalesTurnoEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $adicionalesTurnoEmpleadoRel
+     */
+    public function setAdicionalesTurnoEmpleadoRel($adicionalesTurnoEmpleadoRel): void
+    {
+        $this->adicionalesTurnoEmpleadoRel = $adicionalesTurnoEmpleadoRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAportesContratosEmpleadoRel()
     {
         return $this->aportesContratosEmpleadoRel;
@@ -1955,38 +2082,6 @@ class RhuEmpleado
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdicionalesTurnoEmpleadoRel()
-    {
-        return $this->adicionalesTurnoEmpleadoRel;
-    }
-
-    /**
-     * @param mixed $adicionalesTurnoEmpleadoRel
-     */
-    public function setAdicionalesTurnoEmpleadoRel($adicionalesTurnoEmpleadoRel): void
-    {
-        $this->adicionalesTurnoEmpleadoRel = $adicionalesTurnoEmpleadoRel;
-    }
-
-    /**
      * @return mixed
      */
     public function getTurNovedadesEmpleadoRel()
@@ -2021,38 +2116,6 @@ class RhuEmpleado
     /**
      * @return mixed
      */
-    public function getPermisoEspecial()
-    {
-        return $this->permisoEspecial;
-    }
-
-    /**
-     * @param mixed $permisoEspecial
-     */
-    public function setPermisoEspecial($permisoEspecial): void
-    {
-        $this->permisoEspecial = $permisoEspecial;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLibretaMilitar()
-    {
-        return $this->libretaMilitar;
-    }
-
-    /**
-     * @param mixed $libretaMilitar
-     */
-    public function setLibretaMilitar($libretaMilitar): void
-    {
-        $this->libretaMilitar = $libretaMilitar;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCambiosSalariosEmpleadoRel()
     {
         return $this->cambiosSalariosEmpleadoRel;
@@ -2064,150 +2127,6 @@ class RhuEmpleado
     public function setCambiosSalariosEmpleadoRel($cambiosSalariosEmpleadoRel): void
     {
         $this->cambiosSalariosEmpleadoRel = $cambiosSalariosEmpleadoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoEstudioTipoFk()
-    {
-        return $this->codigoEstudioTipoFk;
-    }
-
-    /**
-     * @param mixed $codigoEstudioTipoFk
-     */
-    public function setCodigoEstudioTipoFk($codigoEstudioTipoFk): void
-    {
-        $this->codigoEstudioTipoFk = $codigoEstudioTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmpleadoEstudioTipoRel()
-    {
-        return $this->empleadoEstudioTipoRel;
-    }
-
-    /**
-     * @param mixed $empleadoEstudioTipoRel
-     */
-    public function setEmpleadoEstudioTipoRel($empleadoEstudioTipoRel): void
-    {
-        $this->empleadoEstudioTipoRel = $empleadoEstudioTipoRel;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNumeroHijos()
-    {
-        return $this->numeroHijos;
-    }
-
-    /**
-     * @param int $numeroHijos
-     */
-    public function setNumeroHijos(int $numeroHijos): void
-    {
-        $this->numeroHijos = $numeroHijos;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoZonaFk()
-    {
-        return $this->codigoZonaFk;
-    }
-
-    /**
-     * @param mixed $codigoZonaFk
-     */
-    public function setCodigoZonaFk($codigoZonaFk): void
-    {
-        $this->codigoZonaFk = $codigoZonaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoSectorFk()
-    {
-        return $this->codigoSectorFk;
-    }
-
-    /**
-     * @param mixed $codigoSectorFk
-     */
-    public function setCodigoSectorFk($codigoSectorFk): void
-    {
-        $this->codigoSectorFk = $codigoSectorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZonaRel()
-    {
-        return $this->zonaRel;
-    }
-
-    /**
-     * @param mixed $zonaRel
-     */
-    public function setZonaRel($zonaRel): void
-    {
-        $this->zonaRel = $zonaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSectorRel()
-    {
-        return $this->sectorRel;
-    }
-
-    /**
-     * @param mixed $sectorRel
-     */
-    public function setSectorRel($sectorRel): void
-    {
-        $this->sectorRel = $sectorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoDepartamentoFk()
-    {
-        return $this->codigoDepartamentoFk;
-    }
-
-    /**
-     * @param mixed $codigoDepartamentoFk
-     */
-    public function setCodigoDepartamentoFk($codigoDepartamentoFk): void
-    {
-        $this->codigoDepartamentoFk = $codigoDepartamentoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepartamentoRel()
-    {
-        return $this->departamentoRel;
-    }
-
-    /**
-     * @param mixed $departamentoRel
-     */
-    public function setDepartamentoRel($departamentoRel): void
-    {
-        $this->departamentoRel = $departamentoRel;
     }
 
 

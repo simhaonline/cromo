@@ -54,11 +54,6 @@ class RhuCargo
     protected $rhuAspirantesCargoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="RhuEmpleado", mappedBy="cargoRel")
-     */
-    protected $empleadosCargoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="RhuContrato", mappedBy="cargoRel")
      */
     protected $contratosCargoRel;
@@ -82,22 +77,6 @@ class RhuCargo
      * @ORM\OneToMany(targetEntity="RhuAcreditacionTipo", mappedBy="cargoRel")
      */
     protected $acreditacionesTiposCargoRel;
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
 
     /**
      * @return mixed
@@ -145,6 +124,22 @@ class RhuCargo
     public function setCodigoCargoSupervigilanciaFk($codigoCargoSupervigilanciaFk): void
     {
         $this->codigoCargoSupervigilanciaFk = $codigoCargoSupervigilanciaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCargoSupervigilanciaRel()
+    {
+        return $this->cargoSupervigilanciaRel;
+    }
+
+    /**
+     * @param mixed $cargoSupervigilanciaRel
+     */
+    public function setCargoSupervigilanciaRel($cargoSupervigilanciaRel): void
+    {
+        $this->cargoSupervigilanciaRel = $cargoSupervigilanciaRel;
     }
 
     /**
@@ -198,22 +193,6 @@ class RhuCargo
     /**
      * @return mixed
      */
-    public function getEmpleadosCargoRel()
-    {
-        return $this->empleadosCargoRel;
-    }
-
-    /**
-     * @param mixed $empleadosCargoRel
-     */
-    public function setEmpleadosCargoRel($empleadosCargoRel): void
-    {
-        $this->empleadosCargoRel = $empleadosCargoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getContratosCargoRel()
     {
         return $this->contratosCargoRel;
@@ -262,16 +241,35 @@ class RhuCargo
     /**
      * @return mixed
      */
-    public function getCargoSupervigilanciaRel()
+    public function getRequisitosCargoRel()
     {
-        return $this->cargoSupervigilanciaRel;
+        return $this->requisitosCargoRel;
     }
 
     /**
-     * @param mixed $cargoSupervigilanciaRel
+     * @param mixed $requisitosCargoRel
      */
-    public function setCargoSupervigilanciaRel($cargoSupervigilanciaRel): void
+    public function setRequisitosCargoRel($requisitosCargoRel): void
     {
-        $this->cargoSupervigilanciaRel = $cargoSupervigilanciaRel;
+        $this->requisitosCargoRel = $requisitosCargoRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAcreditacionesTiposCargoRel()
+    {
+        return $this->acreditacionesTiposCargoRel;
+    }
+
+    /**
+     * @param mixed $acreditacionesTiposCargoRel
+     */
+    public function setAcreditacionesTiposCargoRel($acreditacionesTiposCargoRel): void
+    {
+        $this->acreditacionesTiposCargoRel = $acreditacionesTiposCargoRel;
+    }
+
+
+
 }

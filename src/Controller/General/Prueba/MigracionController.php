@@ -20,6 +20,9 @@ use App\Entity\General\GenSectorEconomico;
 use App\Entity\General\GenSegmento;
 use App\Entity\General\GenSexo;
 use App\Entity\General\GenTipoPersona;
+use App\Entity\RecursoHumano\RhuAcademia;
+use App\Entity\RecursoHumano\RhuAcreditacion;
+use App\Entity\RecursoHumano\RhuAcreditacionTipo;
 use App\Entity\RecursoHumano\RhuAdicional;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
@@ -37,11 +40,17 @@ use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
 use App\Entity\RecursoHumano\RhuCreditoTipo;
 use App\Entity\RecursoHumano\RhuDepartamento;
+use App\Entity\RecursoHumano\RhuDisciplinario;
+use App\Entity\RecursoHumano\RhuDisciplinarioFalta;
+use App\Entity\RecursoHumano\RhuDisciplinarioMotivo;
+use App\Entity\RecursoHumano\RhuDisciplinarioTipo;
 use App\Entity\RecursoHumano\RhuEmbargo;
 use App\Entity\RecursoHumano\RhuEmbargoJuzgado;
 use App\Entity\RecursoHumano\RhuEmbargoTipo;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuEntidad;
+use App\Entity\RecursoHumano\RhuEstudio;
+use App\Entity\RecursoHumano\RhuEstudioTipo;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuIncapacidadDiagnostico;
@@ -137,6 +146,9 @@ class MigracionController extends Controller
                     //$this->rhuCreditoTipo($conn);
                     //$this->rhuIncapacidadDiagnostico($conn);
                     //$this->rhuLicenciaTipo($conn);
+//                    $this->rhuDisciplinario($conn);
+//                    $this->rhuAcreditacion($conn);
+                    $this->rhuEstudio($conn);
                     //$this->turTurno($conn);
                     //$this->turSecuencia($conn);
                     //$this->turConcepto($conn);
@@ -194,6 +206,15 @@ class MigracionController extends Controller
                             break;
                         case 'rhu_licencia':
                             $this->rhuLicencia($conn);
+                            break;
+                        case 'rhu_disciplinario':
+                            $this->rhuDisciplinario($conn);
+                            break;
+                        case 'rhuAcreditacion':
+                            $this->rhuAcreditacion($conn);
+                            break;
+                        case 'rhuEstudio':
+                            $this->rhuEstudio($conn);
                             break;
                         case 'tur_cliente':
                             $this->turCliente($conn);
@@ -262,6 +283,9 @@ class MigracionController extends Controller
             ['clase' => 'rhu_pago_detalle', 'registros' => $this->contarRegistros('RhuPagoDetalle', 'RecursoHumano', 'codigoPagoDetallePk')],
             ['clase' => 'rhu_incapacidad', 'registros' => $this->contarRegistros('RhuIncapacidad', 'RecursoHumano', 'codigoIncapacidadPk')],
             ['clase' => 'rhu_licencia', 'registros' => $this->contarRegistros('RhuLicencia', 'RecursoHumano', 'codigoLicenciaPk')],
+            ['clase' => 'rhu_disciplinario', 'registros' => $this->contarRegistros('RhuDisciplinario', 'RecursoHumano', 'codigoDisciplinarioPk')],
+            ['clase' => 'rhu_acreditacion', 'registros' => $this->contarRegistros('RhuAcreditacion', 'RecursoHumano', 'codigoAcreditacionPk')],
+            ['clase' => 'rhu_estudio', 'registros' => $this->contarRegistros('RhuEstudio', 'RecursoHumano', 'codigoEstudioPk')],
             ['clase' => 'tur_cliente', 'registros' => $this->contarRegistros('TurCliente', 'Turno', 'codigoClientePk')],
             ['clase' => 'tur_grupo', 'registros' => $this->contarRegistros('TurGrupo', 'Turno', 'codigoGrupoPk')],
             ['clase' => 'tur_puesto', 'registros' => $this->contarRegistros('TurPuesto', 'Turno', 'codigoPuestoPk')],
@@ -574,17 +598,17 @@ class MigracionController extends Controller
                     $arEmpleado->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_activo_fk']));
                 }*/
                 $arEmpleado->setCodigoContratoUltimoFk($row['codigo_contrato_ultimo_fk']);
-                if($row['codigo_zona_fk']) {
+                if ($row['codigo_zona_fk']) {
                     $arEmpleado->setZonaRel($em->getReference(RhuZona::class, $row['codigo_zona_fk']));
                 }
-                if($row['codigo_subzona_fk']) {
+                if ($row['codigo_subzona_fk']) {
                     $arEmpleado->setSectorRel($em->getReference(RhuSector::class, $row['codigo_subzona_fk']));
                 }
                 $arEmpleado->setLibretaMilitar($row['libreta_militar']);
-                if($row['codigo_banco_fk']) {
+                if ($row['codigo_banco_fk']) {
                     $arEmpleado->setBancoRel($em->getReference(GenBanco::class, $row['codigo_banco_fk']));
                 }
-                if($row['codigo_departamento_empresa_fk']) {
+                if ($row['codigo_departamento_empresa_fk']) {
                     $arEmpleado->setDepartamentoRel($em->getReference(RhuDepartamento::class, $row['codigo_departamento_empresa_fk']));
                 }
                 $em->persist($arEmpleado);
@@ -2210,6 +2234,176 @@ class MigracionController extends Controller
 
     }
 
+    private function rhuDisciplinario($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                codigo_disciplinario_pk,
+                codigo_disciplinario_tipo_fk,
+                codigo_disciplinario_motivo_fk,
+                codigo_disciplinario_falta_fk,
+                codigo_empleado_fk,
+                fecha,
+                fecha_notificacion,
+                codigo_contrato_fk,
+                asunto,
+                fecha_incidente,
+                fecha_desde_sancion,
+                fecha_hasta_sancion,
+                fecha_ingreso_trabajo,
+                dias_suspencion,
+                reentrenamiento,
+                estado_procede,
+                estado_suspension,
+                estado_autorizado,
+                estado_cerrado,
+                comentarios
+                 FROM rhu_disciplinario");
+        foreach ($datos as $row) {
+            $arDisciplinario = new RhuDisciplinario();
+            $arDisciplinario->setCodigoDisciplinarioPk($row['codigo_disciplinario_pk']);
+            $arDisciplinario->setDisciplinarioTipoRel($em->getReference(RhuDisciplinarioTipo::class, $row['codigo_disciplinario_tipo_fk']));
+            $arDisciplinario->setDisciplinarioMotivoRel($em->getReference(RhuDisciplinarioMotivo::class, $row['codigo_disciplinario_motivo_fk']));
+            $arDisciplinario->setDisciplinariosFaltaRel($em->getReference(RhuDisciplinarioFalta::class, $row['codigo_disciplinario_falta_fk']));
+            $arDisciplinario->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+            $arDisciplinario->setFecha(date_create($row['fecha']));
+            $arDisciplinario->setFechaNotificacion(date_create($row['fecha_notificacion']));
+            $arDisciplinario->setCodigoContratoFk($row['codigo_contrato_fk']);
+            $arDisciplinario->setAsunto(utf8_encode($row['asunto']));
+            $arDisciplinario->setFechaIncidente(date_create($row['fecha_incidente']));
+            $arDisciplinario->setFechaDesdeSancion(date_create($row['fecha_desde_sancion']));
+            $arDisciplinario->setFechaHastaSancion(date_create($row['fecha_hasta_sancion']));
+            $arDisciplinario->setFechaIngresoTrabajo(date_create($row['fecha_ingreso_trabajo']));
+            $arDisciplinario->setDiasSuspencion($row['dias_suspencion']);
+            $arDisciplinario->setReentrenamiento($row['reentrenamiento']);
+            $arDisciplinario->setEstadoProcede($row['estado_procede']);
+            $arDisciplinario->setEstadoSuspendido($row['estado_suspension']);
+            $arDisciplinario->setEstadoAutorizado($row['estado_autorizado']);
+            $arDisciplinario->setEstadoAprobado($row['estado_cerrado']);
+            $arDisciplinario->setComentarios(utf8_encode($row['comentarios']));
+            $em->persist($arDisciplinario);
+            $metadata = $em->getClassMetaData(get_class($arDisciplinario));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+
+    }
+
+    private function rhuAcreditacion($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                codigo_acreditacion_pk,
+                codigo_acreditacion_tipo_fk,
+                codigo_academia_fk,
+                codigo_empleado_fk,
+                codigo_acreditacion_rechazo_fk,
+                fecha,
+                fecha_acreditacion,
+                fecha_validacion,
+                fecha_vence_curso,
+                fecha_vencimiento,
+                numero_acreditacion,
+                numero_validacion,
+                numero_registro,
+                comentarios,
+                detalle_validacion,
+                estado_acreditado,
+                estado_rechazado
+                FROM rhu_acreditacion");
+        foreach ($datos as $row) {
+            $arAcreditacion = new RhuAcreditacion();
+            $arAcreditacion->setCodigoAcreditacionPk($row['codigo_acreditacion_pk']);
+            $arAcreditacion->setFecha(date_create($row['fecha']));
+            $arAcreditacion->setFechaAcreditacion(date_create($row['fecha_acreditacion']));
+            $arAcreditacion->setFechaValidacion(date_create($row['fecha_validacion']));
+            $arAcreditacion->setFechaVenceCurso(date_create($row['fecha_vence_curso']));
+            $arAcreditacion->setFechaVencimiento(date_create($row['fecha_vencimiento']));
+            $arAcreditacion->setNumeroAcreditacion($row['numero_acreditacion']);
+            $arAcreditacion->setNumeroValidacion($row['numero_validacion']);
+            $arAcreditacion->setNumeroRegistro(utf8_decode($row['numero_registro']));
+            $arAcreditacion->setCodigoAcreditacionRechazoFk($row['codigo_acreditacion_rechazo_fk']);
+            $arAcreditacion->setComentarios(utf8_decode($row['comentarios']));
+            $arAcreditacion->setDetalleValidacion(utf8_decode($row['detalle_validacion']));
+            $arAcreditacion->setEstadoAcreditado($row['estado_acreditado']);
+            $arAcreditacion->setEstadoRechazado($row['estado_rechazado']);
+            $arAcreditacion->setAcreditacionTipoRel($em->getReference(RhuAcreditacionTipo::class, $row['codigo_acreditacion_tipo_fk']));
+            $arAcreditacion->setAcademiaRel($em->getReference(RhuAcademia::class, $row['codigo_academia_fk']));
+            $arAcreditacion->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+            $em->persist($arAcreditacion);
+            $metadata = $em->getClassMetaData(get_class($arAcreditacion));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+    }
+
+    private function rhuEstudio($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("SELECT
+                codigo_empleado_estudio_pk,
+                codigo_empleado_fk,
+                codigo_empleado_estudio_tipo_fk,
+                codigo_ciudad_fk,
+                institucion,
+                titulo,
+                fecha,
+                fecha_inicio,
+                fecha_terminacion,
+                fecha_vencimiento_curso,
+                fecha_inicio_acreditacion,
+                fecha_vencimiento_acreditacion,
+                validar_vencimiento,
+                codigo_grado_bachiller_fk,
+                codigo_academia_fk,
+                graduado,
+                numero_registro,
+                numero_acreditacion,
+                comentarios,
+                codigo_estudio_tipo_acreditacion_fk,
+                codigo_estudio_estado_fk,
+                codigo_estudio_estado_invalido_fk,
+                fecha_estado,
+                fecha_estado_invalido
+                FROM rhu_empleado_estudio");
+        foreach ($datos as $row) {
+            $arEstudio = new RhuEstudio();
+            $arEstudio->setCodigoEstudioPk($row['codigo_empleado_estudio_pk']);
+            $arEstudio->setInstitucion(utf8_encode($row['institucion']));
+            $arEstudio->setTitulo(utf8_encode($row['titulo']));
+            $arEstudio->setFecha(date_create($row['fecha']));
+            $arEstudio->setFechaInicio(date_create($row['fecha_inicio']));
+            $arEstudio->setFechaTerminacion(date_create($row['fecha_terminacion']));
+            $arEstudio->setFechaVencimientoCurso(date_create($row['fecha_vencimiento_curso']));
+            $arEstudio->setFechaInicioAcreditacion(date_create($row['fecha_inicio_acreditacion']));
+            $arEstudio->setFechaVencimientoAcreditacion(date_create($row['fecha_vencimiento_acreditacion']));
+            $arEstudio->setValidarVencimiento($row['validar_vencimiento']);
+            $arEstudio->setCodigoGradoBachillerFk($row['codigo_grado_bachiller_fk']);
+            $arEstudio->setCodigoAcademiaFk($row['codigo_academia_fk']);
+            $arEstudio->setGraduado($row['graduado']);
+            $arEstudio->setNumeroRegistro($row['numero_registro']);
+            $arEstudio->setNumeroAcreditacion($row['numero_acreditacion']);
+            $arEstudio->setCodigoEstudioTipoAcreditacionFk($row['codigo_estudio_tipo_acreditacion_fk']);
+            $arEstudio->setCodigoEstudioEstadoFk($row['codigo_estudio_estado_fk']);
+            $arEstudio->setCodigoEstudioEstadoInvalidoFk($row['codigo_estudio_estado_invalido_fk']);
+            $arEstudio->setComentarios(utf8_encode($row['comentarios']));
+            $arEstudio->setFechaEstado(date_create($row['fecha_estado']));
+            $arEstudio->setFechaEstadoInvalido(date_create($row['fecha_estado_invalido']));
+
+            $arEstudio->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+            $arEstudio->setEstudioTipoRel($em->getReference(RhuEstudioTipo::class, $row['codigo_empleado_estudio_tipo_fk']));
+            $arEstudio->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+
+            $em->persist($arEstudio);
+            $metadata = $em->getClassMetaData(get_class($arEstudio));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+    }
+
     private function turTurno($conn)
     {
         $em = $this->getDoctrine()->getManager();
@@ -2413,10 +2607,10 @@ class MigracionController extends Controller
                 $arCliente->setEstrato($row['estrato']);
                 $arCliente->setDireccion(utf8_encode($row['direccion']));
                 $arCliente->setTelefono($row['telefono']);
-                if($row['codigo_ciudad_fk']) {
+                if ($row['codigo_ciudad_fk']) {
                     $arCliente->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
                 }
-                if($row['codigo_segmento_fk']) {
+                if ($row['codigo_segmento_fk']) {
                     $arCliente->setSegmentoRel($em->getReference(GenSegmento::class, $row['codigo_segmento_fk']));
                 }
                 if ($row['codigo_sector_comercial_fk']) {
@@ -2649,7 +2843,7 @@ class MigracionController extends Controller
                 $arContrato->setUsuario($row['usuario']);
                 $arContrato->setComentarios(utf8_encode($row['comentarios']));
                 $arContrato->setVrSalarioBase($row['vr_salario_base']);
-                if($row['estrato']) {
+                if ($row['estrato']) {
                     $arContrato->setEstrato($row['estrato']);
                 }
                 $em->persist($arContrato);
@@ -2722,7 +2916,7 @@ class MigracionController extends Controller
                 $arContratoDetalle->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
                 $arContratoDetalle->setConceptoRel($em->getReference(TurConcepto::class, $row['codigo_concepto_servicio_fk']));
                 $arContratoDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
-                if($row['codigo_grupo_facturacion_fk']) {
+                if ($row['codigo_grupo_facturacion_fk']) {
                     $arContratoDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
                 }
                 $arContratoDetalle->setFechaDesde(date_create($row['fecha_desde']));
@@ -2761,7 +2955,7 @@ class MigracionController extends Controller
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
-                if($registro) {
+                if ($registro) {
                     $codigoItem = $registro['codigo_pk'];
                     $horaDesde = date_create($registro['hora_inicio']);
                     $horaHasta = date_create($registro['hora_fin']);
@@ -2865,7 +3059,7 @@ class MigracionController extends Controller
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
-                if($registro) {
+                if ($registro) {
                     $horaDesde = date_create($registro['hora_inicio']);
                     $horaHasta = date_create($registro['hora_fin']);
                     $arContratoDetalleCompuesto->setHorasUnidad($registro['horas']);
@@ -3034,7 +3228,7 @@ class MigracionController extends Controller
                 if ($row['codigo_servicio_detalle_fk']) {
                     $arPedidoDetalle->setContratoDetalleRel($em->getReference(TurContratoDetalle::class, $row['codigo_servicio_detalle_fk']));
                 }
-                if($row['codigo_grupo_facturacion_fk']) {
+                if ($row['codigo_grupo_facturacion_fk']) {
                     $arPedidoDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
                 }
                 $arPedidoDetalle->setAnio($row['anio']);
@@ -3077,7 +3271,7 @@ class MigracionController extends Controller
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
-                if($registro) {
+                if ($registro) {
                     $codigoItem = $registro['codigo_pk'];
                     $horaDesde = date_create($registro['hora_inicio']);
                     $horaHasta = date_create($registro['hora_fin']);
@@ -3188,7 +3382,7 @@ class MigracionController extends Controller
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
-                if($registro) {
+                if ($registro) {
                     $horaDesde = date_create($registro['hora_inicio']);
                     $horaHasta = date_create($registro['hora_fin']);
                     $arPedidoDetalleCompuesto->setHorasUnidad($registro['horas']);
@@ -3265,7 +3459,7 @@ class MigracionController extends Controller
                 $arFactura->setVrRetencionIva($row['vr_retencion_iva']);
                 $arFactura->setUsuario($row['usuario']);
                 $arFactura->setEstadoAutorizado($row['estado_autorizado']);
-                if($row['estado_autorizado'] == 1) {
+                if ($row['estado_autorizado'] == 1) {
                     $arFactura->setEstadoAprobado(1);
                 }
                 $arFactura->setEstadoAnulado($row['estado_anulado']);
@@ -3319,10 +3513,10 @@ class MigracionController extends Controller
                 } else {
                     $arFacturaDetalle->setPedidoDetalleRel(null);
                 }
-                if($row['codigo_grupo_facturacion_fk']) {
+                if ($row['codigo_grupo_facturacion_fk']) {
                     $arFacturaDetalle->setGrupoRel($em->getReference(TurGrupo::class, $row['codigo_grupo_facturacion_fk']));
                 }
-                if($row['codigo_modalidad_servicio_externo']) {
+                if ($row['codigo_modalidad_servicio_externo']) {
                     $arFacturaDetalle->setModalidadRel($em->getReference(TurModalidad::class, $row['codigo_modalidad_servicio_externo']));
                 }
                 $arFacturaDetalle->setCantidad($row['cantidad']);
@@ -3334,9 +3528,9 @@ class MigracionController extends Controller
 
                 $ar = $conn->query("SELECT codigo_pk, hora_inicio, hora_fin, horas, horas_diurnas, horas_nocturnas FROM temporal_conceptos WHERE modalidad='" . $row['codigo_modalidad_servicio_externo'] . "' AND codigo_concepto_fk = " . $row['codigo_concepto_servicio_fk']);
                 $registro = $ar->fetch_assoc();
-                if($registro) {
+                if ($registro) {
                     $codigoItem = $registro['codigo_pk'];
-                    if($codigoItem) {
+                    if ($codigoItem) {
                         $arFacturaDetalle->setItemRel($em->getReference(TurItem::class, $codigoItem));
                     }
                 } else {

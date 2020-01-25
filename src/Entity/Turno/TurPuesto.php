@@ -131,14 +131,24 @@ class TurPuesto
     private $codigoSupervisorFk;
 
     /**
-     * @ORM\Column(name="codigo_zona_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=20, nullable=true)
      */
     private $codigoZonaFk;
 
     /**
-     * @ORM\Column(name="codigo_operacion_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_operacion_fk", type="string", length=20, nullable=true)
      */
     private $codigoOperacionFk;
+
+    /**
+     * @ORM\Column(name="codigo_proyecto_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoProyectoFk;
+
+    /**
+     * @ORM\Column(name="codigo_area_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoAreaFk;
 
     /**
      * @ORM\Column(name="codigo_coordinador_fk", type="string", length=20, nullable=true)
@@ -198,6 +208,18 @@ class TurPuesto
      * @ORM\JoinColumn(name="codigo_operacion_fk", referencedColumnName="codigo_operacion_pk")
      */
     protected $operacionRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurProyecto", inversedBy="puestosProyectoRel")
+     * @ORM\JoinColumn(name="codigo_proyecto_fk", referencedColumnName="codigo_proyecto_pk")
+     */
+    protected $proyectoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurArea", inversedBy="puestosAreaRel")
+     * @ORM\JoinColumn(name="codigo_area_fk", referencedColumnName="codigo_area_pk")
+     */
+    protected $areaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="TurCoordinador", inversedBy="puestosCoordinadorRel")
@@ -504,6 +526,22 @@ class TurPuesto
     /**
      * @return mixed
      */
+    public function getControlPuesto()
+    {
+        return $this->controlPuesto;
+    }
+
+    /**
+     * @param mixed $controlPuesto
+     */
+    public function setControlPuesto($controlPuesto): void
+    {
+        $this->controlPuesto = $controlPuesto;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoSalarioFk()
     {
         return $this->codigoSalarioFk;
@@ -515,6 +553,102 @@ class TurPuesto
     public function setCodigoSalarioFk($codigoSalarioFk): void
     {
         $this->codigoSalarioFk = $codigoSalarioFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoSupervisorFk()
+    {
+        return $this->codigoSupervisorFk;
+    }
+
+    /**
+     * @param mixed $codigoSupervisorFk
+     */
+    public function setCodigoSupervisorFk($codigoSupervisorFk): void
+    {
+        $this->codigoSupervisorFk = $codigoSupervisorFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoOperacionFk()
+    {
+        return $this->codigoOperacionFk;
+    }
+
+    /**
+     * @param mixed $codigoOperacionFk
+     */
+    public function setCodigoOperacionFk($codigoOperacionFk): void
+    {
+        $this->codigoOperacionFk = $codigoOperacionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoProyectoFk()
+    {
+        return $this->codigoProyectoFk;
+    }
+
+    /**
+     * @param mixed $codigoProyectoFk
+     */
+    public function setCodigoProyectoFk($codigoProyectoFk): void
+    {
+        $this->codigoProyectoFk = $codigoProyectoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoAreaFk()
+    {
+        return $this->codigoAreaFk;
+    }
+
+    /**
+     * @param mixed $codigoAreaFk
+     */
+    public function setCodigoAreaFk($codigoAreaFk): void
+    {
+        $this->codigoAreaFk = $codigoAreaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCoordinadorFk()
+    {
+        return $this->codigoCoordinadorFk;
+    }
+
+    /**
+     * @param mixed $codigoCoordinadorFk
+     */
+    public function setCodigoCoordinadorFk($codigoCoordinadorFk): void
+    {
+        $this->codigoCoordinadorFk = $codigoCoordinadorFk;
     }
 
     /**
@@ -611,6 +745,102 @@ class TurPuesto
     public function setSalarioRel($salarioRel): void
     {
         $this->salarioRel = $salarioRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupervisorRel()
+    {
+        return $this->supervisorRel;
+    }
+
+    /**
+     * @param mixed $supervisorRel
+     */
+    public function setSupervisorRel($supervisorRel): void
+    {
+        $this->supervisorRel = $supervisorRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionRel()
+    {
+        return $this->operacionRel;
+    }
+
+    /**
+     * @param mixed $operacionRel
+     */
+    public function setOperacionRel($operacionRel): void
+    {
+        $this->operacionRel = $operacionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProyectoRel()
+    {
+        return $this->proyectoRel;
+    }
+
+    /**
+     * @param mixed $proyectoRel
+     */
+    public function setProyectoRel($proyectoRel): void
+    {
+        $this->proyectoRel = $proyectoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAreaRel()
+    {
+        return $this->areaRel;
+    }
+
+    /**
+     * @param mixed $areaRel
+     */
+    public function setAreaRel($areaRel): void
+    {
+        $this->areaRel = $areaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCoordinadorRel()
+    {
+        return $this->coordinadorRel;
+    }
+
+    /**
+     * @param mixed $coordinadorRel
+     */
+    public function setCoordinadorRel($coordinadorRel): void
+    {
+        $this->coordinadorRel = $coordinadorRel;
     }
 
     /**
@@ -741,149 +971,6 @@ class TurPuesto
         $this->puestosAdicionalesPuestoRel = $puestosAdicionalesPuestoRel;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodigoSupervisorFk()
-    {
-        return $this->codigoSupervisorFk;
-    }
-
-    /**
-     * @param mixed $codigoSupervisorFk
-     */
-    public function setCodigoSupervisorFk($codigoSupervisorFk): void
-    {
-        $this->codigoSupervisorFk = $codigoSupervisorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSupervisorRel()
-    {
-        return $this->supervisorRel;
-    }
-
-    /**
-     * @param mixed $supervisorRel
-     */
-    public function setSupervisorRel($supervisorRel): void
-    {
-        $this->supervisorRel = $supervisorRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoZonaFk()
-    {
-        return $this->codigoZonaFk;
-    }
-
-    /**
-     * @param mixed $codigoZonaFk
-     */
-    public function setCodigoZonaFk($codigoZonaFk): void
-    {
-        $this->codigoZonaFk = $codigoZonaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZonaRel()
-    {
-        return $this->zonaRel;
-    }
-
-    /**
-     * @param mixed $zonaRel
-     */
-    public function setZonaRel($zonaRel): void
-    {
-        $this->zonaRel = $zonaRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoOperacionFk()
-    {
-        return $this->codigoOperacionFk;
-    }
-
-    /**
-     * @param mixed $codigoOperacionFk
-     */
-    public function setCodigoOperacionFk($codigoOperacionFk): void
-    {
-        $this->codigoOperacionFk = $codigoOperacionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperacionRel()
-    {
-        return $this->operacionRel;
-    }
-
-    /**
-     * @param mixed $operacionRel
-     */
-    public function setOperacionRel($operacionRel): void
-    {
-        $this->operacionRel = $operacionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getControlPuesto()
-    {
-        return $this->controlPuesto;
-    }
-
-    /**
-     * @param bool $controlPuesto
-     */
-    public function setControlPuesto(bool $controlPuesto): void
-    {
-        $this->controlPuesto = $controlPuesto;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCoordinadorFk()
-    {
-        return $this->codigoCoordinadorFk;
-    }
-
-    /**
-     * @param mixed $codigoCoordinadorFk
-     */
-    public function setCodigoCoordinadorFk($codigoCoordinadorFk): void
-    {
-        $this->codigoCoordinadorFk = $codigoCoordinadorFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCoordinadorRel()
-    {
-        return $this->coordinadorRel;
-    }
-
-    /**
-     * @param mixed $coordinadorRel
-     */
-    public function setCoordinadorRel($coordinadorRel): void
-    {
-        $this->coordinadorRel = $coordinadorRel;
-    }
 
 
 }

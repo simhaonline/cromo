@@ -35,6 +35,7 @@ use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoClase;
 use App\Entity\RecursoHumano\RhuContratoMotivo;
 use App\Entity\RecursoHumano\RhuContratoTipo;
+use App\Entity\RecursoHumano\RhuCostoClase;
 use App\Entity\RecursoHumano\RhuCredito;
 use App\Entity\RecursoHumano\RhuCreditoPago;
 use App\Entity\RecursoHumano\RhuCreditoPagoTipo;
@@ -64,6 +65,7 @@ use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuPension;
 use App\Entity\RecursoHumano\RhuRh;
+use App\Entity\RecursoHumano\RhuSalarioTipo;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSector;
 use App\Entity\RecursoHumano\RhuSubtipoCotizante;
@@ -74,6 +76,7 @@ use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
 use App\Entity\RecursoHumano\RhuZona;
 use App\Entity\Seguridad\Usuario;
+use App\Entity\Turno\TurArea;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurContrato;
@@ -86,16 +89,20 @@ use App\Entity\Turno\TurFacturaTipo;
 use App\Entity\Turno\TurGrupo;
 use App\Entity\Turno\TurItem;
 use App\Entity\Turno\TurModalidad;
+use App\Entity\Turno\TurOperacion;
+use App\Entity\Turno\TurOperacionTipo;
 use App\Entity\Turno\TurPedido;
 use App\Entity\Turno\TurPedidoDetalle;
 use App\Entity\Turno\TurPedidoDetalleCompuesto;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Entity\Turno\TurProgramacion;
 use App\Entity\Turno\TurPrototipo;
+use App\Entity\Turno\TurProyecto;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurSector;
 use App\Entity\Turno\TurSecuencia;
 use App\Entity\Turno\TurTurno;
+use App\Entity\Turno\TurZona;
 use App\Utilidades\Mensajes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -222,6 +229,9 @@ class MigracionController extends Controller
                         case 'tur_grupo':
                             $this->turGrupo($conn);
                             break;
+                        case 'tur_operacion':
+                            $this->turOperacion($conn);
+                            break;
                         case 'tur_puesto':
                             $this->turPuesto($conn);
                             break;
@@ -288,6 +298,7 @@ class MigracionController extends Controller
             ['clase' => 'rhu_estudio', 'registros' => $this->contarRegistros('RhuEstudio', 'RecursoHumano', 'codigoEstudioPk')],
             ['clase' => 'tur_cliente', 'registros' => $this->contarRegistros('TurCliente', 'Turno', 'codigoClientePk')],
             ['clase' => 'tur_grupo', 'registros' => $this->contarRegistros('TurGrupo', 'Turno', 'codigoGrupoPk')],
+            ['clase' => 'tur_operacion', 'registros' => $this->contarRegistros('TurOperacion', 'Turno', 'codigoOperacionPk')],
             ['clase' => 'tur_puesto', 'registros' => $this->contarRegistros('TurPuesto', 'Turno', 'codigoPuestoPk')],
             ['clase' => 'tur_contrato', 'registros' => $this->contarRegistros('TurContrato', 'Turno', 'codigoContratoPk')],
             ['clase' => 'tur_contrato_detalle', 'registros' => $this->contarRegistros('TurContratoDetalle', 'Turno', 'codigoContratoDetallePk')],
@@ -634,46 +645,52 @@ class MigracionController extends Controller
         for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
             $lote = $pagina * $rango;
             $datos = $conn->query("SELECT
-                    codigo_contrato_pk,
+                    rhu_contrato.codigo_contrato_pk,
                     rhu_contrato_tipo.codigo_externo as codigo_contrato_tipo_externo,
                     rhu_contrato_clase.codigo_externo as codigo_contrato_clase_externo,
                     rhu_clasificacion_riesgo.codigo_externo as codigo_clasificacion_riesgo_externo,
                     rhu_motivo_terminacion_contrato.codigo_externo as codigo_motivo_terminacion_externo,                    
-                    fecha,
-                    fecha_desde,
-                    fecha_hasta,
+                    rhu_contrato.fecha,
+                    rhu_contrato.fecha_desde,
+                    rhu_contrato.fecha_hasta,
                     rhu_tipo_tiempo.codigo_externo as codigo_tipo_tiempo_externo,
                     rhu_contrato.factor_horas_dia,
                     rhu_tipo_pension.codigo_externo as codigo_tipo_pension_externo,
                     rhu_tipo_salud.codigo_externo as codigo_tipo_salud_externo,
-                    codigo_empleado_fk,
-                    numero,
-                    codigo_cargo_fk,
-                    cargo_descripcion,
-                    vr_salario,
-                    vr_salario_pago,
-                    vr_devengado_pactado,
-                    estado_terminado,
+                    rhu_contrato.codigo_empleado_fk,
+                    rhu_contrato.numero,
+                    rhu_contrato.codigo_cargo_fk,
+                    rhu_contrato.cargo_descripcion,
+                    rhu_contrato.vr_salario,
+                    rhu_contrato.vr_salario_pago,
+                    rhu_contrato.vr_devengado_pactado,
+                    rhu_contrato.estado_terminado,
                     rhu_contrato.indefinido,
-                    comentarios_terminacion,
-                    codigo_centro_costo_fk,
-                    fecha_ultimo_pago_cesantias,
-                    fecha_ultimo_pago_vacaciones,
-                    fecha_ultimo_pago_primas,
-                    fecha_ultimo_pago,
-                    codigo_tipo_cotizante_fk,
-                    codigo_subtipo_cotizante_fk,
-                    salario_integral,
-                    /*costo_tipo_fk,*/
+                    rhu_contrato.comentarios_terminacion,
+                    rhu_contrato.codigo_centro_costo_fk,
+                    rhu_contrato.fecha_ultimo_pago_cesantias,
+                    rhu_contrato.fecha_ultimo_pago_vacaciones,
+                    rhu_contrato.fecha_ultimo_pago_primas,
+                    rhu_contrato.fecha_ultimo_pago,
+                    rhu_contrato.codigo_tipo_cotizante_fk,
+                    rhu_contrato.codigo_subtipo_cotizante_fk,
+                    rhu_contrato.salario_integral,
                     rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo,
                     rhu_entidad_pension.codigo_interface as codigo_entidad_pension_externo,
                     rhu_entidad_cesantia.codigo_externo as codigo_entidad_cesantia_externo,
                     rhu_entidad_caja.codigo_interface as codigo_entidad_caja_externo,
-                    codigo_ciudad_contrato_fk,
-                    codigo_ciudad_labora_fk,
-                    codigo_centro_trabajo_fk,
-                    auxilio_transporte,
-                    turno_fijo_ordinario
+                    rhu_contrato.codigo_ciudad_contrato_fk,
+                    rhu_contrato.codigo_ciudad_labora_fk,
+                    rhu_contrato.codigo_centro_trabajo_fk,
+                    rhu_contrato.auxilio_transporte,
+                    rhu_contrato.turno_fijo_ordinario,
+                    rhu_contrato.codigo_salario_tipo_fk,
+                    rhu_empleado.codigo_empleado_tipo_fk,
+                    rhu_empleado.centro_costo_fijo,
+                    rhu_empleado.centro_costo_distribuido,
+                    rhu_empleado.centro_costo_distribuido_fijo,
+                    rhu_contrato.codigo_sucursal_fk,
+                    rhu_contrato.codigo_centro_costo_contabilidad_fk
                   FROM rhu_contrato 
                   left join rhu_contrato_tipo on rhu_contrato.codigo_contrato_tipo_fk = rhu_contrato_tipo.codigo_contrato_tipo_pk
                   left join rhu_contrato_clase on rhu_contrato_clase.codigo_contrato_clase_pk=rhu_contrato.codigo_contrato_clase_fk
@@ -686,7 +703,8 @@ class MigracionController extends Controller
                   left join rhu_entidad_cesantia on rhu_entidad_cesantia.codigo_entidad_cesantia_pk=rhu_contrato.codigo_entidad_cesantia_fk
                   left join rhu_entidad_caja on rhu_entidad_caja.codigo_entidad_caja_pk=rhu_contrato.codigo_entidad_caja_fk
                   left join rhu_tipo_tiempo on rhu_contrato.codigo_tipo_tiempo_fk=rhu_tipo_tiempo.codigo_tipo_tiempo_pk
-                  ORDER BY codigo_contrato_pk limit {$lote},{$rango}");
+                  left join rhu_empleado on rhu_contrato.codigo_empleado_fk=rhu_empleado.codigo_empleado_pk
+                  ORDER BY codigo_contrato_pk  limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 $arContrato = new RhuContrato();
                 $arContrato->setCodigoContratoPk($row['codigo_contrato_pk']);
@@ -733,6 +751,48 @@ class MigracionController extends Controller
                 $arContrato->setEntidadCajaRel($arEntidadCaja);
                 $arEntidadCesantia = $em->getRepository(RhuEntidad::class)->findOneBy(['codigoInterface' => $row['codigo_entidad_cesantia_externo']]);
                 $arContrato->setEntidadCesantiaRel($arEntidadCesantia);
+                if($row['codigo_salario_tipo_fk']) {
+                    If($row['codigo_salario_tipo_fk'] == 1) {
+                        $arContrato->setSalarioTipoRel($em->getReference(RhuSalarioTipo::class, 'FIJ'));
+                    } else {
+                        $arContrato->setSalarioTipoRel($em->getReference(RhuSalarioTipo::class, 'VAR'));
+                    }
+                }
+                if($row['codigo_empleado_tipo_fk']) {
+                    $codigoClase = "ADM";
+                    switch ($row['codigo_empleado_tipo_fk']) {
+                        case 1:
+                            $codigoClase = "ADM";
+                            break;
+                        case 2:
+                            $codigoClase = "ADO";
+                            break;
+                        case 3:
+                            $codigoClase = "OPE";
+                            break;
+                        case 4:
+                            $codigoClase = "COM";
+                            break;
+                    }
+                    $arContrato->setCostoClaseRel($em->getReference(RhuCostoClase::class, $codigoClase));
+                }
+                if($row['codigo_sucursal_fk']) {
+                    $arContrato->setSucursalRel($em->getReference(RhuSucursal::class, $row['codigo_sucursal_fk']));
+                }
+                $costoTipo = 'FIJ';
+                if($row['centro_costo_fijo'] == 1) {
+                    $costoTipo = 'FIJ';
+                }
+                if($row['centro_costo_distribuido'] == 1) {
+                    $costoTipo = 'OPE';
+                }
+                if($row['centro_costo_distribuido_fijo'] == 1) {
+                    $costoTipo = 'DIS';
+                }
+                $arContrato->setCodigoCostoTipoFk($costoTipo);
+                if($row['codigo_centro_costo_contabilidad_fk']) {
+                    $arContrato->setCentroCostoRel($em->getReference(FinCentroCosto::class, $row['codigo_centro_costo_contabilidad_fk']));
+                }
                 $em->persist($arContrato);
                 $metadata = $em->getClassMetaData(get_class($arContrato));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2701,6 +2761,48 @@ class MigracionController extends Controller
 
     }
 
+    private function turOperacion($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_operacion_pk FROM tur_operacion ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                    codigo_operacion_pk,
+                    codigo_cliente_fk,
+                    nombre_corto,
+                    nombre,
+                    codigo_proyecto_fk,
+                    codigo_operacion_tipo_fk
+                 FROM tur_operacion 
+                 ORDER BY codigo_operacion_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arOperacion = new TurOperacion();
+                $arOperacion->setCodigoOperacionPk($row['codigo_operacion_pk']);
+                $arOperacion->setNombre(utf8_encode($row['nombre']));
+                $arOperacion->setNombreCorto(utf8_encode($row['nombre_corto']));
+                if($row['codigo_cliente_fk']) {
+                    $arOperacion->setClienteRel($em->getReference(TurCliente::class, $row['codigo_cliente_fk']));
+                }
+                if($row['codigo_operacion_tipo_fk']) {
+                    $arOperacion->setOperacionTipoRel($em->getReference(TurOperacionTipo::class, $row['codigo_operacion_tipo_fk']));
+                }
+                $em->persist($arOperacion);
+                $metadata = $em->getClassMetaData(get_class($arOperacion));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+
+    }
+
     private function turPuesto($conn)
     {
         $em = $this->getDoctrine()->getManager();
@@ -2721,7 +2823,11 @@ class MigracionController extends Controller
                 codigo_ciudad_fk,
                 codigo_centro_costo_contabilidad_fk,
                 latitud,
-                longitud    
+                longitud, 
+                codigo_operacion_fk,
+                codigo_zona_fk,
+                codigo_area_fk,
+                codigo_proyecto_fk    
                  FROM tur_puesto 
                  ORDER BY codigo_puesto_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
@@ -2746,6 +2852,18 @@ class MigracionController extends Controller
                 }
                 if ($row['longitud']) {
                     $arPuesto->setLongitud($row['longitud']);
+                }
+                if($row['codigo_operacion_fk']) {
+                    $arPuesto->setOperacionRel($em->getReference(TurOperacion::class, $row['codigo_operacion_fk']));
+                }
+                if($row['codigo_zona_fk']) {
+                    $arPuesto->setZonaRel($em->getReference(TurZona::class, $row['codigo_zona_fk']));
+                }
+                if($row['codigo_area_fk']) {
+                    $arPuesto->setAreaRel($em->getReference(TurArea::class, $row['codigo_area_fk']));
+                }
+                if($row['codigo_proyecto_fk']) {
+                    $arPuesto->setProyectoRel($em->getReference(TurProyecto::class, $row['codigo_proyecto_fk']));
                 }
                 $em->persist($arPuesto);
                 $metadata = $em->getClassMetaData(get_class($arPuesto));

@@ -12,8 +12,7 @@ class TurOperacion
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_operacion_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_operacion_pk", type="string", length=20)
      */
     private $codigoOperacionPk;
 
@@ -42,6 +41,12 @@ class TurOperacion
      * @ORM\JoinColumn(name="codigo_cliente_fk", referencedColumnName="codigo_cliente_pk")
      */
     protected $clienteRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurOperacionTipo", inversedBy="operacionesOperacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_operacion_tipo_fk", referencedColumnName="codigo_operacion_tipo_pk")
+     */
+    protected $operacionTipoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="TurPuesto", mappedBy="operacionRel")
@@ -159,5 +164,23 @@ class TurOperacion
     {
         $this->puestosOperacionRel = $puestosOperacionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOperacionTipoRel()
+    {
+        return $this->operacionTipoRel;
+    }
+
+    /**
+     * @param mixed $operacionTipoRel
+     */
+    public function setOperacionTipoRel($operacionTipoRel): void
+    {
+        $this->operacionTipoRel = $operacionTipoRel;
+    }
+
+
 
 }

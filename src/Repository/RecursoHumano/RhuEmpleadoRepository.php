@@ -129,7 +129,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->leftJoin('e.sexoRel', 's')
             ->leftJoin('e.estadoCivilRel', 'ec')
             ->leftJoin('c.clasificacionRiesgoRel', 'clr')
-            ->leftJoin('e.cargoRel', 'car')
+            ->leftJoin('c.cargoRel', 'car')
             ->leftJoin('c.pensionRel', 'tp')
             ->leftJoin('c.tipoCotizanteRel', 'tc')
             ->leftJoin('c.subtipoCotizanteRel', 'stc')

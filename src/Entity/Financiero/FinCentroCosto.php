@@ -60,11 +60,6 @@ class FinCentroCosto
     protected $asientosDetallesCentroCostoRel;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCostoGrupo", mappedBy="centroCostoRel")
-     */
-    protected $rhuCostosGruposCentroCostoRel;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Turno\TurPuesto", mappedBy="centroCostoRel")
      */
     protected $turPuestosCentroCostoRel;
@@ -88,11 +83,6 @@ class FinCentroCosto
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="centroCostoRel")
      */
     protected $movimientosDetallesCentroCostoRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarIngresoDetalle", mappedBy="centroCostoRel")
-     */
-    protected $ingresosDetallesCentroCostoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimientoDetalle", mappedBy="centroCostoRel")
@@ -132,17 +122,17 @@ class FinCentroCosto
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function isEstadoInactivo(): bool
+    public function getEstadoInactivo()
     {
         return $this->estadoInactivo;
     }
 
     /**
-     * @param bool $estadoInactivo
+     * @param mixed $estadoInactivo
      */
-    public function setEstadoInactivo(bool $estadoInactivo): void
+    public function setEstadoInactivo($estadoInactivo): void
     {
         $this->estadoInactivo = $estadoInactivo;
     }
@@ -177,22 +167,6 @@ class FinCentroCosto
     public function setAsientosDetallesCentroCostoRel($asientosDetallesCentroCostoRel): void
     {
         $this->asientosDetallesCentroCostoRel = $asientosDetallesCentroCostoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRhuCostosGruposCentroCostoRel()
-    {
-        return $this->rhuCostosGruposCentroCostoRel;
-    }
-
-    /**
-     * @param mixed $rhuCostosGruposCentroCostoRel
-     */
-    public function setRhuCostosGruposCentroCostoRel($rhuCostosGruposCentroCostoRel): void
-    {
-        $this->rhuCostosGruposCentroCostoRel = $rhuCostosGruposCentroCostoRel;
     }
 
     /**
@@ -278,22 +252,6 @@ class FinCentroCosto
     /**
      * @return mixed
      */
-    public function getIngresosDetallesCentroCostoRel()
-    {
-        return $this->ingresosDetallesCentroCostoRel;
-    }
-
-    /**
-     * @param mixed $ingresosDetallesCentroCostoRel
-     */
-    public function setIngresosDetallesCentroCostoRel($ingresosDetallesCentroCostoRel): void
-    {
-        $this->ingresosDetallesCentroCostoRel = $ingresosDetallesCentroCostoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCarMovimientosDetallesCentroCostoRel()
     {
         return $this->carMovimientosDetallesCentroCostoRel;
@@ -306,6 +264,7 @@ class FinCentroCosto
     {
         $this->carMovimientosDetallesCentroCostoRel = $carMovimientosDetallesCentroCostoRel;
     }
+
 
 
 }

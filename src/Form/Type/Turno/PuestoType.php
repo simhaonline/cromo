@@ -6,9 +6,11 @@ namespace App\Form\Type\Turno;
 
 use App\Entity\Financiero\FinArea;
 use App\Entity\Financiero\FinCentroCosto;
+use App\Entity\Turno\TurArea;
 use App\Entity\Turno\TurCoordinador;
 use App\Entity\Turno\TurOperacion;
 use App\Entity\Turno\TurProgramador;
+use App\Entity\Turno\TurProyecto;
 use App\Entity\Turno\TurPuesto;
 use App\Entity\Turno\TurPuestoTipo;
 use App\Entity\Turno\TurSalario;
@@ -81,6 +83,26 @@ class PuestoType  extends AbstractType
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('s')
                         ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'placeholder' => ''
+            ])
+            ->add('proyectoRel',EntityType::class,[
+                'class' => TurProyecto::class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'placeholder' => ''
+            ])
+            ->add('areaRel',EntityType::class,[
+                'class' => TurArea::class,
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
                 'placeholder' => ''

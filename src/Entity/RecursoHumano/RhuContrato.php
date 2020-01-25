@@ -203,11 +203,6 @@ class RhuContrato
     private $salarioIntegral = false;
 
     /**
-     * @ORM\Column(name="costo_tipo_fk", type="string", length=10, nullable=true)
-     */
-    private $costoTipoFk = false;
-
-    /**
      * @ORM\Column(name="codigo_entidad_salud_fk", type="integer", nullable=true)
      */
     private $codigoEntidadSaludFk;
@@ -241,11 +236,6 @@ class RhuContrato
      * @ORM\Column(name="codigo_costo_clase_fk", type="string", length=10, nullable=true)
      */
     private $codigoCostoClaseFk;
-
-    /**
-     * @ORM\Column(name="codigo_costo_grupo_fk", type="string", length=10, nullable=true)
-     */
-    private $codigoCostoGrupoFk;
 
     /**
      * @ORM\Column(name="codigo_costo_tipo_fk", type="string", length=10, nullable=true)
@@ -390,7 +380,7 @@ class RhuContrato
 
     /**
      * @ORM\ManyToOne(targetEntity="RhuEntidad", inversedBy="contratosEntidadCesantiaRel")
-     * @ORM\JoinColumn(name="codigo_entidad_censantia_fk",referencedColumnName="codigo_entidad_pk")
+     * @ORM\JoinColumn(name="codigo_entidad_cesantia_fk",referencedColumnName="codigo_entidad_pk")
      */
     protected $entidadCesantiaRel;
 
@@ -429,12 +419,6 @@ class RhuContrato
      * @ORM\JoinColumn(name="codigo_costo_clase_fk",referencedColumnName="codigo_costo_clase_pk")
      */
     protected $costoClaseRel;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RhuCostoGrupo", inversedBy="contratosCostoGrupoRel")
-     * @ORM\JoinColumn(name="codigo_costo_grupo_fk",referencedColumnName="codigo_costo_grupo_pk")
-     */
-    protected $costoGrupoRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="contratosCentroCostoRel")
@@ -659,6 +643,70 @@ class RhuContrato
     /**
      * @return mixed
      */
+    public function getCodigoSalarioTipoFk()
+    {
+        return $this->codigoSalarioTipoFk;
+    }
+
+    /**
+     * @param mixed $codigoSalarioTipoFk
+     */
+    public function setCodigoSalarioTipoFk($codigoSalarioTipoFk): void
+    {
+        $this->codigoSalarioTipoFk = $codigoSalarioTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpCesantiasInicial()
+    {
+        return $this->ibpCesantiasInicial;
+    }
+
+    /**
+     * @param mixed $ibpCesantiasInicial
+     */
+    public function setIbpCesantiasInicial($ibpCesantiasInicial): void
+    {
+        $this->ibpCesantiasInicial = $ibpCesantiasInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpPrimasInicial()
+    {
+        return $this->ibpPrimasInicial;
+    }
+
+    /**
+     * @param mixed $ibpPrimasInicial
+     */
+    public function setIbpPrimasInicial($ibpPrimasInicial): void
+    {
+        $this->ibpPrimasInicial = $ibpPrimasInicial;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIbpRecargoNocturnoInicial()
+    {
+        return $this->ibpRecargoNocturnoInicial;
+    }
+
+    /**
+     * @param mixed $ibpRecargoNocturnoInicial
+     */
+    public function setIbpRecargoNocturnoInicial($ibpRecargoNocturnoInicial): void
+    {
+        $this->ibpRecargoNocturnoInicial = $ibpRecargoNocturnoInicial;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFactorHorasDia()
     {
         return $this->factorHorasDia;
@@ -819,6 +867,22 @@ class RhuContrato
     /**
      * @return mixed
      */
+    public function getVrSalarioPago()
+    {
+        return $this->vrSalarioPago;
+    }
+
+    /**
+     * @param mixed $vrSalarioPago
+     */
+    public function setVrSalarioPago($vrSalarioPago): void
+    {
+        $this->vrSalarioPago = $vrSalarioPago;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getVrAdicional()
     {
         return $this->vrAdicional;
@@ -846,6 +910,22 @@ class RhuContrato
     public function setVrAdicionalPrestacional($vrAdicionalPrestacional): void
     {
         $this->vrAdicionalPrestacional = $vrAdicionalPrestacional;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrDevengadoPactado()
+    {
+        return $this->vrDevengadoPactado;
+    }
+
+    /**
+     * @param mixed $vrDevengadoPactado
+     */
+    public function setVrDevengadoPactado($vrDevengadoPactado): void
+    {
+        $this->vrDevengadoPactado = $vrDevengadoPactado;
     }
 
     /**
@@ -979,6 +1059,22 @@ class RhuContrato
     /**
      * @return mixed
      */
+    public function getFechaUltimoPagoAporte()
+    {
+        return $this->fechaUltimoPagoAporte;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoAporte
+     */
+    public function setFechaUltimoPagoAporte($fechaUltimoPagoAporte): void
+    {
+        $this->fechaUltimoPagoAporte = $fechaUltimoPagoAporte;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoTipoCotizanteFk()
     {
         return $this->codigoTipoCotizanteFk;
@@ -1022,22 +1118,6 @@ class RhuContrato
     public function setSalarioIntegral($salarioIntegral): void
     {
         $this->salarioIntegral = $salarioIntegral;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCostoTipoFk()
-    {
-        return $this->costoTipoFk;
-    }
-
-    /**
-     * @param mixed $costoTipoFk
-     */
-    public function setCostoTipoFk($costoTipoFk): void
-    {
-        $this->costoTipoFk = $costoTipoFk;
     }
 
     /**
@@ -1155,22 +1235,6 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getCodigoCostoGrupoFk()
-    {
-        return $this->codigoCostoGrupoFk;
-    }
-
-    /**
-     * @param mixed $codigoCostoGrupoFk
-     */
-    public function setCodigoCostoGrupoFk($codigoCostoGrupoFk): void
-    {
-        $this->codigoCostoGrupoFk = $codigoCostoGrupoFk;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoCostoTipoFk()
     {
         return $this->codigoCostoTipoFk;
@@ -1230,6 +1294,118 @@ class RhuContrato
     public function setAuxilioTransporte($auxilioTransporte): void
     {
         $this->auxilioTransporte = $auxilioTransporte;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoDistribucionFk()
+    {
+        return $this->codigoDistribucionFk;
+    }
+
+    /**
+     * @param mixed $codigoDistribucionFk
+     */
+    public function setCodigoDistribucionFk($codigoDistribucionFk): void
+    {
+        $this->codigoDistribucionFk = $codigoDistribucionFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHabilitadoTurno()
+    {
+        return $this->habilitadoTurno;
+    }
+
+    /**
+     * @param mixed $habilitadoTurno
+     */
+    public function setHabilitadoTurno($habilitadoTurno): void
+    {
+        $this->habilitadoTurno = $habilitadoTurno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTurnoFijo()
+    {
+        return $this->turnoFijo;
+    }
+
+    /**
+     * @param mixed $turnoFijo
+     */
+    public function setTurnoFijo($turnoFijo): void
+    {
+        $this->turnoFijo = $turnoFijo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoClienteFk()
+    {
+        return $this->codigoClienteFk;
+    }
+
+    /**
+     * @param mixed $codigoClienteFk
+     */
+    public function setCodigoClienteFk($codigoClienteFk): void
+    {
+        $this->codigoClienteFk = $codigoClienteFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPagadoEntidad()
+    {
+        return $this->pagadoEntidad;
+    }
+
+    /**
+     * @param mixed $pagadoEntidad
+     */
+    public function setPagadoEntidad($pagadoEntidad): void
+    {
+        $this->pagadoEntidad = $pagadoEntidad;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalarioTipoRel()
+    {
+        return $this->salarioTipoRel;
+    }
+
+    /**
+     * @param mixed $salarioTipoRel
+     */
+    public function setSalarioTipoRel($salarioTipoRel): void
+    {
+        $this->salarioTipoRel = $salarioTipoRel;
     }
 
     /**
@@ -1571,17 +1747,49 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getCostoGrupoRel()
+    public function getCentroCostoRel()
     {
-        return $this->costoGrupoRel;
+        return $this->centroCostoRel;
     }
 
     /**
-     * @param mixed $costoGrupoRel
+     * @param mixed $centroCostoRel
      */
-    public function setCostoGrupoRel($costoGrupoRel): void
+    public function setCentroCostoRel($centroCostoRel): void
     {
-        $this->costoGrupoRel = $costoGrupoRel;
+        $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDistribucionRel()
+    {
+        return $this->distribucionRel;
+    }
+
+    /**
+     * @param mixed $distribucionRel
+     */
+    public function setDistribucionRel($distribucionRel): void
+    {
+        $this->distribucionRel = $distribucionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteRel()
+    {
+        return $this->clienteRel;
+    }
+
+    /**
+     * @param mixed $clienteRel
+     */
+    public function setClienteRel($clienteRel): void
+    {
+        $this->clienteRel = $clienteRel;
     }
 
     /**
@@ -1715,22 +1923,6 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getSoportesContratosContratoRel()
-    {
-        return $this->soportesContratosContratoRel;
-    }
-
-    /**
-     * @param mixed $soportesContratosContratoRel
-     */
-    public function setSoportesContratosContratoRel($soportesContratosContratoRel): void
-    {
-        $this->soportesContratosContratoRel = $soportesContratosContratoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAportesDetallesContratoRel()
     {
         return $this->aportesDetallesContratoRel;
@@ -1745,67 +1937,19 @@ class RhuContrato
     }
 
     /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
      * @return mixed
      */
-    public function getCodigoSalarioTipoFk()
+    public function getSoportesContratosContratoRel()
     {
-        return $this->codigoSalarioTipoFk;
+        return $this->soportesContratosContratoRel;
     }
 
     /**
-     * @param mixed $codigoSalarioTipoFk
+     * @param mixed $soportesContratosContratoRel
      */
-    public function setCodigoSalarioTipoFk($codigoSalarioTipoFk): void
+    public function setSoportesContratosContratoRel($soportesContratosContratoRel): void
     {
-        $this->codigoSalarioTipoFk = $codigoSalarioTipoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIbpRecargoNocturnoInicial()
-    {
-        return $this->ibpRecargoNocturnoInicial;
-    }
-
-    /**
-     * @param mixed $ibpRecargoNocturnoInicial
-     */
-    public function setIbpRecargoNocturnoInicial($ibpRecargoNocturnoInicial): void
-    {
-        $this->ibpRecargoNocturnoInicial = $ibpRecargoNocturnoInicial;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSalarioTipoRel()
-    {
-        return $this->salarioTipoRel;
-    }
-
-    /**
-     * @param mixed $salarioTipoRel
-     */
-    public function setSalarioTipoRel($salarioTipoRel): void
-    {
-        $this->salarioTipoRel = $salarioTipoRel;
+        $this->soportesContratosContratoRel = $soportesContratosContratoRel;
     }
 
     /**
@@ -1827,54 +1971,6 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getIbpCesantiasInicial()
-    {
-        return $this->ibpCesantiasInicial;
-    }
-
-    /**
-     * @param mixed $ibpCesantiasInicial
-     */
-    public function setIbpCesantiasInicial($ibpCesantiasInicial): void
-    {
-        $this->ibpCesantiasInicial = $ibpCesantiasInicial;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIbpPrimasInicial()
-    {
-        return $this->ibpPrimasInicial;
-    }
-
-    /**
-     * @param mixed $ibpPrimasInicial
-     */
-    public function setIbpPrimasInicial($ibpPrimasInicial): void
-    {
-        $this->ibpPrimasInicial = $ibpPrimasInicial;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVrSalarioPago()
-    {
-        return $this->vrSalarioPago;
-    }
-
-    /**
-     * @param mixed $vrSalarioPago
-     */
-    public function setVrSalarioPago($vrSalarioPago): void
-    {
-        $this->vrSalarioPago = $vrSalarioPago;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getLicenciasContratoRel()
     {
         return $this->licenciasContratoRel;
@@ -1891,17 +1987,17 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getVrDevengadoPactado()
+    public function getIncapacidadesContratoRel()
     {
-        return $this->vrDevengadoPactado;
+        return $this->incapacidadesContratoRel;
     }
 
     /**
-     * @param mixed $vrDevengadoPactado
+     * @param mixed $incapacidadesContratoRel
      */
-    public function setVrDevengadoPactado($vrDevengadoPactado): void
+    public function setIncapacidadesContratoRel($incapacidadesContratoRel): void
     {
-        $this->vrDevengadoPactado = $vrDevengadoPactado;
+        $this->incapacidadesContratoRel = $incapacidadesContratoRel;
     }
 
     /**
@@ -1939,22 +2035,6 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getIncapacidadesContratoRel()
-    {
-        return $this->incapacidadesContratoRel;
-    }
-
-    /**
-     * @param mixed $incapacidadesContratoRel
-     */
-    public function setIncapacidadesContratoRel($incapacidadesContratoRel): void
-    {
-        $this->incapacidadesContratoRel = $incapacidadesContratoRel;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getEmpleadosContratoRel()
     {
         return $this->empleadosContratoRel;
@@ -1966,102 +2046,6 @@ class RhuContrato
     public function setEmpleadosContratoRel($empleadosContratoRel): void
     {
         $this->empleadosContratoRel = $empleadosContratoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoCentroCostoFk()
-    {
-        return $this->codigoCentroCostoFk;
-    }
-
-    /**
-     * @param mixed $codigoCentroCostoFk
-     */
-    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
-    {
-        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCentroCostoRel()
-    {
-        return $this->centroCostoRel;
-    }
-
-    /**
-     * @param mixed $centroCostoRel
-     */
-    public function setCentroCostoRel($centroCostoRel): void
-    {
-        $this->centroCostoRel = $centroCostoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoDistribucionFk()
-    {
-        return $this->codigoDistribucionFk;
-    }
-
-    /**
-     * @param mixed $codigoDistribucionFk
-     */
-    public function setCodigoDistribucionFk($codigoDistribucionFk): void
-    {
-        $this->codigoDistribucionFk = $codigoDistribucionFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDistribucionRel()
-    {
-        return $this->distribucionRel;
-    }
-
-    /**
-     * @param mixed $distribucionRel
-     */
-    public function setDistribucionRel($distribucionRel): void
-    {
-        $this->distribucionRel = $distribucionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHabilitadoTurno()
-    {
-        return $this->habilitadoTurno;
-    }
-
-    /**
-     * @param mixed $habilitadoTurno
-     */
-    public function setHabilitadoTurno($habilitadoTurno): void
-    {
-        $this->habilitadoTurno = $habilitadoTurno;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTurnoFijo()
-    {
-        return $this->turnoFijo;
-    }
-
-    /**
-     * @param mixed $turnoFijo
-     */
-    public function setTurnoFijo($turnoFijo): void
-    {
-        $this->turnoFijo = $turnoFijo;
     }
 
     /**
@@ -2083,54 +2067,6 @@ class RhuContrato
     /**
      * @return mixed
      */
-    public function getCodigoClienteFk()
-    {
-        return $this->codigoClienteFk;
-    }
-
-    /**
-     * @param mixed $codigoClienteFk
-     */
-    public function setCodigoClienteFk($codigoClienteFk): void
-    {
-        $this->codigoClienteFk = $codigoClienteFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClienteRel()
-    {
-        return $this->clienteRel;
-    }
-
-    /**
-     * @param mixed $clienteRel
-     */
-    public function setClienteRel($clienteRel): void
-    {
-        $this->clienteRel = $clienteRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPagadoEntidad()
-    {
-        return $this->pagadoEntidad;
-    }
-
-    /**
-     * @param mixed $pagadoEntidad
-     */
-    public function setPagadoEntidad($pagadoEntidad): void
-    {
-        $this->pagadoEntidad = $pagadoEntidad;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCambiosSalariosContratoRel()
     {
         return $this->cambiosSalariosContratoRel;
@@ -2142,22 +2078,6 @@ class RhuContrato
     public function setCambiosSalariosContratoRel($cambiosSalariosContratoRel): void
     {
         $this->cambiosSalariosContratoRel = $cambiosSalariosContratoRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaUltimoPagoAporte()
-    {
-        return $this->fechaUltimoPagoAporte;
-    }
-
-    /**
-     * @param mixed $fechaUltimoPagoAporte
-     */
-    public function setFechaUltimoPagoAporte($fechaUltimoPagoAporte): void
-    {
-        $this->fechaUltimoPagoAporte = $fechaUltimoPagoAporte;
     }
 
 

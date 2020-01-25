@@ -13,8 +13,7 @@ class TurZona
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_zona_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_zona_pk", type="string", length=20)
      */
     private $codigoZonaPk;
 
@@ -75,5 +74,7 @@ class TurZona
     {
         $this->puestosZonaRel = $puestosZonaRel;
     }
+
+
 
 }

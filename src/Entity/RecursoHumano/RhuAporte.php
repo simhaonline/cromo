@@ -54,12 +54,17 @@ class RhuAporte
     /**
      * @ORM\Column(name="fecha_desde", type="date")
      */
-    private $fechaDesde = 0;
+    private $fechaDesde;
 
     /**
      * @ORM\Column(name="fecha_hasta", type="date")
      */
-    private $fechaHasta = 0;
+    private $fechaHasta;
+
+    /**
+     * @ORM\Column(name="fecha_hasta_periodo", type="date", nullable=true)
+     */
+    private $fechaHastaPeriodo;
 
     /**
      * Tipo de planilla pago seguridad social s-sucursal u-unica
@@ -579,6 +584,22 @@ class RhuAporte
     public function setNumeroLineas($numeroLineas): void
     {
         $this->numeroLineas = $numeroLineas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaHastaPeriodo()
+    {
+        return $this->fechaHastaPeriodo;
+    }
+
+    /**
+     * @param mixed $fechaHastaPeriodo
+     */
+    public function setFechaHastaPeriodo($fechaHastaPeriodo): void
+    {
+        $this->fechaHastaPeriodo = $fechaHastaPeriodo;
     }
 
 

@@ -121,7 +121,7 @@ class RhuAporteDetalleRepository extends ServiceEntityRepository
                 $arAporteDetalle->setAnio($arAporte->getAnio());
                 $arAporteDetalle->setMes($arAporte->getMes());
                 $arAporteDetalle->setFechaDesde($arAporte->getFechaDesde());
-                $arAporteDetalle->setFechaHasta($arAporte->getFechaHasta());
+                $arAporteDetalle->setFechaHasta($arAporte->getFechaHastaPeriodo());
                 $arAporteDetalle->setTipoRegistro(2);
                 $arAporteDetalle->setSecuencia($secuencia);
 

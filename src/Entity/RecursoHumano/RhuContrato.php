@@ -183,6 +183,11 @@ class RhuContrato
     private $fechaUltimoPago;
 
     /**
+     * @ORM\Column(name="fecha_ultimo_pago_aporte", type="date", nullable=true)
+     */
+    private $fechaUltimoPagoAporte;
+
+    /**
      * @ORM\Column(name="codigo_tipo_cotizante_fk", type="string", length=10, nullable=true)
      */
     private $codigoTipoCotizanteFk;
@@ -2137,6 +2142,22 @@ class RhuContrato
     public function setCambiosSalariosContratoRel($cambiosSalariosContratoRel): void
     {
         $this->cambiosSalariosContratoRel = $cambiosSalariosContratoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaUltimoPagoAporte()
+    {
+        return $this->fechaUltimoPagoAporte;
+    }
+
+    /**
+     * @param mixed $fechaUltimoPagoAporte
+     */
+    public function setFechaUltimoPagoAporte($fechaUltimoPagoAporte): void
+    {
+        $this->fechaUltimoPagoAporte = $fechaUltimoPagoAporte;
     }
 
 

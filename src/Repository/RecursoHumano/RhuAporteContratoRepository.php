@@ -93,7 +93,7 @@ class RhuAporteContratoRepository extends ServiceEntityRepository
             $arrConfiguracionNomina = $em->getRepository(RhuConfiguracion::class)->generarAporte();
             $arEntidadRiesgos = $em->getRepository(RhuEntidad::class)->find($arrConfiguracionNomina['codigoEntidadRiesgosProfesionalesFk']);
             if($arEntidadRiesgos) {
-                $arContratos = $em->getRepository(RhuContrato::class)->contratosPeriodoAporte($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'), $arAporte->getCodigoSucursalFk());
+                $arContratos = $em->getRepository(RhuContrato::class)->contratosPeriodoAporte($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'), $arAporte->getCodigoSucursalFk());
                 foreach ($arContratos as $arContrato) {
                     if($this->validarContratoCargar($arAporte->getCodigoAportePk(), $arContrato['codigoContratoPk'])) {
                         $arContratoProceso = $em->getRepository(RhuContrato::class)->find($arContrato['codigoContratoPk']);

@@ -151,6 +151,16 @@ final class FuncionesController
         return ['fechaDesde' => date_create($fechaDesde), 'fechaHasta' => date_create($fechaHasta)];
     }
 
+    public static function hastaAnioMesPrestacional($anio, $mes)
+    {
+        $ultimoDia  = date("d", (mktime(0, 0, 0, $mes + 1, 1, $anio) - 1));
+        if($ultimoDia == 31) {
+            $ultimoDia = 30;
+        }
+        $fechaHasta = date_create($anio . '-' . $mes . '-' . $ultimoDia);
+        return $fechaHasta;
+    }
+
     public static function crearNotificacion($id, $descripcion = '', $arrUsuarios = array())
     {
         try {

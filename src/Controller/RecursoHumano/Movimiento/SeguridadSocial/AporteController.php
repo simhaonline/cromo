@@ -125,8 +125,10 @@ class AporteController extends MaestroController
             if ($form->get('guardar')->isClicked()) {
                 $arAporte = $form->getData();
                 $fechas = FuncionesController::desdeHastaAnioMes($arAporte->getAnio(), $arAporte->getMes());
+                $fechaHastaPeriodo = FuncionesController::hastaAnioMesPrestacional($arAporte->getAnio(), $arAporte->getMes());
                 $arAporte->setFechaDesde($fechas['fechaDesde']);
-                $arAporte->setFechaHasta($fechas['fechaHasta']);
+                $arAporte->setFechaHastaPeriodo($fechas['fechaHasta']);
+                $arAporte->setFechaHasta($fechaHastaPeriodo);
                 $periodoSalud = $this->periodoSalud($arAporte->getAnio(), $arAporte->getMes());
                 $arAporte->setAnioSalud($periodoSalud['anio']);
                 $arAporte->setMesSalud($periodoSalud['mes']);

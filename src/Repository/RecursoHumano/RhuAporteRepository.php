@@ -144,9 +144,9 @@ class RhuAporteRepository extends ServiceEntityRepository
                     $saludCotizacion = $arAporteDetalle['cotizacionSalud'];
                     $pensionCotizacion = $arAporteDetalle['cotizacionPension'];
                 }
-                $saludEmpleado = $em->getRepository(RhuPagoDetalle::class)->descuentoSalud($arAporteContrato->getCodigoContratoFk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                $saludEmpleado = $em->getRepository(RhuPagoDetalle::class)->descuentoSalud($arAporteContrato->getCodigoContratoFk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                 $arAporteContrato->setVrSaludEmpleado($saludEmpleado);
-                $pensionEmpleado = $em->getRepository(RhuPagoDetalle::class)->descuentoPension($arAporteContrato->getCodigoContratoFk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                $pensionEmpleado = $em->getRepository(RhuPagoDetalle::class)->descuentoPension($arAporteContrato->getCodigoContratoFk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                 $arAporteContrato->setVrPensionEmpleado($pensionEmpleado);
 
                 $salud = $saludCotizacion - $saludEmpleado;
@@ -161,7 +161,9 @@ class RhuAporteRepository extends ServiceEntityRepository
                 } else {
                     $arAporteContrato->setVrPension(0);
                 }
-
+                $arContrato = $em->getRepository(RhuContrato::class)->find($arAporteContrato->getCodigoContratoFk());
+                $arContrato->setFechaUltimoPagoAporte($arAporte->getFechaHasta());
+                $em->persist($arContrato);
             }
             if($arAporte->getNumero() == 0) {
                 $arAporteTipo = $em->getRepository(RhuAporteTipo::class)->find($arAporte->getCodigoAporteTipoFk());

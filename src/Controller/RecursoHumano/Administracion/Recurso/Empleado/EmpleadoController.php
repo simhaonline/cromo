@@ -239,6 +239,7 @@ class EmpleadoController extends MaestroController
                     $arContrato->setFechaUltimoPagoCesantias($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoPrimas($arContrato->getFechaDesde());
                     $arContrato->setFechaUltimoPagoVacaciones($arContrato->getFechaDesde());
+                    $arContrato->setFechaUltimoPagoAporte($arContrato->getFechaDesde());
                 }
 
                 $em->persist($arContrato);

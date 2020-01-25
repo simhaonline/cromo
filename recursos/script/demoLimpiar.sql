@@ -4,6 +4,8 @@ DELETE FROM tur_programacion;
 DELETE FROM tur_prototipo;
 DELETE FROM tur_costo_servicio;
 DELETE FROM tur_costo_empleado_servicio;
+DELETE FROM tur_factura_detalle;
+DELETE FROM tur_factura;
 DELETE FROM tur_pedido_detalle;
 DELETE FROM tur_pedido;
 DELETE FROM tur_contrato_detalle;

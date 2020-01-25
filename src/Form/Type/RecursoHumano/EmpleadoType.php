@@ -4,8 +4,10 @@ namespace App\Form\Type\RecursoHumano;
 
 use App\Entity\General\GenBanco;
 use App\Entity\RecursoHumano\RhuBanco;
+use App\Entity\RecursoHumano\RhuDepartamento;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuEstudioTipo;
+use App\Entity\RecursoHumano\RhuZona;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -114,6 +116,36 @@ class EmpleadoType extends AbstractType
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
+            ])
+            ->add('zonaRel', EntityType::class, [
+                'required' => false,
+                'class' => RhuZona::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('z')
+                        ->orderBy('z.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Zona:'
+            ])
+            ->add('sectorRel', EntityType::class, [
+                'required' => false,
+                'class' => RhuZona::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Sector:'
+            ])
+            ->add('departamentoRel', EntityType::class, [
+                'required' => false,
+                'class' => RhuDepartamento::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Departamento:'
             ])
             ->add('numeroIdentificacion', NumberType::class, ['required' => true, 'label' => 'numero identificacion:'])
             ->add('digitoVerificacion', NumberType::class, ['required' => true])

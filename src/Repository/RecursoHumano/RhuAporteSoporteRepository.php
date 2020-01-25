@@ -64,10 +64,10 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
             $novedadRetiro = " ";
             $diasCotizar = 0;
             if ($arAporteContrato['indefinido'] == 1) {
-                $dateFechaHasta = $arAporte->getFechaHasta();
+                $dateFechaHasta = $arAporte->getFechaHastaPeriodo();
             } else {
-                if ($arAporteContrato['fechaHasta'] > $arAporte->getFechaHasta()) {
-                    $dateFechaHasta = $arAporte->getFechaHasta();
+                if ($arAporteContrato['fechaHasta'] > $arAporte->getFechaHastaPeriodo()) {
+                    $dateFechaHasta = $arAporte->getFechaHastaPeriodo();
                 } else {
                     $dateFechaHasta = $arAporteContrato['fechaHasta'];
                 }
@@ -86,18 +86,18 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 if ($diasCotizar == 31) {
                     $diasCotizar = $diasCotizar - 1;
                 } else {
-                    if ($arAporte->getFechaHasta()->format('d') == 28) {
-                        if ($arAporteContrato['fechaHasta'] >= $arAporte->getFechaHasta() || $arAporteContrato['indefinido'] == 1) {
+                    if ($arAporte->getFechaHastaPeriodo()->format('d') == 28) {
+                        if ($arAporteContrato['fechaHasta'] >= $arAporte->getFechaHastaPeriodo() || $arAporteContrato['indefinido'] == 1) {
                             $diasCotizar = $diasCotizar + 2;
                         }
                     }
-                    if ($arAporte->getFechaHasta()->format('d') == 29) {
-                        if ($arAporteContrato['fechaHasta'] >= $arAporte->getFechaHasta() || $arAporteContrato['indefinido'] == 1) {
+                    if ($arAporte->getFechaHastaPeriodo()->format('d') == 29) {
+                        if ($arAporteContrato['fechaHasta'] >= $arAporte->getFechaHastaPeriodo() || $arAporteContrato['indefinido'] == 1) {
                             $diasCotizar = $diasCotizar + 1;
                         }
                     }
-                    if ($arAporte->getFechaHasta()->format('d') == 31) {
-                        if ($arAporteContrato['fechaHasta'] >= $arAporte->getFechaHasta() || $arAporteContrato['indefinido'] == 1) {
+                    if ($arAporte->getFechaHastaPeriodo()->format('d') == 31) {
+                        if ($arAporteContrato['fechaHasta'] >= $arAporte->getFechaHastaPeriodo() || $arAporteContrato['indefinido'] == 1) {
                             if ($arAporteContrato['fechaDesde']->format('d') != 31) {
                                 $diasCotizar = $diasCotizar - 1;
                             }
@@ -110,7 +110,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 $novedadIngreso = "X";
             }
 
-            if ($arAporteContrato['indefinido'] == 0 && $arAporteContrato['fechaHasta'] <= $arAporte->getFechaHasta()) {
+            if ($arAporteContrato['indefinido'] == 0 && $arAporteContrato['fechaHasta'] <= $arAporte->getFechaHastaPeriodo()) {
                 $novedadRetiro = "X";
             }
 
@@ -123,7 +123,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
             //$strSql = "DELETE FROM rhu_sso_periodo_empleado_detalle WHERE codigo_periodo_empleado_fk = " . $arPeriodoEmpleadoActualizar->getCodigoPeriodoEmpleadoPk();
             //$em->getConnection()->executeQuery($strSql);
 
-            $arrIbcOrdinario = $em->getRepository(RhuPagoDetalle::class)->ibcOrdinario($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'), $arAporteContrato['codigoContratoFk']);
+            $arrIbcOrdinario = $em->getRepository(RhuPagoDetalle::class)->ibcOrdinario($arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'), $arAporteContrato['codigoContratoFk']);
 
             $diasLicenciaTotal = 0;
             $diasIncapacidadTotal = 0;
@@ -136,21 +136,21 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
             $ibcVacaciones = 0;
 
 
-            $arrLicenciasPeriodo = $em->getRepository(RhuLicencia::class)->listaLicenciasMes($arAporte->getFechaDesde(), $arAporte->getFechaHasta(), $arAporteContrato['codigoEmpleadoFk']);
-            $arrLicencias = $this->setDiasLicenciaMes($arrLicenciasPeriodo, $arAporte->getFechaDesde(), $arAporte->getFechaHasta(), $arContrato->getVrSalarioPago());
+            $arrLicenciasPeriodo = $em->getRepository(RhuLicencia::class)->listaLicenciasMes($arAporte->getFechaDesde(), $arAporte->getFechaHastaPeriodo(), $arAporteContrato['codigoEmpleadoFk']);
+            $arrLicencias = $this->setDiasLicenciaMes($arrLicenciasPeriodo, $arAporte->getFechaDesde(), $arAporte->getFechaHastaPeriodo(), $arContrato->getVrSalarioPago());
             foreach ($arrLicencias as $arrLicencia) {
                 $diasLicenciaTotal += $arrLicencia['dias'];
             }
 
             $arrIncapacidades = NULL;
-            $arrIncapacidadesPeriodo = $em->getRepository(RhuIncapacidad::class)->listaIncapacidadMes($arAporte->getFechaDesde(), $arAporte->getFechaHasta(), $arAporteContrato['codigoEmpleadoFk']);
-            $arrIncapacidades = $this->setDiasIncapacidadMes($arrIncapacidadesPeriodo, $arAporte->getFechaDesde(), $arAporte->getFechaHasta(), $arContrato->getVrSalarioPago());
+            $arrIncapacidadesPeriodo = $em->getRepository(RhuIncapacidad::class)->listaIncapacidadMes($arAporte->getFechaDesde(), $arAporte->getFechaHastaPeriodo(), $arAporteContrato['codigoEmpleadoFk']);
+            $arrIncapacidades = $this->setDiasIncapacidadMes($arrIncapacidadesPeriodo, $arAporte->getFechaDesde(), $arAporte->getFechaHastaPeriodo(), $arContrato->getVrSalarioPago());
             foreach ($arrIncapacidades as $arrIncapacidad) {
                 $diasIncapacidadTotal += $arrIncapacidad['dias'];
             }
             $arrVacaciones = NULL;
-            $arrVacacionesPeriodo = $em->getRepository(RhuVacacion::class)->listaVacacionesMes($arAporte->getFechaDesde(), $arAporte->getFechaHasta(), $arAporteContrato['codigoEmpleadoFk']);
-            $arrVacaciones = $this->setDiasVacacionMes($arrVacacionesPeriodo, $arAporte->getFechaDesde(), $arAporte->getFechaHasta(), $arContrato->getVrSalarioPago());
+            $arrVacacionesPeriodo = $em->getRepository(RhuVacacion::class)->listaVacacionesMes($arAporte->getFechaDesde(), $arAporte->getFechaHastaPeriodo(), $arAporteContrato['codigoEmpleadoFk']);
+            $arrVacaciones = $this->setDiasVacacionMes($arrVacacionesPeriodo, $arAporte->getFechaDesde(), $arAporte->getFechaHastaPeriodo(), $arContrato->getVrSalarioPago());
 
             foreach ($arrVacaciones as $arrVacacion) {
                 $diasVacacionesTotal += $arrVacacion['dias'];
@@ -276,7 +276,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
 
                     if ($diasOrdinariosTotal <= 0 && $novedadTrasladoEntidad == false) {
                         //Validación si el empleado contiene un traslado de salud en el periodo a reportar para marcar la X trasladoSaludAOtraEps.
-                        $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                        $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                         if ($arrTrasladoSaludEmpleado) {
                             $arAporteSoporte->setTrasladoAOtraEps(true);
                             $arAporteSoporte->setCodigoEntidadSaludTraslada($arrTrasladoSaludEmpleado['codigoEntidadNueva']);
@@ -295,7 +295,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
 
                     if ($diasOrdinariosTotal <= 0 && $novedadTrasladoPension == false) {
                         //Validación si el empleado contiene un traslado de pension en el periodo a reportar para marcar la X trasladoAOtraPension.
-                        $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                        $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                         if ($arrTrasladoPensionEmpleado) {
                             $arAporteSoporte->setTrasladoAOtraPension(true);
                             $arAporteSoporte->setCodigoEntidadPensionTraslada($arrTrasladoPensionEmpleado['codigoPensionNueva']);
@@ -400,7 +400,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
 
                 if ($diasOrdinariosTotal <= 0 && $novedadTrasladoEntidad == false) {
                     //Validación si el empleado contiene un traslado de salud en el periodo a reportar para marcar la X trasladoSaludAOtraEps.
-                    $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                    $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                     if ($arrTrasladoSaludEmpleado) {
                         $arAporteSoporte->setTrasladoAOtraEps(true);
                         $arAporteSoporte->setCodigoEntidadSaludTraslada($arrTrasladoSaludEmpleado['codigoEntidadNueva']);
@@ -422,7 +422,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
 //
 //                if ($diasOrdinariosTotal <= 0 && $novedadTrasladoPension == false) {
 //                    //Validación si el empleado contiene un traslado de pension en el periodo a reportar para marcar la X trasladoAOtraPension.
-//                    $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+//                    $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
 //                    if ($arrTrasladoPensionEmpleado) {
 //                        $arAporteSoporte->setTrasladoAOtraPension(true);
 //                        $arAporteSoporte->setCodigoEntidadPensionTraslada($arrTrasladoPensionEmpleado['codigoPensionNueva']);
@@ -537,7 +537,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 }
                 if ($diasOrdinariosTotal <= 0 && $novedadTrasladoEntidad == false) {
                     //Validación si el empleado contiene un traslado de salud en el periodo a reportar para marcar la X trasladoSaludAOtraEps.
-                    $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                    $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                     if ($arrTrasladoSaludEmpleado) {
                         $arAporteSoporte->setTrasladoAOtraEps(true);
                         $arAporteSoporte->setCodigoEntidadSaludTraslada($arrTrasladoSaludEmpleado['codigoEntidadNueva']);
@@ -556,7 +556,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
 
                 if ($diasOrdinariosTotal <= 0 && $novedadTrasladoPension == false) {
                     //Validación si el empleado contiene un traslado de pension en el periodo a reportar para marcar la X trasladoAOtraPension.
-                    $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                    $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                     if ($arrTrasladoPensionEmpleado) {
                         $arAporteSoporte->setTrasladoAOtraPension(true);
                         $arAporteSoporte->setCodigoEntidadPensionTraslada($arrTrasladoPensionEmpleado['codigoPensionNueva']);
@@ -627,7 +627,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 }
                 /*
                 //Validación si el empleado contiene un traslado de salud en el periodo a reportar para marcar la X trasladoSaludAOtraEps.
-                $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                $arrTrasladoSaludEmpleado = $this->trasladoSaludEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                 if ($arrTrasladoSaludEmpleado) {
                     $arPeriodoEmpleadoDetalle->setTrasladoAOtraEps(true);
                     $arPeriodoEmpleadoDetalle->setCodigoEntidadSaludTraslada($arrTrasladoSaludEmpleado['codigoEntidadNueva']);
@@ -642,7 +642,7 @@ class RhuAporteSoporteRepository extends ServiceEntityRepository
                 }
 
                 //Validación si el empleado contiene un traslado de pension en el periodo a reportar para marcar la X trasladoAOtraPension.
-                $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHasta()->format('Y-m-d'));
+                $arrTrasladoPensionEmpleado = $this->trasladoPensionEmpleado($arContrato->getCodigoContratoPk(), $arAporte->getFechaDesde()->format('Y-m-d'), $arAporte->getFechaHastaPeriodo()->format('Y-m-d'));
                 if ($arrTrasladoPensionEmpleado) {
                     $arPeriodoEmpleadoDetalle->setTrasladoAOtraPension(true);
                     $arPeriodoEmpleadoDetalle->setCodigoEntidadPensionTraslada($arrTrasladoPensionEmpleado['codigoPensionNueva']);

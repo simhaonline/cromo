@@ -26,6 +26,7 @@ use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -62,11 +63,10 @@ class GuiaController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/transporte/guia/lista", name="transporte_movimiento_transporte_guia_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('codigoGuiaTipoFk', EntityType::class, [
                 'class' => TteGuiaTipo::class,

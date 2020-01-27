@@ -69,11 +69,14 @@ class CarMovimientoDetalleRepository extends ServiceEntityRepository
     public function actualizar($arrControles, $id)
     {
         $em = $this->getEntityManager();
-        $arrCuenta = $arrControles['arrCuenta'];
-        $arrCliente = $arrControles['arrCliente'];
-        $arrRetencion = $arrControles['cboImpuestoRetencion'];
-        $arrDetalle = $arrControles['arrDetalle'];
-        $arrCentroCostos = $arrControles['arrCentroCosto'];
+        if(isset($arrControles['arrCuenta'])) {
+            $arrCuenta = $arrControles['arrCuenta'];
+            $arrCliente = $arrControles['arrCliente'];
+            $arrRetencion = $arrControles['cboImpuestoRetencion'];
+            $arrDetalle = $arrControles['arrDetalle'];
+            $arrNumero = $arrControles['arrNumero'];
+            $arrCentroCostos = $arrControles['arrCentroCosto'];
+        }
         $arMovimientosDetalle = $em->getRepository(CarMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $id]);
         foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
             $intCodigo = $arMovimientoDetalle->getCodigoMovimientoDetallePk();
@@ -82,6 +85,7 @@ class CarMovimientoDetalleRepository extends ServiceEntityRepository
             $codigoNaturaleza = isset($arrControles['cboNaturaleza' . $intCodigo]) && $arrControles['cboNaturaleza' . $intCodigo] != '' ? $arrControles['cboNaturaleza' . $intCodigo] : null;
             $codigoRetencion = $arrRetencion[$intCodigo];
             $detalle = $arrDetalle[$intCodigo];
+            $numero = $arrNumero[$intCodigo];
             $retencion = 0;
             if ($arrCuenta[$intCodigo]) {
                 $arCuenta = $em->getRepository(FinCuenta::class)->find($arrCuenta[$intCodigo]);
@@ -123,6 +127,7 @@ class CarMovimientoDetalleRepository extends ServiceEntityRepository
                     }
                 }
             }
+            $arMovimientoDetalle->setNumero($numero);
             $arMovimientoDetalle->setVrBase($base);
             $arMovimientoDetalle->setVrPago($valorPago);
             $arMovimientoDetalle->setVrRetencion($retencion);

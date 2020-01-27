@@ -83,66 +83,66 @@ class ControllerListener extends Controller{
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
         $arUsuario=$this->user->getToken()->getUser();
         $arModelo = $em->getRepository(GenModelo::class)->find($modelo);
-//        if($arModelo) {
-//            if($arUsuarioRol=="ROLE_ADMIN") {
-//                return;
-//            } else {
-//                $permisoGrupo = false;
-//                if($arUsuario->getCodigoGrupoFk()) {
-//                    $arGrupoModelo = $em->getRepository(SegGrupoModelo::class)->findOneBy(['codigoGrupoFk' => $arUsuario->getCodigoGrupoFk(), 'codigoModeloFk' => $modelo]);
-//                    if($arGrupoModelo) {
-//                        switch ($metodo) {
-//                            case "lista":
-//                                if($arGrupoModelo->getLista()) {
-//                                    $permisoGrupo = true;
-//                                }
-//                                break;
-//                            case "nuevo":
-//                                if($arGrupoModelo->getNuevo()) {
-//                                    $permisoGrupo = true;
-//                                }
-//                                break;
-//                            case "detalle":
-//                                if($arGrupoModelo->getDetalle()) {
-//                                    $permisoGrupo = true;
-//                                }
-//                                break;
-//                        }
-//                    }
-//                }
-//                if($permisoGrupo == true) {
-//                    return;
-//                }
-//                $arUsuarioModelo = $em->getRepository(SegUsuarioModelo::class)->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $modelo]);
-//                if($arUsuarioModelo) {
-//                    switch ($metodo) {
-//                        case "lista":
-//                            if($arUsuarioModelo->getLista()) {
-//                                return;
-//                            } else {
-//                                $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
-//                            }
-//                            break;
-//                        case "nuevo":
-//                            if($arUsuarioModelo->getNuevo()) {
-//                                return;
-//                            } else {
-//                                $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
-//                            }
-//                            break;
-//                        case "detalle":
-//                            if($arUsuarioModelo->getDetalle()) {
-//                                return;
-//                            } else {
-//                                $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
-//                            }
-//                            break;
-//                    }
-//                } else {
-//                    $this->redireccionar($event, $url, "No tiene permisos asignados para esta funcionalidad");
-//                }
-//            }
-//        }
+        /*
+        if($arModelo) {
+            if($arUsuarioRol=="ROLE_ADMIN") {
+                return;
+            } else {
+                $permisoGrupo = false;
+                if($arUsuario->getCodigoGrupoFk()) {
+                    $arGrupoModelo = $em->getRepository(SegGrupoModelo::class)->findOneBy(['codigoGrupoFk' => $arUsuario->getCodigoGrupoFk(), 'codigoModeloFk' => $modelo]);
+                    if($arGrupoModelo) {
+                        switch ($metodo) {
+                            case "lista":
+                                if($arGrupoModelo->getLista()) {
+                                    $permisoGrupo = true;
+                                }
+                                break;
+                            case "nuevo":
+                                if($arGrupoModelo->getNuevo()) {
+                                    $permisoGrupo = true;
+                                }
+                                break;
+                            case "detalle":
+                                if($arGrupoModelo->getDetalle()) {
+                                    $permisoGrupo = true;
+                                }
+                                break;
+                        }
+                    }
+                }
+                if($permisoGrupo == true) {
+                    return;
+                }
+                $permisoUsuario = false;
+                $arUsuarioModelo = $em->getRepository(SegUsuarioModelo::class)->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $modelo]);
+                if($arUsuarioModelo) {
+                    switch ($metodo) {
+                        case "lista":
+                            if($arUsuarioModelo->getLista()) {
+                                $permisoUsuario = true;
+                            }
+                            break;
+                        case "nuevo":
+                            if($arUsuarioModelo->getNuevo()) {
+                                $permisoUsuario = true;
+                            }
+                            break;
+                        case "detalle":
+                            if($arUsuarioModelo->getDetalle()) {
+                                $permisoUsuario = true;
+                            }
+                            break;
+                    }
+                }
+                if($permisoUsuario) {
+                    return;
+                } else {
+                    $this->redireccionar($event, $url, "No tiene permisos asignados para el modulo " . $arModelo->getCodigoModuloFk() . " funcion " . $arModelo->getCodigoFuncionFk() . " grupo " . $arModelo->getCodigoGrupoFk() . " opcion " . $arModelo->getCodigoModeloPk());
+                }
+            }
+        }
+        */
         /*if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
             if($controller[1]==="detalle"){
                 foreach ($permisos as $key=>$permiso){

@@ -59,6 +59,7 @@ class AdicionalController extends MaestroController
             ->add('estadoInactivo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data'=>$raw['filtros']['estadoInactivo'], 'required' => false])
             ->add('estadoInactivoPeriodo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data'=>$raw['filtros']['estadoInactivoPeriodo'], 'required' => false])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
@@ -71,6 +72,11 @@ class AdicionalController extends MaestroController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(RhuAdicional::class)->lista($raw), "Adicionales al pago permanentes");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuAdicional::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_adicional_lista'));
             }
         }
         $arAdicionales = $paginator->paginate($em->getRepository(RhuAdicional::class)->lista($raw), $request->query->getInt('page', 1), 30);

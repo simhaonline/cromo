@@ -41,7 +41,8 @@
                 <th>TELEFONO</th>
                 <th>EXT.</th>
                 <th>SEGMENTO</th>
-                <td>ROL</td>
+                <th>ROL</th>
+                <th>GRUPO</th>
                 <th>ACTIVO</th>
                 <th></th>
                 <th></th>
@@ -65,6 +66,7 @@
                     {% else %}
                         <td>USUARIO</td>
                     {% endif %}
+                    <td>{{ arUsuario.grupoRel.nombre | default('') }}</td>
                     <td>{{ arUsuario.isActive ? 'SI':'NO' }}</td>
                     <td style="text-align: center;">
                         <a href="{{ path('general_seguridad_usuario_nuevo', {'hash' : encriptar( arUsuario.username)}) }}">

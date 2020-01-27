@@ -202,6 +202,7 @@ class SeguridadController extends AbstractController
                 $arUsuario->setRol($form->get('cboRol')->getData());
                 $arUsuario->setAsesorRel($form->get('asesorRel')->getData());
                 $arUsuario->setSegmentoRel($form->get('segmentoRel')->getData());
+                $arUsuario->setGrupoRel($form->get('grupoRel')->getData());
                 if ($id === 0) {
                     $claveNueva = $form->get('txtNuevaClave')->getData();
                     $claveConfirmacion = $form->get('txtConfirmacionClave')->getData();

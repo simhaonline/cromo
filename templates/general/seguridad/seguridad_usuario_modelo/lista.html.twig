@@ -53,12 +53,17 @@
             <td class="col-md-3">CARGO:</td>
             <td class="col-md-3">{{ arUsuario.cargo }}</td>
         </tr>
+        <tr>
+            <td class="col-md-3">GRUPO:</td>
+            <td class="col-md-3">{{ arUsuario.grupoRel.nombre | default('') }}</td>
+            <td></td>
+            <td></td>
+        </tr>
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#modelos">Modelos</a></li>
         <li><a data-toggle="tab" href="#procesos">Procesos</a></li>
         <li><a data-toggle="tab" href="#segmentos">Segmentos</a></li>
-        <li><a data-toggle="tab" href="#grupo">Grupo</a></li>
     </ul>
     <div class="tab-content">
         <div id="modelos" class="tab-pane fade in active">
@@ -166,17 +171,6 @@
                    href="javascript:abrirVentana3('{{ path('general_seguridad_usuario_segmento_nuevo',{'hash' : hash}) }}','Segmento',600,900)">Nuevo</a>
                 {{ form_widget(formSegmento.btnEliminarSegmento,{'attr':{'class':'btn btn-sm btn-danger'}}) }}
             </div>
-        </div>
-        <div id="grupo" class="tab-pane fade">
-            <table class="table table-striped table-bordered table-hover tabla-datos">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>NOMBRE</th>
-                    <th><input type="checkbox" name="chkSeleccionarTodosSegmentos" id="chkSeleccionarTodosSegmentos"
-                               onclick="ChequearTodosTabla(this, 'ChkSeleccionarSegmentos[]')"/></th>
-                </tr>
-            </table>
         </div>
     </div>
 

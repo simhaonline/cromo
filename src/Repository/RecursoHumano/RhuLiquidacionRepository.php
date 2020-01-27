@@ -1018,6 +1018,8 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                             $salarioVacaciones = $arLiquidacion->getVrSalarioVacacionPropuesto();
                         }
 
+                        $arLiquidacion->setFechaUltimoPagoVacacion($arLiquidacion->getContratoRel()->getFechaUltimoPagoVacaciones());
+
                         if($arConfiguracionLiquidacion->getAplicar()) {
                             $recargosNocturnos = 0;
                             if($arConfiguracionLiquidacion->getRecargoNocturno() == 'PERIODO') {
@@ -1042,7 +1044,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                         $arLiquidacion->setDiasVacacion($intDiasVacacionesLiquidar);
                         $arLiquidacion->setDiasVacacionAusentismo($intDiasAusentismo);
                         $arLiquidacion->setVrVacacion($douVacaciones);
-                        $arLiquidacion->setFechaUltimoPagoVacacion($arLiquidacion->getContratoRel()->getFechaUltimoPagoVacaciones());
+
                     }
                 } else {
                     $arLiquidacion->setVrSalarioVacaciones(0);

@@ -83,7 +83,7 @@ class ControllerListener extends Controller{
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
         $arUsuario=$this->user->getToken()->getUser();
         $arModelo = $em->getRepository(GenModelo::class)->find($modelo);
-        /*
+
         if($arModelo) {
             if($arUsuarioRol=="ROLE_ADMIN") {
                 return;
@@ -142,7 +142,7 @@ class ControllerListener extends Controller{
                 }
             }
         }
-        */
+
         /*if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
             if($controller[1]==="detalle"){
                 foreach ($permisos as $key=>$permiso){

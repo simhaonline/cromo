@@ -160,10 +160,19 @@ class MovimientoController extends MaestroController
                     $arTercero = $em->getRepository(TesTercero::class)->find($txtCodigoTercero);
                     if ($arTercero) {
                         if ($arMovimiento->getMovimientoTipoRel()) {
-                            $arMovimiento->setTerceroRel($arTercero);
-                            $em->persist($arMovimiento);
-                            $em->flush();
-                            return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+                            $validado = true;
+                            if($clase == 'CP') {
+                                $validado = $em->getRepository(TesMovimiento::class)->validarNumero($arMovimiento->getCodigoMovimientoPk(), $txtCodigoTercero, $arMovimiento->getNumeroDocumento());
+                                if(!$validado) {
+                                    Mensajes::error("Ya existe un documento de este tercero con ese numero");
+                                }
+                            }
+                            if($validado) {
+                                $arMovimiento->setTerceroRel($arTercero);
+                                $em->persist($arMovimiento);
+                                $em->flush();
+                                return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $arMovimiento->getCodigoMovimientoPk()]));
+                            }
                         } else {
                             Mensajes::error('Debe seleccionar un tipo');
                         }

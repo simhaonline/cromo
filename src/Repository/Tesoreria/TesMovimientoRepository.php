@@ -634,4 +634,21 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
     }
 
+    public function validarNumero($codigoMovimiento, $codigoTercero, $numero) {
+        $em = $this->getEntityManager();
+        $validar = true;
+        $queryBuilder = $em->createQueryBuilder()->from(TesMovimiento::class, 'm')
+            ->select('m.codigoMovimientoPk')
+            ->andWhere("m.codigoTerceroFk = " . $codigoTercero)
+            ->andWhere("m.numeroDocumento = '{$numero}'");
+        if($codigoMovimiento) {
+            $queryBuilder->andWhere("m.codigoMovimientoPk <> {$codigoMovimiento}");
+        }
+        $arMovimiento = $queryBuilder->getQuery()->getResult();
+        if($arMovimiento) {
+            $validar = false;
+        }
+        return $validar;
+    }
+
 }

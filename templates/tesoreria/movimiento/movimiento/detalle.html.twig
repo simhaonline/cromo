@@ -85,9 +85,8 @@
                             {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                 <th>COD</th>
                                 <th>TIPO</th>
-                                <th>DOC</th>
                             {% endif %}
-                            {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
+                            {% if arMovimiento.codigoMovimientoClaseFk == 'CP' or arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                 <th>NUMERO</th>
                             {% endif %}
                             <th>COD</th>
@@ -115,10 +114,9 @@
                                 {% if arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                     <td>{{ arMovimientoDetalle.codigoCuentaPagarFk }}</td>
                                     <td>{{ arMovimientoDetalle.codigoCuentaPagarTipoFk }}</td>
-                                    <td>{{ arMovimientoDetalle.numero }}</td>
                                 {% endif %}
                                 {% if arMovimiento.estadoAutorizado == false %}
-                                    {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
+                                    {% if arMovimiento.codigoMovimientoClaseFk == 'CP' or arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                         <td>
                                             <input type="text"
                                                    name="arrNumero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
@@ -188,7 +186,7 @@
                                                style="text-align: left; width:120px" size="10">
                                     </td>
                                 {% else %}
-                                    {% if arMovimiento.codigoMovimientoClaseFk == 'CP' %}
+                                    {% if arMovimiento.codigoMovimientoClaseFk == 'CP' or arMovimiento.codigoMovimientoClaseFk == 'EG' %}
                                         <td>{{ arMovimientoDetalle.numero }}</td>
                                     {% endif %}
                                     <td>{{ arMovimientoDetalle.codigoTerceroFk }}</td>

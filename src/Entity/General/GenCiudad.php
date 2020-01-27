@@ -194,6 +194,11 @@ class GenCiudad
     protected $turClientesIcaCiudadRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccionReferencia", mappedBy="ciudadRel")
+     */
+    protected $rhuSeleccionesReferenciasCiudadRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoCiudadPk()
@@ -768,6 +773,24 @@ class GenCiudad
     {
         $this->turClientesIcaCiudadRel = $turClientesIcaCiudadRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSeleccionesReferenciasCiudadRel()
+    {
+        return $this->rhuSeleccionesReferenciasCiudadRel;
+    }
+
+    /**
+     * @param mixed $rhuSeleccionesReferenciasCiudadRel
+     */
+    public function setRhuSeleccionesReferenciasCiudadRel($rhuSeleccionesReferenciasCiudadRel): void
+    {
+        $this->rhuSeleccionesReferenciasCiudadRel = $rhuSeleccionesReferenciasCiudadRel;
+    }
+
+
 
 }
 

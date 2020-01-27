@@ -106,15 +106,26 @@
                         <th>RESULTADO CUANTITATIVO</th>
                         <th>ENTREVISTADO POR</th>
                         <th>COMENTARIOS</th>
-                        <th></th>
-                        <th></th>
                         <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
                                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarEntrevista[]');">
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    {% for arSeleccionEntrevista in arSeleccionEntrevistas %}
+                        <tr>
+                            <td>{{ arSeleccionEntrevista.codigoSeleccionEntrevistaPk }}</td>
+                            <td>{{ arSeleccionEntrevista.fecha|date('Y-m-d H:i:s A') }}</td>
+                            <td>{{ arSeleccionEntrevista.seleccionEntrevistaTipoRel.nombre }}</td>
+                            <td>{{ arSeleccionEntrevista.resultado }}</td>
+                            <td>{{ arSeleccionEntrevista.resultadoCuantitativo }}</td>
+                            <td>{{ arSeleccionEntrevista.nombreQuienEntrevista }}</td>
+                            <td>{{ arSeleccionEntrevista.comentarios }}</td>
+                            <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                      value="{{ arSeleccionEntrevista.codigoSeleccionEntrevistaPk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
                 <div class="btn-toolbar" style="float: right">
@@ -122,7 +133,7 @@
                         {% if arSeleccion.estadoAutorizado == 0 %}
                             <a class="btn btn-default btn-sm"
                                href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_entrevista',
-                               {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionEntrevista': 0}) }}', 'AgregarSeleccionEntrevista', 600, 900)">Nuevo</a>
+                                   {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionEntrevista': 0}) }}', 'AgregarSeleccionEntrevista', 600, 900)">Nuevo</a>
                         {% endif %}
                     </div>
                     <div class="btn-group">
@@ -143,17 +154,40 @@
                         <th>RESULTADO CUANTITATIVO</th>
                         <th>PRUEBA ASIGNADA POR</th>
                         <th>COMENTARIOS</th>
-                        <th></th>
-                        <th></th>
                         <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
                                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarPrueba[]');">
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    {% for arSeleccionPrueba in arSeleccionPruebas %}
+                        <tr>
+                            <td>{{ arSeleccionPrueba.codigoSeleccionPruebaPk }}</td>
+                            <td>{{ arSeleccionPrueba.fecha|date('Y-m-d H:i:s A') }}</td>
+                            <td>{{ arSeleccionPrueba.seleccionPruebaTipoRel.nombre | default('') }}</td>
+                            <td>{{ arSeleccionPrueba.resultado }}</td>
+                            <td>{{ arSeleccionPrueba.resultadoCuantitativo }}</td>
+                            <td>{{ arSeleccionPrueba.nombreQuienHacePrueba }}</td>
+                            <td>{{ arSeleccionPrueba.comentarios }}</td>
+                            <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                      value="{{ arSeleccionPrueba.codigoSeleccionPruebaPk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arSeleccion.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_prueba',
+                                   {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionPrueba': 0}) }}', 'AgregarSeleccionPrueba', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarEntrevista, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="referencia">
@@ -170,17 +204,42 @@
                         <th>CIUDAD</th>
                         <th>VERIFICADA</th>
                         <th>COMENTARIOS</th>
-                        <th></th>
-                        <th></th>
                         <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
                                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarReferencia[]');">
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    {% for arSeleccionReferencia in arSeleccionReferencias %}
+                        <tr>
+                            <td>{{ arSeleccionReferencia.codigoSeleccionReferenciaPk }}</td>
+                            <td>{{ arSeleccionReferencia.seleccionReferenciaTipoRel.nombre | default('') }}</td>
+                            <td>{{ arSeleccionReferencia.nombreCorto }}</td>
+                            <td>{{ arSeleccionReferencia.celular }}</td>
+                            <td>{{ arSeleccionReferencia.telefono }}</td>
+                            <td>{{ arSeleccionReferencia.direccion }}</td>
+                            <td>{{ arSeleccionReferencia.ciudadRel.nombre | default('') }}</td>
+                            <td>{{ arSeleccionReferencia.estadoVerificada }}</td>
+                            <td>{{ arSeleccionReferencia.comentarios }}</td>
+                            <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                      value="{{ arSeleccionReferencia.codigoSeleccionReferenciaPk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arSeleccion.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_referencia',
+                                   {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionReferencia': 0}) }}', 'AgregarSeleccionReferencia', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarEntrevista, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="visitas">
@@ -192,17 +251,38 @@
                         <th>FECHA/HORA</th>
                         <th>PERSONA REALIZA VISITA</th>
                         <th>COMENTARIOS</th>
-                        <th></th>
-                        <th></th>
                         <th align="center"><input type="checkbox" name="ChkSeleccionarTodos"
                                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarVisita[]');">
                         </th>
                     </tr>
                     </thead>
                     <tbody>
+                    {% for arSeleccionVisita in arSeleccionVisitas %}
+                        <tr>
+                            <td>{{ arSeleccionVisita.codigoSeleccionVisitaPk }}</td>
+                            <td>{{ arSeleccionVisita.fecha|date('Y-m-d H:i:s A') }}</td>
+                            <td>{{ arSeleccionVisita.nombreQuienVisita }}</td>
+                            <td>{{ arSeleccionVisita.comentarios }}</td>
 
+                            <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                      value="{{ arSeleccionVisita.codigoSeleccionVisitaPk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arSeleccion.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_visita',
+                                   {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionVisita': 0}) }}', 'AgregarSeleccionVisita', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarEntrevista, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="antecentes">
@@ -215,8 +295,6 @@
                         <th>PERSONA SUMINISTRA</th>
                         <th>VERIFICADO</th>
                         <th>COMENTARIOS</th>
-                        <th></th>
-                        <th></th>
                         <th align="center">
                             <input type="checkbox" name="ChkSeleccionarTodos"
                                    onclick="ChequearTodosTabla(this, 'ChkSeleccionarAntecedentes[]');">
@@ -224,9 +302,32 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                    {% for arSeleccionAntecente in arSeleccionAntecedentes %}
+                        <tr>
+                            <td>{{ arSeleccionAntecente.codigoSeleccionAntecedentePk }}</td>
+                            <td>{{ arSeleccionAntecente.fecha|date('Y-m-d H:i:s A') }}</td>
+                            <td>{{ arSeleccionAntecente.nombreQuienSuministra }}</td>
+                            <td>{{ arSeleccionAntecente.estadoVerificado ? 'SI' : 'NO' }}</td>
+                            <td>{{ arSeleccionAntecente.comentarios }}</td>
+                            <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                      value="{{ arSeleccionAntecente.codigoSeleccionAntecedentePk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arSeleccion.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_antecedente',
+                                   {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionAntecedente': 0}) }}', 'AgregarSeleccionAntecedente', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarEntrevista, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="comentarios">
@@ -237,7 +338,6 @@
                         <th>CÓDIGO</th>
                         <th>FECHA/HORA</th>
                         <th>COMENTARIO</th>
-                        <th>USUARIO</th>
                         <th align="center">
                             <input type="checkbox" name="ChkSeleccionarTodos"
                                    onclick="ChequearTodosTabla(this, 'ChkSeleccionarComentario[]');">
@@ -245,9 +345,30 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                    {% for arSeleccionComentario in arSeleccionComentarios %}
+                        <tr>
+                            <td>{{ arSeleccionComentario.codigoSeleccionComentarioPk }}</td>
+                            <td>{{ arSeleccionComentario.fecha|date('Y-m-d H:i:s A') }}</td>
+                            <td>{{ arSeleccionComentario.comentarios }}</td>
+                            <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
+                                                      value="{{ arSeleccionComentario.codigoSeleccionComentarioPk }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-toolbar" style="float: right">
+                    <div class="btn-group">
+                        {% if arSeleccion.estadoAutorizado == 0 %}
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_seleccion_agregar_comentario',
+                                   {'codigoSeleccion': arSeleccion.codigoSeleccionPk, 'codigoSeleccionComentario': 0}) }}', 'AgregarSeleccionComentario', 600, 900)">Nuevo</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        {{ form_widget(form.btnEliminarEntrevista, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

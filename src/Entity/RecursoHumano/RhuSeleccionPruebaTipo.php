@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\Cartera\RhuSeleccionPruebaTipoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuSeleccionPruebaTipoRepository")
  * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
 class RhuSeleccionPruebaTipo
@@ -17,16 +17,36 @@ class RhuSeleccionPruebaTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_seleccion_prueba_tipo_pk", type="integer")
+     * @ORM\Column(name="codigo_seleccion_prueba_tipo_pk", type="string", length=10)
      * @ORM\GeneratedValue(strategy="AUTO")
      */        
     private $codigoSeleccionPruebaTipoPk;
 
     /**
      * @ORM\Column(name="nombre", type="string", length=80)
-     * * @Assert\NotBlank(message="El campo no puede estar vacio")
      */
     private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccionPrueba", mappedBy="seleccionPruebaTipoRel")
+     */
+    protected $seleccionesPruebasSelecionPruebaTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -59,6 +79,23 @@ class RhuSeleccionPruebaTipo
     {
         $this->nombre = $nombre;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesPruebasSelecionPruebaTipoRel()
+    {
+        return $this->seleccionesPruebasSelecionPruebaTipoRel;
+    }
+
+    /**
+     * @param mixed $seleccionesPruebasSelecionPruebaTipoRel
+     */
+    public function setSeleccionesPruebasSelecionPruebaTipoRel($seleccionesPruebasSelecionPruebaTipoRel): void
+    {
+        $this->seleccionesPruebasSelecionPruebaTipoRel = $seleccionesPruebasSelecionPruebaTipoRel;
+    }
+
 
 
 }

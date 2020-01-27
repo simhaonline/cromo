@@ -1,21 +1,26 @@
 <?php
 
-
 namespace App\Entity\RecursoHumano;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuSeleccionEntrevistaRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RecursoHumano\RhuSeleccionPruebaRepository")
+ * @ORM\EntityListeners({"App\Controller\Estructura\EntityListener"})
  */
-class RhuSeleccionEntrevista
+class RhuSeleccionPrueba
 {
+    public $infoLog = [
+        "primaryKey" => "codigoSeleccionPruebaPk",
+        "todos"     => true,
+    ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_seleccion_entrevista_pk", type="integer")
+     * @ORM\Column(name="codigo_seleccion_prueba_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $codigoSeleccionEntrevistaPk;
+     */        
+    private $codigoSeleccionPruebaPk;
 
     /**
      * @ORM\Column(name="codigo_seleccion_fk", type="integer")
@@ -23,12 +28,12 @@ class RhuSeleccionEntrevista
     private $codigoSeleccionFk;
 
     /**
-     * @ORM\Column(name="codigo_seleccion_entrevista_tipo_fk", type="string", length=10, nullable=true)
+     * @ORM\Column(name="codigo_seleccion_prueba_tipo_fk", type="string", length=10, nullable=true)
      */
-    private $codigoSeleccionEntrevistaTipoFk;
+    private $codigoSeleccionPruebaTipoFk;
 
     /**
-     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     * @ORM\Column(name="fecha" , type="datetime" , nullable=true)
      */
     private $fecha;
 
@@ -43,9 +48,9 @@ class RhuSeleccionEntrevista
     private $resultadoCuantitativo;
 
     /**
-     * @ORM\Column(name="nombre_quien_entrevista", type="string", length=100, nullable=true)
+     * @ORM\Column(name="nombre_quien_hace_prueba", type="string", length=100, nullable=true)
      */
-    private $nombreQuienEntrevista;
+    private $nombreQuienHacePrueba;
 
     /**
      * @ORM\Column(name="comentarios", type="string", length=200, nullable=true)
@@ -53,36 +58,47 @@ class RhuSeleccionEntrevista
     private $comentarios;
 
     /**
-     * @ORM\Column(name="codigo_usuario", type="string", length=50, nullable=true)
-     */
-    private $codigoUsuario;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RhuSeleccion", inversedBy="seleccionesEntrevistasSeleccionRel")
+     * @ORM\ManyToOne(targetEntity="RhuSeleccion", inversedBy="seleccionesPruebasSeleccionRel")
      * @ORM\JoinColumn(name="codigo_seleccion_fk", referencedColumnName="codigo_seleccion_pk")
      */
     protected $seleccionRel;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RhuSeleccionEntrevistaTipo", inversedBy="seleccionesEntrevistasSelecionEntrevistaTipoRel")
-     * @ORM\JoinColumn(name="codigo_seleccion_entrevista_tipo_fk", referencedColumnName="codigo_seleccion_entrevista_tipo_pk")
+     * @ORM\ManyToOne(targetEntity="RhuSeleccionPruebaTipo", inversedBy="seleccionesPruebasSelecionPruebaTipoRel")
+     * @ORM\JoinColumn(name="codigo_seleccion_prueba_tipo_fk", referencedColumnName="codigo_seleccion_prueba_tipo_pk")
      */
-    protected $seleccionEntrevistaTipoRel;
+    protected $seleccionPruebaTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
      */
-    public function getCodigoSeleccionEntrevistaPk()
+    public function getCodigoSeleccionPruebaPk()
     {
-        return $this->codigoSeleccionEntrevistaPk;
+        return $this->codigoSeleccionPruebaPk;
     }
 
     /**
-     * @param mixed $codigoSeleccionEntrevistaPk
+     * @param mixed $codigoSeleccionPruebaPk
      */
-    public function setCodigoSeleccionEntrevistaPk($codigoSeleccionEntrevistaPk): void
+    public function setCodigoSeleccionPruebaPk($codigoSeleccionPruebaPk): void
     {
-        $this->codigoSeleccionEntrevistaPk = $codigoSeleccionEntrevistaPk;
+        $this->codigoSeleccionPruebaPk = $codigoSeleccionPruebaPk;
     }
 
     /**
@@ -104,17 +120,17 @@ class RhuSeleccionEntrevista
     /**
      * @return mixed
      */
-    public function getCodigoSeleccionEntrevistaTipoFk()
+    public function getCodigoSeleccionPruebaTipoFk()
     {
-        return $this->codigoSeleccionEntrevistaTipoFk;
+        return $this->codigoSeleccionPruebaTipoFk;
     }
 
     /**
-     * @param mixed $codigoSeleccionEntrevistaTipoFk
+     * @param mixed $codigoSeleccionPruebaTipoFk
      */
-    public function setCodigoSeleccionEntrevistaTipoFk($codigoSeleccionEntrevistaTipoFk): void
+    public function setCodigoSeleccionPruebaTipoFk($codigoSeleccionPruebaTipoFk): void
     {
-        $this->codigoSeleccionEntrevistaTipoFk = $codigoSeleccionEntrevistaTipoFk;
+        $this->codigoSeleccionPruebaTipoFk = $codigoSeleccionPruebaTipoFk;
     }
 
     /**
@@ -168,17 +184,17 @@ class RhuSeleccionEntrevista
     /**
      * @return mixed
      */
-    public function getNombreQuienEntrevista()
+    public function getNombreQuienHacePrueba()
     {
-        return $this->nombreQuienEntrevista;
+        return $this->nombreQuienHacePrueba;
     }
 
     /**
-     * @param mixed $nombreQuienEntrevista
+     * @param mixed $nombreQuienHacePrueba
      */
-    public function setNombreQuienEntrevista($nombreQuienEntrevista): void
+    public function setNombreQuienHacePrueba($nombreQuienHacePrueba): void
     {
-        $this->nombreQuienEntrevista = $nombreQuienEntrevista;
+        $this->nombreQuienHacePrueba = $nombreQuienHacePrueba;
     }
 
     /**
@@ -200,22 +216,6 @@ class RhuSeleccionEntrevista
     /**
      * @return mixed
      */
-    public function getCodigoUsuario()
-    {
-        return $this->codigoUsuario;
-    }
-
-    /**
-     * @param mixed $codigoUsuario
-     */
-    public function setCodigoUsuario($codigoUsuario): void
-    {
-        $this->codigoUsuario = $codigoUsuario;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSeleccionRel()
     {
         return $this->seleccionRel;
@@ -232,19 +232,18 @@ class RhuSeleccionEntrevista
     /**
      * @return mixed
      */
-    public function getSeleccionEntrevistaTipoRel()
+    public function getSeleccionPruebaTipoRel()
     {
-        return $this->seleccionEntrevistaTipoRel;
+        return $this->seleccionPruebaTipoRel;
     }
 
     /**
-     * @param mixed $seleccionEntrevistaTipoRel
+     * @param mixed $seleccionPruebaTipoRel
      */
-    public function setSeleccionEntrevistaTipoRel($seleccionEntrevistaTipoRel): void
+    public function setSeleccionPruebaTipoRel($seleccionPruebaTipoRel): void
     {
-        $this->seleccionEntrevistaTipoRel = $seleccionEntrevistaTipoRel;
+        $this->seleccionPruebaTipoRel = $seleccionPruebaTipoRel;
     }
-
 
 
 }

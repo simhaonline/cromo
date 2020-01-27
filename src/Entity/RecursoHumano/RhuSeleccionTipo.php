@@ -16,7 +16,7 @@ class RhuSeleccionTipo
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_seleccion_tipo_pk", type="integer")
+     * @ORM\Column(name="codigo_seleccion_tipo_pk", type="string", length=10)
      * @ORM\GeneratedValue(strategy="AUTO")
      */        
     private $codigoSeleccionTipoPk;

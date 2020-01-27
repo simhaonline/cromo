@@ -23,7 +23,7 @@ class RhuSeleccion
     private $codigoSeleccionPk;
 
     /**
-     * @ORM\Column(name="codigo_seleccion_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_seleccion_tipo_fk", type="string", length=10,  nullable=true)
      */
     private $codigoSeleccionTipoFk;
 
@@ -295,6 +295,26 @@ class RhuSeleccion
      * @ORM\OneToMany(targetEntity="RhuSeleccionEntrevista", mappedBy="seleccionRel")
      */
     protected $seleccionesEntrevistasSeleccionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccionPrueba", mappedBy="seleccionRel")
+     */
+    protected $seleccionesPruebasSeleccionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccionVisita", mappedBy="seleccionRel")
+     */
+    protected $seleccionesVisitasSeleccionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccionReferencia", mappedBy="seleccionRel")
+     */
+    protected $seleccionesReferenciasSeleccionRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccionAntecedente", mappedBy="seleccionRel")
+     */
+    protected $seleccionesAntecedentesSeleccionRel;
 
     /**
      * @return array
@@ -1063,6 +1083,39 @@ class RhuSeleccion
     {
         $this->seleccionesEntrevistasSeleccionRel = $seleccionesEntrevistasSeleccionRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesPruebasSeleccionRel()
+    {
+        return $this->seleccionesPruebasSeleccionRel;
+    }
+
+    /**
+     * @param mixed $seleccionesPruebasSeleccionRel
+     */
+    public function setSeleccionesPruebasSeleccionRel($seleccionesPruebasSeleccionRel): void
+    {
+        $this->seleccionesPruebasSeleccionRel = $seleccionesPruebasSeleccionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesVisitasSeleccionRel()
+    {
+        return $this->seleccionesVisitasSeleccionRel;
+    }
+
+    /**
+     * @param mixed $seleccionesVisitasSeleccionRel
+     */
+    public function setSeleccionesVisitasSeleccionRel($seleccionesVisitasSeleccionRel): void
+    {
+        $this->seleccionesVisitasSeleccionRel = $seleccionesVisitasSeleccionRel;
+    }
+
 
 
 }

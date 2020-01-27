@@ -1,0 +1,38 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="identificacionRel" class="col-sm-2 control-label">Fecha:</label>
+                <div class="col-sm-8">
+                    {{ form_widget(form.fecha) }}
+                    {{ form_errors(form.fecha) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="form_nombreQuienEntrevista" class="col-sm-2 control-label">Persona que realiza la visita:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombreQuienVisita, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+                <label for="form_nombreQuienEntrevista" class="col-sm-2 control-label">Cliente referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.clienteReferencia, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="form_comentarios" class="col-sm-2 control-label">Comentarios:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

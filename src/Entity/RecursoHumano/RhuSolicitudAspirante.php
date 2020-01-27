@@ -63,7 +63,7 @@ class RhuSolicitudAspirante
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", inversedBy="solicitudesAspirantesSolicitudRel")
      * @ORM\JoinColumn(name="codigo_solicitud_fk", referencedColumnName="codigo_solicitud_pk")
      */
-    protected $seleccionRequisitoRel;
+    protected $solicitudRel;
 
     /**
      * @return array
@@ -212,17 +212,17 @@ class RhuSolicitudAspirante
     /**
      * @return mixed
      */
-    public function getSeleccionRequisitoRel()
+    public function getSolicitudRel()
     {
-        return $this->seleccionRequisitoRel;
+        return $this->solicitudRel;
     }
 
     /**
-     * @param mixed $seleccionRequisitoRel
+     * @param mixed $solicitudRel
      */
-    public function setSeleccionRequisitoRel($seleccionRequisitoRel): void
+    public function setSolicitudRel($solicitudRel): void
     {
-        $this->seleccionRequisitoRel = $seleccionRequisitoRel;
+        $this->solicitudRel = $solicitudRel;
     }
 
 

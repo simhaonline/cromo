@@ -10,6 +10,7 @@ use App\Entity\Crm\CrmVisitaTipo;
 use App\Form\Type\Crm\VisitaTipoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,7 +31,7 @@ class VisitaTipoController extends MaestroController
     /**
      * @Route("/crm/administracion/control/visitatipo/lista", name="crm_administracion_control_visitatipo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
@@ -43,7 +44,7 @@ class VisitaTipoController extends MaestroController
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->createQuery($datos['queryBuilder'])->execute(), "Visita tipo");

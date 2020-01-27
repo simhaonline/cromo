@@ -10,6 +10,7 @@ use App\Controller\MaestroController;
 use App\Entity\Transporte\TteZona;
 use App\Form\Type\Transporte\ZonaType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
@@ -35,7 +36,7 @@ class ZonaController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/zona/lista", name="transporte_administracion_guia_zona_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
@@ -48,7 +49,7 @@ class ZonaController extends MaestroController
                 FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteZona::class)->lista()->getQuery()->getResult(), "Zona");

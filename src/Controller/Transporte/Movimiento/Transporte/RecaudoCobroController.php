@@ -17,6 +17,7 @@ use App\Formato\Transporte\RecaudoDevolucion;
 use App\Formato\Transporte\RecaudoCobro;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,7 +40,7 @@ class RecaudoCobroController extends MaestroController
    /**
     * @Route("/transporte/movimiento/transporte/recaudocobro/lista", name="transporte_movimiento_transporte_recaudocobro_lista")
     */    
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
 
         $this->request = $request;
@@ -53,7 +54,7 @@ class RecaudoCobroController extends MaestroController
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteRecaudoCobro::class)->lista()->getQuery()->execute(), "Recaudo cobrar");

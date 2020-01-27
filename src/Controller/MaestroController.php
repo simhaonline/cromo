@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
@@ -21,10 +22,9 @@ abstract class MaestroController extends AbstractController
     /**
      * @return array
      */
-    protected function getDatosLista($filtro = false, $paginar = true)
+    protected function getDatosLista($filtro = false, $paginar = true, PaginatorInterface $paginator)
     {
 
-        $paginator = $this->get('knp_paginator');
         $nombreRepositorio = "App:{$this->modulo}\\{$this->claseNombre}";
         $namespaceType = "\\App\\Form\\Type\\{$this->modulo}\\{$this->nombre}Type";
         $campos = json_decode($namespaceType::getEstructuraPropiedadesLista());

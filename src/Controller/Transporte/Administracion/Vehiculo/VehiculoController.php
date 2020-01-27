@@ -9,6 +9,7 @@ use App\Controller\MaestroController;
 use App\Formato\Transporte\Vehiculo;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\VehiculoType;
@@ -38,7 +39,7 @@ class VehiculoController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/vehiculo/lista", name="transporte_administracion_transporte_vehiculo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
@@ -51,7 +52,7 @@ class VehiculoController extends MaestroController
                 FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteVehiculo::class)->lista()->getQuery()->getResult(), "Vehiculos");

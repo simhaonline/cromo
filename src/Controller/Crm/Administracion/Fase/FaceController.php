@@ -11,6 +11,7 @@ use App\Controller\MaestroController;
 use App\Entity\Crm\CrmFase;
 use App\Form\Type\Crm\FaseType;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,7 +31,7 @@ class FaceController extends MaestroController
     /**
      * @Route("/crm/administracion/fase/lista", name="crm_administracion_fase_fase_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
@@ -48,7 +49,7 @@ class FaceController extends MaestroController
 //                return $this->redirect($this->generateUrl('crm_administracion_fase_fase_lista'));
 //            }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         return $this->render('crm/administracion/fase/lista.html.twig', [
             'arrDatosLista' => $datos,
             'formBotonera' => $formBotonera->createView(),

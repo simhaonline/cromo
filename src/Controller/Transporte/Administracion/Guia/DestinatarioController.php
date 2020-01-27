@@ -12,6 +12,7 @@ use App\Entity\Transporte\TteZona;
 use App\Form\Type\Transporte\DestinatarioType;
 use App\Form\Type\Transporte\ZonaType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
@@ -38,7 +39,7 @@ class DestinatarioController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/destinatario/lista", name="transporte_administracion_guia_destinatario_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
@@ -51,7 +52,7 @@ class DestinatarioController extends MaestroController
                 FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(TteDestinatario::class)->lista()->getQuery()->getResult(), "Destinatario");

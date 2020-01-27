@@ -14,6 +14,7 @@ use App\Form\Type\Transporte\RecaudoType;
 use App\Formato\Transporte\RecaudoDevolucion;
 use App\General\General;
 use App\Utilidades\Estandares;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,7 +37,7 @@ class RecaudoDevolucionController extends MaestroController
    /**
     * @Route("/transporte/movimiento/transporte/recaudodevolucion/lista", name="transporte_movimiento_transporte_recaudodevolucion_lista")
     */    
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $this->request = $request;
         $em = $this->getDoctrine()->getManager();
@@ -49,7 +50,7 @@ class RecaudoDevolucionController extends MaestroController
                 FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
             }
         }
-        $datos = $this->getDatosLista(true);
+        $datos = $this->getDatosLista(true, true, $paginator);
         if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
             if ($formBotonera->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');

@@ -345,7 +345,8 @@ class TurFacturaRepository extends ServiceEntityRepository
                 $arCuentaCobrar->setCuentaCobrarTipoRel($arCuentaCobrarTipo);
                 $arCuentaCobrar->setFecha($arFactura->getFecha());
                 $arCuentaCobrar->setFechaVence($arFactura->getFechaVence());
-                $arCuentaCobrar->setModulo("TUR");
+                $arCuentaCobrar->setModulo("tur");
+                $arCuentaCobrar->setModelo("TurFactura");
                 $arCuentaCobrar->setCodigoDocumento($arFactura->getCodigoFacturaPk());
                 $arCuentaCobrar->setNumeroDocumento($arFactura->getNumero());
                 $arCuentaCobrar->setVrSubtotal($arFactura->getVrSubtotal());

@@ -42,6 +42,11 @@ class CarCuentaCobrar
     private $modulo;
 
     /**
+     * @ORM\Column(name="modelo" ,type="string", length=80, nullable=true)
+     */
+    private $modelo;
+
+    /**
      * @ORM\Column(name="codigo_documento", type="integer", nullable=true)
      */
     private $codigoDocumento;
@@ -899,6 +904,22 @@ class CarCuentaCobrar
     public function setMovimientosDetallesCuentaCobrarRel($movimientosDetallesCuentaCobrarRel): void
     {
         $this->movimientosDetallesCuentaCobrarRel = $movimientosDetallesCuentaCobrarRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    /**
+     * @param mixed $modelo
+     */
+    public function setModelo($modelo): void
+    {
+        $this->modelo = $modelo;
     }
 
 

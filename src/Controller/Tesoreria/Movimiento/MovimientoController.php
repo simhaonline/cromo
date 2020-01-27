@@ -311,11 +311,6 @@ class MovimientoController extends MaestroController
                 $em->getRepository(TesMovimiento::class)->liquidar($id);
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
-            if ($form->get('btnArchivoPlanoBbva')->isClicked()) {
-                $arrDetallesSeleccionados = $request->request->get('ChkSeleccionar');
-                $numero = $arMovimiento->getNumero();
-                $this->generarArchivoBBVA($arMovimiento, $numero, $arrDetallesSeleccionados);
-            }
 
         }
         $arMovimientoDetalles = $paginator->paginate($em->getRepository(TesMovimientoDetalle::class)->lista($arMovimiento->getCodigoMovimientoPk()), $request->query->getInt('page', 1), 500);

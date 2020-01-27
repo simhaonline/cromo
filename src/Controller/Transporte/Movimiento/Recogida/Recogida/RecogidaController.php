@@ -146,9 +146,6 @@ class RecogidaController extends MaestroController
                 if ($arCliente) {
                     $arRecogida->setClienteRel($arCliente);
                     $arRecogida->setOperacionRel($this->getUser()->getOperacionRel());
-                    $arRecogida->setAnunciante($arCliente->getNombreCorto());
-                    $arRecogida->setDireccion($arCliente->getDireccion());
-                    $arRecogida->setTelefono($arCliente->getTelefono());
                     $em->persist($arRecogida);
                     $em->flush();
                     if ($form->get('guardarnuevo')->isClicked()) {

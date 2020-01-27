@@ -336,7 +336,7 @@ class DespachoController extends MaestroController
             }
             if ($form->get('btnExcelGuias')->isClicked()) {
                 $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->despacho($id);
-                $this->exportarExcelPersonalizadoGuia($arDespachoDetalles);
+                $this->exportarExcelPersonalizadoGuia($arDespacho, $arDespachoDetalles);
             }
         }
         $arNovedades = $em->getRepository(TteNovedad::class)->despacho($id);
@@ -668,7 +668,7 @@ class DespachoController extends MaestroController
         return $filtro;
     }
 
-    public function exportarExcelPersonalizadoGuia($arDespachoDetalles)
+    public function exportarExcelPersonalizadoGuia($arDespacho, $arDespachoDetalles)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
@@ -680,6 +680,10 @@ class DespachoController extends MaestroController
             $j = 0;
             $arrColumnas = [
                     'ID',
+                    'COD',
+                    'NUMERO',
+                    'PLACA',
+                    'CONDUCTOR',
                     'TIPO',
                     'GUIA',
                     'FECHA',
@@ -690,6 +694,7 @@ class DespachoController extends MaestroController
                     'CLIENTE',
                     'DESTINATARIO',
                     'DESTINO',
+                    'TELEFONO',
                     'FLETE',
                     'MANEJO',
                     'DECLARA',
@@ -710,24 +715,29 @@ class DespachoController extends MaestroController
             foreach ($arDespachoDetalles as $arDespachoDetalle) {
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
                 $hoja->setCellValue('A' . $j, $arDespachoDetalle['codigoDespachoDetallePk']);
-                $hoja->setCellValue('B' . $j, $arDespachoDetalle['codigoGuiaTipoFk']);
-                $hoja->setCellValue('C' . $j, $arDespachoDetalle['codigoGuiaFk']);
-                $hoja->setCellValue('D' . $j, $arDespachoDetalle['fechaIngreso']);
-                $hoja->setCellValue('E' . $j, $arDespachoDetalle['codigoOperacionIngresoFk']);
-                $hoja->setCellValue('F' . $j, $arDespachoDetalle['codigoOperacionCargoFk']);
-                $hoja->setCellValue('G' . $j, $arDespachoDetalle['numero']);
-                $hoja->setCellValue('H' . $j, $arDespachoDetalle['documentoCliente']);
-                $hoja->setCellValue('I' . $j, $arDespachoDetalle['clienteNombreCorto']);
-                $hoja->setCellValue('J' . $j, $arDespachoDetalle['nombreDestinatario']);
-                $hoja->setCellValue('K' . $j, $arDespachoDetalle['ciudadDestino']);
-                $hoja->setCellValue('L' . $j, $arDespachoDetalle['vrFlete']);
-                $hoja->setCellValue('M' . $j, $arDespachoDetalle['vrManejo']);
-                $hoja->setCellValue('N' . $j, $arDespachoDetalle['vrDeclara']);
-                $hoja->setCellValue('O' . $j, $arDespachoDetalle['vrCobroEntrega']);
-                $hoja->setCellValue('P' . $j, $arDespachoDetalle['vrPrecioReexpedicion']);
-                $hoja->setCellValue('Q' . $j, $arDespachoDetalle['unidades']);
-                $hoja->setCellValue('R' . $j, $arDespachoDetalle['pesoReal']);
-                $hoja->setCellValue('S' . $j, $arDespachoDetalle['pesoVolumen']);
+                $hoja->setCellValue('B' . $j, $arDespacho->getCodigoDespachoPk());
+                $hoja->setCellValue('C' . $j, $arDespacho->getNumero());
+                $hoja->setCellValue('D' . $j, $arDespacho->getCodigoVehiculoFk());
+                $hoja->setCellValue('E' . $j, $arDespacho->getConductorRel()->getNombreCorto());
+                $hoja->setCellValue('F' . $j, $arDespachoDetalle['codigoGuiaTipoFk']);
+                $hoja->setCellValue('G' . $j, $arDespachoDetalle['codigoGuiaFk']);
+                $hoja->setCellValue('H' . $j, $arDespachoDetalle['fechaIngreso']->format('Y-m-d'));
+                $hoja->setCellValue('I' . $j, $arDespachoDetalle['codigoOperacionIngresoFk']);
+                $hoja->setCellValue('J' . $j, $arDespachoDetalle['codigoOperacionCargoFk']);
+                $hoja->setCellValue('K' . $j, $arDespachoDetalle['numero']);
+                $hoja->setCellValue('L' . $j, $arDespachoDetalle['documentoCliente']);
+                $hoja->setCellValue('M' . $j, $arDespachoDetalle['clienteNombreCorto']);
+                $hoja->setCellValue('N' . $j, $arDespachoDetalle['nombreDestinatario']);
+                $hoja->setCellValue('O' . $j, $arDespachoDetalle['ciudadDestino']);
+                $hoja->setCellValue('P' . $j, $arDespachoDetalle['telefonoDestinatario']);
+                $hoja->setCellValue('Q' . $j, $arDespachoDetalle['vrFlete']);
+                $hoja->setCellValue('R' . $j, $arDespachoDetalle['vrManejo']);
+                $hoja->setCellValue('S' . $j, $arDespachoDetalle['vrDeclara']);
+                $hoja->setCellValue('T' . $j, $arDespachoDetalle['vrCobroEntrega']);
+                $hoja->setCellValue('U' . $j, $arDespachoDetalle['vrPrecioReexpedicion']);
+                $hoja->setCellValue('V' . $j, $arDespachoDetalle['unidades']);
+                $hoja->setCellValue('W' . $j, $arDespachoDetalle['pesoReal']);
+                $hoja->setCellValue('X' . $j, $arDespachoDetalle['pesoVolumen']);
                 $j++;
 
             }

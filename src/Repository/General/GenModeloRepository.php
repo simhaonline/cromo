@@ -33,6 +33,16 @@ class GenModeloRepository extends ServiceEntityRepository
             $modulo=$session->get('arSeguridadUsuarioModulofiltroModulo')->getCodigoModuloPk();
             $arModelo=$arModelo->andWhere("genModelo.codigoModuloFk = '{$modulo}'");
         }
+
+        if($session->get('arSegGrupoModulofiltroModelo')){
+            $arModelo=$arModelo->andWhere("genModelo.codigoModeloPk LIKE '%{$session->get('arSegGrupoModulofiltroModelo')}%'");
+        }
+
+        if($session->get('arSegGrupoModulofiltroModulo')){
+            $arModelo=$arModelo->andWhere("genModelo.codigoModuloFk = '{$session->get('arSegGrupoModulofiltroModulo')}' ");
+        }
+
+
         $arModelo=$arModelo->getQuery()->getResult();
 
         return$arModelo;

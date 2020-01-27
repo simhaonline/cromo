@@ -115,10 +115,10 @@ class SeguridadUsuarioModeloController extends AbstractController
             'arSeguridadUsuarioModelo' => $arSeguridadUsuarioModelo,
             'arUsuario' => $arUsuario,
             'hash' => $hash,
-            'form' => $form->createView(),
             'arSeguridadUsuarioProceso' => $arSeguridadUsuarioProceso,
-            'formSegmento' => $formSegmentos->createView(),
             'arSeguridadUsuarioSegmento' => $arSeguridadUsuarioSegmento,
+            'form' => $form->createView(),
+            'formSegmento' => $formSegmentos->createView(),
             'formProceso' => $formProcesos->createView(),
         ]);
     }

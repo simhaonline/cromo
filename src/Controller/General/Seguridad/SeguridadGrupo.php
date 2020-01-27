@@ -136,7 +136,7 @@ class SeguridadGrupo extends AbstractController
     }
 
     /**
-     * @Route("/general/seguridad/grupo/nuevo/modelo/{id}/{codigoGrupo}", name="general_seguridad_grupo_nuevo")
+     * @Route("/general/seguridad/grupo/nuevo/modelo/{id}/{codigoGrupo}", name="general_seguridad_grupo_modelo_nuevo")
      */
     public function nuevoModelo(Request $request, $id, $codigoGrupo)
     {

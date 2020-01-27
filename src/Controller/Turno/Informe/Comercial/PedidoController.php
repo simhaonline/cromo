@@ -79,11 +79,10 @@ class PedidoController extends  AbstractController
     /**
      * @Route("/turno/informe/comercial/pedidos/sinAprobar/lista", name="turno_informe_comercial_pedidoSinAprobar_lista")
      */
-    public function SinAprobar(Request $request)
+    public function SinAprobar(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class,['required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTurInformeComercialPedidoClienteSinAprobarFechaDesde') ? date_create($session->get('filtroInvInformeAsesorVentasFechaDesde')): null])

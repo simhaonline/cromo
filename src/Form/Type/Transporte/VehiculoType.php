@@ -38,7 +38,8 @@ class VehiculoType extends AbstractType
                         ->orderBy('p.nombreCorto', 'ASC');
                 },
                 'choice_label' => 'nombreCorto',
-                'label' => 'Poseedor:'
+                'label' => 'Poseedor:',
+                'placeholder' => ''
             ])
             ->add('propietarioRel',EntityType::class,[
                 'required' => true,
@@ -48,7 +49,8 @@ class VehiculoType extends AbstractType
                         ->orderBy('pr.nombreCorto', 'ASC');
                 },
                 'choice_label' => 'nombreCorto',
-                'label' => 'Propietario:'
+                'label' => 'Propietario:',
+                'placeholder' => ''
             ])
             ->add('marcaRel',EntityType::class,[
                 'required' => false,

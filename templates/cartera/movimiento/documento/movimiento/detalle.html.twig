@@ -64,7 +64,7 @@
                             <th>ID</th>
                             <th>COD</th>
                             <th>TIPO</th>
-                            <th>DOC</th>
+                            <th>NUMERO</th>
                             <th>COD</th>
                             <th>TERCERO</th>
                             <th>CTA</th>
@@ -89,8 +89,14 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ arMovimientoDetalle.codigoCuentaCobrarTipoFk }}</td>
-                                <td>{{ arMovimientoDetalle.numero }}</td>
                                 {% if arMovimiento.estadoAutorizado == false %}
+                                    <td>
+                                        <input type="text"
+                                               name="arrNumero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               id="arrNumero[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
+                                               value="{{ arMovimientoDetalle.numero }}"
+                                               style="text-align: left; width:60px" size="20">
+                                    </td>
                                     <td>
                                         <input type="text"
                                                name="arrCliente[{{ arMovimientoDetalle.codigoMovimientoDetallePk }}]"
@@ -151,6 +157,7 @@
                                                style="text-align: left; width:120px" size="10">
                                     </td>
                                 {% else %}
+                                    <td>{{ arMovimientoDetalle.numero }}</td>
                                     <td>{{ arMovimientoDetalle.codigoClienteFk }}</td>
                                     <td>{{ arMovimientoDetalle.clienteNombreCorto }}</td>
                                     <td>{{ arMovimientoDetalle.codigoCuentaFk }}</td>

@@ -25,6 +25,7 @@ class TtePoseedorRepository extends ServiceEntityRepository
             ->addSelect('p.codigoIdentificacionFk')
             ->addSelect('p.numeroIdentificacion')
             ->addSelect('p.nombreCorto')
+            ->addSelect('c.nombre AS ciudad')
             ->addSelect('p.nombre1')
             ->addSelect('p.nombre2')
             ->addSelect('p.apellido1')
@@ -33,30 +34,33 @@ class TtePoseedorRepository extends ServiceEntityRepository
             ->addSelect('p.codigoCiudadFk')
             ->addSelect('p.telefono')
             ->addSelect('p.movil')
-            ->addSelect('p.correo');
-
-        if ($session->get('TtePoseedor_codigoPoseedorPk')) {
-            $queryBuilder->andWhere("p.codigoPoseedorPk = '{$session->get('TtePoseedor_codigoPoseedorPk')}'");
+            ->addSelect('p.correo')
+            ->leftJoin('p.ciudadRel', 'c');
+        if ($session->get('filtroTteCodigoPoseedor')) {
+            $queryBuilder->andWhere("p.codigoPoseedorPk = '{$session->get('filtroTteCodigoPoseedor')}'");
         }
+        if ($session->get('filtroTteNombrePoseedor')) {
+            $queryBuilder->andWhere("p.nombreCorto LIKE '%{$session->get('filtroTteNombrePoseedor')}%' ");
 
-        if ($session->get('TtePoseedor_nombreCorto')) {
-            $queryBuilder->andWhere("p.nombreCorto LIKE '%{$session->get('TtePoseedor_nombreCorto')}%' ");
-
+        }
+        if ($session->get('filtroNumeroIdentificacionPoseedor')) {
+            $queryBuilder->andWhere("p.numeroIdentificacion = '{$session->get('filtroNumeroIdentificacionPoseedor')}'");
         }
 
         return $queryBuilder;
     }
-    
-    public function camposPredeterminados(){
-        $qb = $this-> _em->createQueryBuilder()
-            ->from('App:Transporte\TtePoseedor','p')
+
+    public function camposPredeterminados()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from('App:Transporte\TtePoseedor', 'p')
             ->select('p.codigoPoseedorPk AS ID')
             ->addSelect('p.nombreCorto AS NOMBRE')
             ->addSelect('p.numeroIdentificacion AS IDENTIFICACION');
         $query = $this->_em->createQuery($qb->getDQL());
         return $query->execute();
     }
-    
+
     public function dqlRndc($codigoPoseedor, $codigoPropietario): array
     {
         $em = $this->getEntityManager();
@@ -78,7 +82,7 @@ class TtePoseedorRepository extends ServiceEntityRepository
         WHERE p.codigoPoseedorPk = :codigoPoseedor OR p.codigoPoseedorPk = :codigoPropietario'
         )->setParameter('codigoPoseedor', $codigoPoseedor)
             ->setParameter('codigoPropietario', $codigoPropietario);
-        $arTercerosPoseedores =  $query->getResult();
+        $arTercerosPoseedores = $query->getResult();
         return $arTercerosPoseedores;
 
     }
@@ -95,7 +99,7 @@ class TtePoseedorRepository extends ServiceEntityRepository
         LEFT JOIN p.identificacionRel pi           
         WHERE p.codigoPoseedorPk = :codigoPoseedor'
         )->setParameter('codigoPoseedor', $codigoPoseedor);
-        $arPoseedor =  $query->getSingleResult();
+        $arPoseedor = $query->getSingleResult();
         return $arPoseedor;
 
     }
@@ -105,9 +109,9 @@ class TtePoseedorRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $arTercero = null;
         $arPoseedor = $em->getRepository(TtePoseedor::class)->find($codigo);
-        if($arPoseedor) {
+        if ($arPoseedor) {
             $arTercero = $em->getRepository(FinTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()));
-            if(!$arTercero) {
+            if (!$arTercero) {
                 $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arPoseedor->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());
@@ -125,9 +129,9 @@ class TtePoseedorRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $arTercero = null;
-        if($arPoseedor) {
+        if ($arPoseedor) {
             $arTercero = $em->getRepository(TesTercero::class)->findOneBy(array('codigoIdentificacionFk' => $arPoseedor->getCodigoIdentificacionFk(), 'numeroIdentificacion' => $arPoseedor->getNumeroIdentificacion()));
-            if(!$arTercero) {
+            if (!$arTercero) {
                 $arTercero = new TesTercero();
                 $arTercero->setIdentificacionRel($arPoseedor->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arPoseedor->getNumeroIdentificacion());

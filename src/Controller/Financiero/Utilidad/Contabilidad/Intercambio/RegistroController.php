@@ -227,6 +227,117 @@ class RegistroController extends Controller
     }
 
     /**
+     * @author Andres Acevedo Cartagena
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @Route("/financiero/utilidad/contabilidad/intercambio/registro/worldOffice2", name="financiero_utilidad_contabilidad_intercambio_registro_worldOffice2")
+     */
+    public function worldOffice2()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $genConfiguracion = $em->getRepository(GenConfiguracion::class)->find(1);
+        $arrConfiguracion = $em->getRepository(FinConfiguracion::class)->intercambioDatos();
+        $arRegistros = $em->getRepository(FinRegistro::class)->listaIntercambio()->getQuery()->getResult();
+        if (count($arRegistros) > 0) {
+            $spreadsheet = new Spreadsheet();
+            $campos = [
+                'EMPRESA',
+                'TIPO_DOCUMENTO',
+                'PREFIJO',
+                'NRO_DOCUMENTO',
+                'FECHA',
+                'TERCERO_INTERNO',
+                'TERCERO_EXTERNO',
+                'CONCEPTO',
+                'FORMA_PAGO',
+                'FEHCA_ENTREGA',
+                'PREFIJO_EXTERNO',
+                'NUMERO_DOCUMENTO_EXTERNO',
+                'VERIFICADO',
+                'ANULADO',
+                'NOTA_AL_PIE_DE_FACTURA',
+                'SUCURSAL',
+                'DETALLE_PRODUCTO',
+                'BODEGA',
+                'UNIDAD_MEDIDA',
+                'CANTIDAD',
+//                'Bloq/act',
+//                'Forma de pago',
+//                'Verificado',
+//                'Anulado',
+//                'Cuenta Contable',
+//                'Nota',
+//                'Tercero Externo',
+//                'Cheque Numero',
+//                'BancoCheque',
+//                'Debito',
+//                'Credito',
+//                'CentroCosto',
+//                'PorcentajeRetencion',
+//                'Vencimiento',
+//                'Vendedor',
+            ];
+            $sheet = $spreadsheet->getActiveSheet();
+            $i = 0;
+            for ($j = 'A'; $j != 'U'; $j++) {
+                $spreadsheet->getActiveSheet()->getColumnDimension($j)->setAutoSize(true);
+                $spreadsheet->getActiveSheet()->getStyle(1)->getFont()->setBold(true);
+                $sheet->setCellValue($j . '1', strtoupper($campos[$i]));
+                $i++;
+            }
+            $j = 2;
+            /** @var  $arRegistro FinRegistro */
+            foreach ($arRegistros as $arRegistro) {
+                $sheet->setCellValue('A' . $j, $genConfiguracion->getNombre());
+                $sheet->setCellValue('B' . $j, $arRegistro['codigoComprobanteFk']);
+                $sheet->setCellValue('C' . $j, $arRegistro['numeroPrefijo']);
+                $sheet->setCellValue('D' . $j, $arRegistro['numero']);
+                $sheet->setCellValue('E' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('F' . $j, $arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('G' . $j, $arRegistro['numeroIdentificacion']);
+                $sheet->setCellValue('H' . $j, $arRegistro['nombre']);
+                $sheet->setCellValue('I' . $j, '0');
+                $sheet->setCellValue('J' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+                $sheet->setCellValue('K' . $j, '0');
+                $sheet->setCellValue('L' . $j, '0');
+                $sheet->setCellValue('M' . $j, '0');
+                $sheet->setCellValue('N' . $j, '0');
+                $sheet->setCellValue('O' . $j, '0');
+                $sheet->setCellValue('P' . $j, '0');
+                $sheet->setCellValue('Q' . $j, '0');
+                $sheet->setCellValue('R' . $j, '0');
+                $sheet->setCellValue('S' . $j, 'Und.');
+                $sheet->setCellValue('T' . $j, '0');
+//                $sheet->setCellValue('I' . $j, '');
+//                $sheet->setCellValue('J' . $j, '0');
+//                $sheet->setCellValue('K' . $j, '0');
+//
+//                $sheet->setCellValue('L' . $j, $arRegistro['codigoCuentaFk']);
+//                $sheet->setCellValue('M' . $j, $arRegistro['descripcion']);
+//                $sheet->setCellValue('N' . $j, $arRegistro['numeroIdentificacion']);
+//                $sheet->setCellValue('O' . $j, '');
+//                $sheet->setCellValue('P' . $j, '');
+//                $sheet->setCellValue('Q' . $j, $arRegistro['vrDebito']);
+//                $sheet->setCellValue('R' . $j, $arRegistro['vrCredito']);
+//                $sheet->setCellValue('S' . $j, '');
+//                $sheet->setCellValue('T' . $j, '');
+//                $sheet->setCellValue('U' . $j, $arRegistro['fecha'] ? $arRegistro['fecha']->format('d-m-Y') : '');
+//                $sheet->setCellValue('V' . $j, '');
+
+                $j++;
+            }
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=DetallesContables.xls");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
+            $writer->save('php://output');
+        } else {
+            Mensajes::error('El listado esta vacío, no hay nada que exportar');
+        }
+    }
+
+    /**
      * @Route("/financiero/utilidad/contabilidad/intercambio/registro/siigo", name="financiero_utilidad_contabilidad_intercambio_registro_siigo")
      */
     public function siigo()

@@ -10,7 +10,11 @@ use App\Form\Type\Transporte\PoseedorType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PoseedorController extends MaestroController
@@ -19,45 +23,41 @@ class PoseedorController extends MaestroController
     public $tipo = "administracion";
     public $modelo = "TtePoseedor";
 
-    protected $clase= TtePoseedor::class;
+    protected $clase = TtePoseedor::class;
     protected $claseNombre = "TtePoseedor";
     protected $modulo = "Transporte";
     protected $funcion = "Administracion";
     protected $grupo = "Poseedor";
     protected $nombre = "Poseedor";
+
     /**
      * @Route("/transporte/administracion/poseedor/lista", name="transporte_administracion_poseedor_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $this->request = $request;
+        $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = MaestroController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo,$this->nombre,$this->claseNombre,$formFiltro);
-            }
+        $form = $this->createFormBuilder()
+            ->add('txtCodigoPoseedor', TextType::class, ['label' => 'Codigo cliente: ', 'required' => false, 'data' => $session->get('filtroTteCodigoPoseedor')])
+            ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombrePoseedor')])
+            ->add('txtNumeroIdentificacion', NumberType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroNumeroIdentificacionPoseedor')])
+            ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('filtroTteCodigoPoseedor', $form->get('txtCodigoPoseedor')->getData());
+            $session->set('filtroTteNombrePoseedor', $form->get('txtNombreCorto')->getData());
+            $session->set('filtroNumeroIdentificacionPoseedor', $form->get('txtNumeroIdentificacion')->getData());
         }
-        $datos = $this->getDatosLista(true, true, $paginator);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TtePoseedor::class)->lista()->getQuery()->execute(), "Poseedor");
+        if ($form->get('btnExcel')->isClicked()) {
+            General::get()->setExportar($em->getRepository(TtePoseedor::class)->lista()->getQuery()->getResult(), "Poseedor");
+        }
+        $arPoseedores = $paginator->paginate($em->getRepository(TtePoseedor::class)->lista(), $request->query->getInt('page', 1), 50);
+        return $this->render('transporte/administracion/poseedor/lista.html.twig',
+            ['arPoseedores' => $arPoseedores,
+                'form' => $form->createView()]);
 
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteRelacionCaja::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
-            }
-        }
-        return $this->render('transporte/administracion/poseedor/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
-        ]);
     }
 
     /**
@@ -94,10 +94,9 @@ class PoseedorController extends MaestroController
                 $arPoseedor->setNombreCorto($arPoseedor->getNombre1() . " " . $arPoseedor->getNombre2() . " " . $arPoseedor->getApellido1() . " " . $arPoseedor->getApellido2());
                 $em->persist($arPoseedor);
                 $em->flush();
-                if($form->get('guardarnuevo')->isClicked()){
-                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_poseedor_nuevo',['id'=>0]));
-                }
-                else{
+                if ($form->get('guardarnuevo')->isClicked()) {
+                    return $this->redirect($this->generateUrl('transporte_administracion_transporte_poseedor_nuevo', ['id' => 0]));
+                } else {
 
                     return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
                 }
@@ -112,7 +111,8 @@ class PoseedorController extends MaestroController
     /**
      * @Route("/transporte/administracion/poseedor/detalle/{id}", name="transporte_administracion_transporte_poseedor_detalle")
      */
-    public function detalle(){
-            return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
+    public function detalle()
+    {
+        return $this->redirect($this->generateUrl('transporte_administracion_poseedor_lista'));
     }
 }

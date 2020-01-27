@@ -141,7 +141,6 @@ class ConductorController extends MaestroController
     {
         $em = $this->getDoctrine()->getManager();
         $arConductor = $em->getRepository(TteConductor::class)->find($id);
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnImprimir', SubmitType::class, array('label' => 'Imprimir'))
             ->getForm();

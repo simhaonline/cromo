@@ -259,7 +259,7 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
             ->addSelect('ca.nombre as cargo')
             ->where('c.habilitadoTurno = 1')
             ->leftJoin('c.empleadoRel', 'e')
-            ->leftJoin('e.cargoRel', 'ca');
+            ->leftJoin('c.cargoRel', 'ca');
         if ($session->get('filtroTurPedidoDetalleCodigo')) {
             $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurPedidoDetalleCodigo')}");
         }

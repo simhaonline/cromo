@@ -159,7 +159,7 @@ class TteClienteRepository extends ServiceEntityRepository
                     $arCliente->setIdentificacionRel($em->getReference(GenIdentificacion::class, $raw['codigoIdentificacionFk']));
                     $arCliente->setNumeroIdentificacion($raw['numeroIdentificacion']);
                     $arCliente->setNombreCorto($raw['nombreCorto']);
-                    $arCliente->setNombreExtendido($raw['nombreCorto']);
+                    $arCliente->setNombreExtendido($raw['nombreExtendido']);
                     $arCliente->setNombre1($raw['nombre1']);
                     $arCliente->setNombre2($raw['nombre2']);
                     $arCliente->setApellido1($raw['apellido1']);

@@ -1136,6 +1136,10 @@ class TteFacturaRepository extends ServiceEntityRepository
                                         $numeroReferencia = $arFactura['numero'];
                                         $arComprobanteReferencia = $arComprobante;
                                     }
+                                } else {
+                                    $prefijoReferencia = $arFactura['prefijo'];
+                                    $numeroReferencia = $arFactura['numero'];
+                                    $arComprobanteReferencia = $arComprobante;
                                 }
                             }
 

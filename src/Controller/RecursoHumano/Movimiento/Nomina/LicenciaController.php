@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LicenciaController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuLicencia";
 
 

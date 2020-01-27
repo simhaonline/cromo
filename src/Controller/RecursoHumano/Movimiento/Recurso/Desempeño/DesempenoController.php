@@ -25,7 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class DesempenoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuDesempeno";
 
     protected $clase = RhuDesempeno::class;

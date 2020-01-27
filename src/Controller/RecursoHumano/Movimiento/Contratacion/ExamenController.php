@@ -41,7 +41,7 @@ class ExamenController extends MaestroController
 {
 
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuExamen";
 
 

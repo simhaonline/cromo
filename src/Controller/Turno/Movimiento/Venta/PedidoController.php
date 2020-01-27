@@ -39,7 +39,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class PedidoController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TurPedido";
 
     protected $clase = TurPedido::class;

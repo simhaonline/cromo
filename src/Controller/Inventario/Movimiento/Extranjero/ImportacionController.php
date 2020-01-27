@@ -32,7 +32,7 @@ use App\Form\Type\Inventario\ImportacionType;
 class ImportacionController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvImportacion";
 
     protected $class = InvImportacion::class;

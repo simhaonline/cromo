@@ -41,7 +41,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SoporteController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TurSoporte";
 
     protected $clase = TurSoporte::class;

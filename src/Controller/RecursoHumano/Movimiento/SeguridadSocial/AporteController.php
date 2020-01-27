@@ -34,7 +34,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AporteController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuAporte";
 
 

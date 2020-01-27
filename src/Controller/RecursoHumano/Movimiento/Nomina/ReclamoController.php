@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ReclamoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuReclamo";
 
 

@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PagoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuPago";
 
     protected $clase = RhuPago::class;

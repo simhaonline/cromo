@@ -33,7 +33,7 @@ class CostoController extends MaestroController
 {
 
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvCosto";
 
 

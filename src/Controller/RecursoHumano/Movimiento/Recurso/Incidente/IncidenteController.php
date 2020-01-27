@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 class IncidenteController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuIncidenteController";
 
 

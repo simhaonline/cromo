@@ -35,7 +35,7 @@ class CreditoController extends MaestroController
 {
 
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuCredito";
 
     protected $clase = RhuCredito::class;

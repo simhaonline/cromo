@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CierreAnioController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuCierreAnio";
 
     protected $clase = RhuCierreAnio::class;

@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class CompromisoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "CarCompromiso";
 
     protected $clase = CarCompromiso::class;

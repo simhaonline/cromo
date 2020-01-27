@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdicionalPeriodoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuAdicionalPeriodo";
 
     protected $clase = RhuAdicionalPeriodo::class;

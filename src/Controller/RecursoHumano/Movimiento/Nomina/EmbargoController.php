@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EmbargoController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuEmbargo";
 
     protected $clase = RhuEmbargo::class;

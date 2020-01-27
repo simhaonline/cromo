@@ -21,7 +21,7 @@ class GrupoController extends  MaestroController
 {
 
 
-    public $tipo = "Movimiento";
+    public $tipo = "administracion";
     public $modelo = "RhuGrupo";
 
 

@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EstudioController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuEstudio";
 
 

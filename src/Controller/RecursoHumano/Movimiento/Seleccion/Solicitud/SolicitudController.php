@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SolicitudController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuSolicitud";
 
     protected $clase = RhuSolicitud::class;

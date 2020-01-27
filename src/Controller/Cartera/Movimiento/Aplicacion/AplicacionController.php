@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AplicacionController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "CarAplicacion";
 
 

@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class CotizacionController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvCotizacion";
 
     protected $class = InvCotizacion::class;

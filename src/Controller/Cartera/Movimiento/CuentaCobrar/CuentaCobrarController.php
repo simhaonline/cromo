@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CuentaCobrarController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "CarCuentaCobrar";
 
 

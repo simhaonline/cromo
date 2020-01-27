@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class InduccionController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuInduccion";
 
 

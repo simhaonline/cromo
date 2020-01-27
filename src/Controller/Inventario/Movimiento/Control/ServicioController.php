@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ServicioController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvServicio";
 
     protected $clase= InvServicio::class;

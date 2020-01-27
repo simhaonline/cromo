@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class ReciboController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "CarRecibo";
 
     protected $clase = CarRecibo::class;

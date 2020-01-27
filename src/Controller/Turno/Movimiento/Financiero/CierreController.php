@@ -41,7 +41,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CierreController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TurCierre";
 
     protected $clase = TurCierre::class;

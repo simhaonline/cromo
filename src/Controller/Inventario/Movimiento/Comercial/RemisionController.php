@@ -41,7 +41,7 @@ use App\Form\Type\Inventario\PedidoType;
 class RemisionController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvRemision";
 
     protected $class = InvRemision::class;

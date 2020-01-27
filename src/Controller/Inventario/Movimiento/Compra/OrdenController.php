@@ -36,7 +36,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class OrdenController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvOrden";
 
     protected $class = InvOrden::class;

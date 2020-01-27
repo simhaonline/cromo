@@ -31,7 +31,7 @@ use App\Form\Type\Inventario\PedidoType;
 
 class PedidoController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "InvPedido";
 
     protected $class = InvPedido::class;

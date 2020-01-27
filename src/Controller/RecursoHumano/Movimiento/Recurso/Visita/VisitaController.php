@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitaController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuVisita";
 
 

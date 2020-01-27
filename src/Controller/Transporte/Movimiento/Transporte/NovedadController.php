@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class NovedadController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteNovedad";
 
     protected $class= TteNovedad::class;

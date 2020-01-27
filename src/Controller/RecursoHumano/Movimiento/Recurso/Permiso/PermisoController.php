@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PermisoController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuPermiso";
 
     protected $clase = RhuPermiso::class;

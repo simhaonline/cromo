@@ -37,7 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class RequisitosController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuRequisito";
 
     protected $clase = RhuRequisito::class;

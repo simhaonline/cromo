@@ -39,6 +39,7 @@ use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -77,7 +78,7 @@ class DespachoController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/movimiento/transporte/despacho/lista", name="transporte_movimiento_transporte_despacho_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator )
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
@@ -107,8 +108,8 @@ class DespachoController extends MaestroController
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS'
             ])
-            ->add('fechaSalidaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaSalidaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaSalidaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaSalidaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoSoporte', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -140,7 +141,7 @@ class DespachoController extends MaestroController
         $arDespachos = $paginator->paginate($em->getRepository(TteDespacho::class)->lista($raw), $request->query->getInt('page', 1), 30);
 
         return $this->render('transporte/movimiento/transporte/despacho/lista.html.twig', [
-            'arDespachos'=>$arDespachos,
+            'arDespachos' => $arDespachos,
             'form' => $form->createView()
         ]);
     }
@@ -158,7 +159,7 @@ class DespachoController extends MaestroController
         $arDespacho = new TteDespacho();
         if ($id != 0) {
             $arDespacho = $em->getRepository(TteDespacho::class)->find($id);
-        }else {
+        } else {
             $arDespacho->setFechaRegistro(new \DateTime('now'));
             $arDespacho->setFechaSalida(new \DateTime('now'));
             $arDespacho->setUsuario($this->getUser()->getUsername());
@@ -182,7 +183,7 @@ class DespachoController extends MaestroController
                                 $arDespacho->setVehiculoRel($arVehiculo);
                                 $arDespacho->setPoseedorRel($arVehiculo->getPoseedorRel());
                                 $arDespacho->setConductorRel($arConductor);
-                                if(!$arVehiculo->getPropio()) {
+                                if (!$arVehiculo->getPropio()) {
                                     $arDespacho->setVrCostoPago($arDespacho->getVrFletePago());
                                 }
                                 $em->persist($arDespacho);
@@ -257,7 +258,8 @@ class DespachoController extends MaestroController
             ->add('btnLiquidacion', SubmitType::class, $arrBotonLiquidacion)
             ->add('btnCobroEntrega', SubmitType::class, $arrBotonCobroEntrega)
             ->add('btnEliminarNovedad', SubmitType::class, array('label' => 'Eliminar'))
-            ->add('btnEliminarAuxiliar', SubmitType::class, $arrBotonEliminarAuxiliar);
+            ->add('btnEliminarAuxiliar', SubmitType::class, $arrBotonEliminarAuxiliar)
+            ->add('btnExcelGuias', SubmitType::class, array('label' => 'Excel'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
@@ -331,6 +333,10 @@ class DespachoController extends MaestroController
             if ($form->get('btnEliminarAuxiliar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(TteDespachoAuxiliar::class)->eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnExcelGuias')->isClicked()) {
+                $arDespachoDetalles = $em->getRepository(TteDespachoDetalle::class)->despacho($id);
+                $this->exportarExcelPersonalizadoGuia($arDespachoDetalles);
             }
         }
         $arNovedades = $em->getRepository(TteNovedad::class)->despacho($id);
@@ -510,7 +516,7 @@ class DespachoController extends MaestroController
             ->add('txtIdentificacionAuxiliar', TextType::class, ['required' => false])
             ->getForm();
         $form->handleRequest($request);
-        $raw=[];
+        $raw = [];
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
@@ -527,9 +533,9 @@ class DespachoController extends MaestroController
                 echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
             }
             if ($form->get('btnFiltrar')->isClicked()) {
-                $raw['filtros']=[
-                    'nombre' =>  $form->get('txtAuxiliar')->getData(),
-                    'numeroIdentificacion' =>  $form->get('txtIdentificacionAuxiliar')->getData(),
+                $raw['filtros'] = [
+                    'nombre' => $form->get('txtAuxiliar')->getData(),
+                    'numeroIdentificacion' => $form->get('txtIdentificacionAuxiliar')->getData(),
                 ];
             }
         }
@@ -627,17 +633,18 @@ class DespachoController extends MaestroController
             'apikey' => $googleMapsApiKey]);
     }
 
-    public function getFiltro($form){
+    public function getFiltro($form)
+    {
 
-         $filtro = [
+        $filtro = [
             'codigoConductorFk' => $form->get('codigoConductorFk')->getData(),
             'codigoDespachoPk' => $form->get('codigoDespachoPk')->getData(),
             'codigoVehiculoFk' => $form->get('codigoVehiculoFk')->getData(),
             'numero' => $form->get('numero')->getData(),
             'codigoCiudadOrigenFk' => $form->get('codigoCiudadOrigenFk')->getData(),
             'codigoCiudadDestinoFk' => $form->get('codigoCiudadDestinoFk')->getData(),
-            'fechaSalidaDesde' => $form->get('fechaSalidaDesde')->getData() ?$form->get('fechaSalidaDesde')->getData()->format('Y-m-d'): null,
-            'fechaSalidaHasta' => $form->get('fechaSalidaHasta')->getData() ?$form->get('fechaSalidaHasta')->getData()->format('Y-m-d'): null,
+            'fechaSalidaDesde' => $form->get('fechaSalidaDesde')->getData() ? $form->get('fechaSalidaDesde')->getData()->format('Y-m-d') : null,
+            'fechaSalidaHasta' => $form->get('fechaSalidaHasta')->getData() ? $form->get('fechaSalidaHasta')->getData()->format('Y-m-d') : null,
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoSoporte' => $form->get('estadoSoporte')->getData(),
@@ -659,5 +666,77 @@ class DespachoController extends MaestroController
         }
 
         return $filtro;
+    }
+
+    public function exportarExcelPersonalizadoGuia($arDespachoDetalles)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arDespachoDetalles) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Guias');
+            $j = 0;
+            $arrColumnas = [
+                    'ID',
+                    'TIPO',
+                    'GUIA',
+                    'FECHA',
+                    'OI',
+                    'OC',
+                    'NUMERO',
+                    'DOCUMENTO',
+                    'CLIENTE',
+                    'DESTINATARIO',
+                    'DESTINO',
+                    'FLETE',
+                    'MANEJO',
+                    'DECLARA',
+                    'COB_ENT',
+                    'PRE_REE',
+                    'UND',
+                    'PES',
+                    'VOL'
+            ];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arDespachoDetalles as $arDespachoDetalle) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arDespachoDetalle['codigoDespachoDetallePk']);
+                $hoja->setCellValue('B' . $j, $arDespachoDetalle['codigoGuiaTipoFk']);
+                $hoja->setCellValue('C' . $j, $arDespachoDetalle['codigoGuiaFk']);
+                $hoja->setCellValue('D' . $j, $arDespachoDetalle['fechaIngreso']);
+                $hoja->setCellValue('E' . $j, $arDespachoDetalle['codigoOperacionIngresoFk']);
+                $hoja->setCellValue('F' . $j, $arDespachoDetalle['codigoOperacionCargoFk']);
+                $hoja->setCellValue('G' . $j, $arDespachoDetalle['numero']);
+                $hoja->setCellValue('H' . $j, $arDespachoDetalle['documentoCliente']);
+                $hoja->setCellValue('I' . $j, $arDespachoDetalle['clienteNombreCorto']);
+                $hoja->setCellValue('J' . $j, $arDespachoDetalle['nombreDestinatario']);
+                $hoja->setCellValue('K' . $j, $arDespachoDetalle['ciudadDestino']);
+                $hoja->setCellValue('L' . $j, $arDespachoDetalle['vrFlete']);
+                $hoja->setCellValue('M' . $j, $arDespachoDetalle['vrManejo']);
+                $hoja->setCellValue('N' . $j, $arDespachoDetalle['vrDeclara']);
+                $hoja->setCellValue('O' . $j, $arDespachoDetalle['vrCobroEntrega']);
+                $hoja->setCellValue('P' . $j, $arDespachoDetalle['vrPrecioReexpedicion']);
+                $hoja->setCellValue('Q' . $j, $arDespachoDetalle['unidades']);
+                $hoja->setCellValue('R' . $j, $arDespachoDetalle['pesoReal']);
+                $hoja->setCellValue('S' . $j, $arDespachoDetalle['pesoVolumen']);
+                $j++;
+
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=GUIAS.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 }

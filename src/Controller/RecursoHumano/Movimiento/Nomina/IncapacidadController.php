@@ -154,7 +154,7 @@ class IncapacidadController extends MaestroController
                 $arConfiguracion = $em->getRepository(RhuConfiguracion::class)->find(1);
                 $arConfiguracionAporte = $em->getRepository(RhuConfiguracion::class)->find(1);
                 if ($arEmpleado) {
-                    if ($arEmpleado->getEstadoContrato() == 1) {
+                    if ($arEmpleado->getCodigoContratoFk()) {
                         $codigoContrato = $arEmpleado->getCodigoContratoFk();
                     } else {
                         $codigoContrato = $arEmpleado->getCodigoContratoUltimoFk();

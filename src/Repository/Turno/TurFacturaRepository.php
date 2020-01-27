@@ -528,13 +528,14 @@ class TurFacturaRepository extends ServiceEntityRepository
             $em->persist($arFactura);
 
             //Anular cuenta por cobrar
-            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('codigoCuentaCobrarTipoFk' => $arFactura->getFacturaTipoRel()->getCodigoDocumentoCartera(), 'numeroDocumento' => $arFactura->getNumero()));
+            $arCuentaCobrar = $em->getRepository(CarCuentaCobrar::class)->findOneBy(array('modelo' => 'TurFactura', 'codigoDocumento' => $arFactura->getCodigoFacturaPk()));
             if ($arCuentaCobrar) {
                 $arCuentaCobrar->setValorOriginal(0);
                 $arCuentaCobrar->setAbono(0);
                 $arCuentaCobrar->setSaldo(0);
                 $arCuentaCobrar->setSaldoOperado(0);
                 $arCuentaCobrar->setSubtotal(0);
+                $arCuentaCobrar->setEstadoAnulado(1);
                 $em->persist($arCuentaCobrar);
             }
             $em->flush();

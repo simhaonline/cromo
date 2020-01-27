@@ -5,6 +5,7 @@ namespace App\Controller\General\Seguridad;
 
 
 use App\Entity\General\GenModelo;
+use App\Entity\General\GenModulo;
 use App\Entity\Seguridad\SegGrupo;
 use App\Entity\Seguridad\SegGrupoModelo;
 use App\Entity\Seguridad\SegUsuarioModelo;
@@ -12,7 +13,9 @@ use App\Form\Type\General\GrupoType;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -141,7 +144,21 @@ class SeguridadGrupo extends AbstractController
     public function nuevoModelo(Request $request, $id, $codigoGrupo)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
         $form = $this->createFormBuilder()
+            ->add('txtModelo', TextType::class, array('required' => False, 'label'=>'Modelo'))
+            ->add('codigoModuloFk', EntityType::class, array(
+                'class' => GenModulo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.codigoModuloPk', 'ASC');
+                },
+                'choice_label' => 'codigoModuloPk',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'data' => $session->get('arSeguridadUsuarioModulofiltroModulo') || ""
+            ))
             ->add('checkLista', CheckboxType::class, ['required' => false, 'label' => 'Lista'])
             ->add('checkDetalle', CheckboxType::class, ['required' => false, 'label' => 'Detalle'])
             ->add('checkNuevo', CheckboxType::class, ['required' => false, 'label' => 'Nuevo'])
@@ -149,9 +166,20 @@ class SeguridadGrupo extends AbstractController
             ->add('checkAprobar', CheckboxType::class, ['required' => false, 'label' => 'Aprobar'])
             ->add('checkAnular', CheckboxType::class, ['required' => false, 'label' => 'Anular'])
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked()){
+                $session->set('arSegGrupoModulofiltroModelo', $form->get('txtModelo')->getData());
+                $arModulo = $form->get('codigoModuloFk')->getData();
+                if (is_object($arModulo)) {
+                    $session->set('arSegGrupoModulofiltroModulo', $arModulo->getCodigoModuloPk());
+                }else{
+                    $session->set('arSegGrupoModulofiltroModulo', null);
+
+                }
+            }
             if ($form->get('btnGuardar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
                 $arDatos = $form->getData();
@@ -186,8 +214,7 @@ class SeguridadGrupo extends AbstractController
                 }
             }
         }
-
-        $arGenModelos = $em->getRepository(GenModelo::class)->findAll();
+        $arGenModelos = $em->getRepository(GenModelo::class)->lista();
         return $this->render('general/seguridad/grupo/nuevoModelo.html.twig', [
             'form' => $form->createView(),
             'arGenModelos' => $arGenModelos,

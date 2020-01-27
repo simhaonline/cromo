@@ -8,6 +8,7 @@ use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteZona;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -39,11 +40,10 @@ class PrecioController extends MaestroController
     /**
      * @Route("/transporte/administracion/comercial/precio/lista", name="transporte_administracion_comercial_precio_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombrePrecio')])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar'])
@@ -102,10 +102,9 @@ class PrecioController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/comercial/precio/detalle/{id}", name="transporte_administracion_comercial_precio_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $form = $this->createFormBuilder()
             ->add('btnEliminarDetalle', SubmitType::class, array('label' => 'Eliminar'))
@@ -361,10 +360,9 @@ class PrecioController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/comercial/precio/ver/{id}", name="transporte_administracion_comercial_ver_detalle")
      */
-    public function ver(Request $request, $id)
+    public function ver(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $arPrecio = $em->getRepository(TtePrecio::class)->find($id);
         $arPrecioDetalles = $paginator->paginate($em->getRepository(TtePrecioDetalle::class)->lista($id), $request->query->getInt('page', 1), 500);
         return $this->render('transporte/administracion/comercial/precio/ver.html.twig', array(

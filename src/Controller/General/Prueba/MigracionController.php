@@ -74,6 +74,8 @@ use App\Entity\RecursoHumano\RhuTiempo;
 use App\Entity\RecursoHumano\RhuTipoCotizante;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
+use App\Entity\RecursoHumano\RhuVisita;
+use App\Entity\RecursoHumano\RhuVisitaTipo;
 use App\Entity\RecursoHumano\RhuZona;
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Turno\TurArea;
@@ -155,7 +157,8 @@ class MigracionController extends Controller
                     //$this->rhuLicenciaTipo($conn);
 //                    $this->rhuDisciplinario($conn);
 //                    $this->rhuAcreditacion($conn);
-                    $this->rhuEstudio($conn);
+//                    $this->rhuEstudio($conn);
+                    $this->rhuVisita($conn);
                     //$this->turTurno($conn);
                     //$this->turSecuencia($conn);
                     //$this->turConcepto($conn);
@@ -223,6 +226,9 @@ class MigracionController extends Controller
                         case 'rhuEstudio':
                             $this->rhuEstudio($conn);
                             break;
+                        case 'rhuVisita':
+                            $this->rhuVisita($conn);
+                            break;
                         case 'tur_cliente':
                             $this->turCliente($conn);
                             break;
@@ -240,7 +246,6 @@ class MigracionController extends Controller
                             break;
                         case 'tur_contrato_detalle':
                             $this->turContratoDetalle($conn);
-                            break;
                             break;
                         case 'tur_contrato_detalle_compuesto':
                             $this->turContratoDetalleCompuesto($conn);
@@ -296,6 +301,7 @@ class MigracionController extends Controller
             ['clase' => 'rhu_disciplinario', 'registros' => $this->contarRegistros('RhuDisciplinario', 'RecursoHumano', 'codigoDisciplinarioPk')],
             ['clase' => 'rhu_acreditacion', 'registros' => $this->contarRegistros('RhuAcreditacion', 'RecursoHumano', 'codigoAcreditacionPk')],
             ['clase' => 'rhu_estudio', 'registros' => $this->contarRegistros('RhuEstudio', 'RecursoHumano', 'codigoEstudioPk')],
+            ['clase' => 'rhu_visita', 'registros' => $this->contarRegistros('RhuVisita', 'RecursoHumano', 'codigoVisitaPk')],
             ['clase' => 'tur_cliente', 'registros' => $this->contarRegistros('TurCliente', 'Turno', 'codigoClientePk')],
             ['clase' => 'tur_grupo', 'registros' => $this->contarRegistros('TurGrupo', 'Turno', 'codigoGrupoPk')],
             ['clase' => 'tur_operacion', 'registros' => $this->contarRegistros('TurOperacion', 'Turno', 'codigoOperacionPk')],
@@ -2462,6 +2468,61 @@ class MigracionController extends Controller
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         }
         $em->flush();
+    }
+
+    private function rhuVisita($conn){
+        $em = $this->getDoctrine()->getManager();
+        $datos = $conn->query("select 
+                codigo_visita_pk,
+                codigo_visita_tipo_fk,
+                codigo_empleado_fk,
+                fecha_vence,
+                codigo_tipo_identificacion_fk,
+                fecha,
+                fecha_creacion,
+                codigo_cliente_fk,
+                codigo_centro_costo_fk,
+                codigo_cobro_fk,
+                validar_vencimiento,
+                nombre_quien_visita,
+                comentarios,
+                nombre_corto,
+                numero_identificacion,
+                estado_autorizado,
+                estado_cerrado,
+                estado_cobrado,
+                vr_total
+                from rhu_visita");
+        foreach ($datos as $row) {
+            $arVisita = new RhuVisita();
+            $arVisita->setCodigoVisitaPk($row['codigo_visita_pk']);
+            $arVisita->setFechaVence(date_create($row['fecha_vence']));
+            $arVisita->setCodigoIdentificacionFk($row['codigo_tipo_identificacion_fk']);
+            $arVisita->setFechaCreacion(date_create($row['fecha_creacion']));
+            $arVisita->setCodigoClienteFk($row['codigo_cliente_fk']);
+            if ($row['fecha']){
+                $arVisita->setFecha(date_create($row['fecha']));
+            }
+            $arVisita->setCodigoCentroCostoFk($row['codigo_centro_costo_fk']);
+            $arVisita->setCodigoCobroFk($row['codigo_cobro_fk']);
+            $arVisita->setValidarVencimiento($row['validar_vencimiento']);
+            $arVisita->setNombreQuienVisita(utf8_encode($row['nombre_quien_visita']));
+            $arVisita->setComentarios(utf8_encode($row['comentarios']));
+            $arVisita->setNombreCorto(utf8_encode($row['nombre_corto']));
+            $arVisita->setNumeroIdentificacion($row['numero_identificacion']);
+            $arVisita->setEstadoAutorizado($row['estado_autorizado']);
+            $arVisita->setEstadoCerrado($row['estado_cerrado']);
+            $arVisita->setEstadoCobrado($row['estado_cobrado']);
+            $arVisita->setVrTotal($row['vr_total']);
+            $arVisita->setVisitaTipoRel($em->getReference(RhuVisitaTipo::class, $row['codigo_visita_tipo_fk']));
+            $arVisita->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+            $em->persist($arVisita);
+            $metadata = $em->getClassMetaData(get_class($arVisita));
+            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        }
+        $em->flush();
+
     }
 
     private function turTurno($conn)

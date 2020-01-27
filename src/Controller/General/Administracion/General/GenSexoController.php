@@ -21,8 +21,4 @@ class GenSexoController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenSexo";
-
-
 }

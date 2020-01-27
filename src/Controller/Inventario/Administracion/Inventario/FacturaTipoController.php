@@ -21,8 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FacturaTipoController extends MaestroController
 {
-    public $tipo = "administracion";
-    public $modelo = "InvFacturaTipo";
 
 
 }

@@ -21,9 +21,6 @@ class GenFormaPagoController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenFormaPago";
-
 
 
 }

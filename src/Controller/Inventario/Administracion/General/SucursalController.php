@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Inventario\Administracion\General\Precio;
+namespace App\Controller\Inventario\Administracion\General;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -26,8 +26,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class SucursalController extends MaestroController
 {
-    public $tipo = "administracion";
-    public $modelo = "InvSucursal";
 
 
 }

@@ -11,9 +11,6 @@ class GenDepartamentoController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenDepartamento";
-
 
 
 }

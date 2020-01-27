@@ -45,7 +45,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class GuiaController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteGuia";
 
     protected $clase = TteGuia::class;

@@ -19,7 +19,5 @@ use App\General\General;
 class CentroTrabajoController  extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuCentroTrabajo";
 
 }

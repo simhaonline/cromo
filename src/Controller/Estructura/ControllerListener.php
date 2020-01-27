@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-class ControllerListener extends Controller{
+class ControllerListener extends MaestroController{
 
     private $user;
     private $routeActual;
@@ -133,7 +133,12 @@ class ControllerListener extends Controller{
                                 $permisoUsuario = true;
                             }
                             break;
+                        default:
+                            $permisoUsuario = true;
+                            break;
                     }
+
+
                 }
                 if($permisoUsuario) {
                     return;

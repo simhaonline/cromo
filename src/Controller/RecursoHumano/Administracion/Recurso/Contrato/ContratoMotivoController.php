@@ -46,8 +46,5 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class ContratoMotivoController extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuContratoMotivo";
-
 
 }

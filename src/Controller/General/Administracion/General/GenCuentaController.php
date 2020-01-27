@@ -11,8 +11,5 @@ class GenCuentaController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenCuenta";
-
 
 }

@@ -21,8 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BodegaController extends MaestroController
 {
-    public $tipo = "administracion";
-    public $modelo = "InvBodega";
+
 
 
 }

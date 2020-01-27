@@ -21,8 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SubGrupoController extends MaestroController
 {
-    public $tipo = "administracion";
-    public $modelo = "InvSubGrupo";
 
 
 }

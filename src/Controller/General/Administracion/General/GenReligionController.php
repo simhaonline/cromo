@@ -21,8 +21,6 @@ class GenReligionController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenReligion";
 
 
 

@@ -19,7 +19,4 @@ use App\General\General;
 class CierreSeleccionMotivoController extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuCierreSeleccionMotivo";
-
 }

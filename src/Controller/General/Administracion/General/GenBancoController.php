@@ -10,10 +10,6 @@ class GenBancoController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenBanco";
-
-
 
 
 

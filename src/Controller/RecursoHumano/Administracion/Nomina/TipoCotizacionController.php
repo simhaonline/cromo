@@ -19,9 +19,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class TipoCotizacionController extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuTipoCotizacion";
-
 
 
 }

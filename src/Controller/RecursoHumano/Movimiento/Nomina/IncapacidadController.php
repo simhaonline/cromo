@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IncapacidadController extends MaestroController
 {
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuIncapacidadController";
 
 

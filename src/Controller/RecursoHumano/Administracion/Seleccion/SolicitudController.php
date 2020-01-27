@@ -19,7 +19,4 @@ use App\General\General;
 class SolicitudController extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuSolicitud";
-
 }

@@ -25,7 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class RecaudoDevolucionController extends MaestroController
 {
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "TteRecaudoDevolucion";
 
     protected $clase= TteRecaudoDevolucion::class;

@@ -21,7 +21,6 @@ class EntidadController extends  MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "RhuEntidad";
+
 
 }

@@ -21,8 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MarcaController extends MaestroController
 {
-    public $tipo = "administracion";
-    public $modelo = "InvMarca";
 
 
 }

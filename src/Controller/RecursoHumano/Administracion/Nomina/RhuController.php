@@ -19,7 +19,5 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class RhuController extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "Rhu";
 
 }

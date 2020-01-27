@@ -19,8 +19,6 @@ class EmbargoPagoController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "RhuEmbargoPago";
 
 
 }

@@ -18,7 +18,6 @@ use App\General\General;
 class SeleccionEntrevistaTipoController extends AbstractController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuSeleccionEntrevistaTipo";
+
 
 }

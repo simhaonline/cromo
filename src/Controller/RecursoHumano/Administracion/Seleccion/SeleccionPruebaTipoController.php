@@ -19,7 +19,4 @@ use App\General\General;
 class SeleccionPruebaTipoController extends MaestroController
 {
 
-    public $tipo = "administracion";
-    public $modelo = "RhuSeleccionTipo";
-
 }

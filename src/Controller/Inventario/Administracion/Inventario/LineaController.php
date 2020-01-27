@@ -21,8 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LineaController extends MaestroController
 {
-    public $tipo = "administracion";
-    public $modelo = "InvLinea";
 
 
 }

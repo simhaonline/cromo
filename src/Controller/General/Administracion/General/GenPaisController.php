@@ -21,10 +21,5 @@ class GenPaisController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenPais";
-
-
-
 
 }

@@ -21,9 +21,6 @@ class GenIdentificacionController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
-    public $modelo = "GenIdentificacion";
-
 
 
 }

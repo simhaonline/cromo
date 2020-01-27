@@ -18,7 +18,4 @@ use App\General\General;
 class SeleccionReferenciaTipoController extends AbstractController
 {
 
-
-    public $tipo = "administracion";
-    public $modelo = "RhuSeleccionReferenciaTipo";
 }

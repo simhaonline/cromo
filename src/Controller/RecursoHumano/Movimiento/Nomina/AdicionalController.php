@@ -28,7 +28,7 @@ class AdicionalController extends MaestroController
 {
 
 
-    public $tipo = "Movimiento";
+    public $tipo = "movimiento";
     public $modelo = "RhuAdicional";
 
 

@@ -102,6 +102,11 @@ abstract class MaestroController extends AbstractController
                         case 'Crm':
                             $modulo = 'Crm';
                             break;
+
+                        case 'Tes':
+                            $modulo = 'Tesoreria';
+                            break;
+
                     }
                     $em = $this->getDoctrine()->getManager();
                     $entidad = $campo['propiedades']['class'];

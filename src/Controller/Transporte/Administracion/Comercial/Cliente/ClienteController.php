@@ -10,6 +10,7 @@ use App\Form\Type\Transporte\CondicionFleteType;
 use App\Form\Type\Transporte\CondicionManejoType;
 use App\Formato\Transporte\Cliente;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
@@ -44,11 +45,10 @@ class ClienteController extends MaestroController
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/administracion/comercial/cliente/lista", name="transporte_administracion_comercial_cliente_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['label' => 'Codigo cliente: ', 'required' => false, 'data' => $session->get('filtroTteCodigoCliente')])
             ->add('txtNombreCorto', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroTteNombreCliente')])

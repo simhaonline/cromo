@@ -6,7 +6,20 @@
             <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_nomina_programacion_lista') }}">Volver</a>&nbsp;&nbsp;
         </div>
         <div class="btn-group">
-            {% include 'estructura/botonera.html.twig' %}
+            {{ form_widget(form.btnAutorizar) }}
+            {{ form_widget(form.btnDesautorizar) }}
+            {{ form_widget(form.btnImprimir) }}
+            {{ form_widget(form.btnAprobar,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de aprobar el registro?")'} }) }}
+            {{ form_widget(form.btnAnular,  { 'attr': {'class': 'btn btn-default btn-sm', 'onclick': 'return confirm("Esta seguro de anular el registro?")'} }) }}
+            {% if clase is defined %}
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('documental_general_general_lista', { 'tipo': clase.clase,  'codigo': clase.codigo }) }}', 'Archivos', 500, 800)">Archivos</a>
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('financiero_utilidad_general_vermovimiento', { 'clase': clase.clase,  'id': clase.codigo }) }}', 'Financiero', 400, 1200)">Financiero</a>
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_general_comentario_lista', { 'codigoModelo': clase.clase,  'codigo': clase.codigo }) }}', 'Comentario', 600, 900)">Comentario</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_seguridad_log_ver', { 'entidad': clase.clase,  'codigo': clase.codigo }) }}', 'Log', 500, 800)">Log</a>
+                {% endif %}
+                <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('general_utilidad_control_inconsistencia_ver', { 'entidad': clase.clase,  'codigo': clase.codigo }) }}', 'Inconsistencias', 500, 800)">Inconsistencias</a>
+            {% endif %}
             {{ form_widget(form.btnLiberarSoporte) }}
             {{ form_widget(form.btnImprimirResumen) }}
         </div>

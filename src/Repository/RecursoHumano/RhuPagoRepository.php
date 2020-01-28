@@ -2495,6 +2495,61 @@ class RhuPagoRepository extends ServiceEntityRepository
     /**
      * @param $arPago RhuPago
      * @throws \Doctrine\ORM\ORMException
+     */
+    public function anular($arPago)
+    {
+        $em = $this->getEntityManager();
+        if($arPago->getEstadoAprobado()) {
+            if(!$arPago->getEstadoAnulado()) {
+                $arPago->setVrDevengado(0);
+                $arPago->setVrDeduccion(0);
+                $arPago->setVrNeto(0);
+                $arPago->setEstadoAnulado(1);
+                $em->persist($arPago);
+                $arPagoDetalles = $em->getRepository(RhuPagoDetalle::class)->findBy(['codigoPagoFk' => $arPago->getCodigoPagoPk()]);
+                foreach ($arPagoDetalles as $arPagoDetalle) {
+                    $arPagoDetalle->setVrDeduccion(0);
+                    $arPagoDetalle->setVrDevengado(0);
+                    $arPagoDetalle->setPorcentaje(0);
+                    $arPagoDetalle->setVrIngresoBaseCotizacion(0);
+                    $arPagoDetalle->setVrIngresoBaseCotizacionAdicional(0);
+                    $arPagoDetalle->setVrIngresoBasePrestacion(0);
+                    $arPagoDetalle->setVrIngresoBasePrestacionVacacion(0);
+                    $arPagoDetalle->setVrHora(0);
+                    $arPagoDetalle->setVrPagoOperado(0);
+                    $arPagoDetalle->setVrPago(0);
+                    $arPagoDetalle->setDias(0);
+                    $em->persist($arPagoDetalle);
+                }
+                $validarCuentaPagar = true;
+                $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['codigoDocumento' => $arPago->getCodigoPagoPk(), 'modelo' => 'RhuPago']);
+                if($arCuentaPagar) {
+                    if ($arCuentaPagar->getVrAbono() <= 0) {
+                        $arCuentaPagar->setEstadoAnulado(1);
+                        $arCuentaPagar->setVrSubtotal(0);
+                        $arCuentaPagar->setVrIva(0);
+                        $arCuentaPagar->setVrRetencionFuente(0);
+                        $arCuentaPagar->setVrRetencionIva(0);
+                        $arCuentaPagar->setVrTotal(0);
+                        $arCuentaPagar->setVrSaldo(0);
+                        $arCuentaPagar->setVrSaldoOriginal(0);
+                        $arCuentaPagar->setVrSaldoOperado(0);
+                        $em->persist($arCuentaPagar);
+                    } else {
+                        $validarCuentaPagar = false;
+                        Mensajes::error("La cuenta por pagar asociada a esta liquidacion tiene abonos y no se puede anular");
+                    }
+                }
+            }
+            if($validarCuentaPagar) {
+                $em->flush();
+            }
+        }
+    }
+
+    /**
+     * @param $arPago RhuPago
+     * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function anularCensatiaAnterior($arPago)

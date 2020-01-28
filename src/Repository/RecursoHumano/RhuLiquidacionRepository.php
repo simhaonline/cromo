@@ -30,6 +30,7 @@ use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuReclamo;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
+use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -1094,6 +1095,53 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
         return $respuesta;
     }
 
+    /**
+     * @param $arLiquidacion RhuLiquidacion
+     */
+    public function anular($arLiquidacion) {
+        $em = $this->getEntityManager();
+        if($arLiquidacion->getEstadoAprobado()) {
+            $arPago = $em->getRepository(RhuPago::class)->findOneBy(['codigoLiquidacionFk' => $arLiquidacion->getCodigoLiquidacionPk()]);
+            if($arPago) {
+                if($arPago->getEstadoAnulado()) {
+                    $arLiquidacion->setVrSalario(0);
+                    $arLiquidacion->setVrVacacion(0);
+                    $arLiquidacion->setVrAuxilioTransporte(0);
+                    $arLiquidacion->setVrBonificaciones(0);
+                    $arLiquidacion->setVrSalarioCesantiasPropuesto(0);
+                    $arLiquidacion->setVrSalarioPromedioCesantias(0);
+                    $arLiquidacion->setVrCesantias(0);
+                    $arLiquidacion->setVrSalarioPromedioCesantiasAnterior(0);
+                    $arLiquidacion->setVrCesantiasAnterior(0);
+                    $arLiquidacion->setVrInteresesCesantias(0);
+                    $arLiquidacion->setVrInteresesCesantiasAnterior(0);
+                    $arLiquidacion->setVrIndemnizacion(0);
+                    $arLiquidacion->setVrDeducciones(0);
+                    $arLiquidacion->setVrPrima(0);
+                    $arLiquidacion->setVrTotal(0);
+                    $arLiquidacion->setVrSalarioPrimaPropuesto(0);
+                    $arLiquidacion->setVrSalarioPromedioPrimas(0);
+                    $arLiquidacion->setVrSalarioVacacionPropuesto(0);
+                    $arLiquidacion->setVrSalarioVacaciones(0);
+                    $arLiquidacion->setEstadoAnulado(1);
+                    $em->persist($arLiquidacion);
+                    $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(['codigoLiquidacionFk' => $arLiquidacion->getCodigoLiquidacionPk()]);
+                    foreach ($arLiquidacionAdicionales as $arLiquidacionAdicional) {
+                        $arLiquidacionAdicional->setVrBonificacion(0);
+                        $arLiquidacionAdicional->setVrDeduccion(0);
+                        $em->persist($arLiquidacionAdicional);
+                    }
+                    $em->flush();
+                } else {
+                    Mensajes::error("El pago asociado a la liquidacion codigo: " . $arPago->getCodigoPagoPk() . " numero: " . $arPago->getNumero() . " de tipo: LIQUIDACION, no se encuentra anulado, debe anularlo antes de anular la liquidacion");
+                }
+            } else {
+                Mensajes::error("No se encontraron pagos asociados");
+            }
+        } else {
+            Mensajes::error("La liquidacion no estra aprobada");
+        }
+    }
     /**
      * @param $arLiquidacion
      * @throws \Doctrine\ORM\ORMException

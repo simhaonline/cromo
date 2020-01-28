@@ -22,6 +22,7 @@
                    href="javascript:abrirVentana3('{{ path('recursohumano_administracion_recurso_contrato_detalle_terminar',{'id' : arContrato.codigoContratoPk }) }}','terminar',600,900)">Terminar</a>
             </div>
         {% endif %}
+        {{ form_widget(form.btnReactivar) }}
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">

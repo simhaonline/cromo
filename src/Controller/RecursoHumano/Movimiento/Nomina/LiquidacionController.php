@@ -192,6 +192,10 @@ class LiquidacionController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 General::get()->setExportar($em->getRepository(RhuLiquidacion::class)->Adicionales($id)->getQuery()->getResult(), "Adicionales");
             }
+            if ($form->get('btnAnular')->isClicked()) {
+                $em->getRepository(RhuLiquidacion::class)->anular($arLiquidacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_detalle', array('id' => $id)));
+            }
         }
         $arLiquidacionAdicionales = $em->getRepository(RhuLiquidacionAdicional::class)->findBy(['codigoLiquidacionFk' => $id]);
         return $this->render('recursohumano/movimiento/nomina/liquidacion/detalle.html.twig', [

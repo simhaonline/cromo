@@ -143,7 +143,7 @@ class PagoController extends MaestroController
                 $objFormato->Generar($em, $id);
             }
             if ($form->get('btnAnular')->isClicked()) {
-                //$em->getRepository(RhuPago::class)->liquidarProvision(['codigoPagoPk' => $arPago->getCodigoPagoPk()]);
+                $em->getRepository(RhuPago::class)->anular($arPago);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_pago_detalle', ['id' => $id]));
             }
         }

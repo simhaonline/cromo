@@ -134,9 +134,13 @@ class ContratoController extends MaestroController
                 return $this->redirect($this->generateUrl('recursohumano_administracion_recurso_contrato_lista'));
             }
         }
+        $arrBtnReactivar = ['attr' => ['class' => 'btn btn btn-default'], 'label' => 'Reactivar', 'disabled' => true];
+        if ($arContrato->getEstadoTerminado()) {
+            $arrBtnReactivar['disabled'] = false;
+        }
         $form = $this->createFormBuilder()
+            ->add('btnReactivar', SubmitType::class, $arrBtnReactivar)
             ->add('btnCartaLaboral', SubmitType::class, ['label' => 'Carta laboral', 'attr' => ['class' => 'btn btn-link']])
-            ->add('btnReactivar', SubmitType::class, ['label' => 'Re-Activar', 'attr' => ['class' => 'btn']])
             ->add('btnPdf', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn btn-link']])
             ->getForm();
         $form->handleRequest($request);

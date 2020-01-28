@@ -626,22 +626,27 @@ class RhuContratoRepository extends ServiceEntityRepository
      */
     public function reactivar($arContrato) {
         $em = $this->getEntityManager();
-        //Validar si se encuentra en una liquidación
-        $arrLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(['codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAnulado' => 0]);
-        if(!$arrLiquidacion) {
-            $arContrato->setEstadoTerminado(0);
-            $arContrato->setContratoMotivoRel(null);
-            $arContrato->setIndefinido($arContrato->getContratoClaseRel()->getIndefinido());
-            $em->persist($arContrato);
-            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
-            $arEmpleado->setContratoRel($arContrato);
-            $arEmpleado->setEstadoContrato(1);
-            $arEmpleado->setCodigoContratoUltimoFk($arContrato->getCodigoContratoPk());
-            $em->persist($arEmpleado);
-            $em->flush();
-            Mensajes::info("El contrato se reactivo con exito");
+        if($arContrato->getEstadoTerminado() == 1) {
+            //Validar si se encuentra en una liquidación
+            $arrLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(['codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAnulado' => 0]);
+            if(!$arrLiquidacion) {
+                $arContrato->setEstadoTerminado(0);
+                $arContrato->setContratoMotivoRel(null);
+                $arContrato->setIndefinido($arContrato->getContratoClaseRel()->getIndefinido());
+                $em->persist($arContrato);
+                $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
+                $arEmpleado->setContratoRel($arContrato);
+                $arEmpleado->setEstadoContrato(1);
+                $arEmpleado->setCodigoContratoUltimoFk($arContrato->getCodigoContratoPk());
+                $em->persist($arEmpleado);
+                $em->flush();
+                Mensajes::info("El contrato se reactivo con exito");
+            } else {
+                Mensajes::error("No se puede reactivar el contrato por que tiene liquidacion activa");
+            }
         } else {
-            Mensajes::error("No se puede reactivar el contrato por que tiene liquidacion activa");
+            Mensajes::error("El contrato no esta terminado");
         }
+
     }
 }

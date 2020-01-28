@@ -25,6 +25,7 @@ use App\Formato\RecursoHumano\Vacaciones;
 use App\General\General;
 use App\Utilidades\Estandares;
 use App\Utilidades\Mensajes;
+use Symfony\Component\HttpFoundation\Session\Session;
 use function Complex\add;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -62,6 +63,10 @@ class VacacionController extends MaestroController
     public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroRhuVacacion')
+        ];
         $form = $this->createFormBuilder()
             ->add('codigoGrupoFk', EntityType::class, [
                 'class' => RhuGrupo::class,
@@ -72,17 +77,18 @@ class VacacionController extends MaestroController
                 'required' => false,
                 'choice_label' => 'nombre',
                 'placeholder' => 'TODOS',
-                'attr' => ['class' => 'form-control to-select-2']
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data'=>  $raw['filtros']['grupo'] ? $em->getReference(RhuGrupo::class, $raw['filtros']['grupo']) : null
             ])
-            ->add('codigoVacacionPk', IntegerType::class, array('required' => false))
-            ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
-            ->add('numero', IntegerType::class, ['required' => false])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoVacacionPk', IntegerType::class, array('required' => false, 'data'=> $raw['filtros']['codigoVacacion'] ))
+            ->add('codigoEmpleadoFk', TextType::class, ['required' => false, 'data'=> $raw['filtros']['codigoEmpleado']])
+            ->add('numero', IntegerType::class, ['required' => false, 'data'=> $raw['filtros']['numero']])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
+            ->add('estadoContabilizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=> $raw['filtros']['numero']])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaHasta']?date_create($raw['filtros']['fechaHasta']):null ])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnContabilizar', SubmitType::class, ['label' => 'Contabilizar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
@@ -90,9 +96,7 @@ class VacacionController extends MaestroController
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -488,6 +492,7 @@ class VacacionController extends MaestroController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoVacacion' => $form->get('codigoVacacionPk')->getData(),
             'codigoEmpleado' => $form->get('codigoEmpleadoFk')->getData(),
@@ -507,6 +512,7 @@ class VacacionController extends MaestroController
         } else {
             $filtro['grupo'] = $arGrupo;
         }
+        $session->set('filtroRhuVacacion', $filtro);
 
         return $filtro;
 

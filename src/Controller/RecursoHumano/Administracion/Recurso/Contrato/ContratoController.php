@@ -28,7 +28,6 @@ use App\General\General;
 use App\Utilidades\Formato;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use PhpParser\Node\Expr\New_;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -137,6 +136,7 @@ class ContratoController extends MaestroController
         }
         $form = $this->createFormBuilder()
             ->add('btnCartaLaboral', SubmitType::class, ['label' => 'Carta laboral', 'attr' => ['class' => 'btn btn-link']])
+            ->add('btnReactivar', SubmitType::class, ['label' => 'Re-Activar', 'attr' => ['class' => 'btn']])
             ->add('btnPdf', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn btn-link']])
             ->getForm();
         $form->handleRequest($request);
@@ -195,6 +195,9 @@ class ContratoController extends MaestroController
                     '#t' => "",
                     '#u' => $arContrato->getGrupoRel()->getNombre(),
                 ], $id);
+            }
+            if ($form->get('btnReactivar')->isClicked()) {
+                $em->getRepository(RhuContrato::class)->reactivar($arContrato);
             }
         }
 

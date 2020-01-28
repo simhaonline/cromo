@@ -8,6 +8,7 @@ use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuIncapacidad;
 use App\Entity\RecursoHumano\RhuLicencia;
+use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
@@ -617,6 +618,30 @@ class RhuContratoRepository extends ServiceEntityRepository
                     Mensajes::error("El contrato " . $codigo . " tiene pagos relacionados");
                 }
             }
+        }
+    }
+
+    /**
+     * @param $arContrato RhuContrato
+     */
+    public function reactivar($arContrato) {
+        $em = $this->getEntityManager();
+        //Validar si se encuentra en una liquidación
+        $arrLiquidacion = $em->getRepository(RhuLiquidacion::class)->findOneBy(['codigoContratoFk' => $arContrato->getCodigoContratoPk(), 'estadoAnulado' => 0]);
+        if(!$arrLiquidacion) {
+            $arContrato->setEstadoTerminado(0);
+            $arContrato->setContratoMotivoRel(null);
+            $arContrato->setIndefinido($arContrato->getContratoClaseRel()->getIndefinido());
+            $em->persist($arContrato);
+            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
+            $arEmpleado->setContratoRel($arContrato);
+            $arEmpleado->setEstadoContrato(1);
+            $arEmpleado->setCodigoContratoUltimoFk($arContrato->getCodigoContratoPk());
+            $em->persist($arEmpleado);
+            $em->flush();
+            Mensajes::info("El contrato se reactivo con exito");
+        } else {
+            Mensajes::error("No se puede reactivar el contrato por que tiene liquidacion activa");
         }
     }
 }

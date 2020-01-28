@@ -38,6 +38,7 @@ class CreditoType extends AbstractType
             ->add('estadoSuspendido',CheckboxType::class,['required' => false])
             ->add('aplicarCuotaCesantia',CheckboxType::class,['required' => false])
             ->add('estadoPagado',CheckboxType::class,['required' => false])
+            ->add('numeroLibranza', TextType::class, ['required' => true])
             ->add('creditoPagoTipoRel',EntityType::class,[
                 'class' => RhuCreditoPagoTipo::class,
                 'query_builder' => function(EntityRepository $er){

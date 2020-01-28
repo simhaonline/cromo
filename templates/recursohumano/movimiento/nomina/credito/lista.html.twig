@@ -63,11 +63,14 @@
             <th>IDENTIFICACION</th>
             <th>EMPLEADO</th>
             <th>GRUPO</th>
+            <th>LIBRANZA</th>
             <th>CREDITO</th>
             <th>VR CUOTA</th>
-            <th>CUOTA ACTUAL</th>
+            <th title="Cuota actual">C_ACT</th>
+            <th title="Numero de cuotas">CUOTAS</th>
             <th>ABONOS</th>
             <th>SALDO</th>
+            <th title="Validar cuotas">V_C</th>
             <th title="Estado pagado">PAG</th>
             <th title="Estado suspendio">SUS</th>
             <th title="Inactivo periodo">INP</th>
@@ -85,11 +88,14 @@
                 <td>{{ arCredito.numeroIdentificacion }}</td>
                 <td>{{ arCredito.empleado }}</td>
                 <td>{{ arCredito.grupo }}</td>
+                <td>{{ arCredito.numeroLibranza }}</td>
                 <td class="numero">{{ arCredito.vrCredito | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCredito.vrCuota | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCredito.numeroCuotaActual }}</td>
+                <td class="numero">{{ arCredito.numeroCuotas }}</td>
                 <td class="numero">{{ arCredito.vrAbonos | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arCredito.vrSaldo | number_format(0, '.', ',') }}</td>
+                <td>{{ arCredito.validarCuotas ? 'SI':'NO' }}</td>
                 <td>{{ arCredito.estadoPagado ? 'SI':'NO' }}</td>
                 <td>{{ arCredito.estadoSuspendido ? 'SI':'NO' }}</td>
                 <td>{{ arCredito.inactivoPeriodo ? 'SI':'NO' }}</td>

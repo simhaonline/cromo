@@ -37,9 +37,15 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
+        $incapacidadTipo = null;
+        $estadoTranscripcion = null;
+        $estadoLegalizado = null;
 
         if ($filtros) {
             $codigoIncapacidad = $filtros['codigoIncapacidad'] ?? null;
+            $incapacidadTipo = $filtros['incapacidadTipo'] ?? null;
+            $estadoTranscripcion = $filtros['estadoTranscripcion'] ?? null;
+            $estadoLegalizado = $filtros['estadoLegalizado'] ?? null;
             $entidadSalud = $filtros['entidadSalud'] ?? null;
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $numeroEps = $filtros['numeroEps'] ?? null;
@@ -91,6 +97,9 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         if ($numeroEps) {
             $queryBuilder->andWhere("i.numeroEps = '{$numeroEps}'");
         }
+        if ($incapacidadTipo) {
+            $queryBuilder->andWhere("i.codigoIncapacidadTipoFk = '{$incapacidadTipo}'");
+        }
         if ($fechaDesde) {
             $queryBuilder->andWhere("i.fechaDesde >= '{$fechaDesde} 00:00:00'");
         }
@@ -121,6 +130,23 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("i.estadoAnulado = 1");
                 break;
         }
+        switch ($estadoLegalizado) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoLegalizado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoLegalizado = 1");
+                break;
+        }
+        switch ($estadoTranscripcion) {
+            case '0':
+                $queryBuilder->andWhere("i.estadoTranscripcion = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("i.estadoTranscripcion = 1");
+                break;
+        }
+
         $queryBuilder->addOrderBy('i.codigoIncapacidadPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();

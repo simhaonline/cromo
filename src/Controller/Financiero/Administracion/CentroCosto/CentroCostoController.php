@@ -30,7 +30,7 @@ class CentroCostoController extends MaestroController
     protected $modulo   = "Financiero";
     protected $funcion  = "Administracion";
     protected $grupo    = "CentroCosto";
-    protected $nombre   = "Centro";
+    protected $nombre   = "CentroCosto";
 
 
 

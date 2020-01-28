@@ -3,6 +3,7 @@
 
 namespace App\Controller\Turno\Administracion\Operacion;
 
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurSalario;
 use App\Entity\Turno\TurSecuencia;
 use App\Form\Type\Turno\SalarioType;
@@ -17,8 +18,20 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class SalarioController extends AbstractController
+class SalarioController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "TurSalario";
+
+
+    protected $clase = TurSalario::class;
+    protected $claseNombre = "TurSalario";
+    protected $modulo = "Turno";
+    protected $funcion = "Administracion";
+    protected $grupo = "Operacion";
+    protected $nombre = "Salario";
+
+
     /**
      * @Route("/turno/administracion/operacion/salario/lista", name="turno_administracion_operacion_salario_lista")
      */

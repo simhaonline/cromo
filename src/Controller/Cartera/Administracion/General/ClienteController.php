@@ -26,7 +26,7 @@ class ClienteController extends MaestroController
     protected $claseNombre = "CarCliente";
     protected $modulo = "Cartera";
     protected $funcion = "Administracion";
-    protected $grupo = "Cliente";
+    protected $grupo = "General";
     protected $nombre = "Cliente";
 
 

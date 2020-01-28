@@ -4,6 +4,7 @@
 namespace App\Controller\Turno\Administracion\Comercial\Cliente;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurClienteIca;
 use App\Form\Type\Turno\ClienteIcaType;
@@ -19,8 +20,21 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
 
-class ClienteIcaController extends AbstractController
+class ClienteIcaController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "TurClienteIca";
+
+    protected $clase = TurClienteIca::class;
+    protected $claseNombre = "TurClienteIca";
+    protected $modulo = "Turno";
+    protected $funcion = "Administracion";
+    protected $grupo = "Comercial";
+    protected $nombre = "ClienteIca";
+
+
+
     /**
      * @Route("/turno/administracion/comercial/cliente/ica/lista", name="turno_administracion_comercial_cliente_ica_lista")
      */

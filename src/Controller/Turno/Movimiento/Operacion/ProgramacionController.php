@@ -4,6 +4,7 @@ namespace App\Controller\Turno\Movimiento\Operacion;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurCliente;
@@ -38,13 +39,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProgramacionController extends AbstractController
+class ProgramacionController extends MaestroController
 {
-    protected $clase = TurPedido::class;
+
+
+    public $tipo = "movimiento";
+    public $modelo = "TurProgramacion";
+
+    protected $clase = TurProgramacion::class;
     protected $claseNombre = "TurPedido";
     protected $modulo = "Turno";
     protected $funcion = "Movimiento";
-    protected $grupo = "Comercial";
+    protected $grupo = "Operacion";
     protected $nombre = "Pedido";
 
     /**

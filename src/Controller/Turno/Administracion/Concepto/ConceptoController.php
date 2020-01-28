@@ -3,6 +3,7 @@
 namespace App\Controller\Turno\Administracion\Concepto;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurConcepto;
 use App\Form\Type\Turno\ConceptoType;
 use App\General\General;
@@ -14,8 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ConceptoController extends ControllerListenerGeneral
+class ConceptoController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "TurConcepto";
+
     protected $clase = TurConcepto::class;
     protected $claseFormulario = ConceptoType::class;
     protected $claseNombre = "TurConcepto";

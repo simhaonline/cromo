@@ -44,7 +44,7 @@ class MovimientoController extends MaestroController
     protected $claseNombre = "CarMovimiento";
     protected $modulo = "Cartera";
     protected $funcion = "Movimiento";
-    protected $grupo = "Documento";
+    protected $grupo = "Movimiento";
     protected $nombre = "Movimiento";
 
     /**

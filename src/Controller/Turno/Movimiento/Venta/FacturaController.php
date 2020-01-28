@@ -5,6 +5,7 @@ namespace App\Controller\Turno\Movimiento\Venta;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenImpuesto;
 use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurClienteIca;
@@ -38,9 +39,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class FacturaController extends AbstractController
+class FacturaController extends MaestroController
 {
 
+    public $tipo = "movimiento";
+    public $modelo = "TurFactura";
 
 
     protected $clase = TurFactura::class;

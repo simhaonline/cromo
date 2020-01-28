@@ -295,6 +295,11 @@ class RhuIncapacidad
     private $estadoAnulado = false;
 
     /**
+     * @ORM\Column(name="tipo", type="string", length=3, nullable=true)
+     */
+    private $tipo;
+
+    /**
      * @ORM\ManyToOne(targetEntity="RhuIncapacidadTipo", inversedBy="incapacidadesIncapacidadTipoRel")
      * @ORM\JoinColumn(name="codigo_incapacidad_tipo_fk", referencedColumnName="codigo_incapacidad_tipo_pk")
      */
@@ -1336,6 +1341,22 @@ class RhuIncapacidad
     public function setIncapacidadesIncapacidadProrrogaRel($incapacidadesIncapacidadProrrogaRel): void
     {
         $this->incapacidadesIncapacidadProrrogaRel = $incapacidadesIncapacidadProrrogaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param mixed $tipo
+     */
+    public function setTipo($tipo): void
+    {
+        $this->tipo = $tipo;
     }
 
 

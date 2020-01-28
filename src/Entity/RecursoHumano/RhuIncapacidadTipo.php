@@ -47,6 +47,11 @@ class RhuIncapacidadTipo
     private $codigoConceptoEmpresaFk;
 
     /**
+     * @ORM\Column(name="tipo", type="string", length=3, nullable=true)
+     */
+    private $tipo;
+
+    /**
      * @ORM\Column(name="tipo_novedad_turno", type="string", length=5, nullable=true)
      */
     private $tipoNovedadTurno;
@@ -228,6 +233,21 @@ class RhuIncapacidadTipo
         $this->incapacidadesIncapacidadTipoRel = $incapacidadesIncapacidadTipoRel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param mixed $tipo
+     */
+    public function setTipo($tipo): void
+    {
+        $this->tipo = $tipo;
+    }
 
 
 }

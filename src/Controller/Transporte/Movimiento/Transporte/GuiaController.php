@@ -65,8 +65,11 @@ class GuiaController extends MaestroController
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $session = new Session();
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTteGuia')
+        ];
         $form = $this->createFormBuilder()
             ->add('codigoGuiaTipoFk', EntityType::class, [
                 'class' => TteGuiaTipo::class,
@@ -76,7 +79,8 @@ class GuiaController extends MaestroController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['guiaTipo'] ? $em->getReference(TteGuiaTipo::class, $raw['filtros']['guiaTipo']) : null
             ])
             ->add('codigoOperacionCargoFk', EntityType::class, [
                 'class' => TteOperacion::class,
@@ -86,7 +90,8 @@ class GuiaController extends MaestroController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['operacionCargo'] ? $em->getReference(TteOperacion::class, $raw['filtros']['operacionCargo']) : null
             ])
             ->add('codigoOperacionCargoIngreso', EntityType::class, [
                 'class' => TteOperacion::class,
@@ -96,7 +101,8 @@ class GuiaController extends MaestroController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['operacionCargoIngreso'] ? $em->getReference(TteOperacion::class, $raw['filtros']['operacionCargoIngreso']) : null
             ])
             ->add('codigoCiudadDestinoFk', EntityType::class, [
                 'class' => TteCiudad::class,
@@ -106,9 +112,10 @@ class GuiaController extends MaestroController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'attr'=>['class'=>'form-control to-select-2'],
+                'data'=>  $raw['filtros']['ciudadDestino'] ? $em->getReference(TteCiudad::class, $raw['filtros']['ciudadDestino']) : null
             ])
-            ->add('codigoClienteFk', TextType::class, array('required' => false))
             ->add('codigoServicioFk', EntityType::class, [
                 'class' => TteServicio::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -117,32 +124,33 @@ class GuiaController extends MaestroController
                 },
                 'required' => false,
                 'choice_label' => 'nombre',
-                'placeholder' => 'TODOS'
+                'placeholder' => 'TODOS',
+                'data'=>  $raw['filtros']['servicio'] ? $em->getReference(TteServicio::class, $raw['filtros']['servicio']) : null
+
             ])
-            ->add('codigoGuiaPk', IntegerType::class, array('required' => false))
-            ->add('codigoDespachoFk', IntegerType::class, array('required' => false))
-            ->add('codigoFacturaFk', IntegerType::class, array('required' => false))
-            ->add('numeroFactura', IntegerType::class, array('required' => false))
-            ->add('numero', IntegerType::class, array('required' => false))
-            ->add('remitente', TextType::class, array('required' => false))
-            ->add('documentoCliente', TextType::class, array('required' => false))
-            ->add('nombreDestinatario', TextType::class, array('required' => false))
-            ->add('fechaIngresoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaIngresoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('estadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoFacturado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoNovedadSolucion', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('codigoClienteFk', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigoCliente']))
+            ->add('codigoGuiaPk', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['codigoGuia']))
+            ->add('codigoDespachoFk', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['codigoDespacho']))
+            ->add('codigoFacturaFk', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['codigoFactura']))
+            ->add('numeroFactura', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['numeroFactura']))
+            ->add('numero', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['numero']))
+            ->add('remitente', TextType::class, array('required' => false, 'data'=>$raw['filtros']['remitente']))
+            ->add('documentoCliente', TextType::class, array('required' => false, 'data'=>$raw['filtros']['documentoCliente']))
+            ->add('nombreDestinatario', TextType::class, array('required' => false, 'data'=>$raw['filtros']['nombreDestinatario']))
+            ->add('fechaIngresoDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaIngresoDesde']?date_create($raw['filtros']['fechaIngresoDesde']):null])
+            ->add('fechaIngresoHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaIngresoHasta']?date_create($raw['filtros']['fechaIngresoHasta']):null])
+            ->add('estadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoDespachado']])
+            ->add('estadoFacturado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoDespachado'] ])
+            ->add('estadoNovedad', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoNovedad'] ])
+            ->add('estadoNovedadSolucion', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoNovedadSolucion'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -335,6 +343,7 @@ class GuiaController extends MaestroController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoGuia' => $form->get('codigoGuiaPk')->getData(),
             'codigoDespacho' => $form->get('codigoDespachoFk')->getData(),
@@ -389,6 +398,8 @@ class GuiaController extends MaestroController
         } else {
             $filtro['operacionCargoIngreso'] = $arOperacionCargoIngreso;
         }
+
+        $session->set('filtroTteGuia', $filtro);
         return $filtro;
     }
 }

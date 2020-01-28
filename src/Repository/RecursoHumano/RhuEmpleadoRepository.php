@@ -379,10 +379,10 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         }
         switch ($estadoContrato) {
             case '0':
-                $queryBuilder->andWhere("e.estadoContrato = 0");
+                $queryBuilder->andWhere("e.estadoContrato = 1");
                 break;
             case '1':
-                $queryBuilder->andWhere("e.estadoContrato = 1");
+                $queryBuilder->andWhere("e.estadoContrato = 0");
                 break;
         }
         return $queryBuilder->getQuery()->getResult();

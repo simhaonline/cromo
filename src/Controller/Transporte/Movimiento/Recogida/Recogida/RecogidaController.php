@@ -52,15 +52,19 @@ class RecogidaController extends MaestroController
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $raw = [
+            'filtros'=> $session->get('filtroTteRecogida')
+        ];
         $form = $this->createFormBuilder()
-            ->add('codigoClienteFk', IntegerType::class, array('required' => false))
-            ->add('codigoRecogidaPk', IntegerType::class, array('required' => false))
-            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false,  'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
-            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
-            ->add('estadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('codigoClienteFk', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['codigoClienteFk']))
+            ->add('codigoRecogidaPk', IntegerType::class, array('required' => false, 'data'=>$raw['filtros']['codigoRecogidaPk']))
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaDesde']?date_create($raw['filtros']['fechaDesde']):null ])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data'=>$raw['filtros']['fechaHasta']?date_create($raw['filtros']['fechaHasta']):null ])
+            ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAutorizado'] ])
+            ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAprobado'] ])
+            ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoAnulado'] ])
+            ->add('estadoProgramado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false, 'data'=>$raw['filtros']['estadoProgramado']])
             ->add('btnFiltro', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -68,9 +72,7 @@ class RecogidaController extends MaestroController
             ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
@@ -189,6 +191,7 @@ class RecogidaController extends MaestroController
 
     public function getFiltros($form)
     {
+        $session = new Session();
         $filtro = [
             'codigoClienteFk' => $form->get('codigoClienteFk')->getData(),
             'codigoRecogidaPk' => $form->get('codigoRecogidaPk')->getData(),
@@ -199,6 +202,7 @@ class RecogidaController extends MaestroController
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
             'estadoProgramado' => $form->get('estadoProgramado')->getData(),
         ];
+        $session->set('filtroTteRecogida', $filtro);
         return $filtro;
     }
 }

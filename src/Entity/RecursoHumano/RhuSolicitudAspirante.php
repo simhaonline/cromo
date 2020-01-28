@@ -34,9 +34,9 @@ class RhuSolicitudAspirante
     private $codigoAspiranteFk;
 
     /**
-     * @ORM\Column(name="estado_aprobado", type="boolean", options={"default":false})
+     * @ORM\Column(name="estado_generado", type="boolean", options={"default":false})
      */
-    private $estadoAprobado=false;
+    private $estadoGenerado=false;
 
     /**
      * @ORM\Column(name="codigo_motivo_descarte_solicitud_aspirante_fk", type="integer", nullable=true)
@@ -132,17 +132,17 @@ class RhuSolicitudAspirante
     /**
      * @return mixed
      */
-    public function getEstadoAprobado()
+    public function getEstadoGenerado()
     {
-        return $this->estadoAprobado;
+        return $this->estadoGenerado;
     }
 
     /**
-     * @param mixed $estadoAprobado
+     * @param mixed $estadoGenerado
      */
-    public function setEstadoAprobado($estadoAprobado): void
+    public function setEstadoGenerado($estadoGenerado): void
     {
-        $this->estadoAprobado = $estadoAprobado;
+        $this->estadoGenerado = $estadoGenerado;
     }
 
     /**

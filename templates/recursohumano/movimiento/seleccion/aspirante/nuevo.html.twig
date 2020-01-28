@@ -145,6 +145,11 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_reintegro" class="col-sm-2 control-label">Zona:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.zonaRel) }}
+                    {{ form_errors(form.zonaRel) }}
+                </div>
                 <label for="form_reintegro" class="col-sm-2 control-label"></label>
                 <div class="col-sm-4">
                     {{ form_widget(form.reintegro) }}

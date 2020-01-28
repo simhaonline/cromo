@@ -68,6 +68,11 @@ class RhuSeleccion
     private $codigoSolicitudFk;
 
     /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoZonaFk;
+
+    /**
      * @ORM\Column(name="codigo_cargo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCargoFk;
@@ -290,6 +295,12 @@ class RhuSeleccion
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
     protected $sexoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuZona", inversedBy="seleccionesZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    protected $zonaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="RhuSeleccionEntrevista", mappedBy="seleccionRel")
@@ -1114,6 +1125,70 @@ class RhuSeleccion
     public function setSeleccionesVisitasSeleccionRel($seleccionesVisitasSeleccionRel): void
     {
         $this->seleccionesVisitasSeleccionRel = $seleccionesVisitasSeleccionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesReferenciasSeleccionRel()
+    {
+        return $this->seleccionesReferenciasSeleccionRel;
+    }
+
+    /**
+     * @param mixed $seleccionesReferenciasSeleccionRel
+     */
+    public function setSeleccionesReferenciasSeleccionRel($seleccionesReferenciasSeleccionRel): void
+    {
+        $this->seleccionesReferenciasSeleccionRel = $seleccionesReferenciasSeleccionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesAntecedentesSeleccionRel()
+    {
+        return $this->seleccionesAntecedentesSeleccionRel;
+    }
+
+    /**
+     * @param mixed $seleccionesAntecedentesSeleccionRel
+     */
+    public function setSeleccionesAntecedentesSeleccionRel($seleccionesAntecedentesSeleccionRel): void
+    {
+        $this->seleccionesAntecedentesSeleccionRel = $seleccionesAntecedentesSeleccionRel;
     }
 
 

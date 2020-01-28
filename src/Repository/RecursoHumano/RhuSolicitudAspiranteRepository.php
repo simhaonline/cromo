@@ -4,6 +4,7 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuAspirante;
 use App\Entity\RecursoHumano\RhuSeleccion;
+use App\Entity\RecursoHumano\RhuSeleccionTipo;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Entity\RecursoHumano\RhuSolicitudAspirante;
 use App\Utilidades\Mensajes;
@@ -41,9 +42,9 @@ class RhuSolicitudAspiranteRepository extends ServiceEntityRepository
             ->select('sa.codigoSolicitudAspirantePk')
             ->addSelect('a.numeroIdentificacion')
             ->addSelect('a.nombreCorto AS aspirante')
-            ->addSelect('sa.estadoAprobado')
+            ->addSelect('sa.estadoGenerado')
             ->addSelect('sa.comentarios')
-        ->leftJoin('sa.aspiranteRel', 'a');
+            ->leftJoin('sa.aspiranteRel', 'a');
         if ($codigoSolicitud) {
             $queryBuilder->andWhere("s.codigoSolicitudPk = '{$codigoSolicitud}'");
         }
@@ -79,19 +80,25 @@ class RhuSolicitudAspiranteRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function aprobarDetallesSeleccionados($arrSeleccionados) {
+    /**
+     * @param $arrSeleccionados
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function aprobarDetallesSeleccionados($arrSeleccionados)
+    {
         $em = $this->getEntityManager();
-        if($arrSeleccionados) {
+        if ($arrSeleccionados) {
+            $arSeleccionTipo = $em->getRepository(RhuSeleccionTipo::class)->find('SDP');
             foreach ($arrSeleccionados AS $codigoSolicitudAspirante) {
                 $arSolicitudAspirante = $em->getRepository(RhuSolicitudAspirante::class)->find($codigoSolicitudAspirante);
-                if($arSolicitudAspirante) {
-                    if ($arSolicitudAspirante->getEstadoAprobado() == 0) {
-                        $arSolicitudAspirante->setEstadoAprobado(1);
+                if ($arSolicitudAspirante) {
+                    if ($arSolicitudAspirante->getEstadoGenerado() == 0) {
+                        $arSolicitudAspirante->setEstadoGenerado(1);
                         $arAspitante = $em->getRepository(RhuAspirante::class)->find($arSolicitudAspirante->getCodigoAspiranteFk());
                         //Se inserta el aspirante aprobado en la entidad seleccion
                         $arSelecion = new RhuSeleccion();
                         $arSelecion->setFecha(new \ DateTime("now"));
-//                        $arSelecion->setCargoRel($arSolicitudAspirante->getSeleccionRequisitoRel()->getCargoRel());
                         $arSelecion->setCiudadRel($arAspitante->getCiudadRel());
                         $arSelecion->setCiudadExpedicionRel($arAspitante->getCiudadExpedicionRel());
                         $arSelecion->setCiudadNacimientoRel($arAspitante->getCiudadNacimientoRel());
@@ -109,14 +116,13 @@ class RhuSolicitudAspiranteRepository extends ServiceEntityRepository
                         $arSelecion->setTelefono($arAspitante->getTelefono());
                         $arSelecion->setCelular($arAspitante->getCelular());
                         $arSelecion->setDireccion($arAspitante->getDireccion());
+                        $arSelecion->setSolicitudRel($arSolicitudAspirante->getSolicitudRel());
+                        $arSelecion->setZonaRel($arAspitante->getZonaRel());
+                        $arSelecion->setSeleccionTipoRel($arSeleccionTipo);
                         $em->persist($arSelecion);
-//                        $arSeleccionTipo = $em->getRepository('BrasaRecursoHumanoBundle:RhuSeleccionTipo')->find(3);
-//                        $arSelecion->setSeleccionTipoRel($arSeleccionTipo);
-//                        $arSelecion->setZonaRel($arAspitante->getZonaRel());
-//                        $arSelecion->setSeleccionRequisitoRel($arRequisicionDetalle->getSeleccionRequisitoRel());
-                        $em->persist($arSelecion);
+//                        $arSelecion->setCargoRel($arSolicitudAspirante->getSeleccionRequisitoRel()->getCargoRel());
                     } else {
-                        Mensajes::error("El aspirante ya tiene un proceso de seleecion");
+                        Mensajes::error("El aspirante ya tiene un proceso de seleccion");
                     }
                 }
             }

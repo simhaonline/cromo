@@ -89,6 +89,16 @@ class AspiranteType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Cargo interno:'
             ])
+            ->add('zonaRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\RecursoHumano\RhuZona',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('z')
+                        ->orderBy('z.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Zona:'
+            ])
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'numero identificacion:'])
             ->add('libretaMilitar',TextType::class,['required' => false,'label' => 'Libreta militar:'])
             ->add('nombre1',TextType::class,['required' => true,'label' => 'Primer nombre:'])

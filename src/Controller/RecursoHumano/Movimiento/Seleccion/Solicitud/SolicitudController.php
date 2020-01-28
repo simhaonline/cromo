@@ -8,6 +8,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAspirante;
+use App\Entity\RecursoHumano\RhuSeleccion;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Entity\RecursoHumano\RhuSolicitudAspirante;
 use App\Entity\Transporte\TteMonitoreo;
@@ -15,6 +16,7 @@ use App\Form\Type\RecursoHumano\AspiranteType;
 use App\Form\Type\RecursoHumano\SolicitudType;
 use App\General\General;
 use App\Utilidades\Estandares;
+use App\Utilidades\Mensajes;
 use function Complex\add;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -125,80 +127,89 @@ class SolicitudController extends MaestroController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
         if ($id != 0) {
-            $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
-            $arrGenerarSeleccion = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Generar seleccion', 'disabled' => false];
-            $form = Estandares::botonera($arSolicitud->getEstadoAutorizado(), $arSolicitud->getEstadoAprobado(), $arSolicitud->getEstadoAnulado());
-            $form->add('btnGenerar', SubmitType::class, $arrGenerarSeleccion);
-            $form->handleRequest($request);
-            if ($form->isSubmitted()) {
-                if ($form->get('btnAutorizar')->isClicked()) {
-                    $em->getRepository(RhuSolicitud::class)->autorizar($arSolicitud);
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
-                }
-                if ($form->get('btnDesautorizar')->isClicked()) {
-                    $em->getRepository(RhuSolicitud::class)->desautorizar($arSolicitud);
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
-                }
-                if ($form->get('btnGenerar')->isClicked()) {
-                    $arAspirantesSeleccionados = $request->request->get('ChkSeleccionar');
-                    $em->getRepository(RhuSolicitudAspirante::class)->aprobarDetallesSeleccionados($arAspirantesSeleccionados);
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
-                }
+            if (!$arSolicitud) {
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
             }
         }
+        $arrGenerarSeleccion = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Generar seleccion', 'disabled' => false];
+        if ($arSolicitud->getEstadoAprobado()) {
+            $arrGenerarSeleccion['disabled'] = true;
+        }
+
+        $form = Estandares::botonera($arSolicitud->getEstadoAutorizado(), $arSolicitud->getEstadoAprobado(), $arSolicitud->getEstadoAnulado());
+        $form->add('btnGenerar', SubmitType::class, $arrGenerarSeleccion);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(RhuSolicitud::class)->autorizar($arSolicitud);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(RhuSolicitud::class)->desautorizar($arSolicitud);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnGenerar')->isClicked()) {
+                $arAspirantesSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuSolicitudAspirante::class)->aprobarDetallesSeleccionados($arAspirantesSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(RhuSolicitud::class)->aprobar($arSolicitud);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
+            }
+        }
+
         $arAspirantes = $em->getRepository(RhuSolicitudAspirante::class)->lista($raw = null);
+        $arSelecciones = $em->getRepository(RhuSeleccion::class)->findBy(array('codigoSolicitudFk' => $id));
         return $this->render('recursohumano/movimiento/seleccion/solicitud/detalle.html.twig', [
             'arAspirantes' => $arAspirantes,
             'arSolicitud' => $arSolicitud,
+            'arSelecciones' => $arSelecciones,
             'form' => $form->createView()
         ]);
     }
 
-//    /**
-//     * @Route("/recursohumano/movimiento/seleccion/solicitud/buscar/aspirante/{id}", name="recursohumano_movimiento_seleccion_solicitud_detalle")
-//     */
-//    public function buscarAspiranteAction(Request $request, $id)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $paginator = $this->get('knp_paginator');
-//        $arRequisicion = new \Brasa\RecursoHumanoBundle\Entity\RhuSeleccionRequisito();
-//        $arRequisicion = $em->getRepository('BrasaRecursoHumanoBundle:RhuSeleccionRequisito')->find($id);
-//        $form = $this->formularioBuscarAspirante();
-//        $form->handleRequest($request);
-//        $this->listarAspirantes();
-//        if ($form->isValid()) {
-//            if ($form->get('BtnFiltrar')->isClicked()) {
-//                $this->filtrarBuscarAspirante($form, $request);
-//                $this->listarAspirantes();
-//            }
-//            if ($form->get('BtnAplicar')->isClicked()) {
-//                $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                if ($arRequisicion->getEstadoAnulado() != 1) {
-//                    if ($arrSeleccionados) {
-//                        foreach ($arrSeleccionados AS $codigo) {
-//                            $arAspirante = $em->getRepository('BrasaRecursoHumanoBundle:RhuAspirante')->find($codigo);
-//                            $arRequisicionAspirante = new \Brasa\RecursoHumanoBundle\Entity\RhuSeleccionRequisicionAspirante();
-//                            $arRequisicionAspirante->setSeleccionRequisitoRel($arRequisicion);
-//                            $arRequisicionAspirante->setAspiranteRel($arAspirante);
-//                            $em->persist($arRequisicionAspirante);
-//                        }
-//                        $em->flush();
-//                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
-//                    }
-//                } else {
-//                    $objMensaje->Mensaje("error", "No se pueden aplicar mas aspirantes,la requisicion ha sido anulada");
-//                }
-//
-//            }
-//        }
-//        $arAspirantes = $paginator->paginate($em->createQuery($this->strDqlListaAspirantes), $request->query->get('page', 1), 100);
-//        return $this->render('BrasaRecursoHumanoBundle:Movimientos/Requisicion:buscarAspirante.html.twig', array(
-//            'arRequisicion' => $arRequisicion,
-//            'arAspirantes' => $arAspirantes,
-//            'form' => $form->createView()
-//        ));
-//    }
+    /**
+     * @Route("/recursohumano/movimiento/seleccion/solicitud/buscar/aspirante/{id}", name="recursohumano_movimiento_seleccion_solicitud_buscar_aspirante")
+     */
+    public function buscarAspiranteAction(Request $request, $id, PaginatorInterface $paginator)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('btnAplicar', SubmitType::class, ['label' => 'Aplicar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->get('btnAplicar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                if (!$arSolicitud->getEstadoAnulado()) {
+                    if ($arrSeleccionados) {
+                        foreach ($arrSeleccionados AS $codigo) {
+                            $arAspirante = $em->getRepository(RhuAspirante::class)->find($codigo);
+                            $arSolicitudAspirante = new RhuSolicitudAspirante();
+                            $arSolicitudAspirante->setSolicitudRel($arSolicitud);
+                            $arSolicitudAspirante->setAspiranteRel($arAspirante);
+                            $em->persist($arSolicitudAspirante);
+                        }
+                        $em->flush();
+                        echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                    }
+                } else {
+                    Mensajes::error("No se pueden aplicar mas aspirantes,la requisicion ha sido anulada");
+                }
+
+            }
+        }
+        $arAspirantes = $em->getRepository(RhuAspirante::class)->lista($raw = null);
+        return $this->render('recursohumano/movimiento/seleccion/solicitud/buscarAspirante.html.twig', array(
+            'arSolicitud' => $arSolicitud,
+            'arAspirantes' => $arAspirantes,
+            'form' => $form->createView()
+        ));
+    }
 
     public function getFiltros($form)
     {

@@ -40,6 +40,7 @@ class RhuAspiranteRepository extends ServiceEntityRepository
             ->select('a.codigoAspirantePk')
             ->addSelect('a.numeroIdentificacion')
             ->addSelect('a.nombreCorto')
+            ->addSelect('a.fechaNacimiento')
             ->addSelect('a.telefono')
             ->addSelect('a.celular')
             ->addSelect('a.correo')
@@ -82,7 +83,7 @@ class RhuAspiranteRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function Autorizar($arAspirante)
+    public function autorizar($arAspirante)
     {
         $em = $this->getEntityManager();
         if (!$arAspirante->getEstadoAutorizado()) {
@@ -91,6 +92,17 @@ class RhuAspiranteRepository extends ServiceEntityRepository
             $em->flush();
         } else {
             Mensajes::error('El aspirante ya esta autorizado');
+        }
+    }
+
+    public function desautorizar($arAspirante)
+    {
+        if ($arAspirante->getEstadoAutorizado() == 1 && $arAspirante->getEstadoAprobado() == 0) {
+            $arAspirante->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arAspirante);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro no se puede desautorizar');
         }
     }
 

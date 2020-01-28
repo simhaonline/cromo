@@ -53,6 +53,11 @@ class RhuAspirante
     private $codigoRhFk;
 
     /**
+     * @ORM\Column(name="codigo_zona", type="string", length=10, nullable=true)
+     */
+    private $codigoZona;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -264,6 +269,12 @@ class RhuAspirante
      * @ORM\JoinColumn(name="codigo_rh_fk", referencedColumnName="codigo_rh_pk")
      */
     protected $rhRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuZona", inversedBy="aspirantesZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    protected $zonaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCargo", inversedBy="rhuAspirantesCargoRel")
@@ -948,6 +959,39 @@ class RhuAspirante
     {
         $this->solicitudesAspiranteRel = $solicitudesAspiranteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZona()
+    {
+        return $this->codigoZona;
+    }
+
+    /**
+     * @param mixed $codigoZona
+     */
+    public function setCodigoZona($codigoZona): void
+    {
+        $this->codigoZona = $codigoZona;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
 
 
 }

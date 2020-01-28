@@ -122,18 +122,22 @@ class AspiranteController extends MaestroController
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $arAspirante = $em->getRepository(RhuAspirante::class)->find($id);
         if ($id != 0) {
-            $arAspirante = $em->getRepository(RhuAspirante::class)->find($id);
             $form = Estandares::botonera($arAspirante->getEstadoAutorizado(), $arAspirante->getEstadoAprobado(), $arAspirante->getEstadoAnulado());
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 if ($form->get('btnAutorizar')->isClicked()) {
                     $em->getRepository(RhuAspirante::class)->autorizar($arAspirante);
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_aplicar', array('id' => $arAspirante->getCodigoAspirantePk())));
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_detalle', ['id' => $id]));
                 }
                 if ($form->get('btnAnular')->isClicked()) {
                     $em->getRepository(RhuAspirante::class)->anular($arAspirante);
-                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_aplicar', array('id' => $arAspirante->getCodigoAspirantePk())));
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_detalle', ['id' => $id]));
+                }
+                if ($form->get('btnDesautorizar')->isClicked()) {
+                    $em->getRepository(RhuAspirante::class)->desautorizar($arAspirante);
+                    return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_detalle', ['id' => $id]));
                 }
             }
             if (!$arAspirante) {
@@ -142,7 +146,7 @@ class AspiranteController extends MaestroController
         }
         return $this->render('recursohumano/movimiento/seleccion/aspirante/detalle.html.twig', [
             'arAspirante' => $arAspirante,
-            'form' =>$form->createView()
+            'form' => $form->createView()
         ]);
     }
 
@@ -170,7 +174,7 @@ class AspiranteController extends MaestroController
             'required' => true,
             'disabled' => false);
         $ctrlBoton = false;
-        $arSolicitudes = $em->getRepository(RhuSolicitud::class)->findBy(['estadoAutorizado' => 1]);
+        $arSolicitudes = $em->getRepository(RhuSolicitud::class)->findBy(['estadoAutorizado' => 1, 'estadoAprobado' => 0]);
 
         if (count($arSolicitudes) == 0) {
             $arrSolicitudesRel['disabled'] = true;
@@ -187,6 +191,7 @@ class AspiranteController extends MaestroController
         if ($form->isSubmitted() && $form->isValid()) {
             $arSolicitudAspirante = new RhuSolicitudAspirante();
             $arSolicitudAspirante->setAspiranteRel($arAspirante);
+            $arSolicitudAspirante->setSolicitudRel(($form->get('solicitudRel')->getData()));
             $em->persist($arSolicitudAspirante);
             $arSolicitud = $form->get('solicitudRel')->getData();
             if ($arAspirante->getEstadoBloqueado() == 0) {
@@ -215,10 +220,10 @@ class AspiranteController extends MaestroController
                         echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                     }
                 } else {
-                    Mensajes::error("El aspirante ya se encuenta en la requisicion");
+                    Mensajes::error("El aspirante ya se encuenta en la solicitud");
                 }
             } else {
-                Mensajes::error('El aspirante no puede aplicar a la requisición, tiene inconsistencias');
+                Mensajes::error('El aspirante no puede aplicar a la solicitud, tiene inconsistencias o se encuentra bloqueado');
             }
         }
         return $this->render('recursohumano/movimiento/seleccion/aspirante/aplicar.html.twig', array(

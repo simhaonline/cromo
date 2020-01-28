@@ -4,6 +4,8 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuSeleccion;
+use App\Entity\RecursoHumano\RhuSeleccionEntrevista;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -80,15 +82,36 @@ class RhuSeleccionRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function Autorizar($arSeleccionado)
+    /**
+     * @param $arSeleccionado
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arSeleccion)
     {
         $em = $this->getEntityManager();
-        if (!$arSeleccionado->getEstadoAutorizado()) {
-            $arSeleccionado->setEstadoAutorizado(1);
-            $em->persist($arSeleccionado);
-            $em->flush();
+        if (!$arSeleccion->getEstadoAutorizado()) {
+            $arSeleccionEntrevista =  $em->getRepository(RhuSeleccionEntrevista::class)->findBy(array('codigoSeleccionFk' => $arSeleccion));
+            if($arSeleccionEntrevista){
+                $arSeleccion->setEstadoAutorizado(1);
+                $em->persist($arSeleccion);
+                $em->flush();
+            } else {
+                Mensajes::error("La selección no tiene entrevistas, no se puede autorizar");
+            }
         } else {
-            Mensajes::error('El seleccion ya esta autorizado');
+            Mensajes::error('El selección ya esta autorizado');
+        }
+    }
+
+    public function desautorizar($arSeleccion)
+    {
+        if ($arSeleccion->getEstadoAutorizado() == 1 && $arSeleccion->getEstadoAprobado() == 0) {
+            $arSeleccion->setEstadoAutorizado(0);
+            $this->getEntityManager()->persist($arSeleccion);
+            $this->getEntityManager()->flush();
+        } else {
+            Mensajes::error('El registro no se puede desautorizar');
         }
     }
 

@@ -28,6 +28,16 @@ class RhuZona
     protected $empleadosZonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuAspirante", mappedBy="zonaRel")
+     */
+    protected $aspirantesZonaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="zonaRel")
+     */
+    protected $seleccionesZonaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoZonaPk()
@@ -73,6 +83,38 @@ class RhuZona
     public function setEmpleadosZonaRel($empleadosZonaRel): void
     {
         $this->empleadosZonaRel = $empleadosZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAspirantesZonaRel()
+    {
+        return $this->aspirantesZonaRel;
+    }
+
+    /**
+     * @param mixed $aspirantesZonaRel
+     */
+    public function setAspirantesZonaRel($aspirantesZonaRel): void
+    {
+        $this->aspirantesZonaRel = $aspirantesZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeleccionesZonaRel()
+    {
+        return $this->seleccionesZonaRel;
+    }
+
+    /**
+     * @param mixed $seleccionesZonaRel
+     */
+    public function setSeleccionesZonaRel($seleccionesZonaRel): void
+    {
+        $this->seleccionesZonaRel = $seleccionesZonaRel;
     }
 
 

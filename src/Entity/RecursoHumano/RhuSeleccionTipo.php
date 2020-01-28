@@ -17,7 +17,6 @@ class RhuSeleccionTipo
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_seleccion_tipo_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
      */        
     private $codigoSeleccionTipoPk;
 
@@ -30,6 +29,22 @@ class RhuSeleccionTipo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="seleccionTipoRel")
      */
     protected $seleccionesTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -66,17 +81,17 @@ class RhuSeleccionTipo
     /**
      * @return mixed
      */
-    public function getSeleccionTipoRel()
+    public function getSeleccionesTipoRel()
     {
-        return $this->seleccionTipoRel;
+        return $this->seleccionesTipoRel;
     }
 
     /**
-     * @param mixed $seleccionTipoRel
+     * @param mixed $seleccionesTipoRel
      */
-    public function setSeleccionTipoRel($seleccionTipoRel): void
+    public function setSeleccionesTipoRel($seleccionesTipoRel): void
     {
-        $this->seleccionTipoRel = $seleccionTipoRel;
+        $this->seleccionesTipoRel = $seleccionesTipoRel;
     }
 
 

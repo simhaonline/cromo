@@ -126,7 +126,6 @@ class RhuSolicitudRepository extends ServiceEntityRepository
         $em->flush();
     }
 
-
     public function camposPredeterminados()
     {
         $qb = $this->_em->createQueryBuilder()

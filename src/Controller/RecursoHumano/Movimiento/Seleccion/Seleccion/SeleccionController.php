@@ -119,6 +119,8 @@ class SeleccionController extends AbstractController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("recursohumano/movimiento/seleccion/seleccion/detalle/{id}", name="recursohumano_movimiento_seleccion_seleccion_detalle")
      */
     public function detalle(Request $request, $id)
@@ -127,7 +129,7 @@ class SeleccionController extends AbstractController
         $arSeleccion = $em->getRepository(RhuSeleccion::class)->find($id);
         if ($id != 0) {
             if (!$arSeleccion) {
-                return $this->redirect($this->generateUrl('crm_administracion_fase_fase_lista'));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_lista'));
             }
         }
         $arrEliminarEntrevista = ['attr' => ['class' => 'btn btn-sm btn-danger'], 'label' => 'Eliminar', 'disabled' => false];
@@ -137,6 +139,11 @@ class SeleccionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnAutorizar')->isClicked()) {
                 $em->getRepository(RhuSeleccion::class)->autorizar($arSeleccion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(RhuSeleccion::class)->desautorizar($arSeleccion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_seleccion_detalle', ['id' => $id]));
             }
             if ($form->get('btnAnular')->isClicked()) {
                 $em->getRepository(RhuSeleccion::class)->anular($arSeleccion);

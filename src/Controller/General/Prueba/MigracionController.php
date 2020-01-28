@@ -2041,45 +2041,45 @@ class MigracionController extends Controller
                         estado_transcripcion,
                         vr_incapacidad,
                         vr_pagado,
-                        vr_saldo, 
-                        porcentaje_pago, 
-                        codigo_usuario, 
+                        vr_saldo,
+                        porcentaje_pago,
+                        codigo_usuario,
                         estado_legalizado,
                         vr_cobro,
-                        vr_ibc_propuesto, 
-                        dias_entidad, 
-                        dias_empresa, 
-                        dias_acumulados, 
+                        vr_ibc_propuesto,
+                        dias_entidad,
+                        dias_empresa,
+                        dias_acumulados,
                         pagar_empleado,
-                        vr_ibc_mes_anterior, 
-                        dias_ibc_mes_anterior, 
-                        vr_hora, 
-                        codigo_incapacidad_prorroga_fk, 
-                        fecha_desde_empresa, 
-                        fecha_hasta_empresa, 
-                        fecha_desde_entidad, 
-                        fecha_hasta_entidad, 
-                        vr_propuesto, 
-                        vr_hora_empresa, 
-                        fecha_documento_fisico, 
-                        aplicar_adicional, 
-                        fecha_aplicacion, 
-                        vr_abono, 
-                        medico, 
-                        vr_salario,  
-                        codigo_empleado_fk, 
-                        codigo_contrato_fk, 
-                        numero_eps, 
-                        comentarios, 
-                        estado_cobrar, 
-                        estado_prorroga, 
-                        codigo_cliente_fk, 
-                        codigo_cobro_fk, 
-                        estado_cobrado, 
+                        vr_ibc_mes_anterior,
+                        dias_ibc_mes_anterior,
+                        vr_hora,
+                        codigo_incapacidad_prorroga_fk,
+                        fecha_desde_empresa,
+                        fecha_hasta_empresa,
+                        fecha_desde_entidad,
+                        fecha_hasta_entidad,
+                        vr_propuesto,
+                        vr_hora_empresa,
+                        fecha_documento_fisico,
+                        aplicar_adicional,
+                        fecha_aplicacion,
+                        vr_abono,
+                        medico,
+                        vr_salario,
+                        codigo_empleado_fk,
+                        codigo_contrato_fk,
+                        numero_eps,
+                        comentarios,
+                        estado_cobrar,
+                        estado_prorroga,
+                        codigo_cliente_fk,
+                        codigo_cobro_fk,
+                        estado_cobrado,
                         estado_cobrar_cliente,
-                        rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo                                                                          
-                 FROM rhu_incapacidad    
-                 left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_incapacidad.codigo_entidad_salud_fk 
+                        rhu_entidad_salud.codigo_interface as codigo_entidad_salud_externo
+                 FROM rhu_incapacidad
+                 left join rhu_entidad_salud on rhu_entidad_salud.codigo_entidad_salud_pk=rhu_incapacidad.codigo_entidad_salud_fk
                  ORDER BY codigo_incapacidad_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 $arIncapacidad = new RhuIncapacidad();
@@ -2166,6 +2166,13 @@ class MigracionController extends Controller
             $em->flush();
         }
 
+        $arr = $conn->query("SELECT codigo_incapacidad_pk, codigo_incapacidad_prorroga_fk FROM rhu_incapacidad where codigo_incapacidad_prorroga_fk is not null");
+        foreach ($arr as $row) {
+            $arIncapacidad = $em->getRepository(RhuIncapacidad::class)->find($row['codigo_incapacidad_pk']);
+            $arIncapacidad->setIncapacidadProrrogaRel($em->getReference(RhuIncapacidad::class, $row['codigo_incapacidad_prorroga_fk']));
+            $em->persist($arIncapacidad);
+        }
+        $em->flush();
     }
 
     private function rhuLicenciaTipo($conn)

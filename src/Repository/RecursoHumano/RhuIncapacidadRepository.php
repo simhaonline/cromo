@@ -57,7 +57,7 @@ class RhuIncapacidadRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuIncapacidad::class, 'i')
             ->select('i.codigoIncapacidadPk')
             ->addSelect('i.numero as numeroEps')
-            ->addSelect('es.nombre as entidad')
+            ->addSelect('es.nombreCorto as entidad')
             ->addSelect('e.numeroIdentificacion as documento')
             ->addSelect('e.nombreCorto as empleado')
             ->addSelect('it.nombre')

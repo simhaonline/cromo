@@ -5,6 +5,7 @@ namespace App\Controller\General\Administracion\General;
 
 
 use App\Controller\MaestroController;
+use App\Entity\General\GenIdentificacion;
 use App\Entity\General\GenResolucion;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
 use App\Form\Type\General\ResolucionType;
@@ -20,6 +21,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class GenIdentificacionController extends MaestroController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "GenIdentificacion";
+
+
+    protected $clase= GenIdentificacion::class;
+    protected $claseNombre = "GenIdentificacion";
+    protected $modulo   = "General";
+    protected $funcion  = "Administracion";
+    protected $grupo    = "General";
+    protected $nombre   = "GenIdentificacion";
 
 
 

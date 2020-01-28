@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Administracion\Inventario\Bodega;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
+use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\DocumentoType;
@@ -22,6 +23,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class BodegaController extends MaestroController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "InvBodega";
 
+
+    protected $class = InvBodega::class;
+    protected $claseNombre = "InvBodega";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "Bodega";
 
 }

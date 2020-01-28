@@ -12,6 +12,7 @@ use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TtePoseedor;
+use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteRutaRecogida;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\DespachoRecogidaType;
@@ -41,6 +42,15 @@ class RedespachoController extends MaestroController
 {
     public $tipo = "movimiento";
     public $modelo = "TteRedespacho";
+
+    protected $clase = TteRedespacho::class;
+    protected $claseNombre = "TteRedespacho";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recogida";
+    protected $nombre = "Redespacho";
+
+
 
 }
 

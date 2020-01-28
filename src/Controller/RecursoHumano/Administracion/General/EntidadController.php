@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Administracion\General;
 
 
 use App\Controller\MaestroController;
+use App\Entity\RecursoHumano\RhuEntidad;
 use App\Entity\RecursoHumano\RhuGrupo;
 use App\Form\Type\RecursoHumano\GrupoType;
 use App\General\General;
@@ -21,6 +22,14 @@ class EntidadController extends  MaestroController
 {
 
 
+    public $tipo = "administracion";
+    public $modelo = "RhuEntidad";
 
+    protected $clase = RhuEntidad::class;
+    protected $claseNombre = "RhuEntidad";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "General";
+    protected $nombre = "Entidad";
 
 }

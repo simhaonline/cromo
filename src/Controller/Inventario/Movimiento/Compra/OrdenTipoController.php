@@ -39,4 +39,13 @@ class OrdenTipoController extends MaestroController
     public $tipo = "movimiento";
     public $modelo = "InvOrdenTipo";
 
+    protected $class = InvOrdenTipo::class;
+    protected $claseNombre = "InvOrdenTipo";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Compra";
+    protected $nombre = "OrdenTipo";
+
+
+
 }

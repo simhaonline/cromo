@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Dotacion;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuDotacion;
 use App\Entity\RecursoHumano\RhuDotacionDetalle;
 use App\Entity\RecursoHumano\RhuDotacionElemento;
@@ -25,8 +26,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class DotacionController extends AbstractController
+class DotacionController extends MaestroController
 {
+
+    public $tipo = "movimiento";
+    public $modelo = "RhuDotacion";
+
+
     protected $clase = RhuDotacion::class;
     protected $claseFormulario = DotacionType::class;
     protected $claseNombre = "RhuDotacion";

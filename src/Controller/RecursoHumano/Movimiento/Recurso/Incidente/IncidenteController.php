@@ -31,7 +31,7 @@ class IncidenteController extends MaestroController
 {
 
     public $tipo = "movimiento";
-    public $modelo = "RhuIncidenteController";
+    public $modelo = "RhuIncidente";
 
 
     protected $clase = RhuIncidente::class;

@@ -39,4 +39,13 @@ class CotizacionTipoController extends MaestroController
     public $tipo = "movimiento";
     public $modelo = "InvCotizacionTipo";
 
+    protected $class = InvCotizacionTipo::class;
+    protected $claseNombre = "InvCotizacionTipo";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Comercial";
+    protected $nombre = "CotizacionTipo";
+
+
+
 }

@@ -6,6 +6,7 @@ namespace App\Controller\General\Administracion\General;
 
 use App\Controller\MaestroController;
 use App\Entity\General\GenResolucion;
+use App\Entity\General\GenSexo;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
 use App\Form\Type\General\ResolucionType;
 use App\Form\Type\RecursoHumano\VacacionTipoType;
@@ -19,6 +20,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GenSexoController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "GenSexo";
+
+
+    protected $clase= GenSexo::class;
+    protected $claseNombre = "GenSexo";
+    protected $modulo   = "General";
+    protected $funcion  = "Administracion";
+    protected $grupo    = "General";
+    protected $nombre   = "GenSexo";
 
 
 }

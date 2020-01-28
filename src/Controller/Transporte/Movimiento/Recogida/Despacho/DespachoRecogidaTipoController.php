@@ -10,6 +10,7 @@ use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespachoRecogida;
+use App\Entity\Transporte\TteDespachoRecogidaTipo;
 use App\Entity\Transporte\TteOperacion;
 use App\Entity\Transporte\TtePoseedor;
 use App\Entity\Transporte\TteRutaRecogida;
@@ -41,6 +42,14 @@ class DespachoRecogidaTipoController extends MaestroController
 {
     public $tipo = "movimiento";
     public $modelo = "TteDespachoRecogidaTipo";
+
+    protected $clase = TteDespachoRecogidaTipo::class;
+    protected $claseNombre = "TteDespachoRecogidaTipo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Movimiento";
+    protected $nombre = "DespachoRecogidaTipo";
+
 
 }
 

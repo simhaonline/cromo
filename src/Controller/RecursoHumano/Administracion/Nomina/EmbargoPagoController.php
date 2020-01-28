@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Administracion\Nomina;
 
 
 use App\Controller\MaestroController;
+use App\Entity\RecursoHumano\RhuEmbargoPago;
 use App\Entity\RecursoHumano\RhuEmbargoTipo;
 use App\Form\Type\RecursoHumano\EmbargoTipoType;
 use App\General\General;
@@ -19,6 +20,14 @@ class EmbargoPagoController extends MaestroController
 {
 
 
+    public $tipo = "administracion";
+    public $modelo = "RhuEmbargoPago";
 
+    protected $clase = RhuEmbargoPago::class;
+    protected $claseNombre = "RhuEmbargoPago";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Nomina";
+    protected $nombre = "EmbargoPago";
 
 }

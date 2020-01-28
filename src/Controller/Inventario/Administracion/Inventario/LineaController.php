@@ -21,6 +21,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LineaController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "InvLinea";
+
+
+    protected $class= InvLina::class;
+    protected $claseNombre = "InvLinea";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "Linea";
+
 
 
 }

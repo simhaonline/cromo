@@ -7,6 +7,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
 use App\Entity\Inventario\InvPrecio;
 use App\Entity\Inventario\InvPrecioDetalle;
+use App\Entity\Inventario\InvSucursal;
 use App\Form\Type\Inventario\PrecioType;
 use App\General\General;
 use App\Utilidades\Mensajes;
@@ -27,6 +28,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class SucursalController extends MaestroController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "InvSucursal";
 
+
+    protected $class = InvSucursal::class;
+    protected $claseNombre = "InvSucursal";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "General";
+    protected $nombre = "Sucursal";
 }
 

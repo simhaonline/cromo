@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Crm\Administracion\Control\Visita;
+namespace App\Controller\Crm\Administracion\Comercial\Visita;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -26,7 +26,7 @@ class VisitaTipoController extends MaestroController
     protected $claseNombre = "CrmVisitaTipo";
     protected $modulo   = "Crm";
     protected $funcion  = "Administracion";
-    protected $grupo    = "Control";
+    protected $grupo    = "Comercial";
     protected $nombre   = "VisitaTipo";
     /**
      * @Route("/crm/administracion/control/visitatipo/lista", name="crm_administracion_control_visitatipo_lista")

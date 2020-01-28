@@ -2,7 +2,7 @@
 
 
 
-namespace App\Controller\Crm\Administracion\Fase;
+namespace App\Controller\Crm\Administracion\Comercial\Fase;
 
 
 use App\Controller\Estructura\ControllerListenerGeneral;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FaceController extends MaestroController
+class FaseController extends MaestroController
 {
     public $tipo = "administracion";
     public $modelo = "CrmFase";

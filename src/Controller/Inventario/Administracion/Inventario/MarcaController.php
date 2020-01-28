@@ -6,6 +6,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
+use App\Entity\Inventario\InvMarca;
 use App\Form\Type\Inventario\DocumentoType;
 use App\Form\Type\Inventario\ItemType;
 use App\General\General;
@@ -21,6 +22,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MarcaController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "InvMarca";
+
+
+    protected $class= InvMarca::class;
+    protected $claseNombre = "InvMarca";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "Marca";
 
 
 }

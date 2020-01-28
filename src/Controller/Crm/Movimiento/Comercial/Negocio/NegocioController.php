@@ -32,7 +32,7 @@ class NegocioController extends MaestroController
     protected $claseNombre = "CrmNegocio";
     protected $modulo = "Crm";
     protected $funcion = "Movimiento";
-    protected $grupo = "comercial";
+    protected $grupo = " Comercial";
     protected $nombre = "Negocio";
 
     /**

@@ -20,6 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class GenReligionController extends MaestroController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "GenReligion";
+
+
 
 
 

@@ -14,6 +14,7 @@ use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteConductor;
 use App\Entity\Transporte\TteConfiguracion;
 use App\Entity\Transporte\TteDespacho;
+use App\Entity\Transporte\TteDespachoAdicional;
 use App\Entity\Transporte\TteDespachoAuxiliar;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteDespachoTipo;
@@ -58,5 +59,13 @@ class DespachoAdicionalController extends MaestroController
 {
     public $tipo = "movimiento";
     public $modelo = "TteDespachoAdicional";
+
+    protected $clase = TteDespachoAdicional::class;
+    protected $claseNombre = "TteDespachoAdicional";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Transporte";
+    protected $nombre = "DespachoAdicional";
+
 
 }

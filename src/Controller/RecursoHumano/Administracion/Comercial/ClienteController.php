@@ -21,7 +21,7 @@ class ClienteController extends MaestroController
 
 
     public $tipo = "administracion";
-    public $modelo = "RhuClientes";
+    public $modelo = "RhuCliente";
 
 
     protected $clase = RhuCliente::class;

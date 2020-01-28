@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Administracion\Inventario;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
+use App\DataFixtures\InvDocumentoTipo;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvItem;
 use App\Form\Type\Inventario\DocumentoType;
@@ -21,6 +22,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DocumentoTipoController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "InvDocumentoTipo";
+
+
+    protected $class= InvDocumentoTipo::class;
+    protected $claseNombre = "InvDocumentoTipo";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "DocumentoTipo";
 
 
 }

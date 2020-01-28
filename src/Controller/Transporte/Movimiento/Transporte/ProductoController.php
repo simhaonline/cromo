@@ -16,6 +16,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Entity\Transporte\TteNovedad;
 use App\Entity\Transporte\TteOperacion;
+use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRedespacho;
 use App\Entity\Transporte\TteServicio;
@@ -47,6 +48,13 @@ class ProductoController extends MaestroController
 
     public $tipo = "movimiento";
     public $modelo = "TteProducto";
+
+    protected $clase = TteProducto::class;
+    protected $claseNombre = "TteProducto";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Transporte";
+    protected $nombre = "Producto";
 
 }
 

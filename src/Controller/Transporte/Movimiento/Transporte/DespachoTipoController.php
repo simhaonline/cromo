@@ -57,6 +57,15 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class DespachoTipoController extends MaestroController
 {
     public $tipo = "movimiento";
-    public $modelo = "TteDespachoTipoController";
+    public $modelo = "TteDespachoTipo";
+
+
+    protected $clase = TteDespachoTipo::class;
+    protected $claseNombre = "TteDespachoTipo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Transporte";
+    protected $nombre = "DespachoTipo";
+
 
 }

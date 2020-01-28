@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Crm\Movimiento\Control\Visita;
+namespace App\Controller\Crm\Movimiento\Comercial\Visita;
 
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;

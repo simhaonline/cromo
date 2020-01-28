@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\MaestroController;
 use App\Entity\Financiero\FinAsiento;
+use App\Entity\Financiero\FinComprobante;
 use App\Entity\Financiero\FinCuenta;
 use App\Form\Type\Financiero\CuentaType;
 use App\General\General;
@@ -22,6 +23,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class FinComprobanteController extends MaestroController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "FinComprobante";
+
+
+    protected $clase= FinComprobante::class;
+    protected $claseNombre = "FinComprobante";
+    protected $modulo   = "Financiero";
+    protected $funcion  = "Administracion";
+    protected $grupo    = "Contabilidad";
+    protected $nombre   = "FinComprobante";
 
 }
 

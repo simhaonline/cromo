@@ -21,6 +21,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GrupoController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "InvGrupo";
+
+
+    protected $class= InvGrupo::class;
+    protected $claseNombre = "InvGrupo";
+    protected $modulo = "Inventario";
+    protected $funcion = "Administracion";
+    protected $grupo = "Inventario";
+    protected $nombre = "Grupo";
+
 
 
 }

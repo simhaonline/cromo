@@ -9,6 +9,7 @@ use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCondicion;
 use App\Entity\Transporte\TteCondicionFlete;
 use App\Entity\Transporte\TteDescuentoZona;
+use App\Entity\Transporte\TteFacturaTipo;
 use App\Form\Type\Transporte\CondicionType;
 use App\Form\Type\Transporte\CondicionFleteType;
 use App\Utilidades\Estandares;
@@ -22,6 +23,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class FacturaTipoController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "TteFacturaTipo";
 
+
+    protected $class = TteFacturaTipo::class;
+    protected $claseNombre = "TteFacturaTipo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Administracion";
+    protected $grupo = "Comercial";
+    protected $nombre = "FacturaTipo";
 }
 

@@ -11,6 +11,7 @@ use App\Entity\Transporte\TteDespachoRecogida;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteRecaudoDevolucion;
 use App\Entity\Transporte\TteRecogida;
+use App\Entity\Transporte\TteRecogidaProgramada;
 use App\Form\Type\Transporte\RecogidaType;
 use App\Formato\Transporte\Recogida;
 use App\General\General;
@@ -34,6 +35,15 @@ class RecogidaProgramadaController extends MaestroController
 
     public $tipo = "movimiento";
     public $modelo = "TteRecogidaProgramada";
+
+    protected $clase = TteRecogidaProgramada::class;
+    protected $claseNombre = "TteRecogidaProgramada";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Recogida";
+    protected $nombre = "RecogidaProgramada";
+
+
 
 }
 

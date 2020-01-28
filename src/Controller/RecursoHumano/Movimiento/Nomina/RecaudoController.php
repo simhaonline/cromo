@@ -2,9 +2,10 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 
-use App\Controller\BaseController;
+
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuRecaudo;
 use App\Form\Type\RecursoHumano\RecaudoType;
 use App\General\General;
@@ -12,8 +13,12 @@ use App\Utilidades\Mensajes;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class RecaudoController extends ControllerListenerGeneral
+class RecaudoController extends MaestroController
 {
+    public $tipo = "movimiento";
+    public $modelo = "RhuRecaudo";
+
+
     protected $clase = RhuRecaudo::class;
     protected $claseFormulario = RecaudoType::class;
     protected $claseNombre = "RhuRecaudo";

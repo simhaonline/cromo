@@ -34,4 +34,11 @@ class CuentaCobrarTipoController extends MaestroController
     public $tipo = "movimiento";
     public $modelo = "CarCuentaCobrarTipo";
 
+    protected $clase = CarCuentaCobrarTipo::class;
+    protected $claseNombre = "CarCuentaCobrarTipo";
+    protected $modulo = "Cartera";
+    protected $funcion = "Movimiento";
+    protected $grupo = "CuentaCobrar";
+    protected $nombre = "CuentaCobrarTipo";
+
 }

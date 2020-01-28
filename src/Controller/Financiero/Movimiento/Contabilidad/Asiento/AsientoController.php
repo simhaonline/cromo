@@ -34,14 +34,14 @@ class AsientoController extends MaestroController
 {
 
 
-    public $tipo = "administracion";
+    public $tipo = "movimiento";
     public $modelo = "FinAsiento";
 
 
     protected $clase = FinAsiento::class;
     protected $claseNombre = "FinAsiento";
     protected $modulo = "Financiero";
-    protected $funcion = "Administracion";
+    protected $funcion = "Movimiento";
     protected $grupo = "Contabilidad";
     protected $nombre = "Asiento";
 

@@ -8,6 +8,7 @@ use App\Controller\Estructura\FuncionesController;
 use App\Controller\Estructura\MensajesController;
 use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCumplido;
+use App\Entity\Transporte\TteCumplidoTipo;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteCliente;
 use App\Form\Type\Transporte\CumplidoType;
@@ -32,6 +33,14 @@ class CumplidoTipoController extends MaestroController
 
     public $tipo = "movimiento";
     public $modelo = "TteCumplidoTipo";
+
+    protected $clase = TteCumplidoTipo::class;
+    protected $claseNombre = "TteCumplidoTipo";
+    protected $modulo = "Transporte";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Transporte";
+    protected $nombre = "CumplidoTipo";
+
 
 
 }

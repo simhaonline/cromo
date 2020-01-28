@@ -9,6 +9,8 @@ use App\Controller\MaestroController;
 class GenEntidadController extends MaestroController
 {
 
+    public $tipo = "administracion";
+    public $modelo = "GenEntidad";
 
 
 

@@ -4,6 +4,7 @@ namespace App\Controller\Tesoreria\Administracion;
 
 use App\Controller\BaseController;
 use App\Controller\MaestroController;
+use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Entity\Tesoreria\TesTercero;
 use App\Form\Type\Tesoreria\TerceroType;
 use App\General\General;
@@ -18,5 +19,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CuentaPagarTipo extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "TesCuentaPagarTipo";
+
+    protected $clase = TesCuentaPagarTipo::class;
+    protected $claseNombre = "TesCuentaPagarTipo";
+    protected $modulo = "Tesoreria";
+    protected $funcion = "Administracion";
+    protected $grupo = "Administracion";
+    protected $nombre = "CuentaPagrTipo";
 
 }

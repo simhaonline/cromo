@@ -44,4 +44,13 @@ class RemisionTipoController extends MaestroController
     public $tipo = "movimiento";
     public $modelo = "InvRemisionTipo";
 
+
+    protected $class = InvRemisionTipo::class;
+    protected $claseNombre = "InvRemisionTipo";
+    protected $modulo = "Inventario";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Comercial";
+    protected $nombre = "InvRemisionTipo";
+
+
 }

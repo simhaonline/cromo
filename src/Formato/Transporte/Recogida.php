@@ -3,6 +3,7 @@
 namespace App\Formato\Transporte;
 
 use App\Entity\Transporte\TteRecogida;
+use App\Utilidades\Estandares;
 
 class Recogida extends \FPDF {
 
@@ -43,30 +44,7 @@ class Recogida extends \FPDF {
         $this->SetFont('Arial','B',10);
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
-        //Logo
-        $this->SetXY(53, 10);
-        //$this->Image('../public/img/empresa/logo.jpg', 12, 13, 40, 25);
-        try {
-            $logo=self::$em->getRepository('App\Entity\General\GenImagen')->find('LOGO');
-            if($logo ){
-                $this->Image("data:image/'{$logo->getExtension()}';base64,".base64_encode(stream_get_contents($logo->getImagen())), 12, 13, 40, 25,$logo->getExtension());
-            }
-        } catch (\Exception $exception) {
-        }
-        $this->Cell(147, 7, utf8_decode("RECOGIDA"), 0, 0, 'C', 1);
-        $this->SetXY(53, 18);
-        $this->SetFont('Arial', 'B', 9);
-        $this->Cell(20, 4, "EMPRESA:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, utf8_decode('EMPRESA DE TRANSPORTE S.A.S'), 0, 0, 'L', 0);
-        $this->SetXY(53, 22);
-        $this->Cell(20, 4, "NIT:", 0, 0, 'L', 1);
-        $this->Cell(100, 4, '800123456-1', 0, 0, 'L', 0);
-        $this->SetXY(53, 26);
-        $this->Cell(20, 4, utf8_decode("DIRECCIÓN:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, utf8_decode('CRA 45 NRO 20-58'), 0, 0, 'L', 0);
-        $this->SetXY(53, 30);
-        $this->Cell(20, 4, utf8_decode("TELÉFONO:"), 0, 0, 'L', 1);
-        $this->Cell(100, 4, '4587478', 0, 0, 'L', 0);
+        Estandares::generarEncabezado($this, 'Recogida', self::$em);
 
         //ENCABEZADO ORDEN DE COMPRA
         $intY = 40;

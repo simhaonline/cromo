@@ -53,9 +53,9 @@ class RhuAspirante
     private $codigoRhFk;
 
     /**
-     * @ORM\Column(name="codigo_zona", type="string", length=10, nullable=true)
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=10, nullable=true)
      */
-    private $codigoZona;
+    private $codigoZonaFk;
 
     /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
@@ -248,13 +248,13 @@ class RhuAspirante
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuAspirantesCiudadExpedicionRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     * @ORM\JoinColumn(name="codigo_ciudad_expedicion_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadExpedicionRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuAspirantesCiudadNacimientoRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     * @ORM\JoinColumn(name="codigo_ciudad_nacimiento_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadNacimientoRel;
 
@@ -286,7 +286,6 @@ class RhuAspirante
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitudAspirante", mappedBy="aspiranteRel")
      */
     protected $solicitudesAspiranteRel;
-
 
     /**
      * @return array
@@ -414,6 +413,22 @@ class RhuAspirante
     public function setCodigoRhFk($codigoRhFk): void
     {
         $this->codigoRhFk = $codigoRhFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
     }
 
     /**
@@ -931,6 +946,22 @@ class RhuAspirante
     /**
      * @return mixed
      */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCargoRel()
     {
         return $this->cargoRel;
@@ -959,39 +990,6 @@ class RhuAspirante
     {
         $this->solicitudesAspiranteRel = $solicitudesAspiranteRel;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoZona()
-    {
-        return $this->codigoZona;
-    }
-
-    /**
-     * @param mixed $codigoZona
-     */
-    public function setCodigoZona($codigoZona): void
-    {
-        $this->codigoZona = $codigoZona;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZonaRel()
-    {
-        return $this->zonaRel;
-    }
-
-    /**
-     * @param mixed $zonaRel
-     */
-    public function setZonaRel($zonaRel): void
-    {
-        $this->zonaRel = $zonaRel;
-    }
-
 
 
 }

@@ -105,7 +105,7 @@ class AspiranteType extends AbstractType
             ->add('nombre2',TextType::class,['required' => false,'label' => 'Segundo nombre:'])
             ->add('apellido1',TextType::class,['required' => true,'label' => 'Primer apellido:'])
             ->add('apellido2',TextType::class,['required' => false,'label' => 'Segundo apellido:'])
-            ->add('telefono',NumberType::class,['required' => true,'label' => 'Telefono:'])
+            ->add('telefono',TextType::class,['required' => true,'label' => 'Telefono:'])
             ->add('celular',NumberType::class,['required' => true,'label' => 'Celular:'])
             ->add('direccion',TextType::class,['required' => true,'label' => 'Direccion:'])
             ->add('barrio',TextType::class,['required' => true,'label' => 'Barrio:'])

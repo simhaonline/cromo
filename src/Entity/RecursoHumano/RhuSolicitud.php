@@ -38,9 +38,9 @@ class RhuSolicitud
     private $codigoSolicitudMotivoFk;
 
     /**
-     * @ORM\Column(name="codigo_experiencia_solicitud_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_solicitud_experiencia_fk", type="string", length=10, nullable=true)
      */
-    private $codigoExperienciaSolicitudFk;
+    private $codigoSolicitudExperienciaFk;
 
     /**
      * @ORM\Column(name="codigo_estado_civil_fk", type="string", length=10, nullable=true)
@@ -135,11 +135,6 @@ class RhuSolicitud
     private $edadMaxima;
 
     /**
-     * @ORM\Column(name="numero_hijos", type="integer", nullable=true)
-     */
-    private $numeroHijos;
-
-    /**
      * @ORM\Column(name="codigo_tipo_vehiculo_fk", type="string", length=30, nullable=true)
      */
     private $codigoTipoVehiculoFk;
@@ -153,11 +148,6 @@ class RhuSolicitud
      * @ORM\Column(name="codigo_licencia_moto_fk", type="string", length=30, nullable=true)
      */
     private $codigoLicenciaMotoFk;
-
-    /**
-     * @ORM\Column(name="experiencia_solicitud", type="string", nullable=true)
-     */
-    private $experienciaSolicitud;
 
     /**
      * @ORM\Column(name="comentarios", type="string", length=300, nullable=true)
@@ -335,17 +325,17 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getCodigoExperienciaSolicitudFk()
+    public function getCodigoSolicitudExperienciaFk()
     {
-        return $this->codigoExperienciaSolicitudFk;
+        return $this->codigoSolicitudExperienciaFk;
     }
 
     /**
-     * @param mixed $codigoExperienciaSolicitudFk
+     * @param mixed $codigoSolicitudExperienciaFk
      */
-    public function setCodigoExperienciaSolicitudFk($codigoExperienciaSolicitudFk): void
+    public function setCodigoSolicitudExperienciaFk($codigoSolicitudExperienciaFk): void
     {
-        $this->codigoExperienciaSolicitudFk = $codigoExperienciaSolicitudFk;
+        $this->codigoSolicitudExperienciaFk = $codigoSolicitudExperienciaFk;
     }
 
     /**
@@ -639,22 +629,6 @@ class RhuSolicitud
     /**
      * @return mixed
      */
-    public function getNumeroHijos()
-    {
-        return $this->numeroHijos;
-    }
-
-    /**
-     * @param mixed $numeroHijos
-     */
-    public function setNumeroHijos($numeroHijos): void
-    {
-        $this->numeroHijos = $numeroHijos;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCodigoTipoVehiculoFk()
     {
         return $this->codigoTipoVehiculoFk;
@@ -698,22 +672,6 @@ class RhuSolicitud
     public function setCodigoLicenciaMotoFk($codigoLicenciaMotoFk): void
     {
         $this->codigoLicenciaMotoFk = $codigoLicenciaMotoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExperienciaSolicitud()
-    {
-        return $this->experienciaSolicitud;
-    }
-
-    /**
-     * @param mixed $experienciaSolicitud
-     */
-    public function setExperienciaSolicitud($experienciaSolicitud): void
-    {
-        $this->experienciaSolicitud = $experienciaSolicitud;
     }
 
     /**
@@ -971,6 +929,7 @@ class RhuSolicitud
     {
         $this->solicitudesAspirantesSolicitudRel = $solicitudesAspirantesSolicitudRel;
     }
+
 
 
 }

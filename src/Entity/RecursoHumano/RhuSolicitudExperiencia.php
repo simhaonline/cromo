@@ -16,8 +16,7 @@ class RhuSolicitudExperiencia
     ];
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_solicitud_experiencia_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_solicitud_experiencia_pk", type="string", length=10)
      */        
     private $codigoSolicitudExperienciaPk;
 
@@ -30,6 +29,22 @@ class RhuSolicitudExperiencia
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="solicitudExperienciaRel")
      */
     protected $solicitudesExperienciasRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -78,6 +93,7 @@ class RhuSolicitudExperiencia
     {
         $this->solicitudesExperienciasRel = $solicitudesExperienciasRel;
     }
+
 
 
 }

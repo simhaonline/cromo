@@ -78,7 +78,7 @@ class RhuAspiranteRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("a.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('a.codigoAspirantePk', 'ASC');
+        $queryBuilder->addOrderBy('a.codigoAspirantePk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

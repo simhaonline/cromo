@@ -247,7 +247,6 @@ class EmpleadoController extends MaestroController
 
                 $arEmpleado->setCodigoContratoFk($arContrato->getCodigoContratoPk());
                 $arEmpleado->setEstadoContrato(true);
-                $arEmpleado->setCargoRel($arContrato->getCargoRel());
                 $em->persist($arEmpleado);
                 $em->flush();
             }

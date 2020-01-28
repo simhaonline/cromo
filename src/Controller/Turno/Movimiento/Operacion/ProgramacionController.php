@@ -288,10 +288,12 @@ class ProgramacionController extends MaestroController
         $raw = [];
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked()) {
-                $session->set('filtroRhuEmpleadoCodigo', $form->get('txtCodigo')->getData());
-                $session->set('filtroRhuEmpleadoNombre', $form->get('txtNombre')->getData());
-                $session->set('filtroRhuEmpleadoIdentificacion', $form->get('txtIdentificacion')->getData());
-                $session->set('filtroRhuEmpleadoEstadoContrato', $form->get('chkEstadoContrato')->getData());
+                $raw['filtros'] =[
+                    'codigoEmpelado'=>$form->get('txtCodigo')->getData(),
+                    'nombreCorto'=>$form->get('txtNombre')->getData(),
+                    'numeroIdentificacion'=>$form->get('txtIdentificacion')->getData(),
+                    'estadoContrato'=>$form->get('chkEstadoContrato')->getData()
+                ];
             }
         }
         $arEmpleados = $paginator->paginate($em->getRepository(RhuEmpleado::class)->ListaBuscarEmpleado($raw), $request->query->get('page', 1), 20);

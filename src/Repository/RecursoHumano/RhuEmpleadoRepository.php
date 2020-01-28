@@ -354,6 +354,13 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         $numeroIdentificacion = null;
         $estadoContrato = null;
 
+        if ($filtros) {
+            $codigoEmpelado = $filtros['codigoEmpelado'] ?? null;
+            $nombreCorto = $filtros['nombreCorto'] ?? null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
+            $estadoContrato = $filtros['estadoContrato'] ?? null;
+        }
+
         $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoContratoFk')
             ->addSelect('e.codigoEmpleadoPk')

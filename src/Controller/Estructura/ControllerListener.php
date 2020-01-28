@@ -108,6 +108,9 @@ class ControllerListener extends MaestroController{
                                     $permisoGrupo = true;
                                 }
                                 break;
+                            default:
+                                $permisoGrupo = true;
+                                break;
                         }
                     }
                 }

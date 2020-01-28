@@ -810,7 +810,14 @@ class MigracionController extends Controller
             ob_clean();
         }
 
-
+        $arr = $conn->query("SELECT codigo_empleado_pk, codigo_contrato_activo_fk FROM rhu_empleado WHERE codigo_contrato_activo_fk is not null");
+        foreach ($arr as $row) {
+            $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($row['codigo_empleado_pk']);
+            $arEmpleado->setEstadoContrato(1);
+            $arEmpleado->setContratoRel($em->getReference(RhuContrato::class, $row['codigo_contrato_activo_fk']));
+            $em->persist($arEmpleado);
+        }
+        $em->flush();
     }
 
     private function rhuCambioSalario($conn)

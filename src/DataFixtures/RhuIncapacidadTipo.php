@@ -9,6 +9,9 @@ class RhuIncapacidadTipo extends Fixture
 {
     public function load(ObjectManager $manager)
     {
+
+        /*
+        No activar este datafixture att:mario
         $arIncapacidadTipo = $manager->getRepository(\App\Entity\RecursoHumano\RhuIncapacidadTipo::class)->find('GEN');
         if(!$arIncapacidadTipo){
             $arIncapacidadTipo = new \App\Entity\RecursoHumano\RhuIncapacidadTipo();
@@ -28,7 +31,7 @@ class RhuIncapacidadTipo extends Fixture
             $arIncapacidadTipo->setGeneraPago(1);
             $arIncapacidadTipo->setGeneraIbc(1);
             $manager->persist($arIncapacidadTipo);
-        }
+        }*/
         $manager->flush();
     }
 }

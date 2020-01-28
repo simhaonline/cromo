@@ -291,6 +291,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setHoras($intHorasProcesarIncapacidad);
                 $arPagoDetalle->setDias($intDias);
                 $arPagoDetalle->setVrHora($vrHoraIncapacidad);
+                $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
                 //$arPagoDetalle->setVrDia($douVrDia);
 
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
@@ -343,6 +344,7 @@ class RhuPagoRepository extends ServiceEntityRepository
                 $arPagoDetalle->setHoras($intHorasProcesarIncapacidad);
                 $arPagoDetalle->setDias($intDias);
                 $arPagoDetalle->setVrHora($vrHoraIncapacidad);
+                $arPagoDetalle->setPorcentaje($arConcepto->getPorcentaje());
                 //$arPagoDetalle->setVrDia($douVrDia);
                 $this->getValoresPagoDetalle($arrDatosGenerales, $arPagoDetalle, $arConcepto, $pagoDetalle);
                 $arPagoDetalle->setIncapacidadRel($arIncapacidad);

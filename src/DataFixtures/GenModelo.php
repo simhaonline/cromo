@@ -49,8 +49,6 @@ class GenModelo extends Fixture
             ['codigo' =>'FinCuenta',                            'modulo'=> 'Financiero',              'funcion' => 'administracion',           'grupo' => 'Contabilidad',        'descontinuado' => '0',  'orden' => 3],
             ['codigo' =>'FinTercero',                           'modulo'=> 'Financiero',              'funcion' => 'administracion',           'grupo' => 'Tercero',             'descontinuado' => '0',  'orden' => 4],
 
-
-
             ['codigo' =>'GenBanco',                             'modulo'=> 'General',                 'funcion' => 'administracion',           'grupo' => 'General',             'descontinuado' => '0',  'orden' => 1],
             ['codigo' =>'GenCiudad',                            'modulo'=> 'General',                 'funcion' => 'administracion',           'grupo' => 'General',             'descontinuado' => '0',  'orden' => 2],
             ['codigo' =>'GenCuenta',                            'modulo'=> 'General',                 'funcion' => 'administracion',           'grupo' => 'General',             'descontinuado' => '0',  'orden' => 3],

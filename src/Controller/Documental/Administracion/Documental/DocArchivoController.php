@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Documental\Movimiento;
+namespace App\Controller\Administracion\Documental;
 
 
 use App\Controller\MaestroController;

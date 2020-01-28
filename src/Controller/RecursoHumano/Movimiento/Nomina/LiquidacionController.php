@@ -12,6 +12,7 @@ use App\Entity\RecursoHumano\RhuGrupo;
 use App\Entity\RecursoHumano\RhuLiquidacion;
 use App\Entity\RecursoHumano\RhuLiquidacionAdicional;
 use App\Entity\RecursoHumano\RhuPago;
+use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\Transporte\TteDespacho;
 use App\Form\Type\RecursoHumano\LiquidacionParametrosType;
 use App\Form\Type\RecursoHumano\LiquidacionType;
@@ -69,6 +70,7 @@ class LiquidacionController extends AbstractController
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
         $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
@@ -80,6 +82,11 @@ class LiquidacionController extends AbstractController
             if ($form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
                 General::get()->setExportar($em->getRepository(RhuLiquidacion::class)->lista($raw), "Liquidaciones");
+            }
+            if ($form->get('btnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                $em->getRepository(RhuLiquidacion::class)->eliminar($arrSeleccionados);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_nomina_liquidacion_lista'));
             }
         }
         $arLiquidaciones = $paginator->paginate($em->getRepository(RhuLiquidacion::class)->lista($raw), $request->query->getInt('page', 1), 30);

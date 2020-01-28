@@ -68,6 +68,7 @@
             <th title="Estado anulado">ANU</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -95,6 +96,9 @@
                         </i>
                     </a>
                 </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arLiquidacion.codigoLiquidacionPk }}" />
+                </td>
             </tr>
         {% endfor %}
         </tbody>
@@ -110,6 +114,9 @@
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}

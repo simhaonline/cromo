@@ -312,8 +312,6 @@ class ContratoController extends MaestroController
                  * @var $arEmpleado RhuEmpleado
                  */
                 $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
-                $arEmpleado->setCodigoClasificacionRiesgoFk(NULL);
-                $arEmpleado->setCodigoCargoFk(NULL);
                 $arEmpleado->setEstadoContrato(0);
                 $arEmpleado->setCodigoContratoFk(NULL);
                 $arEmpleado->setCodigoContratoUltimoFk($id);

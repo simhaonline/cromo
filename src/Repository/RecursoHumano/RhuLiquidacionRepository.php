@@ -27,6 +27,7 @@ use App\Entity\RecursoHumano\RhuNovedad;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuPagoTipo;
+use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuReclamo;
 use App\Entity\RecursoHumano\RhuVacacionTipo;
@@ -1142,6 +1143,24 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
             Mensajes::error("La liquidacion no estra aprobada");
         }
     }
+
+    public function eliminar($arrSeleccionados)
+    {
+        try {
+            foreach ($arrSeleccionados as $arrSeleccionado) {
+                $arRegistro = $this->getEntityManager()->getRepository(RhuLiquidacion::class)->find($arrSeleccionado);
+                if($arRegistro->getEstadoAutorizado() == 0) {
+                    if ($arRegistro) {
+                        $this->getEntityManager()->remove($arRegistro);
+                    }
+                }
+            }
+            $this->getEntityManager()->flush();
+        } catch (\Exception $ex) {
+            Mensajes::error("El registro tiene registros relacionados");
+        }
+    }
+
     /**
      * @param $arLiquidacion
      * @throws \Doctrine\ORM\ORMException

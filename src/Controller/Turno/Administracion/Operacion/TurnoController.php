@@ -87,6 +87,9 @@ class TurnoController extends MaestroController
        if ($form->isSubmitted() && $form->isValid()) {
            if ($form->get('guardar')->isClicked()) {
                $arTurno = $form->getData();
+               if (is_null($arTurno->getHorasNocturnas())){
+                   $arTurno->setHorasNocturnas(0);
+               }
                $em->persist($arTurno);
                $em->flush();
                return $this->redirect($this->generateUrl('turno_administracion_operacion_turno_detalle', ['id' => $arTurno->getCodigoTurnoPk()]));

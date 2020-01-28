@@ -26,7 +26,7 @@ class TurnoType extends   AbstractType
             ->add('horaHasta', TimeType::class, ['required' => true])
             ->add('horas', NumberType::class, ['required' => true])
             ->add('horasDiurnas', NumberType::class, ['required' => false])
-            ->add('horasNocturnas', NumberType::class, ['required' => false])
+            ->add('horasNocturnas', NumberType::class, ['required' => false, 'attr'=>['placeholder'=>0]])
             ->add('novedad', CheckboxType::class, ['required' => false,'label' => 'Novedad'])
             ->add('descanso', CheckboxType::class, ['required' => false,'label' => 'Descanso'])
             ->add('descansoOrdinario', CheckboxType::class, ['required' => false,'label' => 'Descanso ordinario'])

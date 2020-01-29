@@ -27,6 +27,9 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
 
         $codigoCuentaPagar = null;
         $numero = null;
+        $codigoModelo = null;
+        $modelo = null;
+        $numero = null;
         $codigoTercero = null;
         $cuentaPagarTipo = null;
         $cuentaPagarBanco = null;
@@ -39,6 +42,8 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         if ($filtros) {
             $codigoCuentaPagar = $filtros['codigoCuentaPagar'] ?? null;
             $numero = $filtros['numero'] ?? null;
+            $codigoModelo = $filtros['codigoModelo'] ?? null;
+            $modelo = $filtros['modelo'] ?? null;
             $codigoTercero = $filtros['codigoTercero'] ?? null;
             $cuentaPagarTipo = $filtros['cuentaPagarTipo'] ?? null;
             $cuentaPagarBanco = $filtros['cuentaPagarBanco'] ?? null;
@@ -74,6 +79,12 @@ class TesCuentaPagarRepository extends ServiceEntityRepository
         }
         if($numero) {
             $queryBuilder->andWhere("cp.numeroDocumento = '{$numero}'");
+        }
+        if($codigoModelo) {
+            $queryBuilder->andWhere("cp.codigoDocumento = '{$codigoModelo}'");
+        }
+        if($modelo) {
+            $queryBuilder->andWhere("cp.modelo = '{$modelo}'");
         }
         if ($codigoTercero) {
             $queryBuilder->andWhere("cp.codigoTerceroFk = '{$codigoTercero}'");

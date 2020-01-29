@@ -86,11 +86,12 @@ class CuentaPagarController extends MaestroController
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('codigoModelo', TextType::class, array('required' => false))
+            ->add('modelo', TextType::class, array('required' => false))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
         $raw = [
@@ -215,6 +216,8 @@ class CuentaPagarController extends MaestroController
         $filtro = [
             'codigoCuentaPagar' => $form->get('codigoCuentaPagarPk')->getData(),
             'numero' => $form->get('numero')->getData(),
+            'codigoModelo' => $form->get('codigoModelo')->getData(),
+            'modelo' => $form->get('modelo')->getData(),
             'codigoTercero' => $form->get('txtCodigoTercero')->getData(),
             'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
             'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,

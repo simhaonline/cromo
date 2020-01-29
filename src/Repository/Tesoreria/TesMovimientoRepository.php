@@ -603,13 +603,18 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAnulado')
             ->addSelect('m.estadoContabilizado')
             ->addSelect('m.comentarios')
+            ->addSelect('m.codigoMovimientoClaseFk')
             ->addSelect('tl.nombreCorto')
             ->addSelect('tl.numeroIdentificacion')
             ->addSelect('tl.direccion')
             ->addSelect('tl.telefono')
+            ->addSelect('cu.codigoCuentaContableFk')
+            ->addSelect('cu.cuenta')
+            ->addSelect('ba.nombre as banco')
             ->leftJoin('m.movimientoTipoRel', 'it')
             ->leftJoin('m.terceroRel', 'tl')
-            ->leftJoin('m.cuentaRel', 'cu');
+            ->leftJoin('m.cuentaRel', 'cu')
+            ->leftJoin('cu.bancoRel', 'ba');
         if($codigoMovimientoPk){
             $queryBuilder->where("m.codigoMovimientoPk = {$codigoMovimientoPk}");
         } else {

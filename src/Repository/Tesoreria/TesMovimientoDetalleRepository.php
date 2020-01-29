@@ -156,6 +156,7 @@ class TesMovimientoDetalleRepository extends ServiceEntityRepository
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TesMovimientoDetalle::class, 'md')
             ->select('md.codigoMovimientoDetallePk')
             ->addSelect('md.codigoCuentaPagarFk')
+            ->addSelect('md.cuenta')
             ->addSelect('md.codigoCuentaFk')
             ->addSelect('md.naturaleza')
             ->addSelect('ter.nombreCorto AS terceroNombreCorto')

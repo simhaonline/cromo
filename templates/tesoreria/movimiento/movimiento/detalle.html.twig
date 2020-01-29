@@ -10,10 +10,14 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase' : arMovimiento.codigoMovimientoClaseFk}) }}">Volver</a>&nbsp;&nbsp;
+               href="{{ path('tesoreria_movimiento_movimiento_movimiento_lista', {'clase' : arMovimiento.codigoMovimientoClaseFk }) }}">Volver</a>&nbsp;&nbsp;
         </div>
     </div>
     <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('tesoreria_movimiento_movimiento_movimiento_nuevo', {'id': 0, 'clase' : arMovimiento.codigoMovimientoClaseFk}) }}">Nuevo</a>
+        </div>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>

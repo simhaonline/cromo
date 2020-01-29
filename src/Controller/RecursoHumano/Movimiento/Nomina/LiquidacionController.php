@@ -5,6 +5,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Nomina;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuCredito;
@@ -34,13 +35,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class LiquidacionController extends AbstractController
+class LiquidacionController extends MaestroController
 {
+
+    public $tipo = "movimiento";
+    public $modelo = "RhuLiquidacion";
+
     protected $clase = RhuLiquidacion::class;
     protected $claseFormulario = LiquidacionType::class;
     protected $claseNombre = "RhuLiquidacion";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Nomina";
     protected $nombre = "Liquidacion";
 

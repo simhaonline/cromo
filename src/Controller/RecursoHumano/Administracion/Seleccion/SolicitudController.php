@@ -18,5 +18,15 @@ use App\General\General;
 
 class SolicitudController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "RhuSolicitud";
+
+    protected $clase = RhuSolicitud::class;
+
+    protected $claseNombre = "RhuSolicitud";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Seleccion";
+    protected $nombre = "Solicitud";
 
 }

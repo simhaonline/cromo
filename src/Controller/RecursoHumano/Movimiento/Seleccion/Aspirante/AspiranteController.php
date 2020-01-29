@@ -52,9 +52,11 @@ class AspiranteController extends MaestroController
         $form = $this->createFormBuilder()
             ->add('codigoAspirantePk', TextType::class, array('required' => false))
             ->add('nombre', TextType::class, ['required' => false])
+            ->add('numeroIdentificacion', TextType::class, ['required' => false])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
+            ->add('estadoBloqueado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -242,9 +244,11 @@ class AspiranteController extends MaestroController
         $filtro = [
             'codigoAspirante' => $form->get('codigoAspirantePk')->getData(),
             'nombre' => $form->get('nombre')->getData(),
+            'numeroIdentificacion' => $form->get('numeroIdentificacion')->getData(),
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),
+            'estadoBloqueado' => $form->get('estadoBloqueado')->getData(),
         ];
 
         return $filtro;

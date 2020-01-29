@@ -22,18 +22,22 @@ class RhuAspiranteRepository extends ServiceEntityRepository
 
         $codigoAspirante = null;
         $nombre = null;
+        $numeroIdentificacion = null;
         $fechaDesde = null;
         $fechaHasta = null;
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
+        $estadoBloqueado = null;
 
         if ($filtros) {
             $codigoAspirante = $filtros['codigoAspirante'] ?? null;
             $nombre = $filtros['nombre'] ?? null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $estadoBloqueado = $filtros['estadoBloqueado'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuAspirante::class, 'a')
@@ -47,9 +51,13 @@ class RhuAspiranteRepository extends ServiceEntityRepository
             ->addSelect('a.direccion')
             ->addSelect('a.estadoAutorizado')
             ->addSelect('a.estadoAprobado')
-            ->addSelect('a.estadoAnulado');
+            ->addSelect('a.estadoAnulado')
+            ->addSelect('a.estadoBloqueado');
         if ($codigoAspirante) {
             $queryBuilder->andWhere("a.codigoAspirantePk = '{$codigoAspirante}'");
+        }
+        if ($numeroIdentificacion) {
+            $queryBuilder->andWhere("a.numeroIdentificacion = '{$numeroIdentificacion}'");
         }
         if ($nombre) {
             $queryBuilder->andWhere("a.nombreCorto LIKE '%{$nombre}%'");
@@ -76,6 +84,14 @@ class RhuAspiranteRepository extends ServiceEntityRepository
                 break;
             case '1':
                 $queryBuilder->andWhere("a.estadoAnulado = 1");
+                break;
+        }
+        switch ($estadoBloqueado) {
+            case '0':
+                $queryBuilder->andWhere("a.estadoBloqueado = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("a.estadoBloqueado = 1");
                 break;
         }
         $queryBuilder->addOrderBy('a.codigoAspirantePk', 'DESC');
@@ -113,7 +129,7 @@ class RhuAspiranteRepository extends ServiceEntityRepository
         $em->persist($arAspirante);
         $em->flush();
     }
-    
+
     public function camposPredeterminados()
     {
         $qb = $this->_em->createQueryBuilder()

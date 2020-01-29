@@ -18,7 +18,11 @@
                         <div class="col-sm-2">
                             {{ form_widget(form.nombre) }}
                         </div>
-                        <label class="col-sm-1 col-sm-offset-3 control-label">Autorizado:</label>
+                        <label class=" col-sm-1 control-label">Identificacion:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.numeroIdentificacion) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Autorizado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAutorizado) }}
                         </div>
@@ -33,6 +37,12 @@
                         <label class="col-sm-1 col-sm-offset-9 control-label">Anulado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAnulado) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 col-sm-offset-9 control-label">Bloqueado:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.estadoBloqueado) }}
                         </div>
                     </div>
                 </div>
@@ -55,6 +65,7 @@
             <th>CORREO</th>
             <th title="AUTORIZADO">AUT</th>
             <th title="APROBADO">APRO</th>
+            <th title="BLOQUEADO">BLOQ</th>
             <th title="ANULADO">ANU</th>
             <th></th>
             <th></th>
@@ -71,6 +82,7 @@
                 <td>{{ arAspirante.correo }}</td>
                 <td>{{ arAspirante.estadoAutorizado ? 'SI' : 'NO' }}</td>
                 <td>{{ arAspirante.estadoAprobado ? 'SI' : 'NO' }}</td>
+                <td>{{ arAspirante.estadoBloqueado ? 'SI' : 'NO' }}</td>
                 <td>{{ arAspirante.estadoAnulado ? 'SI' : 'NO' }}</td>
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seleccion_aspirante_nuevo',{'id': arAspirante.codigoAspirantePk }) }}"><i

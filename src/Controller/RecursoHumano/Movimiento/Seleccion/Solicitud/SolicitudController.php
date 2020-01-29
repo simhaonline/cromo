@@ -161,7 +161,7 @@ class SolicitudController extends MaestroController
             }
         }
 
-        $arAspirantes = $em->getRepository(RhuSolicitudAspirante::class)->lista($raw = null);
+        $arAspirantes = $em->getRepository(RhuSolicitudAspirante::class)->lista($raw = null, $id);
         $arSelecciones = $em->getRepository(RhuSeleccion::class)->findBy(array('codigoSolicitudFk' => $id));
         return $this->render('recursohumano/movimiento/seleccion/solicitud/detalle.html.twig', [
             'arAspirantes' => $arAspirantes,

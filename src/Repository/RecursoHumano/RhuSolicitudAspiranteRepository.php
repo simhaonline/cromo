@@ -19,7 +19,7 @@ class RhuSolicitudAspiranteRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuSolicitudAspirante::class);
     }
 
-    public function lista($raw)
+    public function lista($raw, $id)
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
@@ -44,6 +44,7 @@ class RhuSolicitudAspiranteRepository extends ServiceEntityRepository
             ->addSelect('a.nombreCorto AS aspirante')
             ->addSelect('sa.estadoGenerado')
             ->addSelect('sa.comentarios')
+            ->where("sa.codigoSolicitudFk = '{$id}'")
             ->leftJoin('sa.aspiranteRel', 'a');
         if ($codigoSolicitud) {
             $queryBuilder->andWhere("s.codigoSolicitudPk = '{$codigoSolicitud}'");
@@ -75,7 +76,7 @@ class RhuSolicitudAspiranteRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("s.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('sa.codigoSolicitudAspirantePk', 'ASC');
+        $queryBuilder->addOrderBy('sa.codigoSolicitudAspirantePk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

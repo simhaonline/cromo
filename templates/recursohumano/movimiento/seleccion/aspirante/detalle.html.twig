@@ -2,8 +2,10 @@
 {% block content %}
     {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
     <div class="btn-toolbar" style="float:left">
-        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}">Volver</a>
-        <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_aspirante_aplicar', {'id': arAspirante.codigoAspirantePk }) }}', 'Aplicar', 500, 700)" >Aplicar</a>
+        <a class="btn btn-default btn-sm"
+           href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}">Volver</a>
+        <a class="btn btn-default btn-sm"
+           href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_aspirante_aplicar', {'id': arAspirante.codigoAspirantePk }) }}', 'Aplicar', 500, 700)">Aplicar</a>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
@@ -67,6 +69,39 @@
             <td class="td-label" align="right">{{ arAspirante.cargoAspira }}</td>
         </tr>
     </table>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#solicitudes" data-toggle="tab">Solicitudes aplicadas</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="solicitudes">
+            <div id="solicitudes" style="width: 100%"><br>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NOMBRE</th>
+                            <th>GENERADO</th>
+                            <th>COMENTARIO</th>
+                            <th>GENERADO</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for arSolicitudAplicada in arSolicitudesAplicadas %}
+                            <tr>
+                                <td>{{ arSolicitudAplicada.codigoSolicitudAspirantePk }}</td>
+                                <td>{{ arSolicitudAplicada.solicitudRel.nombre }}</td>
+                                <td>{{ arSolicitudAplicada.estadoGenerado ? 'SI' : 'NO' }}</td>
+                                <td>{{ arSolicitudAplicada.comentarios }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="separador-1"></div>
+            </div>
+        </div>
+    </div>
     <br/><br/><br/>
     {{ form_end(form) }}
 {% endblock %}

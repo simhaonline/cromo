@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Proceso\Venta;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use Knp\Component\Pager\PaginatorInterface;
@@ -19,8 +20,11 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class FacturaElectronicaController extends AbstractController
+class FacturaElectronicaController extends MaestroController
 {
+    public $tipo = "proceso";
+    public $proceso = "ttep0019";
+
     /**
      * @param Request $request
      * @return Response

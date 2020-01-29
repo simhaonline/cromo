@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Proceso\General;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteClienteCondicion;
 use App\Entity\Transporte\TteCumplido;
@@ -15,6 +16,7 @@ use App\Entity\Transporte\TteRecibo;
 use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteRecogidaProgramada;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,19 +28,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-class UnificarClienteController extends Controller
+class UnificarClienteController extends MaestroController
 {
+    public $tipo = "proceso";
+    public $proceso = "ttep0014";
+
+
     /**
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/proceso/general/cliente/unificar", name="transporte_proceso_general_cliente_unificar")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('btnUnificar', SubmitType::class, ['label' => 'Unificar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();

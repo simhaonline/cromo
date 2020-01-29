@@ -3,9 +3,11 @@
 namespace App\Controller\Transporte\Proceso\Transporte\General;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCierre;
 use App\Entity\TteGuia;
 use App\Form\Type\Transporte\CierreType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,15 +15,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class CierreController extends Controller
+class CierreController extends MaestroController
 {
+
+    public $tipo = "proceso";
+    public $proceso = "ttep0013";
+
    /**
     * @Route("/transporte/proceso/transporte/general/cierre", name="transporte_proceso_transporte_general_cierre")
     */    
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->getForm();
         $form->handleRequest($request);

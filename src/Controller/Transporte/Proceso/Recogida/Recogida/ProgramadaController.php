@@ -2,12 +2,14 @@
 
 namespace App\Controller\Transporte\Proceso\Recogida\Recogida;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteRecogida;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteRecogidaProgramada;
 use App\Form\Type\RecogidaProgramadaType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,8 +17,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ProgramadaController extends Controller
+class ProgramadaController extends MaestroController
 {
+
+    public $tipo = "proceso";
+    public $proceso = "ttep0001";
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
@@ -24,10 +32,9 @@ class ProgramadaController extends Controller
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("/transporte/proceso/recogida/recogida/programada", name="transporte_proceso_recogida_recogida_programada")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnGenerar', SubmitType::class, array('label' => 'Generar'))
             ->add('btnGenerarTodos', SubmitType::class, array('label' => 'Generar todos'))

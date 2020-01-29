@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FechaRetiroController extends AbstractController
 {
+
     /**
      * @Route("/recursohumano/informe/contrato/fecha/terminacion/lista", name="recursohumano_informe_contrato_fecha_terminacion_lista")
      */

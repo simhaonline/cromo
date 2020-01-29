@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Proceso\Contabilidad;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,19 +19,24 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class FacturaController extends Controller
+class FacturaController extends MaestroController
 {
+
+    public $tipo = "proceso";
+    public $proceso = "ttep0015";
+
+
     /**
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/proceso/contabilidad/factura/lista", name="transporte_proceso_contabilidad_factura_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])

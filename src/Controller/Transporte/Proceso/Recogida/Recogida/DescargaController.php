@@ -2,7 +2,9 @@
 
 namespace App\Controller\Transporte\Proceso\Recogida\Recogida;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteRecogida;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,14 +12,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class DescargaController extends Controller
+class DescargaController extends MaestroController
 {
-   /**
+
+    public $tipo = "proceso";
+    public $proceso = "ttep0003";
+
+
+
+    /**
     * @Route("/transporte/proceso/recogida/recogida/descarga", name="transporte_proceso_recogida_recogida_descarga")
     */    
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
-        $paginator  = $this->get('knp_paginator');
+
         $query = $this->getDoctrine()->getRepository(TteRecogida::class)->findBy(array('codigoRecogidaPk' => NULL));
         $form = $this->createFormBuilder()
             ->add('codigoDespachoRecogida', TextType::class)

@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Proceso\Transporte\Despacho;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteGuia;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,8 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class SoporteController extends Controller
+class SoporteController extends MaestroController
 {
+    public $tipo = "proceso";
+    public $proceso = "ttep0005";
+
 
     /**
      * @param Request $request
@@ -21,11 +26,10 @@ class SoporteController extends Controller
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/proceso/transporte/despacho/soporte", name="transporte_proceso_transporte_despacho_soporte")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $codigoDespacho = 0;
         $form = $this->createFormBuilder()
             ->add('txtDespachoCodigo', TextType::class, array('data' => $session->get('filtroTteDespachoCodigo')))

@@ -168,6 +168,7 @@ class AspiranteController extends MaestroController
                 return $er->createQueryBuilder('sr')
                     ->where('sr.estadoAnulado = 0')
                     ->andWhere('sr.estadoAutorizado = 1')
+                    ->andWhere('sr.estadoAprobado = 0')
                     ->orderBy('sr.codigoSolicitudPk', 'DESC');
             },
             'choice_label' => function($er){

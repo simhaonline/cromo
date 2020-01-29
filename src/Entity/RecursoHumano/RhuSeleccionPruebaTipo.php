@@ -18,7 +18,6 @@ class RhuSeleccionPruebaTipo
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_seleccion_prueba_tipo_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
      */        
     private $codigoSeleccionPruebaTipoPk;
 

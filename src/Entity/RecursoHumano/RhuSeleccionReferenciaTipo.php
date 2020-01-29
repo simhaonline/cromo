@@ -18,7 +18,6 @@ class RhuSeleccionReferenciaTipo
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_seleccion_referencia_tipo_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
      */        
     private $codigoSeleccionReferenciaTipoPk;
 
@@ -95,7 +94,6 @@ class RhuSeleccionReferenciaTipo
     {
         $this->seleccionesReferenciasSelecionReferenciaTipoRel = $seleccionesReferenciasSelecionReferenciaTipoRel;
     }
-
 
 
 }

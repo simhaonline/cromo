@@ -18,7 +18,6 @@ class RhuSeleccionEntrevistaTipo
     /**
      * @ORM\Id
      * @ORM\Column(name="codigo_seleccion_entrevista_tipo_pk", type="string", length=10)
-     * @ORM\GeneratedValue(strategy="AUTO")
      */        
     private $codigoSeleccionEntrevistaTipoPk;
 
@@ -95,7 +94,5 @@ class RhuSeleccionEntrevistaTipo
     {
         $this->seleccionesEntrevistasSelecionEntrevistaTipoRel = $seleccionesEntrevistasSelecionEntrevistaTipoRel;
     }
-
-
 
 }

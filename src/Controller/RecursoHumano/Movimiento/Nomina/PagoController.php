@@ -106,7 +106,7 @@ class PagoController extends MaestroController
                 $em->getRepository(RhuPago::class)->contabilizar($arrSeleccionados);
             }
         }
-        $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->lista($raw), $request->query->getInt('page', 1), 50);
+        $arPagos = $paginator->paginate($em->getRepository(RhuPago::class)->lista($raw), $request->query->getInt('page', 1), 200);
         return $this->render('recursohumano/movimiento/nomina/pago/lista.html.twig', [
             'arPagos' => $arPagos,
             'form' => $form->createView(),

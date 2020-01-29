@@ -66,13 +66,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% set nombreCliente = '' %}
+                        {% set intPuesto = '' %}
                         {% for arContratoDetalle in arContratoDetalles %}
-                            {% if nombreCliente != arContratoDetalle.cliente %}
+                            {% if intPuesto != arContratoDetalle.codigoPuestoFk or arContratoDetalle.codigoPuestoFk == '' %}
                                 <tr>
-                                    <td colspan="31"><b> {{ arContratoDetalle.cliente }} </b></td>
+                                    <td id="suptipo" colspan="31">
+                                        <b>{{ arContratoDetalle.puestoNombre | default('') }}</b>
+                                    </td>
                                 </tr>
-                                {% set nombreCliente =  arContratoDetalle.cliente %}
+                                {% set intPuesto = arContratoDetalle.codigoPuestoFk %}
                             {% endif %}
                             <td> {{ arContratoDetalle.codigoContratoDetallePk }}</td> <input type="hidden"
                                                                                              name="arrCodigo[]"

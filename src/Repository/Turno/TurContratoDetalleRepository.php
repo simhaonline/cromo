@@ -22,7 +22,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
         $session = new Session();
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurContratoDetalle::class, 'cd')
             ->select('cd.codigoContratoDetallePk')
-            ->addSelect('p.nombre AS puesto')
+            ->addSelect('p.nombre AS puestoNombre')
             ->addSelect('cli.nombreCorto as cliente')
             ->addSelect('cd.cantidad')
             ->addSelect('cd.lunes')
@@ -50,6 +50,7 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->addSelect('cd.compuesto')
             ->addSelect('cd.codigoGrupoFk')
             ->addSelect('cd.programar')
+            ->addSelect('cd.codigoPuestoFk')
             ->addSelect('con.nombre as conceptoNombre')
             ->addSelect('i.nombre as itemNombre')
             ->addSelect('mod.nombre as modalidadNombre')
@@ -62,7 +63,8 @@ class TurContratoDetalleRepository extends ServiceEntityRepository
             ->where("cd.codigoContratoFk = {$id}")
             ->andWhere('cd.estadoTerminado = 0')
             ->groupBy('cd.codigoContratoDetallePk')
-            ->addGroupBy('cd.codigoPuestoFk');
+            ->addGroupBy('cd.codigoPuestoFk')
+        ->orderBy('cd.codigoPuestoFk', 'ASC');
 
         return $queryBuilder->getQuery()->getResult();
     }

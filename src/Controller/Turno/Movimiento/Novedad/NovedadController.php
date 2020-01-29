@@ -4,6 +4,7 @@
 namespace App\Controller\Turno\Movimiento\Novedad;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\Turno\TurNovedad;
@@ -26,8 +27,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class NovedadController extends AbstractController
+class NovedadController extends MaestroController
 {
+
+    public $tipo = "movimiento";
+    public $modelo = "TurNovedad";
+
+    protected $clase = TurNovedad::class;
+    protected $claseNombre = "TurNovedad";
+    protected $modulo = "Turno";
+    protected $funcion = "Movimiento";
+    protected $grupo = "Novedad";
+    protected $nombre = "NovedadController";
+
+
     /**
      * @Route("/turno/movimiento/novedad/lista", name="turno_movimiento_novedad_lista")
      */

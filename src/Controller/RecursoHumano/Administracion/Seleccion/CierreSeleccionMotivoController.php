@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Seleccion;
 
 use App\Controller\MaestroController;
+use App\Entity\RecursoHumano\RhuCierreSeleccionMotivo;
 use App\Entity\RecursoHumano\RhuSolicitudMotivo;
 use App\Form\Type\RecursoHumano\SolicitudMotivoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,5 +19,16 @@ use App\General\General;
 
 class CierreSeleccionMotivoController extends MaestroController
 {
+
+    public $tipo = "administracion";
+    public $modelo = "RhuCierreSeleccionMotivo";
+
+    protected $clase = RhuCierreSeleccionMotivo::class;
+    protected $claseNombre = "RhuCierreSeleccionMotivo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Seleccion";
+    protected $nombre = "CierreSeleccionMotivo";
+
 
 }

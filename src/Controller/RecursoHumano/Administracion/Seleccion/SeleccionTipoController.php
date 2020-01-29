@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Administracion\Seleccion;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuSeleccionTipo;
 use App\Form\Type\RecursoHumano\SeleccionTipoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\General\General;
 
-class SeleccionTipoController extends AbstractController
+class SeleccionTipoController extends MaestroController
 {
 
     public $tipo = "administracion";

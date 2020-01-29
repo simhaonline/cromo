@@ -2,6 +2,7 @@
 namespace App\Controller\Turno\Administracion\Configuracion;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Turno\TurConcepto;
 use App\Entity\Turno\TurConfiguracion;
 use App\Form\Type\Turno\ConceptoType;
@@ -16,8 +17,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ConfiguracionController extends AbstractController
+class ConfiguracionController extends MaestroController
 {
+    public $tipo = "administracion";
+    public $modelo = "TurConfiguracion";
+
+    protected $clase = TurConfiguracion::class;
+    protected $claseNombre = "TurConfiguracion";
+    protected $modulo = "Turno";
+    protected $funcion = "Administracion";
+    protected $grupo = "Configuracion";
+    protected $nombre = "Configuracion";
+
+
     /**
      * @param Request $request
      * @param $codigoConfiguracion integer

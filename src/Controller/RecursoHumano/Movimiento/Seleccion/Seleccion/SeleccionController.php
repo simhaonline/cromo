@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Movimiento\Seleccion\Seleccion;
 use App\Controller\BaseController;
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuSeleccion;
 use App\Entity\RecursoHumano\RhuSeleccionAntecedente;
 use App\Entity\RecursoHumano\RhuSeleccionComentario;
@@ -32,8 +33,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class SeleccionController extends AbstractController
+class SeleccionController extends MaestroController
 {
+
+    public $tipo = "movimiento";
+    public $modelo = "RhuSeleccion";
+
     protected $clase = RhuSeleccion::class;
     protected $claseFormulario = SeleccionType::class;
     protected $claseNombre = "RhuSeleccion";

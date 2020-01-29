@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Administracion\Seleccion;
 
 use App\Controller\MaestroController;
+use App\Entity\RecursoHumano\RhuSeleccionPruebaTipo;
 use App\Entity\RecursoHumano\RhuSolicitudMotivo;
 use App\Form\Type\RecursoHumano\SolicitudMotivoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,5 +19,17 @@ use App\General\General;
 
 class SeleccionPruebaTipoController extends MaestroController
 {
+
+
+    public $tipo = "administracion";
+    public $modelo = "RhuSeleccionPruebaTipo";
+
+    protected $clase = RhuSeleccionPruebaTipo::class;
+    protected $claseNombre = "RhuSeleccionPruebaTipo";
+    protected $modulo = "RecursoHumano";
+    protected $funcion = "Administracion";
+    protected $grupo = "Seleccion";
+    protected $nombre = "SeleccionPruebaTipo";
+
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Movimiento\Recurso\Prueba;
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuPrueba;
@@ -22,13 +23,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class PruebaController extends AbstractController
+class PruebaController extends MaestroController
 {
+
+    public $tipo = "movimiento";
+    public $modelo = "RhuPrueba";
+
     protected $clase = RhuPrueba::class;
     protected $claseFormulario = PruebaType::class;
     protected $claseNombre = "RhuPrueba";
     protected $modulo = "RecursoHumano";
-    protected $funcion = "movimiento";
+    protected $funcion = "Movimiento";
     protected $grupo = "Recurso";
     protected $nombre = "Prueba";
 

@@ -21,7 +21,7 @@ class ResolucionType extends AbstractType
             ->add('prefijo',TextType::class,['required' => true,'label' => 'Prefijo:'])
             ->add('numeroDesde',TextType::class,['required' => true,'label' => 'Numero desde:'])
             ->add('numeroHasta',TextType::class,['required' => true,'label' => 'Numero hasta:'])
-            ->add('llaveTecnica',TextType::class,['required' => true,'label' => 'Llave tecnica:'])
+            ->add('claveTecnica',TextType::class,['required' => true,'label' => 'Llave tecnica:'])
             ->add('setPruebas',TextType::class,['required' => true,'label' => 'Set pruebas:'])
             ->add('pin',TextType::class,['required' => true,'label' => 'Pin:'])
             ->add('ambiente',TextType::class,['required' => true,'label' => 'Ambiente:'])

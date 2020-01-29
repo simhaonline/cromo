@@ -11,6 +11,7 @@ use App\Entity\Financiero\FinCuenta;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\General\GenImpuesto;
+use App\Entity\General\GenResolucion;
 use App\Entity\General\GenResolucionFactura;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvBodegaUsuario;
@@ -1703,6 +1704,13 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arr) {
+            //Generar cue
+            foreach ($arr AS $codigo) {
+                $this->generarCue($codigo);
+            }
+            $em->flush();
+            //Generar cue fin
+
             $arrConfiguracion = $em->getRepository(GenConfiguracion::class)->facturaElectronica();
             foreach ($arr AS $codigo) {
                 $arFactura = $em->getRepository(InvMovimiento::class)->movimientoFacturaElectronica($codigo);
@@ -1793,7 +1801,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $arrFactura['doc_itemes'] = $arrItem;
                     $arrFactura['doc_cantidad_item'] = $cantidadItemes;
                     $arrFactura['doc_base_iva'] = $baseIvaTotal;
-                    //$arrFactura['doc_numero'] = 13;
                     $facturaElectronica = new FacturaElectronica($em);
                     $respuesta = $facturaElectronica->validarDatos($arrFactura);
                     if($respuesta['estado'] == 'ok') {
@@ -1826,6 +1833,49 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
         }
         return true;
+    }
+
+
+    public function generarCue($codigoMovimiento) {
+        $em = $this->getEntityManager();
+        /** @var $arMovimiento InvMovimiento */
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($codigoMovimiento);
+        /** @var $arResolucion GenResolucion */
+        $arResolucion = $em->getRepository(GenResolucion::class)->find($arMovimiento->getCodigoResolucionFk());
+        $arConfiguracion = $em->getRepository(GenConfiguracion::class)->facturaElectronica();
+        $prefijo = $arResolucion->getPrefijo();
+        $numero = $arMovimiento->getNumero();
+        $fecha = $arMovimiento->getFecha()->format('Y-m-d');
+        $hora = '12:00:00-05:00';
+        $subtotal = number_format($arMovimiento->getVrSubtotal(), 2, '.', '');
+        $iva = number_format($arMovimiento->getVrIva(), 2, '.', '');
+        $inc = number_format(0, 2, '.', '');
+        $ica = number_format(0, 2, '.', '');
+        $total = number_format($arMovimiento->getVrTotal(), 2, '.', '');
+        $identificacionEmisor = $arConfiguracion['nit'];
+
+        $identificacionAdquiriente = null;
+        if($arMovimiento->getCodigoTerceroFk()) {
+            $identificacionAdquiriente = $arMovimiento->getTerceroRel()->getNumeroIdentificacion();
+        }
+        $llaveTecnica = null;
+        $pin = null;
+        $ambiente = null;
+        if($arMovimiento->getCodigoResolucionFk()) {
+            $llaveTecnica = $arResolucion->getClaveTecnica();
+            $pin = $arResolucion->getPin();
+            $ambiente = $arResolucion->getAmbiente();
+        }
+        $cue = null;
+        if($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC') {
+            $cue = $prefijo.$numero.$fecha.$hora.$subtotal.'01'.$iva.'04'.$inc.'03'.$ica.$total.$identificacionEmisor.$identificacionAdquiriente.$llaveTecnica.$ambiente;
+        }
+
+        if($arMovimiento->getCodigoDocumentoTipoFk() == 'NC' || $arMovimiento->getCodigoDocumentoTipoFk() == 'ND') {
+            $cue = $prefijo.$numero.$fecha.$hora.$subtotal.'01'.$iva.'04'.$inc.'03'.$ica.$total.$identificacionEmisor.$identificacionAdquiriente.$pin.$ambiente;
+        }
+        $arMovimiento->setCue($cue);
+        $em->persist($arMovimiento);
     }
 
 }

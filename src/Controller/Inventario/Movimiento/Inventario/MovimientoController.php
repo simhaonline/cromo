@@ -209,14 +209,18 @@ class MovimientoController extends MaestroController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Exception
-     * @Route("/inventario/movimiento/inventario/movimiento/nuevo/factura/{codigoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo_factura")
+     * @Route("/inventario/movimiento/inventario/movimiento/nuevo/factura/{codigoDocumento}/{tipoDocumento}/{id}", name="inventario_movimiento_inventario_movimiento_nuevo_factura")
      */
-    public function nuevoFactura(Request $request, $codigoDocumento, $id)
+    public function nuevoFactura(Request $request, $codigoDocumento, $tipoDocumento, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arMovimiento = new InvMovimiento();
         $objFunciones = new FuncionesController();
         $arDocumento = $em->getRepository(InvDocumento::class)->find($codigoDocumento);
+        if(!$arDocumento->getCodigoResolucionFk()) {
+            Mensajes::error("Para crear una documento factura / nota credito / nota debito debe tener una resolucion asignada");
+            return $this->redirect($this->generateUrl('inventario_movimiento_inventario_movimiento_lista', ['codigoDocumento' => $codigoDocumento, 'tipoDocumento' => $tipoDocumento]));
+        }
         if ($id != 0) {
             $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
             if (!$arMovimiento) {

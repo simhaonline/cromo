@@ -31,6 +31,20 @@ class InvDocumentoTipo extends Fixture
             $arDocumentoTipo->setNombre('FACTURA');
             $manager->persist($arDocumentoTipo);
         }
+        $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find('NC');
+        if(!$arDocumentoTipo){
+            $arDocumentoTipo = new \App\Entity\Inventario\InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('NC');
+            $arDocumentoTipo->setNombre('NOTA CREDITO VENTAS');
+            $manager->persist($arDocumentoTipo);
+        }
+        $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find('ND');
+        if(!$arDocumentoTipo){
+            $arDocumentoTipo = new \App\Entity\Inventario\InvDocumentoTipo();
+            $arDocumentoTipo->setCodigoDocumentoTipoPk('ND');
+            $arDocumentoTipo->setNombre('NOTA DEBITO VENTAS');
+            $manager->persist($arDocumentoTipo);
+        }
         $arDocumentoTipo = $manager->getRepository('App:Inventario\InvDocumentoTipo')->find('TRA');
         if(!$arDocumentoTipo){
             $arDocumentoTipo = new \App\Entity\Inventario\InvDocumentoTipo();

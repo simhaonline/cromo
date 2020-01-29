@@ -14,6 +14,7 @@ use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Entity\RecursoHumano\RhuVacacion;
 use App\Entity\Turno\TurProgramacion;
+use App\Entity\Turno\TurSoporteContrato;
 use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -584,20 +585,25 @@ class RhuContratoRepository extends ServiceEntityRepository
                                     if (!$arProgramacionDetalle) {
                                         $arProgramacionTurnos = $em->getRepository(TurProgramacion::class)->findOneBy(array('codigoContratoFk' => $codigo));
                                         if (!$arProgramacionTurnos) {
-                                            $arContrato = $em->getRepository(RhuContrato::class)->find($codigo);
-                                            if ($arContrato) {
-                                                if ($arContrato->getEstadoTerminado() == 0) {
-                                                    /** @var $arEmpleado RhuEmpleado */
-                                                    $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
-                                                    $arEmpleado->setContratoRel(null);
-                                                    $arEmpleado->setEstadoContrato(0);
-                                                    $em->persist($arEmpleado);
-                                                    $em->remove($arContrato);
-                                                    $em->flush();
+                                            $arSoportes = $em->getRepository(TurSoporteContrato::class)->findOneBy(array('codigoContratoFk' => $codigo));
+                                            if (!$arSoportes) {
+                                                $arContrato = $em->getRepository(RhuContrato::class)->find($codigo);
+                                                if ($arContrato) {
+                                                    if ($arContrato->getEstadoTerminado() == 0) {
+                                                        /** @var $arEmpleado RhuEmpleado */
+                                                        $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($arContrato->getCodigoEmpleadoFk());
+                                                        $arEmpleado->setContratoRel(null);
+                                                        $arEmpleado->setEstadoContrato(0);
+                                                        $em->persist($arEmpleado);
+                                                        $em->remove($arContrato);
+                                                        $em->flush();
+                                                    }
                                                 }
+                                            } else {
+                                                Mensajes::error("El contrato " . $codigo . " tiene soportes de turnos cod " . $arSoportes->getCodigoSoporteContratoPk() . ", por favor verificar.");
                                             }
                                         } else {
-                                            Mensajes::error("El contrato " . $codigo . " tiene programacionesde turnos cod " . $arProgramacionTurnos->getCodigoProgramacionPk() . ", por favor verificar.");
+                                            Mensajes::error("El contrato " . $codigo . " tiene programaciones de turnos cod " . $arProgramacionTurnos->getCodigoProgramacionPk() . ", por favor verificar.");
                                         }
                                     } else {
                                         Mensajes::error("El contrato " . $codigo . " tiene programaciones de pago asociadas cod " . $arProgramacionDetalle->getCodigoProgramacionFk() . ", por favor verificar.");

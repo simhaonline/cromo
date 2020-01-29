@@ -179,11 +179,11 @@ class Compra extends \FPDF
                 $pdf->Cell(20, 4, $arMovimiento['banco'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimiento['codigoCuentaContableFk'], 1, 0, 'L');
                 if($arMovimiento['codigoMovimientoClaseFk'] == 'D'){
-                    $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+                    $pdf->Cell(20, 4, number_format($arMovimiento['vrTotalNeto'], 0, '.', ','), 1, 0, 'R');
                     $pdf->Cell(20, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
                 }else{
                     $pdf->Cell(20, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
-                    $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+                    $pdf->Cell(20, 4, number_format($arMovimiento['vrTotalNeto'], 0, '.', ','), 1, 0, 'R');
                 }
                 $pdf->Ln();
                 if ($contador < $numeroPagos) {

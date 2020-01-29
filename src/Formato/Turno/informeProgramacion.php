@@ -34,7 +34,7 @@ class informeProgramacion extends \FPDF
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 10);
         Estandares::generarEncabezado($this, 'PROGRAMACION DE TURNOS', self::$em);
-        $this->Ln(2);
+        $this->Ln(8);
 
     }
 

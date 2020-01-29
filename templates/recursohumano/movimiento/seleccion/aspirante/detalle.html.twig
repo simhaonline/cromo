@@ -88,7 +88,7 @@
                         <tbody>
                         {% for arSolicitudAplicada in arSolicitudesAplicadas %}
                             <tr>
-                                <td>{{ arSolicitudAplicada.codigoSolicitudAspirantePk }}</td>
+                                <td>{{ arSolicitudAplicada.codigoSolicitudFk }}</td>
                                 <td>{{ arSolicitudAplicada.solicitudRel.nombre }}</td>
                                 <td>{{ arSolicitudAplicada.estadoGenerado ? 'SI' : 'NO' }}</td>
                                 <td>{{ arSolicitudAplicada.comentarios }}</td>

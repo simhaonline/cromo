@@ -48,6 +48,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>FECHA</th>
             <th>MOTIVO</th>
             <th>NOMBRE</th>
             <th title="CANTIDAD SOLICITADA">SOL</th>
@@ -64,6 +65,7 @@
         {% for arSolicitud in arSolicitudes %}
             <tr>
                 <td>{{ arSolicitud.codigoSolicitudPk }}</td>
+                <td>{{ arSolicitud.fecha | date ('Y-m-d') }}</td>
                 <td>{{ arSolicitud.motivo }}</td>
                 <td>{{ arSolicitud.nombre }}</td>
                 <td>{{ arSolicitud.cantidadSolicitada }}</td>

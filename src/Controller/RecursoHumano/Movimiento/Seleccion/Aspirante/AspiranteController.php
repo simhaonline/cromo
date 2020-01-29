@@ -168,9 +168,14 @@ class AspiranteController extends MaestroController
                 return $er->createQueryBuilder('sr')
                     ->where('sr.estadoAnulado = 0')
                     ->andWhere('sr.estadoAutorizado = 1')
-                    ->orderBy('sr.nombre', 'ASC');
+                    ->orderBy('sr.codigoSolicitudPk', 'DESC');
             },
-            'choice_label' => 'nombre',
+            'choice_label' => function($er){
+                $codigoSolicitud = $er->getCodigoSolicitudPk();
+                return $codigoSolicitud.' - '.$er->getNombre();
+            },
+
+            'attr' => ['class' => 'form-control to-select-2'],
             'required' => true,
             'disabled' => false);
         $ctrlBoton = false;

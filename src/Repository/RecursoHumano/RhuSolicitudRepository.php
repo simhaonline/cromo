@@ -36,6 +36,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSolicitud::class, 's')
             ->select('s.codigoSolicitudPk')
+            ->addSelect('s.fecha')
             ->addSelect('m.nombre AS motivo')
             ->addSelect('s.cantidadSolicitada')
             ->addSelect('s.nombre')

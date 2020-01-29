@@ -311,7 +311,6 @@ class TesMovimientoRepository extends ServiceEntityRepository
     public function anular($arMovimiento)
     {
         $em = $this->getEntityManager();
-        $respuesta = [];
         if ($arMovimiento->getEstadoAprobado() == 1 && $arMovimiento->getEstadoContabilizado() == 0) {
             $arMovimientosDetalle = $em->getRepository(TesMovimientoDetalle::class)->findBy(array('codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()));
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
@@ -330,12 +329,33 @@ class TesMovimientoRepository extends ServiceEntityRepository
             }
             $arMovimiento->setVrTotalNeto(0);
             $arMovimiento->setEstadoAnulado(1);
-            $this->_em->persist($arMovimiento);
-            $this->_em->flush();
+            $em->persist($arMovimiento);
+
+            $validarCuentaPagar = true;
+            $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['modelo' => "TesMovimiento", "codigoDocumento" => $arMovimiento->getCodigoMovimientoPk()]);
+            if ($arCuentaPagar->getVrAbono() <= 0) {
+                $arCuentaPagar->setEstadoAnulado(1);
+                $arCuentaPagar->setVrSubtotal(0);
+                $arCuentaPagar->setVrIva(0);
+                $arCuentaPagar->setVrRetencionFuente(0);
+                $arCuentaPagar->setVrRetencionIva(0);
+                $arCuentaPagar->setVrTotal(0);
+                $arCuentaPagar->setVrSaldo(0);
+                $arCuentaPagar->setVrSaldoOriginal(0);
+                $arCuentaPagar->setVrSaldoOperado(0);
+                $em->persist($arCuentaPagar);
+            } else {
+                Mensajes::error("La cuenta por pagar tiene abonos y no se puede anular");
+                $validarCuentaPagar = false;
+            }
+            if($validarCuentaPagar) {
+                $em->flush();
+            }
+
         } else {
-            Mensajes::error();
+            Mensajes::error("El documento debe estar aprobado y no puede estar contabilizado");
         }
-        return $respuesta;
+
     }
 
     public function registroContabilizar($codigo)

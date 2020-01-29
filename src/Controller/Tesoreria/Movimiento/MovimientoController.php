@@ -277,12 +277,7 @@ class MovimientoController extends MaestroController
                 }
             }
             if ($form->get('btnAnular')->isClicked()) {
-                $respuesta = $em->getRepository(TesMovimiento::class)->anular($arMovimiento);
-                if (count($respuesta) > 0) {
-                    foreach ($respuesta as $error) {
-                        Mensajes::error($error);
-                    }
-                }
+                $em->getRepository(TesMovimiento::class)->anular($arMovimiento);
                 return $this->redirect($this->generateUrl('tesoreria_movimiento_movimiento_movimiento_detalle', ['id' => $id]));
             }
             if ($form->get('btnActualizar')->isClicked()) {

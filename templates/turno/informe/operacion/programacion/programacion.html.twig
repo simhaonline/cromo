@@ -77,7 +77,7 @@
                 <div class="form-group form-group-sm">
                     <label for="form_TxtCodigo" class="col-sm-1 control-label">Número pedido:</label>
                     <div class="col-sm-1">
-                        {{ form_widget(form.nuemeroPedido) }}
+                        {{ form_widget(form.numeroPedido) }}
                     </div>
                     <label for="form_TxtCodigo" class="col-sm-1 control-label">Año:</label>
                     <div class="col-sm-1">
@@ -121,7 +121,7 @@
             {% for arProgramacion in arProgramaciones %}
                 {% if intCodigoCliente != arProgramacion.codigoClienteFk %}
                     <tr>
-                        <td colspan="36"> {{ arProgramacion.cliente }}</td>
+                        <td colspan="37"> {{ arProgramacion.cliente }}</td>
                     </tr>
                     {% set intCodigoCliente =  arProgramacion.codigoClienteFk %}
                 {% endif %}

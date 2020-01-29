@@ -38,10 +38,10 @@ class Programacion extends AbstractController
         $form = $this->createFormBuilder()
             ->add('txtAnio', TextType::class, ['required' => false, 'data' =>  $dateFecha->format('Y'), 'attr' => ['class' => 'form-control']])
             ->add('txtMes', TextType::class, ['required' => false, 'data' => $dateFecha->format('m'), 'attr' => ['class' => 'form-control']])
-            ->add('txtEmpleado', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('codigoClienteFk', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('codigoPuesto', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
-            ->add('nuemeroPedido', TextType::class, ['required' => false, 'attr' => ['class' => 'form-control']])
+            ->add('txtEmpleado', TextType::class, ['required' => false, 'data'=> $session->get('filtroRhuEmpleadoCodigoEmpleado'),'attr' => ['class' => 'form-control']])
+            ->add('codigoClienteFk', TextType::class, ['required' => false, 'data'=> $session->get('filtroTurCodigoCliente'),'attr' => ['class' => 'form-control']])
+            ->add('codigoPuesto', TextType::class, ['required' => false, 'data'=> $session->get('filtroTurProgramacionCodigoPuesto'),'attr' => ['class' => 'form-control']])
+            ->add('numeroPedido', TextType::class, ['required' => false, 'data'=> $session->get('filtroTurProgramacionNumeroPedido'),'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnImprimir', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -54,7 +54,7 @@ class Programacion extends AbstractController
                 $session->set('filtroRhuEmpleadoCodigoEmpleado', $form->get('txtEmpleado')->getData());
                 $session->set('filtroTurCodigoCliente', $form->get('codigoClienteFk')->getData());
                 $session->set('filtroTurProgramacionCodigoPuesto', $form->get('codigoPuesto')->getData());
-                $session->set('filtroTurProgramacionNuemeroPedido', $form->get('nuemeroPedido')->getData());
+                $session->set('filtroTurProgramacionNumeroPedido', $form->get('numeroPedido')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones();

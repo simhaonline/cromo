@@ -77,7 +77,7 @@ class RhuSeleccionRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("s.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('s.codigoSeleccionPk', 'ASC');
+        $queryBuilder->addOrderBy('s.codigoSeleccionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

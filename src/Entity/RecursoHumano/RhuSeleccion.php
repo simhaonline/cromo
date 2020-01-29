@@ -93,8 +93,7 @@ class RhuSeleccion
     private $fechaExpedicion;
 
     /**
-     * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false, unique=true)
-     * @Assert\NotBlank(message="El campo no puede estar vacio")
+     * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=false)
      */
     private $numeroIdentificacion;
 
@@ -256,13 +255,13 @@ class RhuSeleccion
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionesCiudadExpedicionRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     * @ORM\JoinColumn(name="codigo_ciudad_expedicion_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadExpedicionRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSeleccionesCiudadNacimientoRel")
-     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     * @ORM\JoinColumn(name="codigo_ciudad_nacimiento_fk", referencedColumnName="codigo_ciudad_pk")
      */
     protected $ciudadNacimientoRel;
 
@@ -501,6 +500,22 @@ class RhuSeleccion
     public function setCodigoSolicitudFk($codigoSolicitudFk): void
     {
         $this->codigoSolicitudFk = $codigoSolicitudFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
     }
 
     /**
@@ -1082,6 +1097,22 @@ class RhuSeleccion
     /**
      * @return mixed
      */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSeleccionesEntrevistasSeleccionRel()
     {
         return $this->seleccionesEntrevistasSeleccionRel;
@@ -1125,38 +1156,6 @@ class RhuSeleccion
     public function setSeleccionesVisitasSeleccionRel($seleccionesVisitasSeleccionRel): void
     {
         $this->seleccionesVisitasSeleccionRel = $seleccionesVisitasSeleccionRel;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoZonaFk()
-    {
-        return $this->codigoZonaFk;
-    }
-
-    /**
-     * @param mixed $codigoZonaFk
-     */
-    public function setCodigoZonaFk($codigoZonaFk): void
-    {
-        $this->codigoZonaFk = $codigoZonaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getZonaRel()
-    {
-        return $this->zonaRel;
-    }
-
-    /**
-     * @param mixed $zonaRel
-     */
-    public function setZonaRel($zonaRel): void
-    {
-        $this->zonaRel = $zonaRel;
     }
 
     /**

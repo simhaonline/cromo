@@ -68,11 +68,6 @@ class RhuSolicitud
     private $codigoSexoFk;
 
     /**
-     * @ORM\Column(name="disponibilidad", type="string", length=20, nullable=true)
-     */
-    private $disponbilidad;
-
-    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -416,22 +411,6 @@ class RhuSolicitud
     public function setCodigoSexoFk($codigoSexoFk): void
     {
         $this->codigoSexoFk = $codigoSexoFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDisponbilidad()
-    {
-        return $this->disponbilidad;
-    }
-
-    /**
-     * @param mixed $disponbilidad
-     */
-    public function setDisponbilidad($disponbilidad): void
-    {
-        $this->disponbilidad = $disponbilidad;
     }
 
     /**

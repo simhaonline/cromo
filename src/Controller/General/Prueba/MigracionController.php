@@ -70,7 +70,15 @@ use App\Entity\RecursoHumano\RhuSalarioTipo;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSector;
 use App\Entity\RecursoHumano\RhuSeleccion;
+use App\Entity\RecursoHumano\RhuSeleccionAntecedente;
+use App\Entity\RecursoHumano\RhuSeleccionEntrevista;
+use App\Entity\RecursoHumano\RhuSeleccionEntrevistaTipo;
+use App\Entity\RecursoHumano\RhuSeleccionPrueba;
+use App\Entity\RecursoHumano\RhuSeleccionPruebaTipo;
+use App\Entity\RecursoHumano\RhuSeleccionReferencia;
+use App\Entity\RecursoHumano\RhuSeleccionReferenciaTipo;
 use App\Entity\RecursoHumano\RhuSeleccionTipo;
+use App\Entity\RecursoHumano\RhuSeleccionVisita;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Entity\RecursoHumano\RhuSolicitudAspirante;
 use App\Entity\RecursoHumano\RhuSolicitudExperiencia;
@@ -197,6 +205,24 @@ class MigracionController extends Controller
                         case 'rhu_solicitud_aspirante':
                             $this->rhuSolicitudAspirante($conn);
                             break;
+                        case 'rhu_seleccion':
+                            $this->rhuSeleccion($conn);
+                            break;
+                        case 'rhu_seleccion_entrevista':
+                            $this->rhuSeleccionEntrevista($conn);
+                            break;
+                        case 'rhu_seleccion_prueba':
+                            $this->rhuSeleccionPrueba($conn);
+                            break;
+                        case 'rhu_seleccion_referencia':
+                            $this->rhuSeleccionReferencia($conn);
+                            break;
+                        case 'rhu_seleccion_visita':
+                            $this->rhuSeleccionVisita($conn);
+                            break;
+                        case 'rhu_seleccion_antecedente':
+                            $this->rhuSeleccionAntecedente($conn);
+                            break;
                         case 'rhu_cambio_salario':
                             $this->rhuCambioSalario($conn);
                             break;
@@ -308,6 +334,12 @@ class MigracionController extends Controller
             ['clase' => 'rhu_aspirante', 'registros' => $this->contarRegistros('RhuAspirante', 'RecursoHumano', 'codigoAspirantePk')],
             ['clase' => 'rhu_solicitud', 'registros' => $this->contarRegistros('RhuSolicitud', 'RecursoHumano', 'codigoSolicitudPk')],
             ['clase' => 'rhu_solicitud_aspirante', 'registros' => $this->contarRegistros('RhuSolicitudAspirante', 'RecursoHumano', 'codigoSolicitudAspirantePk')],
+            ['clase' => 'rhu_seleccion', 'registros' => $this->contarRegistros('RhuSeleccion', 'RecursoHumano', 'codigoSeleccionPk')],
+            ['clase' => 'rhu_seleccion_entrevista', 'registros' => $this->contarRegistros('RhuSeleccionEntrevista', 'RecursoHumano', 'codigoSeleccionEntrevistaPk')],
+            ['clase' => 'rhu_seleccion_prueba', 'registros' => $this->contarRegistros('RhuSeleccionPrueba', 'RecursoHumano', 'codigoSeleccionPruebaPk')],
+            ['clase' => 'rhu_seleccion_referencia', 'registros' => $this->contarRegistros('RhuSeleccionReferencia', 'RecursoHumano', 'codigoSeleccionReferenciaPk')],
+            ['clase' => 'rhu_seleccion_visita', 'registros' => $this->contarRegistros('RhuSeleccionVisita', 'RecursoHumano', 'codigoSeleccionVisitaPk')],
+            ['clase' => 'rhu_seleccion_antecedente', 'registros' => $this->contarRegistros('RhuSeleccionAntecedente', 'RecursoHumano', 'codigoSeleccionAntecedentePk')],
             ['clase' => 'rhu_cambio_salario', 'registros' => $this->contarRegistros('RhuCambioSalario', 'RecursoHumano', 'codigoCambioSalarioPk')],
             ['clase' => 'rhu_adicional', 'registros' => $this->contarRegistros('RhuAdicional', 'RecursoHumano', 'codigoAdicionalPk')],
             ['clase' => 'rhu_embargo', 'registros' => $this->contarRegistros('RhuEmbargo', 'RecursoHumano', 'codigoEmbargoPk')],
@@ -2054,6 +2086,7 @@ class MigracionController extends Controller
             $datos = $conn->query("SELECT
                 codigo_aspirante_pk,
                 codigo_ciudad_fk,
+                codigo_cargo_fk,
                 codigo_estado_civil_fk,
                 codigo_ciudad_nacimiento_fk,
                 codigo_ciudad_expedicion_fk,
@@ -2087,6 +2120,9 @@ class MigracionController extends Controller
                 $arAspirante->setCodigoAspirantePk($row['codigo_aspirante_pk']);
                 $arAspirante->setNumeroIdentificacion($row['numero_identificacion']);
                 $arAspirante->setIdentificacionRel($em->getReference(GenIdentificacion::class, 'CC'));
+                if ($row['codigo_cargo_fk']) {
+                    $arAspirante->setCargoRel($em->getReference(RhuCargo::class, $row['codigo_cargo_fk']));
+                }
                 if ($row['codigo_ciudad_fk']) {
                     $arAspirante->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
                 }
@@ -2146,50 +2182,54 @@ class MigracionController extends Controller
         for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
             $lote = $pagina * $rango;
             $datos = $conn->query("SELECT
-                codigo_seleccion_requisito_pk,
-                codigo_centro_costo_fk,
-                codigo_cargo_fk,
-                fecha,
-                nombre,
-                cantidad_solicitada,
-                fecha_pruebas,
-                fecha_vencimiento,
-                codigo_estado_civil_fk,
-                codigo_ciudad_fk,
-                codigo_estudio_tipo_fk,
-                codigo_sexo_fk,
-                codigo_religion_fk,
-                codigo_disponibilidad_fk,
-                codigo_tipo_vehiculo_fk,
-                codigo_licencia_carro_fk,
-                codigo_licencia_moto_fk,
-                edad_minima,
-                edad_maxima,
-                codigo_experiencia_requisicion_fk,
-                codigo_seleccion_requisito_motivo_fk,
-                cliente_referencia,
-                vr_salario,
-                salario_fijo,
-                salario_variable,
-                vr_no_salarial,
-                fecha_contratacion,
-                codigo_clasificacion_riesgo_fk,
-                estado_autorizado,
-                estado_aprobado,
-                estado_anulado,
-                soporte,
-                comentarios
-                 FROM rhu_seleccion_requisito ORDER BY codigo_seleccion_requisito_pk limit {$lote},{$rango}");
+                rhu_seleccion_requisito.codigo_seleccion_requisito_pk,
+                rhu_seleccion_requisito.codigo_centro_costo_fk,
+                rhu_seleccion_requisito.codigo_cargo_fk,
+                rhu_clasificacion_riesgo.codigo_externo as codigo_clasificacion_riesgo_externo,
+                rhu_seleccion_requisito.fecha,
+                rhu_seleccion_requisito.nombre as solicitud_nombre,
+                rhu_seleccion_requisito.cantidad_solicitada,
+                rhu_seleccion_requisito.fecha_pruebas,
+                rhu_seleccion_requisito.fecha_vencimiento,
+                rhu_seleccion_requisito.codigo_estado_civil_fk,
+                rhu_seleccion_requisito.codigo_ciudad_fk,
+                rhu_seleccion_requisito.codigo_estudio_tipo_fk,
+                rhu_seleccion_requisito.codigo_sexo_fk,
+                rhu_seleccion_requisito.codigo_religion_fk,
+                rhu_seleccion_requisito.codigo_disponibilidad_fk,
+                rhu_seleccion_requisito.codigo_tipo_vehiculo_fk,
+                rhu_seleccion_requisito.codigo_licencia_carro_fk,
+                rhu_seleccion_requisito.codigo_licencia_moto_fk,
+                rhu_seleccion_requisito.edad_minima,
+                rhu_seleccion_requisito.edad_maxima,
+                rhu_seleccion_requisito.codigo_estudio_tipo_fk,
+                rhu_seleccion_requisito.codigo_experiencia_requisicion_fk,
+                rhu_seleccion_requisito.codigo_seleccion_requisito_motivo_fk,
+                rhu_seleccion_requisito.cliente_referencia,
+                rhu_seleccion_requisito.vr_salario,
+                rhu_seleccion_requisito.salario_fijo,
+                rhu_seleccion_requisito.salario_variable,
+                rhu_seleccion_requisito.vr_no_salarial,
+                rhu_seleccion_requisito.fecha_contratacion,
+                rhu_seleccion_requisito.estado_autorizado,
+                rhu_seleccion_requisito.estado_aprobado,
+                rhu_seleccion_requisito.estado_cerrado,
+                rhu_seleccion_requisito. soporte,
+                rhu_seleccion_requisito.comentarios
+                FROM rhu_seleccion_requisito
+                left join rhu_clasificacion_riesgo on rhu_clasificacion_riesgo.codigo_clasificacion_riesgo_pk=rhu_seleccion_requisito.codigo_clasificacion_riesgo_fk
+                ORDER BY codigo_seleccion_requisito_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 $arSolicitud = new RhuSolicitud();
                 $arSolicitud->setCodigoSolicitudPk($row['codigo_seleccion_requisito_pk']);
                 $arSolicitud->setGrupoRel($em->getReference(RhuGrupo::class, $row['codigo_centro_costo_fk']));
                 $arSolicitud->setCargoRel($em->getReference(RhuCargo::class, $row['codigo_cargo_fk']));
-                $arSolicitud->setCodigoSolicitudMotivoFk($row['codigo_seleccion_requisito_motivo_fk']);
+                $arSolicitud->setEstudioTipoRel($em->getReference(RhuEstudioTipo::class, $row['codigo_estudio_tipo_fk']));
+                $arSolicitud->setSolicitudExperienciaRel($em->getReference(RhuSolicitudExperiencia::class, $row['codigo_experiencia_requisicion_fk']));
                 $arSolicitud->setFecha(date_create($row['fecha']));
                 $arSolicitud->setFechaContratacion(date_create($row['fecha_contratacion']));
                 $arSolicitud->setFechaVencimiento(date_create($row['fecha_vencimiento']));
-                $arSolicitud->setNombre(utf8_encode($row['nombre']));
+                $arSolicitud->setNombre(utf8_encode($row['solicitud_nombre']));
                 $arSolicitud->setCantidadSolicitada(utf8_encode($row['cantidad_solicitada']));
                 $arSolicitud->setVrSalario(utf8_encode($row['vr_salario']));
                 $arSolicitud->setVrNoSalarial(($row['vr_no_salarial']));
@@ -2198,24 +2238,40 @@ class MigracionController extends Controller
                 $arSolicitud->setFechaPruebas(date_create($row['fecha_pruebas']));
                 $arSolicitud->setEdadMinima(utf8_encode($row['edad_minima']));
                 $arSolicitud->setEdadMaxima(utf8_encode($row['edad_maxima']));
-//                if ($row['codigo_estudio_tipo_fk']) {
-//                    $arSolicitud->setEstudioTipoRel($em->getReference(RhuEstudioTipo::class, $row['codigo_estudio_tipo_fk']));
-//                }
-//                if ($row['codigo_experiencia_requisicion_fk']) {
-//                    $arSolicitud->setSolicitudExperienciaRel($em->getReference(RhuSolicitudExperiencia::class, $row['codigo_experiencia_requisicion_fk']));
-//                }
-//                if ($row['codigo_sexo_fk']) {
-//                    $arSolicitud->setSexoRel($em->getReference(GenSexo::class, $row['codigo_sexo_fk']));
-//                }
-//                if ($row['codigo_ciudad_fk']) {
-//                    $arSolicitud->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
-//                }
-//                if ($row['codigo_estado_civil_fk']) {
-//                    $arSolicitud->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
-//                }
-//                if ($row['codigo_clasificacion_riesgo_fk']) {
-//                    $arSolicitud->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_fk']));
-//                }
+                $arSolicitud->setCodigoTipoVehiculoFk($row['codigo_tipo_vehiculo_fk']);
+                $arSolicitud->setCodigoLicenciaMotoFk(utf8_encode($row['codigo_licencia_moto_fk']));
+                $arSolicitud->setCodigoLicenciaCarroFk(utf8_encode($row['codigo_licencia_carro_fk']));
+                $arSolicitud->setEdadMaxima(utf8_encode($row['edad_maxima']));
+                $arSolicitud->setEstadoAutorizado($row['estado_aprobado']);
+                $arSolicitud->setEstadoAprobado($row['estado_cerrado']);
+                $arSolicitud->setComentarios(utf8_encode($row['comentarios']));
+                if ($row['codigo_clasificacion_riesgo_externo']) {
+                    $arSolicitud->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
+                }
+                if ($row['codigo_seleccion_requisito_motivo_fk']) {
+                    $arSolicitud->setSolicitudMotivoRel($em->getReference(RhuSolicitudMotivo::class, $row['codigo_seleccion_requisito_motivo_fk']));
+                }
+                if ($row['codigo_sexo_fk']) {
+                    $codigoClase = null;
+                    switch ($row['codigo_sexo_fk']) {
+                        case 'M':
+                            $codigoClase = "M";
+                            break;
+                        case 'F':
+                            $codigoClase = "F";
+                            break;
+                        case 'I':
+                            $codigoClase = "I";
+                            break;
+                    }
+                    $arSolicitud->setSexoRel($em->getReference(GenSexo::class, $codigoClase));
+                }
+                if ($row['codigo_ciudad_fk']) {
+                    $arSolicitud->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
+                if ($row['codigo_estado_civil_fk']) {
+                    $arSolicitud->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
+                }
                 $em->persist($arSolicitud);
                 $metadata = $em->getClassMetaData(get_class($arSolicitud));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -2268,100 +2324,338 @@ class MigracionController extends Controller
         }
     }
 
-//    private function rhuSeleccion($conn)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $rango = 5000;
-//        $arr = $conn->query("SELECT codigo_seleccion_pk FROM rhu_seleccion ");
-//        $registros = $arr->num_rows;
-//        $totalPaginas = $registros / $rango;
-//        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
-//            $lote = $pagina * $rango;
-//            $datos = $conn->query("SELECT
-//                codigo_seleccion_pk,
-//                codigo_seleccion_tipo_fk,
-//                codigo_identificacion_tipo_fk,
-//                codigo_estado_civil_fk,
-//                codigo_centro_costo_fk,
-//                codigo_ciudad_fk,
-//                codigo_ciudad_nacimiento_fk,
-//                codigo_ciudad_expedicion_fk,
-//                codigo_rh_fk,
-//                codigo_seleccion_requisito_fk,
-//                codigo_cargo_fk,
-//                fecha,
-//                numero_identificacion,
-//                nombre_corto,
-//                nombre1,
-//                nombre2,
-//                apellido1,
-//                apellido2,
-//                telefono,
-//                celular,
-//                direccion,
-//                barrio,
-//                codigo_sexo_fk,
-//                correo,
-//                fecha_nacimiento,
-//                comentarios,
-//                estado_autorizado,
-//                estado_aprobado,
-//                presenta_pruebas,
-//                referencias_verificadas,
-//                fecha_entrevista,
-//                fecha_pruebas,
-//                vr_servicio,
-//                codigo_zona_fk,
-//                codigo_motivo_cierre_seleccion_fk,
-//                fechaCierre
-//                 FROM rhu_seleccion ORDER BY codigo_seleccion_pk limit {$lote},{$rango}");
-//            foreach ($datos as $row) {
-//                $arSeleccion = new RhuSeleccion();
-//                $arSeleccion->setCodigoSeleccionPk($row['codigo_seleccion_pk']);
-//                $arSeleccion->setCodigoGrupoPagoFk($row['codigo_centro_costo_fk']);
-//                $arSeleccion->setSeleccionTipoRel($em->getReference(RhuSeleccionTipo::class, $row['codigo_seleccion_tipo_fk']));
-////                $arSeleccion->setCodigoSolicitudMotivoFk($row['codigo_seleccion_requisito_motivo_fk']);
-////                $arSeleccion->setFecha(date_create($row['fecha']));
-////                $arSeleccion->setFechaContratacion(date_create($row['fecha_contratacion']));
-////                $arSeleccion->setFechaVencimiento(date_create($row['fecha_vencimiento']));
-////                $arSeleccion->setNombre(utf8_encode($row['nombre']));
-////                $arSolicitud->setCantidadSolicitada(utf8_encode($row['cantidad_solicitada']));
-////                $arSeleccion->setVrSalario(utf8_encode($row['vr_salario']));
-////                $arSolicitud->setVrNoSalarial(($row['vr_no_salarial']));
-////                $arSolicitud->setSalarioFijo(utf8_encode($row['salario_fijo']));
-////                $arSolicitud->setSalarioVariable(utf8_encode($row['salario_variable']));
-////                $arSolicitud->setFechaPruebas(date_create($row['fecha_pruebas']));
-////                $arSolicitud->setEdadMinima(utf8_encode($row['edad_minima']));
-////                $arSolicitud->setEdadMaxima(utf8_encode($row['edad_maxima']));
-////                if ($row['codigo_estudio_tipo_fk']) {
-////                    $arSolicitud->setEstudioTipoRel($em->getReference(RhuEstudioTipo::class, $row['codigo_estudio_tipo_fk']));
-////                }
-////                if ($row['codigo_experiencia_requisicion_fk']) {
-////                    $arSolicitud->setSolicitudExperienciaRel($em->getReference(RhuSolicitudExperiencia::class, $row['codigo_experiencia_requisicion_fk']));
-////                }
-////                if ($row['codigo_sexo_fk']) {
-////                    $arSolicitud->setSexoRel($em->getReference(GenSexo::class, $row['codigo_sexo_fk']));
-////                }
-////                if ($row['codigo_ciudad_fk']) {
-////                    $arSolicitud->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
-////                }
-////                if ($row['codigo_estado_civil_fk']) {
-////                    $arSolicitud->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
-////                }
-////                if ($row['codigo_clasificacion_riesgo_fk']) {
-////                    $arSolicitud->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_fk']));
-////                }
-//                $em->persist($arSeleccion);
-//                $metadata = $em->getClassMetaData(get_class($arSeleccion));
-//                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-//                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-//            }
-//            $em->flush();
-//            $em->clear();
-//            $datos->free();
-//            ob_clean();
-//        }
-//    }
+    private function rhuSeleccion($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_seleccion_pk FROM rhu_seleccion ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_seleccion_pk,
+                rhu_seleccion_tipo.codigo_externo as codigo_seleccion_tipo_externo,
+                codigo_tipo_identificacion_fk,
+                codigo_estado_civil_fk,
+                codigo_centro_costo_fk,
+                codigo_ciudad_fk,
+                codigo_ciudad_nacimiento_fk,
+                codigo_ciudad_expedicion_fk,
+                codigo_rh_fk,
+                codigo_seleccion_requisito_fk,
+                codigo_cargo_fk,
+                fecha,
+                fecha_expedicion,
+                fecha_pruebas,
+                numero_identificacion,
+                nombre_corto,
+                nombre1,
+                nombre2,
+                apellido1,
+                apellido2,
+                telefono,
+                celular,
+                direccion,
+                barrio,
+                codigo_sexo_fk,
+                correo,
+                fecha_nacimiento,
+                comentarios,
+                estado_autorizado,
+                estado_aprobado,
+                presenta_pruebas,
+                referencias_verificadas,
+                fecha_entrevista,
+                fecha_pruebas,
+                vr_servicio,
+                codigo_zona_fk,
+                codigo_motivo_cierre_seleccion_fk,
+                fechaCierre
+                 FROM rhu_seleccion
+                 left join rhu_seleccion_tipo on rhu_seleccion.codigo_seleccion_tipo_fk = rhu_seleccion_tipo.codigo_seleccion_tipo_pk 
+                ORDER BY codigo_seleccion_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arSeleccion = new RhuSeleccion();
+                $arSeleccion->setCodigoSeleccionPk($row['codigo_seleccion_pk']);
+                $arSeleccion->setCodigoGrupoPagoFk($row['codigo_centro_costo_fk']);
+                $arSeleccion->setIdentificacionRel($em->getReference(GenIdentificacion::class, 'CC'));
+                $arSeleccion->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
+                $arSeleccion->setRhRel($em->getReference(RhuRh::class, $row['codigo_rh_fk']));
+                $arSeleccion->setCargoRel($em->getReference(RhuCargo::class, $row['codigo_cargo_fk']));
+                $arSeleccion->setFecha(date_create($row['fecha']));
+                $arSeleccion->setFechaExpedicion(date_create($row['fecha_expedicion']));
+                $arSeleccion->setNumeroIdentificacion($row['numero_identificacion']);
+                $arSeleccion->setNombreCorto(utf8_encode($row['nombre_corto']));
+                $arSeleccion->setNombre1(utf8_encode($row['nombre1']));
+                $arSeleccion->setNombre2(utf8_encode($row['nombre2']));
+                $arSeleccion->setApellido1(utf8_encode($row['apellido1']));
+                $arSeleccion->setApellido2(utf8_encode($row['apellido2']));
+                $arSeleccion->setTelefono($row['telefono']);
+                $arSeleccion->setCelular($row['celular']);
+                $arSeleccion->setDireccion(utf8_encode($row['direccion']));
+                $arSeleccion->setBarrio(utf8_encode($row['barrio']));
+                $arSeleccion->setCorreo(utf8_encode($row['correo']));
+                $arSeleccion->setFechaNacimiento(date_create($row['fecha_nacimiento']));
+                $arSeleccion->setEstadoAutorizado(1);
+                $arSeleccion->setEstadoAprobado($row['estado_aprobado']);
+                $arSeleccion->setPresentaPruebas($row['presenta_pruebas']);
+                $arSeleccion->setReferenciasVerificadas($row['referencias_verificadas']);
+                $arSeleccion->setFechaEntrevista(date_create($row['fecha_entrevista']));
+                $arSeleccion->setFechaPrueba(date_create($row['fecha_pruebas']));
+                $arSeleccion->setComentarios(utf8_encode($row['comentarios']));
+                if ($row['codigo_seleccion_tipo_externo']) {
+                    $arSeleccion->setSeleccionTipoRel($em->getReference(RhuSeleccionTipo::class, $row['codigo_seleccion_tipo_externo']));
+                }
+                if ($row['codigo_ciudad_fk']) {
+                    $arSeleccion->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
+                if ($row['codigo_seleccion_requisito_fk']) {
+                    $arSeleccion->setSolicitudRel($em->getReference(RhuSolicitud::class, $row['codigo_seleccion_requisito_fk']));
+                }
+                if ($row['codigo_sexo_fk']) {
+                    $arSeleccion->setSexoRel($em->getReference(GenSexo::class, $row['codigo_sexo_fk']));
+                }
+                if ($row['codigo_ciudad_nacimiento_fk']) {
+                    $arSeleccion->setCiudadNacimientoRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_nacimiento_fk']));
+                }
+                if ($row['codigo_ciudad_expedicion_fk']) {
+                    $arSeleccion->setCiudadExpedicionRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_expedicion_fk']));
+                }
+                if ($row['codigo_zona_fk']) {
+                    $arSeleccion->setZonaRel($em->getReference(RhuZona::class, $row['codigo_zona_fk']));
+                }
+                $em->persist($arSeleccion);
+                $metadata = $em->getClassMetaData(get_class($arSeleccion));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuSeleccionEntrevista($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_seleccion_entrevista_pk FROM rhu_seleccion_entrevista ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_seleccion_entrevista_pk,
+                codigo_seleccion_fk,
+                codigo_seleccion_entrevista_tipo_fk,
+                fecha,
+                resultado,
+                resultado_cuantitativo,
+                nombre_quien_entrevista,
+                comentarios
+                 FROM rhu_seleccion_entrevista
+                ORDER BY codigo_seleccion_entrevista_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arSeleccionEntrevista = new RhuSeleccionEntrevista();
+                $arSeleccionEntrevista->setCodigoSeleccionEntrevistaPk($row['codigo_seleccion_entrevista_pk']);
+                $arSeleccionEntrevista->setFecha(date_create($row['fecha']));
+                $arSeleccionEntrevista->setSeleccionEntrevistaTipoRel($em->getReference(RhuSeleccionEntrevistaTipo::class, $row['codigo_seleccion_entrevista_tipo_fk']));
+                $arSeleccionEntrevista->setSeleccionRel($em->getReference(RhuSeleccion::class, $row['codigo_seleccion_fk']));
+                $arSeleccionEntrevista->setResultado(utf8_encode($row['resultado']));
+                $arSeleccionEntrevista->setResultadoCuantitativo($row['resultado_cuantitativo']);
+                $arSeleccionEntrevista->setNombreQuienEntrevista(utf8_encode($row['nombre_quien_entrevista']));
+                $arSeleccionEntrevista->setComentarios(utf8_encode($row['comentarios']));
+                $arSeleccionEntrevista->setCodigoUsuario(utf8_encode($row['codigo_usuario']));
+                $em->persist($arSeleccionEntrevista);
+                $metadata = $em->getClassMetaData(get_class($arSeleccionEntrevista));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuSeleccionPrueba($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_seleccion_prueba_pk FROM rhu_seleccion_prueba ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_seleccion_prueba_pk,
+                codigo_seleccion_fk,
+                codigo_seleccion_prueba_tipo_fk,
+                fecha,
+                resultado,
+                resultado_cuantitativo,
+                nombre_quien_hace_prueba,
+                comentarios
+                 FROM rhu_seleccion_prueba
+                ORDER BY codigo_seleccion_prueba_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arSeleccionPrueba = new RhuSeleccionPrueba();
+                $arSeleccionPrueba->setCodigoSeleccionPruebaPk($row['codigo_seleccion_prueba_pk']);
+                $arSeleccionPrueba->setFecha(date_create($row['fecha']));
+                $arSeleccionPrueba->setSeleccionPruebaTipoRel($em->getReference(RhuSeleccionPruebaTipo::class, $row['codigo_seleccion_prueba_tipo_fk']));
+                $arSeleccionPrueba->setSeleccionRel($em->getReference(RhuSeleccion::class, $row['codigo_seleccion_fk']));
+                $arSeleccionPrueba->setResultado(utf8_encode($row['resultado']));
+                $arSeleccionPrueba->setResultadoCuantitativo($row['resultado_cuantitativo']);
+                $arSeleccionPrueba->setNombreQuienHacePrueba(utf8_encode($row['nombre_quien_hace_prueba']));
+                $arSeleccionPrueba->setComentarios(utf8_encode($row['comentarios']));
+                $em->persist($arSeleccionPrueba);
+                $metadata = $em->getClassMetaData(get_class($arSeleccionPrueba));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuSeleccionReferencia($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_seleccion_referencia_pk FROM rhu_seleccion_referencia ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_seleccion_referencia_pk,
+                codigo_seleccion_fk,
+                codigo_seleccion_tipo_referencia_fk,
+                codigo_ciudad_fk,
+                nombre_corto,
+                telefono,
+                celular,
+                direccion,
+                estado_verificada,
+                empresa,
+                suministra_informacion,
+                cargo,
+                motivo_retiro,
+                tiempo_laborado,    
+                comentarios
+                 FROM rhu_seleccion_referencia
+                ORDER BY codigo_seleccion_referencia_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arSeleccionReferencia = new RhuSeleccionReferencia();
+                $arSeleccionReferencia->setCodigoSeleccionReferenciaPk($row['codigo_seleccion_referencia_pk']);
+                $arSeleccionReferencia->setSeleccionReferenciaTipoRel($em->getReference(RhuSeleccionReferenciaTipo::class, $row['codigo_seleccion_tipo_referencia_fk']));
+                if ($row['codigo_ciudad_fk']) {
+                    $arSeleccionReferencia->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
+                $arSeleccionReferencia->setSeleccionRel($em->getReference(RhuSeleccion::class, $row['codigo_seleccion_fk']));
+                $arSeleccionReferencia->setNombreCorto(utf8_encode($row['nombre_corto']));
+                $arSeleccionReferencia->setTelefono(utf8_encode($row['telefono']));
+                $arSeleccionReferencia->setCelular(utf8_encode($row['celular']));
+                $arSeleccionReferencia->setDireccion(utf8_encode($row['direccion']));
+                $arSeleccionReferencia->setEstadoVerificada(utf8_encode($row['estado_verificada']));
+                $arSeleccionReferencia->setEmpresa(utf8_encode($row['empresa']));
+                $arSeleccionReferencia->setSuministraInformacion(utf8_encode($row['suministra_informacion']));
+                $arSeleccionReferencia->setCargo(utf8_encode($row['cargo']));
+                $arSeleccionReferencia->setMotivoRetiro(utf8_encode($row['motivo_retiro']));
+                $arSeleccionReferencia->setTiempoLaborado(utf8_encode($row['tiempo_laborado']));
+                $arSeleccionReferencia->setComentarios(utf8_encode($row['comentarios']));
+                $em->persist($arSeleccionReferencia);
+                $metadata = $em->getClassMetaData(get_class($arSeleccionReferencia));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuSeleccionVisita($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_seleccion_visita_pk FROM rhu_seleccion_visita ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_seleccion_visita_pk,
+                codigo_seleccion_fk,
+                fecha,
+                nombre_quien_visita,
+                cliente_referencia,
+                comentarios
+                 FROM rhu_seleccion_visita
+                ORDER BY codigo_seleccion_visita_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arSeleccionVisita = new RhuSeleccionVisita();
+                $arSeleccionVisita->setCodigoSeleccionVisitaPk($row['codigo_seleccion_visita_pk']);
+                $arSeleccionVisita->setFecha(date_create($row['fecha']));
+                $arSeleccionVisita->setSeleccionRel($em->getReference(RhuSeleccion::class, $row['codigo_seleccion_fk']));
+                $arSeleccionVisita->setNombreQuienVisita(utf8_encode($row['nombre_quien_visita']));
+                $arSeleccionVisita->setClienteReferencia(utf8_encode($row['cliente_referencia']));
+                $arSeleccionVisita->setComentarios(utf8_encode($row['comentarios']));
+                $em->persist($arSeleccionVisita);
+                $metadata = $em->getClassMetaData(get_class($arSeleccionVisita));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuSeleccionAntecedente($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_seleccion_antecedente_pk FROM rhu_seleccion_antecedente ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                codigo_seleccion_antecedente_pk,
+                codigo_seleccion_fk,
+                fecha,
+                nombre_quien_suministra,
+                comentarios,
+                verificado,
+                codigo_usuario
+                 FROM rhu_seleccion_antecedente
+                ORDER BY codigo_seleccion_antecedente_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arSeleccionAntecedente = new RhuSeleccionAntecedente();
+                $arSeleccionAntecedente->setCodigoSeleccionAntecedentePk($row['codigo_seleccion_antecedente_pk']);
+                $arSeleccionAntecedente->setFecha(date_create($row['fecha']));
+                $arSeleccionAntecedente->setEstadoVerificado($row['verificado']);
+                $arSeleccionAntecedente->setSeleccionRel($em->getReference(RhuSeleccion::class, $row['codigo_seleccion_fk']));
+                $arSeleccionAntecedente->setNombreQuienSuministra(utf8_encode($row['nombre_quien_suministra']));
+                $arSeleccionAntecedente->setComentarios(utf8_encode($row['comentarios']));
+                $em->persist($arSeleccionAntecedente);
+                $metadata = $em->getClassMetaData(get_class($arSeleccionAntecedente));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
 
     private function rhuIncapacidadDiagnostico($conn)
     {

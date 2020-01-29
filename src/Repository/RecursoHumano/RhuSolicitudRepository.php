@@ -77,7 +77,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("s.estadoAnulado = 1");
                 break;
         }
-        $queryBuilder->addOrderBy('s.codigoSolicitudPk', 'ASC');
+        $queryBuilder->addOrderBy('s.codigoSolicitudPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
     }

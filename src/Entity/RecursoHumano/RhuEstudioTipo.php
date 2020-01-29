@@ -22,7 +22,7 @@ class RhuEstudioTipo
     private $codigoEstudioTipoPk;
 
     /**
-     * @ORM\Column(name="nombre", type="string", length=80, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=500, nullable=false)
      */
     private $nombre;
 
@@ -46,7 +46,6 @@ class RhuEstudioTipo
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="estudioTipoRel")
      */
     protected $rhuSolicitudesEstudioTiposRel;
-
 
     /**
      * @return array
@@ -126,6 +125,38 @@ class RhuEstudioTipo
     public function setEstudiosEstudioTipoRel($estudiosEstudioTipoRel): void
     {
         $this->estudiosEstudioTipoRel = $estudiosEstudioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmpleadosEmpleadoEstudioTipoRel()
+    {
+        return $this->empleadosEmpleadoEstudioTipoRel;
+    }
+
+    /**
+     * @param mixed $empleadosEmpleadoEstudioTipoRel
+     */
+    public function setEmpleadosEmpleadoEstudioTipoRel($empleadosEmpleadoEstudioTipoRel): void
+    {
+        $this->empleadosEmpleadoEstudioTipoRel = $empleadosEmpleadoEstudioTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuSolicitudesEstudioTiposRel()
+    {
+        return $this->rhuSolicitudesEstudioTiposRel;
+    }
+
+    /**
+     * @param mixed $rhuSolicitudesEstudioTiposRel
+     */
+    public function setRhuSolicitudesEstudioTiposRel($rhuSolicitudesEstudioTiposRel): void
+    {
+        $this->rhuSolicitudesEstudioTiposRel = $rhuSolicitudesEstudioTiposRel;
     }
 
 

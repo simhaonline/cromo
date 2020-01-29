@@ -72,10 +72,14 @@
                 <td>{{ arSeleccion.estadoAutorizado ? 'SI' : 'NO' }}</td>
                 <td>{{ arSeleccion.estadoAprobado ? 'SI' : 'NO' }}</td>
                 <td>{{ arSeleccion.estadoAnulado ? 'SI' : 'NO' }}</td>
-                <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_seleccion_seleccion_nuevo',{'id': arSeleccion.codigoSeleccionPk }) }}"><i
-                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arSeleccion.estadoAutorizado == 0 %}
+                    <td style="text-align: center;">
+                        <a href="{{ path('recursohumano_movimiento_seleccion_seleccion_nuevo',{'id': arSeleccion.codigoSeleccionPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seleccion_seleccion_detalle',{'id' : arSeleccion.codigoSeleccionPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

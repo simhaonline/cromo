@@ -72,9 +72,14 @@
                 <td>{{ arSolicitud.estadoAutorizado ? 'SI' : 'NO' }}</td>
                 <td>{{ arSolicitud.estadoAprobado ? 'SI' : 'NO' }}</td>
                 <td>{{ arSolicitud.estadoAnulado ? 'SI' : 'NO' }}</td>
-                <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_movimiento_seleccion_solicitud_nuevo',{'id': arSolicitud.codigoSolicitudPk }) }}"><i class="fa fa-edit" style="color: black;font-size: large;"></i></a>
-                </td>
+                {% if arSolicitud.estadoAutorizado == 0 %}
+                    <td style="text-align: center;">
+                        <a href="{{ path('recursohumano_movimiento_seleccion_solicitud_nuevo',{'id': arSolicitud.codigoSolicitudPk }) }}"><i
+                                    class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
                 <td style="text-align: center;">
                     <a href="{{ path('recursohumano_movimiento_seleccion_solicitud_detalle',{'id' : arSolicitud.codigoSolicitudPk }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">

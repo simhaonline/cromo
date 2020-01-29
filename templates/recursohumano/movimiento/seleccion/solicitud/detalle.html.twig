@@ -20,64 +20,56 @@
             <td class="td-in-well">{{ arSolicitud.codigoSolicitudPk }}</td>
             <td class="titulo">FECHA:</td>
             <td class="td-in-well">{{ arSolicitud.fecha | date("Y-m-d") }}</td>
-            <td></td>
-            <td></td>
+            <td class="titulo">FECHA CIERRE:</td>
+            <td class="td-label" align="right">{{ arSolicitud.fechaVencimiento | date('Y-m-d') }}</td>
         </tr>
         <tr>
             <td class="titulo">NOMBRE:</td>
             <td class="td-in-well">{{ arSolicitud.nombre }}</td>
             <td class="titulo">GRUPO:</td>
             <td class="td-in-well">{{ arSolicitud.grupoRel.nombre }}</td>
-            <td class="titulo">FECHA CIERRE:</td>
-            <td class="td-label" align="right">{{ arSolicitud.fechaVencimiento | date('Y-m-d') }}</td>
+            <td class="titulo">NO SALARIAL:</td>
+            <td class="td-label" align="right">{{ arSolicitud.vrNoSalarial }}</td>
         </tr>
         <tr>
             <td class="titulo">CANTIDAD:</td>
             <td class="td-in-well">{{ arSolicitud.cantidadSolicitada }}</td>
             <td class="titulo">ESTADO CIVIL:</td>
             <td class="td-in-well">{{ arSolicitud.estadoCivilRel.nombre | default('') }}</td>
-            <td class="titulo">NO SALARIAL:</td>
-            <td class="td-label" align="right">{{ arSolicitud.vrNoSalarial }}</td>
+            <td class="titulo">EDAD MAXIMA:</td>
+            <td class="td-label" align="right">{{ arSolicitud.edadMaxima }}</td>
         </tr>
         <tr>
             <td class="titulo">NIVEL ESTUDIO:</td>
             <td class="td-in-well">{{ arSolicitud.estudioTipoRel.nombre | default('') }}</td>
             <td class="titulo">EDAD MINIMA:</td>
             <td class="td-in-well">{{ arSolicitud.edadMinima }}</td>
-            <td class="titulo">EDAD MAXIMA:</td>
-            <td class="td-label" align="right">{{ arSolicitud.edadMaxima }}</td>
+            <td class="titulo">RELIGION:</td>
+            <td class="td-label" align="right">{{ arSolicitud.religionRel.nombre | default('') }}</td>
         </tr>
         <tr>
             <td class="titulo">SEXO:</td>
             <td class="td-in-well">{{ arSolicitud.sexoRel.nombre | default('') }}</td>
             <td class="titulo">CIUDAD RESIDENCIA:</td>
-            <td class="td-in-well">{{ arSolicitud.ciudadRel.nombre }}</td>
-            <td class="titulo">NRO HIJOS:</td>
-            <td class="td-label" align="right">{{ arSolicitud.numeroHijos }}</td>
+            <td class="td-in-well">{{ arSolicitud.ciudadRel.nombre | default('') }}</td>
+            <td class="titulo">LICENCIA CARRO:</td>
+            <td class="td-label" align="right">{{ arSolicitud.codigoLicenciaCarroFk ? 'SI':'NO' }}</td>
         </tr>
         <tr>
             <td class="titulo">EXPERIENCIA:</td>
             <td class="td-in-well">{{ arSolicitud.solicitudExperienciaRel.nombre | default('') }}</td>
             <td class="titulo">TIPO VEHICULO:</td>
             <td class="td-in-well">{{ arSolicitud.codigoTipoVehiculoFk }}</td>
-            <td class="titulo">RELIGION:</td>
-            <td class="td-label" align="right">{{ arSolicitud.religionRel.nombre | default('') }}</td>
+            <td class="titulo">LICENCIA MOTO:</td>
+            <td class="td-label" align="right">{{ arSolicitud.codigoLicenciaMotoFk ? 'SI' :'NO' }}</td>
         </tr>
         <tr>
             <td class="titulo">MOTIVO:</td>
             <td class="td-in-well">{{ arSolicitud.solicitudMotivoRel.nombre | default('') }}</td>
-            <td class="titulo">DISPONIBILIDAD:</td>
-            <td class="td-in-well">{{ arSolicitud.disponbilidad }}</td>
-            <td class="titulo">LICENCIA CARRO:</td>
-            <td class="td-label" align="right">{{ arSolicitud.codigoLicenciaCarroFk ? 'SI':'NO' }}</td>
-        </tr>
-        <tr>
-            <td class="titulo">FECHA CONTRATACION:</td>
-            <td class="td-in-well">{{ arSolicitud.fechaContratacion | date('') }}</td>
             <td class="titulo">FECHA PRUEBAS:</td>
-            <td class="td-in-well">{{ arSolicitud.fechaPruebas | date ('') }}</td>
-            <td class="titulo">LICENCIA MOTO:</td>
-            <td class="td-label" align="right">{{ arSolicitud.codigoLicenciaMotoFk ? 'SI' :'NO' }}</td>
+            <td class="td-in-well">{{ arSolicitud.fechaPruebas | date ('Y-m-d') }}</td>
+            <td class="titulo">FECHA CONTRATACION:</td>
+            <td class="td-in-well">{{ arSolicitud.fechaContratacion | date('Y-m-d') }}
         </tr>
         <tr>
             <td class="titulo"><b>COMENTARIOS:</b></td>
@@ -120,11 +112,13 @@
                 </div>
                 <div class="separador-1"></div>
                 <div class="btn-toolbar" style="float: right">
-                    <div class="btn-group">
-                        <a class="btn btn-default btn-sm"
-                           href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_solicitud_buscar_aspirante', { 'id': arSolicitud.codigoSolicitudPk}) }}', 'BuscarAspirante', 700, 1000)">Buscar
-                            aspirante</a>
-                    </div>
+                    {% if arSolicitud.estadoAprobado == 0 %}
+                        <div class="btn-group">
+                            <a class="btn btn-default btn-sm"
+                               href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_solicitud_buscar_aspirante', { 'id': arSolicitud.codigoSolicitudPk}) }}', 'BuscarAspirante', 700, 1000)">Buscar
+                                aspirante</a>
+                        </div>
+                    {% endif %}
                     <div class="btn-group">
                         {{ form_widget(form.btnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
                     </div>
@@ -162,7 +156,7 @@
                             <td>{{ arSeleccion.numeroIdentificacion }}</td>
                             <td>{{ arSeleccion.nombreCorto }}</td>
                             <td>{{ arSeleccion.clienteRel.nombre |default('') }}</td>
-                            <td>{{ arSeleccion.fechaPrueba != null ? arSeleccion.fechaPruebas|date("Y/m/d H:i"):"" }}</td>
+                            <td>{{ arSeleccion.fechaPrueba != null ? arSeleccion.fechaPrueba|date("Y/m/d H:i"):"" }}</td>
                             <td>{{ arSeleccion.telefono }}</td>
                             <td>{{ arSeleccion.celular }}</td>
                             <td>{{ arSeleccion.presentaPruebas ? 'SI' : 'NO' }}</td>

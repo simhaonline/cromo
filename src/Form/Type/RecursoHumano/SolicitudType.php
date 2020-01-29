@@ -126,7 +126,6 @@ class SolicitudType extends AbstractType
             ->add('codigoTipoVehiculoFk', ChoiceType::class, array('choices'   => array('CARRO' => '1', 'MOTO' => '2', 'NO APLICA' => '0')))
             ->add('codigoLicenciaCarroFk', ChoiceType::class, array('choices'   => array('SI' => '1', 'NO' => '2', 'NO APLICA' => '0')))
             ->add('codigoLicenciaMotoFk', ChoiceType::class, array('choices'   => array('SI' => '1', 'NO' => '2', 'NO APLICA' => '0')))
-            ->add('disponbilidad',TextType::class,['required' => false,'label' => 'Disponibilidad:'])
             ->add('comentarios', TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

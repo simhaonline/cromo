@@ -219,7 +219,7 @@
                             <td>{{ arSeleccionReferencia.telefono }}</td>
                             <td>{{ arSeleccionReferencia.direccion }}</td>
                             <td>{{ arSeleccionReferencia.ciudadRel.nombre | default('') }}</td>
-                            <td>{{ arSeleccionReferencia.estadoVerificada }}</td>
+                            <td>{{ arSeleccionReferencia.estadoVerificada ? 'SI' : 'NO' }}</td>
                             <td>{{ arSeleccionReferencia.comentarios }}</td>
                             <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
                                                       value="{{ arSeleccionReferencia.codigoSeleccionReferenciaPk }}"/>

@@ -115,6 +115,16 @@ class SolicitudType extends AbstractType
                 'choice_label' => 'nombre',
                 'label' => 'Experiencia:'
             ])
+            ->add('zonaRel',EntityType::class,[
+                'required' => true,
+                'class' => 'App\Entity\RecursoHumano\RhuZona',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('z')
+                        ->orderBy('z.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Zona:'
+            ])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('cantidadSolicitada',IntegerType::class,['required' => true,'label' => 'Cantidad:'])
             ->add('vrSalario', NumberType::class,['required' => true,'label' => 'Salario:'])

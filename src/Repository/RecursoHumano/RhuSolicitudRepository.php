@@ -38,6 +38,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->select('s.codigoSolicitudPk')
             ->addSelect('s.fecha')
             ->addSelect('m.nombre AS motivo')
+            ->addSelect('g.nombre AS grupo')
             ->addSelect('s.cantidadSolicitada')
             ->addSelect('s.nombre')
             ->addSelect('s.salarioFijo')
@@ -47,7 +48,8 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->addSelect('s.estadoAprobado')
             ->addSelect('s.estadoAutorizado')
             ->addSelect('s.estadoAnulado')
-        ->leftJoin('s.solicitudMotivoRel', 'm');
+            ->leftJoin('s.solicitudMotivoRel', 'm')
+            ->leftJoin('s.grupoRel', 'g');
         if ($codigoSolicitud) {
             $queryBuilder->andWhere("s.codigoSolicitudPk = '{$codigoSolicitud}'");
         }

@@ -145,6 +145,11 @@ class RhuSolicitud
     private $codigoLicenciaMotoFk;
 
     /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=10, nullable=true)
+     */
+    private $codigoZonaFk;
+
+    /**
      * @ORM\Column(name="comentarios", type="string", length=300, nullable=true)
      * @Assert\Length(
      *     max=300,
@@ -231,6 +236,12 @@ class RhuSolicitud
      * @ORM\JoinColumn(name="codigo_sexo_fk", referencedColumnName="codigo_sexo_pk")
      */
     protected $sexoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuZona", inversedBy="solicitudesZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    protected $zonaRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitudAspirante", mappedBy="solicitudRel")
@@ -907,6 +918,38 @@ class RhuSolicitud
     public function setSolicitudesAspirantesSolicitudRel($solicitudesAspirantesSolicitudRel): void
     {
         $this->solicitudesAspirantesSolicitudRel = $solicitudesAspirantesSolicitudRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * @param mixed $codigoZonaFk
+     */
+    public function setCodigoZonaFk($codigoZonaFk): void
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
     }
 
 

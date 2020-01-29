@@ -51,6 +51,7 @@
             <th>FECHA</th>
             <th>MOTIVO</th>
             <th>NOMBRE</th>
+            <th>GRUPO</th>
             <th title="CANTIDAD SOLICITADA">SOL</th>
             <th>FIJO</th>
             <th>VARIBLE</th>
@@ -68,6 +69,7 @@
                 <td>{{ arSolicitud.fecha | date ('Y-m-d') }}</td>
                 <td>{{ arSolicitud.motivo }}</td>
                 <td>{{ arSolicitud.nombre }}</td>
+                <td>{{ arSolicitud.grupo }}</td>
                 <td>{{ arSolicitud.cantidadSolicitada }}</td>
                 <td>{{ arSolicitud.salarioFijo ? 'SI' : 'NO' }}</td>
                 <td>{{ arSolicitud.salarioVariable ? 'SI' : 'NO' }}</td>

@@ -89,7 +89,7 @@ class SolicitudController extends MaestroController
         if ($id != 0) {
             $arSolicitud = $em->getRepository('App:RecursoHumano\RhuSolicitud')->find($id);
             if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('admin_lista', ['modulo' => 'recursoHumano', 'entidad' => 'solicitud']));
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
             }
         }
         $form = $this->createForm(SolicitudType::class, $arSolicitud);

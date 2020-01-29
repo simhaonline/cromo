@@ -33,6 +33,11 @@ class RhuZona
     protected $aspirantesZonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="zonaRel")
+     */
+    protected $solicitudesZonaRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSeleccion", mappedBy="zonaRel")
      */
     protected $seleccionesZonaRel;
@@ -115,6 +120,22 @@ class RhuZona
     public function setSeleccionesZonaRel($seleccionesZonaRel): void
     {
         $this->seleccionesZonaRel = $seleccionesZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesZonaRel()
+    {
+        return $this->solicitudesZonaRel;
+    }
+
+    /**
+     * @param mixed $solicitudesZonaRel
+     */
+    public function setSolicitudesZonaRel($solicitudesZonaRel): void
+    {
+        $this->solicitudesZonaRel = $solicitudesZonaRel;
     }
 
 

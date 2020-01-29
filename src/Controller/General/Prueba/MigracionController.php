@@ -179,6 +179,9 @@ class MigracionController extends Controller
                 if ($request->request->get('OpGenerar')) {
                     $codigo = $request->request->get('OpGenerar');
                     switch ($codigo) {
+                        case 'fin_centro_costo':
+                            $this->finCentroCosto($conn);
+                            break;
                         case 'rhu_empleado':
                             $this->rhuEmpleado($conn);
                             break;
@@ -299,6 +302,7 @@ class MigracionController extends Controller
             }
         }
         $arrProcesos = [
+            ['clase' => 'fin_centro_costo', 'registros' => $this->contarRegistros('FinCentroCosto', 'Financiero', 'codigoCentroCostoPk')],
             ['clase' => 'rhu_empleado', 'registros' => $this->contarRegistros('RhuEmpleado', 'RecursoHumano', 'codigoEmpleadoPk')],
             ['clase' => 'rhu_contrato', 'registros' => $this->contarRegistros('RhuContrato', 'RecursoHumano', 'codigoContratoPk')],
             ['clase' => 'rhu_aspirante', 'registros' => $this->contarRegistros('RhuAspirante', 'RecursoHumano', 'codigoAspirantePk')],
@@ -490,6 +494,39 @@ class MigracionController extends Controller
         } else {
             return false;
         }
+    }
+
+    private function finCentroCosto($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_centro_costo_pk FROM ctb_centro_costo ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                    codigo_centro_costo_pk,
+                    nombre,            
+                    estado_inactivo
+                  FROM ctb_centro_costo 
+                  ORDER BY codigo_centro_costo_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arCentroCosto = new FinCentroCosto();
+                $arCentroCosto->setCodigoCentroCostoPk(utf8_encode($row['codigo_centro_costo_pk']));
+                $arCentroCosto->setNombre(utf8_encode($row['nombre']));
+                $arCentroCosto->setEstadoInactivo($row['estadoInactivo']);
+                $em->persist($arCentroCosto);
+                $metadata = $em->getClassMetaData(get_class($arCentroCosto));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+        $em->flush();
     }
 
     private function rhuGrupo($conn)
@@ -1167,6 +1204,7 @@ class MigracionController extends Controller
                         codigo_empleado_fk,
                         vr_pagar,
                         vr_cuota,
+                        vr_abonos,
                         fecha,
                         fecha_inicio,
                         fecha_credito,
@@ -1195,6 +1233,7 @@ class MigracionController extends Controller
             $arCredito->setVrCredito($row['vr_pagar']);
             $arCredito->setVrCuota($row['vr_cuota']);
             $arCredito->setVrSaldo($row['saldo']);
+            $arCredito->setVrAbonos($row['vr_abonos']);
             $arCredito->setFecha(date_create($row['fecha']));
             $arCredito->setFechaInicio(date_create($row['fecha_inicio']));
             $arCredito->setFechaCredito(date_create($row['fecha_credito']));
@@ -1533,7 +1572,7 @@ class MigracionController extends Controller
             $arLiquidacion->setEliminarAusentismoPrima($row['eliminar_ausentismo_primas']);
             $arLiquidacion->setEliminarAusentismoVacacion($row['eliminar_ausentismo_vacacion']);
             $arLiquidacion->setEstadoAutorizado($row['estado_autorizado']);
-            $arLiquidacion->setEstadoAprobado(1);
+            $arLiquidacion->setEstadoAprobado($row['estado_generado']);
             $arLiquidacion->setEstadoAnulado($row['estado_anulado']);
             $arLiquidacion->setEstadoContabilizado($row['estado_contabilizado']);
             $arLiquidacion->setOmitirCesantiasAnterior($row['omitir_cesantias_anterior']);

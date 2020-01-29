@@ -69,6 +69,8 @@ use App\Entity\RecursoHumano\RhuRh;
 use App\Entity\RecursoHumano\RhuSalarioTipo;
 use App\Entity\RecursoHumano\RhuSalud;
 use App\Entity\RecursoHumano\RhuSector;
+use App\Entity\RecursoHumano\RhuSeleccion;
+use App\Entity\RecursoHumano\RhuSeleccionTipo;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Entity\RecursoHumano\RhuSolicitudAspirante;
 use App\Entity\RecursoHumano\RhuSolicitudExperiencia;
@@ -2226,6 +2228,101 @@ class MigracionController extends Controller
 
         }
     }
+
+//    private function rhuSeleccion($conn)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $rango = 5000;
+//        $arr = $conn->query("SELECT codigo_seleccion_pk FROM rhu_seleccion ");
+//        $registros = $arr->num_rows;
+//        $totalPaginas = $registros / $rango;
+//        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+//            $lote = $pagina * $rango;
+//            $datos = $conn->query("SELECT
+//                codigo_seleccion_pk,
+//                codigo_seleccion_tipo_fk,
+//                codigo_identificacion_tipo_fk,
+//                codigo_estado_civil_fk,
+//                codigo_centro_costo_fk,
+//                codigo_ciudad_fk,
+//                codigo_ciudad_nacimiento_fk,
+//                codigo_ciudad_expedicion_fk,
+//                codigo_rh_fk,
+//                codigo_seleccion_requisito_fk,
+//                codigo_cargo_fk,
+//                fecha,
+//                numero_identificacion,
+//                nombre_corto,
+//                nombre1,
+//                nombre2,
+//                apellido1,
+//                apellido2,
+//                telefono,
+//                celular,
+//                direccion,
+//                barrio,
+//                codigo_sexo_fk,
+//                correo,
+//                fecha_nacimiento,
+//                comentarios,
+//                estado_autorizado,
+//                estado_aprobado,
+//                presenta_pruebas,
+//                referencias_verificadas,
+//                fecha_entrevista,
+//                fecha_pruebas,
+//                vr_servicio,
+//                codigo_zona_fk,
+//                codigo_motivo_cierre_seleccion_fk,
+//                fechaCierre
+//                 FROM rhu_seleccion ORDER BY codigo_seleccion_pk limit {$lote},{$rango}");
+//            foreach ($datos as $row) {
+//                $arSeleccion = new RhuSeleccion();
+//                $arSeleccion->setCodigoSeleccionPk($row['codigo_seleccion_pk']);
+//                $arSeleccion->setCodigoGrupoPagoFk($row['codigo_centro_costo_fk']);
+//                $arSeleccion->setSeleccionTipoRel($em->getReference(RhuSeleccionTipo::class, $row['codigo_seleccion_tipo_fk']));
+////                $arSeleccion->setCodigoSolicitudMotivoFk($row['codigo_seleccion_requisito_motivo_fk']);
+////                $arSeleccion->setFecha(date_create($row['fecha']));
+////                $arSeleccion->setFechaContratacion(date_create($row['fecha_contratacion']));
+////                $arSeleccion->setFechaVencimiento(date_create($row['fecha_vencimiento']));
+////                $arSeleccion->setNombre(utf8_encode($row['nombre']));
+////                $arSolicitud->setCantidadSolicitada(utf8_encode($row['cantidad_solicitada']));
+////                $arSeleccion->setVrSalario(utf8_encode($row['vr_salario']));
+////                $arSolicitud->setVrNoSalarial(($row['vr_no_salarial']));
+////                $arSolicitud->setSalarioFijo(utf8_encode($row['salario_fijo']));
+////                $arSolicitud->setSalarioVariable(utf8_encode($row['salario_variable']));
+////                $arSolicitud->setFechaPruebas(date_create($row['fecha_pruebas']));
+////                $arSolicitud->setEdadMinima(utf8_encode($row['edad_minima']));
+////                $arSolicitud->setEdadMaxima(utf8_encode($row['edad_maxima']));
+////                if ($row['codigo_estudio_tipo_fk']) {
+////                    $arSolicitud->setEstudioTipoRel($em->getReference(RhuEstudioTipo::class, $row['codigo_estudio_tipo_fk']));
+////                }
+////                if ($row['codigo_experiencia_requisicion_fk']) {
+////                    $arSolicitud->setSolicitudExperienciaRel($em->getReference(RhuSolicitudExperiencia::class, $row['codigo_experiencia_requisicion_fk']));
+////                }
+////                if ($row['codigo_sexo_fk']) {
+////                    $arSolicitud->setSexoRel($em->getReference(GenSexo::class, $row['codigo_sexo_fk']));
+////                }
+////                if ($row['codigo_ciudad_fk']) {
+////                    $arSolicitud->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+////                }
+////                if ($row['codigo_estado_civil_fk']) {
+////                    $arSolicitud->setEstadoCivilRel($em->getReference(GenEstadoCivil::class, $row['codigo_estado_civil_fk']));
+////                }
+////                if ($row['codigo_clasificacion_riesgo_fk']) {
+////                    $arSolicitud->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_fk']));
+////                }
+//                $em->persist($arSeleccion);
+//                $metadata = $em->getClassMetaData(get_class($arSeleccion));
+//                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+//                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+//            }
+//            $em->flush();
+//            $em->clear();
+//            $datos->free();
+//            ob_clean();
+//        }
+//    }
 
     private function rhuIncapacidadDiagnostico($conn)
     {

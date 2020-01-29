@@ -48,6 +48,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->addSelect('s.estadoAprobado')
             ->addSelect('s.estadoAutorizado')
             ->addSelect('s.estadoAnulado')
+            ->addSelect('s.usuario')
             ->leftJoin('s.solicitudMotivoRel', 'm')
             ->leftJoin('s.grupoRel', 'g');
         if ($codigoSolicitud) {

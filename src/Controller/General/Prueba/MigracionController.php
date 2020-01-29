@@ -2214,7 +2214,8 @@ class MigracionController extends Controller
                 rhu_seleccion_requisito.estado_autorizado,
                 rhu_seleccion_requisito.estado_aprobado,
                 rhu_seleccion_requisito.estado_cerrado,
-                rhu_seleccion_requisito. soporte,
+                rhu_seleccion_requisito.soporte,
+                rhu_seleccion_requisito.codigo_usuario,
                 rhu_seleccion_requisito.comentarios
                 FROM rhu_seleccion_requisito
                 left join rhu_clasificacion_riesgo on rhu_clasificacion_riesgo.codigo_clasificacion_riesgo_pk=rhu_seleccion_requisito.codigo_clasificacion_riesgo_fk
@@ -2245,6 +2246,7 @@ class MigracionController extends Controller
                 $arSolicitud->setEstadoAutorizado($row['estado_aprobado']);
                 $arSolicitud->setEstadoAprobado($row['estado_cerrado']);
                 $arSolicitud->setComentarios(utf8_encode($row['comentarios']));
+                $arSolicitud->setUsuario(utf8_encode($row['codigo_usuario']));
                 if ($row['codigo_clasificacion_riesgo_externo']) {
                     $arSolicitud->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));
                 }
@@ -2371,6 +2373,7 @@ class MigracionController extends Controller
                 vr_servicio,
                 codigo_zona_fk,
                 codigo_motivo_cierre_seleccion_fk,
+                codigo_usuario,
                 fechaCierre
                  FROM rhu_seleccion
                  left join rhu_seleccion_tipo on rhu_seleccion.codigo_seleccion_tipo_fk = rhu_seleccion_tipo.codigo_seleccion_tipo_pk 
@@ -2404,6 +2407,7 @@ class MigracionController extends Controller
                 $arSeleccion->setFechaEntrevista(date_create($row['fecha_entrevista']));
                 $arSeleccion->setFechaPrueba(date_create($row['fecha_pruebas']));
                 $arSeleccion->setComentarios(utf8_encode($row['comentarios']));
+                $arSeleccion->setUsuario(utf8_encode($row['codigo_usuario']));
                 if ($row['codigo_seleccion_tipo_externo']) {
                     $arSeleccion->setSeleccionTipoRel($em->getReference(RhuSeleccionTipo::class, $row['codigo_seleccion_tipo_externo']));
                 }

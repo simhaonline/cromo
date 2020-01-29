@@ -83,6 +83,11 @@ class RhuSeleccion
     private $codigoCierreSeleccionMotivoFk;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -1188,6 +1193,22 @@ class RhuSeleccion
     public function setSeleccionesAntecedentesSeleccionRel($seleccionesAntecedentesSeleccionRel): void
     {
         $this->seleccionesAntecedentesSeleccionRel = $seleccionesAntecedentesSeleccionRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

@@ -46,7 +46,8 @@ class RhuSeleccionRepository extends ServiceEntityRepository
             ->addSelect('s.direccion')
             ->addSelect('s.estadoAutorizado')
             ->addSelect('s.estadoAprobado')
-            ->addSelect('s.estadoAnulado');
+            ->addSelect('s.estadoAnulado')
+            ->addSelect('s.usuario');
         if ($codigoSeleccion) {
             $queryBuilder->andWhere("s.codigoSeleccionPk = '{$codigoSeleccion}'");
         }
@@ -91,8 +92,8 @@ class RhuSeleccionRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if (!$arSeleccion->getEstadoAutorizado()) {
-            $arSeleccionEntrevista =  $em->getRepository(RhuSeleccionEntrevista::class)->findBy(array('codigoSeleccionFk' => $arSeleccion));
-            if($arSeleccionEntrevista){
+            $arSeleccionEntrevista = $em->getRepository(RhuSeleccionEntrevista::class)->findBy(array('codigoSeleccionFk' => $arSeleccion));
+            if ($arSeleccionEntrevista) {
                 $arSeleccion->setEstadoAutorizado(1);
                 $em->persist($arSeleccion);
                 $em->flush();

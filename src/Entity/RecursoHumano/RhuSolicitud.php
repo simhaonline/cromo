@@ -159,6 +159,11 @@ class RhuSolicitud
     private $comentarios;
 
     /**
+     * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
+     */
+    private $usuario;
+
+    /**
      * @ORM\Column(name="estado_autorizado", type="boolean",options={"default":false})
      */
     private $estadoAutorizado = false;
@@ -950,6 +955,22 @@ class RhuSolicitud
     public function setZonaRel($zonaRel): void
     {
         $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * @param mixed $usuario
+     */
+    public function setUsuario($usuario): void
+    {
+        $this->usuario = $usuario;
     }
 
 

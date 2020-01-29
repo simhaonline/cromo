@@ -24,14 +24,30 @@
         <tr>
             <td class="titulo">CODIGO:</td>
             <td class="td-in-well">{{ arMovimiento.codigoMovimientoPk }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+        </tr>
+        <tr>
             <td class="titulo">CLIENTE:</td>
             <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimiento.clienteRel.nombreCorto }}</td>
-            <td class="titulo">BRUTO:</td>
-            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrTotalBruto |number_format(2, '.', ',') }}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well" style="text-transform: uppercase;">{{ arMovimiento.codigoCuentaFk }}</td>
+            <td class="titulo">BANCO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.cuentaRel.bancoRel.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">NUMERO:</td>
             <td class="td-in-well">{{ arMovimiento.numero }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" style="text-transform: uppercase;"></td>
+            <td class="titulo">BRUTO:</td>
+            <td class="td-in-well" style="text-align: right;">{{ arMovimiento.vrTotalBruto |number_format(2, '.', ',') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo">USUARIO:</td>
             <td class="td-in-well" style="text-transform: uppercase;"></td>
             <td class="titulo">RETENCION:</td>

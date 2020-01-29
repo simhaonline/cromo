@@ -139,7 +139,7 @@ class NotaCredito extends \FPDF
             $pdf->SetLineWidth(.2);
             $pdf->SetFont('', 'B', 7);
             //creamos la cabecera de la tabla.
-            $w = array(15, 15, 15, 40.5,  20, 20, 20,20, 20);
+            $w = array(15, 15, 15, 50,  20, 20, 20,20, 20);
             for ($i = 0; $i < count($header); $i++)
                 if ($i == 0 || $i == 1)
                     $pdf->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -158,7 +158,7 @@ class NotaCredito extends \FPDF
                     $pdf->Cell(15, 4, $arMovimientoDetalle['codigoCuentaPagarTipoFk'], 1, 0, 'L');
                     $pdf->Cell(15, 4, $arMovimientoDetalle['numero'], 1, 0, 'L');
                     $pdf->Cell(15, 4, $arMovimientoDetalle['terceroNumeroIdentificacion'], 1, 0, 'L');
-                    $pdf->Cell(40.5, 4, substr($arMovimientoDetalle['terceroNombreCorto'], 0, 30), 1, 0, 'L');
+                    $pdf->Cell(50, 4, substr($arMovimientoDetalle['terceroNombreCorto'], 0, 30), 1, 0, 'L');
                     $pdf->Cell(20, 4, $arMovimientoDetalle['cuenta'], 1, 0, 'L');
                     $pdf->Cell(20, 4, $arMovimientoDetalle['banco'], 1, 0, 'L');
                     $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaFk'], 1, 0, 'L');
@@ -176,7 +176,7 @@ class NotaCredito extends \FPDF
                 $pdf->Cell(15, 4, "", 1, 0, 'L');
                 $pdf->Cell(15, 4, "", 1, 0, 'L');
                 $pdf->Cell(15, 4, "", 1, 0, 'L');
-                $pdf->Cell(40.5, 4, "", 1, 0, 'L');
+                $pdf->Cell(50, 4, "", 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimiento['cuenta'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimiento['banco'], 1, 0, 'L');
                 $pdf->Cell(20, 4, $arMovimiento['codigoCuentaContableFk'], 1, 0, 'L');

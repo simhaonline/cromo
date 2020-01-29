@@ -136,14 +136,14 @@ class Movimiento extends \FPDF
     public function EncabezadoDetalles()
     {
         $this->Ln(12);
-        $header = array('ID', 'TIPO', 'DOC', 'NIT', 'TERCERO','CTA', 'N', 'VALOR');
+        $header = array('COD', 'NUM', 'NIT', 'TERCERO','CTA','BANCO', 'CTA','DEBITO', 'CREDITO');
         $this->SetFillColor(236, 236, 236);
         $this->SetTextColor(0);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(.2);
         $this->SetFont('', 'B', 7);
         //creamos la cabecera de la tabla.
-        $w = array(15, 20, 20, 25, 60, 20, 5, 20);
+        $w = array(15, 15, 15, 50,  20, 20, 20,20, 20);
         for ($i = 0; $i < count($header); $i++)
             if ($i == 0 || $i == 1)
                 $this->Cell($w[$i], 4, $header[$i], 1, 0, 'L', 1);
@@ -159,20 +159,41 @@ class Movimiento extends \FPDF
     public function Body($pdf)
     {
         $arMovimientosDetalle = self::$em->getRepository(CarMovimientoDetalle::class)->listaFormato(self::$codigoMovimiento);
+        $arMovimiento = self::$em->getRepository(CarMovimiento::class)->find(self::$codigoMovimiento );
         $pdf->SetX(10);
         $pdf->SetFont('Arial', '', 7);
         if ($arMovimientosDetalle) {
             foreach ($arMovimientosDetalle as $arMovimientoDetalle) {
-                $pdf->Cell(15, 4, $arMovimientoDetalle['codigoMovimientoDetallePk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaCobrarTipoFk'], 1, 0, 'L');
-                $pdf->Cell(20, 4, $arMovimientoDetalle['numero'], 1, 0, 'L');
-                $pdf->Cell(25, 4, $arMovimientoDetalle['clienteNumeroIdentificacion'], 1, 0, 'L');
-                $pdf->Cell(60, 4, substr ($arMovimientoDetalle['clienteNombreCorto'], 0,30) , 1, 0, 'L');
-                $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaFk'], 1, 0, 'L');
-                $pdf->Cell(5, 4, $arMovimientoDetalle['naturaleza'], 1, 0, 'L');
-                $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(15, 4, $arMovimientoDetalle['codigoCuentaCobrarTipoFk'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arMovimientoDetalle['numero'], 1, 0, 'L');
+                $pdf->Cell(15, 4, $arMovimientoDetalle['clienteNumeroIdentificacion'], 1, 0, 'L');
+                $pdf->Cell(50, 4, substr($arMovimientoDetalle['clienteNombreCorto'], 0, 30), 1, 0, 'L');
+                $pdf->Cell(20, 4, $arMovimientoDetalle['cuenta'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arMovimientoDetalle['banco'], 1, 0, 'L');
+                $pdf->Cell(20, 4, $arMovimientoDetalle['codigoCuentaPk'], 1, 0, 'L');
+                if($arMovimientoDetalle['naturaleza'] == 'D'){
+                    $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+                    $pdf->Cell(20, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                }else{
+                    $pdf->Cell(20, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                    $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+                }
                 $pdf->Ln();
-                $pdf->SetAutoPageBreak(true, 85);
+            }
+            //contraPartida
+            $pdf->Cell(15, 4, "", 1, 0, 'L');
+            $pdf->Cell(15, 4, "", 1, 0, 'L');
+            $pdf->Cell(15, 4, "", 1, 0, 'L');
+            $pdf->Cell(50, 4, "", 1, 0, 'L');
+            $pdf->Cell(20, 4, $arMovimiento->getCuentaRel()->getCuenta(), 1, 0, 'L');
+            $pdf->Cell(20, 4, $arMovimiento->getCuentaRel()->getBancoRel()->getNombre(), 1, 0, 'L');
+            $pdf->Cell(20, 4, $arMovimiento->getCuentaRel()->getcodigoCuentaPk(), 1, 0, 'L');
+            if($arMovimientoDetalle['naturaleza'] == 'D'){
+                $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+            }else{
+                $pdf->Cell(20, 4, number_format(0, 0, '.', ','), 1, 0, 'R');
+                $pdf->Cell(20, 4, number_format($arMovimientoDetalle['vrPago'], 0, '.', ','), 1, 0, 'R');
             }
             $pdf->Ln();
             $pdf->SetAutoPageBreak(true, 15);

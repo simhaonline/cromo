@@ -29,6 +29,11 @@ class CarMovimientoClase
     private $nombre;
 
     /**
+     * @ORM\Column(name="naturaleza", type="string", length=1, nullable=true)
+     */
+    private $naturaleza;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cartera\CarMovimientoTipo" ,mappedBy="movimientoClaseRel")
      */
     private $movimientosTiposMovimientoClaseRel;
@@ -68,6 +73,22 @@ class CarMovimientoClase
     public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNaturaleza()
+    {
+        return $this->naturaleza;
+    }
+
+    /**
+     * @param mixed $naturaleza
+     */
+    public function setNaturaleza($naturaleza): void
+    {
+        $this->naturaleza = $naturaleza;
     }
 
     /**

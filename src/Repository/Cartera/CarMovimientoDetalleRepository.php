@@ -205,7 +205,14 @@ class CarMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('c.numeroIdentificacion as clienteNumeroIdentificacion')
             ->addSelect('id.vrPago')
             ->addSelect('id.numero')
+            ->addSelect('id.naturaleza')
+            ->addSelect('cu.cuenta')
+            ->addSelect('cu.codigoCuentaPk')
+            ->addSelect('ba.nombre as banco')
             ->leftJoin('id.clienteRel', 'c')
+            ->leftJoin('id.movimientoRel', 'mo')
+            ->leftJoin('mo.cuentaRel', 'cu')
+            ->leftJoin('cu.bancoRel', 'ba')
             ->where('id.codigoMovimientoFk = ' . $id);
         $queryBuilder->orderBy('id.codigoMovimientoDetallePk', 'ASC');
 

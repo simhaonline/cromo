@@ -146,8 +146,10 @@ class AspiranteController extends MaestroController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_aspirante_lista'));
             }
         }
+        $arSolicitudesAplicadas = $em->getRepository(RhuSolicitudAspirante::class)->findBy(array('codigoAspiranteFk' => $arAspirante->getCodigoAspirantePk()));
         return $this->render('recursohumano/movimiento/seleccion/aspirante/detalle.html.twig', [
             'arAspirante' => $arAspirante,
+            'arSolicitudesAplicadas' => $arSolicitudesAplicadas,
             'form' => $form->createView()
         ]);
     }

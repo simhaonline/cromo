@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Utilidad\Servicio\Novedad;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteNovedad;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,16 +15,20 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class NotificarController extends Controller
+class NotificarController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0001";
+
+
 
    /**
     * @Route("/transporte/uti/control/novedad/notificar", name="transporte_uti_servicio_novedad_notificar")
     */    
-    public function lista(Request $request, \Swift_Mailer $mailer)
+    public function lista(Request $request, \Swift_Mailer $mailer, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
         $query = $this->getDoctrine()->getRepository(TteNovedad::class)->pendienteSolucionarCliente();

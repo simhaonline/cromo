@@ -4,6 +4,7 @@ namespace App\Controller\Transporte\Utilidad\Transporte\Recogida;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
@@ -12,6 +13,7 @@ use App\Entity\Transporte\TteRecogida;
 use App\Form\Type\Transporte\GuiaCorreccionType;
 use App\Form\Type\Transporte\RecogidaCorreccionType;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,9 +21,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CorreccionController extends ControllerListenerGeneral
+class CorreccionController extends MaestroController
 {
-    protected $proceso = "0012";
+
+    public $tipo = "utilidad";
+    public $proceso = "tteu0012";
+
+
+
     protected $procestoTipo = "U";
     protected $nombreProceso = "CorreccionRecogidas";
     protected $modulo = "Transporte";
@@ -32,11 +39,11 @@ class CorreccionController extends ControllerListenerGeneral
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/utilidad/transporte/recogida/correccion/lista", name="transporte_utilidad_transporte_recogida_correccion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCodigo', TextType::class, array('data' => $session->get('filtroTteRecogidaCodigo')))
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])

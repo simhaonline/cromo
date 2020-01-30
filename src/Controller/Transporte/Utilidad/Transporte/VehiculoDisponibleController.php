@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Utilidad\Transporte;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
@@ -11,6 +12,7 @@ use App\Form\Type\Transporte\VehiculoDisponibleDescarteType;
 use App\Form\Type\Transporte\VehiculoDisponibleType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +25,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class VehiculoDisponibleController extends Controller
+class VehiculoDisponibleController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0011";
+
+
     /**
      * @param Request $request
      * @return Response
@@ -32,13 +38,13 @@ class VehiculoDisponibleController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/utilidad/transporte/vehiculoDisponible/lista", name="transporte_utilidad_transporte_vehiculoDisponible_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCodigoVehiculo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteVehiculo'), 'attr' => ['class' => 'form-control']])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroTteVehiculoDisponibleFechaDesde') ? date_create($session->get('filtroTteVehiculoDisponibleFechaDesde')) : null])

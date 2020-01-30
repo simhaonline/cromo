@@ -2,7 +2,9 @@
 
 namespace App\Controller\Transporte\Informe\Servicio\Novedad;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteNovedad;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,14 +14,19 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class PendienteAtenderController extends Controller
+class PendienteAtenderController extends MaestroController
 {
-   /**
+    public $tipo = "Informe";
+    public $proceso = "ttei0001";
+
+
+
+    /**
     * @Route("/transporte/inf/control/novedad/pendiente/atender", name="transporte_inf_servicio_novedad_pendiente_atender")
     */    
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {

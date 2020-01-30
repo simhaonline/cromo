@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +18,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class EntregaFechaController extends Controller
+class EntregaFechaController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0016";
+
+
+
+
     /**
      * @param Request $request
      * @return Response

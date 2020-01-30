@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -17,8 +19,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class PendienteSoporteController extends Controller
+class PendienteSoporteController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0009";
+
     /**
      * @param Request $request
      * @return Response
@@ -26,11 +32,11 @@ class PendienteSoporteController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/transporte/guia/pendiente/soporte", name="transporte_informe_transporte_guia_pendiente_soporte")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = New Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('chkEstadoDespachado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data' => $session->get('filtroTtePendienteSoporteEstadoDespachado'), 'required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroTtePendienteSoporteFechaDesde'))])

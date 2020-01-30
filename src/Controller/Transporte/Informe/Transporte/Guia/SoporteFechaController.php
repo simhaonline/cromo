@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +19,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class SoporteFechaController extends Controller
+class SoporteFechaController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0017";
+
+
+
     /**
      * @param Request $request
      * @return Response
@@ -26,11 +33,11 @@ class SoporteFechaController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/transporte/guia/soporte/fecha", name="transporte_informe_transporte_guia_soporte_fecha")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => date_create($session->get('filtroFechaSoporteDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaSoporteHasta'))])

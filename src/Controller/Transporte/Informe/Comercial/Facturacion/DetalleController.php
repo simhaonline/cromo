@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Comercial\Facturacion;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteFacturaDetalle;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,8 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DetalleController extends Controller
+class DetalleController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0025";
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -22,13 +29,13 @@ class DetalleController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/facturacion/detalle", name="transporte_informe_comercial_facturacion_detalle")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFecha')))
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])

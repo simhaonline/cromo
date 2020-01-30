@@ -2,9 +2,11 @@
 
 namespace App\Controller\Transporte\Informe\Recogida;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteRecogida;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,8 +20,17 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class PendienteProgramarController extends Controller
+class PendienteProgramarController extends MaestroController
 {
+
+
+    public $tipo = "informe";
+    public $proceso = "ttei0020";
+
+
+
+
+
     /**
      * @param Request $request
      * @return Response
@@ -27,11 +38,11 @@ class PendienteProgramarController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/recogida/recogida/pendiente/programar", name="transporte_informe_recogida_recogida_pendiente_programar")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroTteNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])

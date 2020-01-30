@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Utilidad\Transporte;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Seguridad\Usuario;
 use App\Entity\Transporte\TteCiudad;
@@ -18,6 +19,7 @@ use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteServicio;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -30,19 +32,25 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class ImportarGuiaExcelController extends Controller
+class ImportarGuiaExcelController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0010";
+
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @Route("/transporte/utilidad/transporte/guia/generar/excel", name="transporte_utilidad_transporte_guia_generar_excel")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('codigoClienteFk', TextType::class, ['required' => false, 'data' => $session->get('filtroGuiaCodigoCliente')])

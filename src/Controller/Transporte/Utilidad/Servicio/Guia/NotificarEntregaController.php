@@ -2,9 +2,11 @@
 
 namespace App\Controller\Transporte\Utilidad\Servicio\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,15 +16,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-class NotificarEntregaController extends Controller
+class NotificarEntregaController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0002";
+
    /**
     * @Route("/transporte/utilidad/control/guia/entrega", name="transporte_utilidad_servicio_guia_entrega")
     */    
-    public function lista(Request $request, \Swift_Mailer $mailer)
+    public function lista(Request $request, \Swift_Mailer $mailer, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
 
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text'])

@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Utilidad\Servicio\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -12,16 +14,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class NotificarEstadoController extends Controller
+class NotificarEstadoController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0003";
+
+
     /**
      * @Route("/transporte/uti/control/novedad/notificar/estado", name="transporte_uti_servicio_novedad_notificar_estado")
      */
-    public function lista(Request $request, \Swift_Mailer $mailer)
+    public function lista(Request $request, \Swift_Mailer $mailer, PaginatorInterface $paginator)
     {
         $session=new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->formularioFiltro();
         $form->handleRequest($request);
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,9 +13,16 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-class PendienteController extends Controller
+class PendienteController extends MaestroController
 {
-   /**
+
+    public $tipo = "informe";
+    public $proceso = "ttei0007";
+
+
+
+
+    /**
     * @Route("/transporte/inf/transporte/guia/pendiente", name="transporte_inf_transporte_guia_pendiente")
     */    
     public function lista(Request $request)

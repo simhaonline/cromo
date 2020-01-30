@@ -2,11 +2,13 @@
 
 namespace App\Controller\Transporte\Informe\Comercial\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
 use App\Formato\Transporte\PendienteDespachoRuta;
 use App\Formato\Transporte\ProduccionCliente;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +22,14 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use App\General\General;
-class ProduccionClienteController extends Controller
+class ProduccionClienteController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0022";
+
+
+
     /**
      * @param Request $request
      * @return Response
@@ -30,11 +38,11 @@ class ProduccionClienteController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/guia/produccion", name="transporte_informe_comercial_guia_produccion")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))

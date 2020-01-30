@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Servicio\Novedad;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteNovedad;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +19,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-class ReporteNovedadController extends Controller
+class ReporteNovedadController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0003";
+
+
     /**
      * @param Request $request
      * @return Response
@@ -26,13 +33,13 @@ class ReporteNovedadController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/control/novedad/reporte/novedad", name="transporte_informe_servicio_novedad_reporte_novedad")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         if($session->get('filtroFechaDesde') == "") {
             $session->set('filtroFechaDesde', $fecha->format('Y-m-d'));

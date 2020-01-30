@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Utilidad\Transporte;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteCiudad;
 use App\Entity\Transporte\TteCliente;
@@ -15,6 +16,7 @@ use App\Entity\Transporte\TteProducto;
 use App\Entity\Transporte\TteRuta;
 use App\Entity\Transporte\TteServicio;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,18 +25,23 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ImportarGuiaController extends Controller
+class ImportarGuiaController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0009";
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/transporte/utilidad/transporte/importar/guia", name="transporte_utilidad_transporte_importar_guia")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('fechaIngresoDesde', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date form-control',], 'required' => false, 'data' => $session->get('filtroGuiaFechaIngresoDesde') != '' ? date_create($session->get('filtroGuiaFechaIngresoDesde')) : null])
             ->add('fechaIngresoHasta', DateType::class, ['widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'attr' => ['class' => 'date form-control',], 'required' => false, 'data' => $session->get('filtroGuiaFechaIngresoHasta') != '' ? date_create($session->get('filtroGuiaFechaIngresoHasta')) : null])

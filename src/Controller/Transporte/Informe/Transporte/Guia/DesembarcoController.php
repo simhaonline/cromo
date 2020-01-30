@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteDesembarco;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,8 +15,15 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class DesembarcoController extends Controller
+class DesembarcoController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0013";
+
+
+
+
     /**
      * @param Request $request
      * @return Response
@@ -22,11 +31,11 @@ class DesembarcoController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/transporte/guia/desembarco", name="transporte_informe_transporte_guia_desembarco")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('dtFechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => true, 'data' => date_create($session->get('filtroTteDesembarcoFechaDesde'))])
             ->add('dtFechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => true, 'data' => date_create($session->get('filtroTteDesembarcoFechaHasta'))])

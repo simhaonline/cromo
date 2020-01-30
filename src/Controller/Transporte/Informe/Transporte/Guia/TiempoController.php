@@ -2,12 +2,14 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteInformeTiempo;
 use App\Entity\Transporte\TteNovedad;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +26,15 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class TiempoController extends Controller
+class TiempoController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0018";
+
+
+
+
+
     /**
      * @param Request $request
      * @param \Swift_Mailer $mailer
@@ -34,12 +43,12 @@ class TiempoController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/transporte/guia/tiempo", name="transporte_informe_transporte_guia_tiempo")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         $session = new Session();
-        $em = $this->getDoctrine()->getManager();
+
         $fecha = new \DateTime('now');
         if ($session->get('filtroFechaDesde') == "") {
             $session->set('filtroFechaDesde', $fecha->format('Y-m-d'));

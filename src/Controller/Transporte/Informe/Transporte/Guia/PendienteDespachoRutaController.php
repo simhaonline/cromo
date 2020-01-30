@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\Formato\Transporte\PendienteDespachoRuta;
 use App\General\General;
@@ -17,8 +18,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class PendienteDespachoRutaController extends Controller
+class PendienteDespachoRutaController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0007";
+
+
+
     /**
      * @param Request $request
      * @return Response

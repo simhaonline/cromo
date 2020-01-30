@@ -3,9 +3,11 @@
 namespace App\Controller\Transporte\Utilidad\Transporte;
 
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\Transporte\TteGuiaCarga;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,19 +16,24 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CargarInformacionGuiasController extends Controller
+class CargarInformacionGuiasController extends MaestroController
 {
+    public $tipo = "utilidad";
+    public $proceso = "tteu0006";
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
      * @Route("/transporte/utilidad/transporte/cargarinformacionguias/lista", name="transporte_utilidad_transporte_cargarinformacionguias_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCliente', TextType::class, ['required' => false])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])

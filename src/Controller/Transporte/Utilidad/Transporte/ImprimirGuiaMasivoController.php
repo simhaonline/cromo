@@ -2,12 +2,14 @@
 
 namespace App\Controller\Transporte\Utilidad\Transporte;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
 use App\Formato\Transporte\Guia;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,16 +21,21 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ImprimirGuiaMasivoController extends Controller
+class ImprimirGuiaMasivoController extends MaestroController
 {
-   /**
+    public $tipo = "utilidad";
+    public $proceso = "tteu0008";
+
+
+
+    /**
     * @Route("/transporte/utilidad/transporte/imprimirGuiaMasivo/lista", name="transporte_utilidad_transporte_imprimirGuiaMasivo_lista")
     */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtGuiaNumeroDesde', TextType::class, array('required' => false, 'data' => $session->get('filtroNumeroDesde')))
             ->add('txtGuiaNumeroHasta', TextType::class, array('required' => false, 'data' => $session->get('filtroNumeroHasta')))

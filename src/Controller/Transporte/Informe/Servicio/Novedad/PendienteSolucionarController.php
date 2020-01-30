@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Servicio\Novedad;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteNovedad;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,8 +18,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class PendienteSolucionarController extends Controller
+class PendienteSolucionarController extends MaestroController
 {
+    public $tipo = "Informe";
+    public $proceso = "ttei0002";
+
+
+
     /**
      * @param Request $request
      * @return Response
@@ -25,10 +32,10 @@ class PendienteSolucionarController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/inf/control/novedad/pendiente/solucionar", name="transporte_inf_servicio_novedad_pendiente_solucionar")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,  PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $session = new session;
         $form = $this->createFormBuilder()
             ->add('txtCodigoCliente', TextType::class, ['required' => false, 'data' => $session->get('filtroTteCodigoCliente'), 'attr' => ['class' => 'form-control']])

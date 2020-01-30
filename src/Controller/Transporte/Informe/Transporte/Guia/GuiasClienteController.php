@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
@@ -20,8 +21,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class GuiasClienteController extends Controller
+class GuiasClienteController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0011";
+
+
+
     /**
      * @param Request $request
      * @param \Swift_Mailer $mailer

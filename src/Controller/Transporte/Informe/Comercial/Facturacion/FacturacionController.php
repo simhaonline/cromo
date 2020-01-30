@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Informe\Comercial\Facturacion;
 
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Entity\Transporte\TteOperacion;
@@ -10,6 +11,7 @@ use App\Formato\Transporte\FacturaInforme;
 use App\Formato\Transporte\ListaFactura;
 use App\General\General;
 use App\Repository\Transporte\TteOperacionRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,8 +23,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class FacturacionController extends Controller
+class FacturacionController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0024";
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -31,10 +37,10 @@ class FacturacionController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/facturacion/factura", name="transporte_informe_comercial_facturacion_factura")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))

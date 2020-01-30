@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Comercial\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenAsesor;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteGuiaTipo;
@@ -9,6 +10,7 @@ use App\Formato\Transporte\ProduccionAsesor;
 use App\Formato\Transporte\ProduccionCliente;
 
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,8 +20,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProduccionAsesorController extends Controller
+class ProduccionAsesorController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0023";
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -28,11 +35,11 @@ class ProduccionAsesorController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/guia/produccion/asesor", name="transporte_informe_comercial_guia_produccion_asesor")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('btnPdf', SubmitType::class, array('label' => 'Pdf'))

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Despacho;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
 use App\Entity\Transporte\TteGuia;
@@ -21,8 +22,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class SiplatfController extends AbstractController
+class SiplatfController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "ttei0005";
+
+
     /**
      * @param Request $request
      * @return Response

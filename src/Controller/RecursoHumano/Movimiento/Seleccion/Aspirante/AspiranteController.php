@@ -175,9 +175,9 @@ class AspiranteController extends MaestroController
                     ->andWhere('sr.estadoAprobado = 0')
                     ->orderBy('sr.codigoSolicitudPk', 'DESC');
             },
-            'choice_label' => function($er){
+            'choice_label' => function ($er) {
                 $codigoSolicitud = $er->getCodigoSolicitudPk();
-                return $codigoSolicitud.' - '.$er->getNombre();
+                return $codigoSolicitud . ' - ' . $er->getNombre();
             },
 
             'attr' => ['class' => 'form-control to-select-2'],
@@ -204,8 +204,9 @@ class AspiranteController extends MaestroController
             $arSolicitudAspirante->setSolicitudRel(($form->get('solicitudRel')->getData()));
             $em->persist($arSolicitudAspirante);
             $arSolicitud = $form->get('solicitudRel')->getData();
+            $arValidarSolicitud = $em->getRepository(RhuSolicitudAspirante::class)->findBy(array('codigoSolicitudFk' => $arSolicitud->getCodigoSolicitudPk(), 'codigoAspiranteFk' => $arAspirante->getCodigoAspirantePk()));
             if ($arAspirante->getEstadoBloqueado() == 0) {
-                if ($arSolicitud->getEstadoAnulado() == 0) {
+                if ($arValidarSolicitud == null) {
                     //Calculo edad
                     $varFechaNacimientoAnio = $arAspirante->getFechaNacimiento()->format('Y');
                     $varFechaNacimientoMes = $arAspirante->getFechaNacimiento()->format('m');

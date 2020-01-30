@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-    {{ form_start(form) }}
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
@@ -15,22 +14,21 @@
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>
             <td class="titulo"><b>CODIGO:</b></td>
-            <td class="td-in-well">{{ arItem.codigoItemPk }}</td>
+            <td class="td-in-well">{{ arRegistro.codigoItemPk }}</td>
             <td class="titulo"><b>NOMBRE</b></td>
-            <td class="td-in-well">{{ arItem.nombre }}</td>
+            <td class="td-in-well">{{ arRegistro.nombre }}</td>
         </tr>
         <tr>
             <td class="titulo">IVA:</td>
-            <td class="td-in-well">{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
+            <td class="td-in-well">{{ arRegistro.impuestoRetencionRel.codigoImpuestoPk }}</td>
             <td class="titulo">RETENCION EN LA FUENTE:</td>
-            <td class="td-in-well">{{ arItem.impuestoRetencionRel.codigoImpuestoPk }}</td>
+            <td class="td-in-well">{{ arRegistro.impuestoRetencionRel.codigoImpuestoPk }}</td>
         </tr>
         <tr>
             <td class="titulo">PORCENTAJE IVA:</td>
-            <td class="td-in-well">{{ arItem.porcentajeIva }}</td>
+            <td class="td-in-well">{{ arRegistro.porcentajeIva }}</td>
             <td class="titulo"></td>
             <td class="td-in-well"></td>
         </tr>
     </table>
-    {{ form_end(form) }}
 {% endblock %}

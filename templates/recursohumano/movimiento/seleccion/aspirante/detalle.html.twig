@@ -6,6 +6,8 @@
            href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}">Volver</a>
         <a class="btn btn-default btn-sm"
            href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_aspirante_aplicar', {'id': arAspirante.codigoAspirantePk }) }}', 'Aplicar', 500, 700)">Aplicar</a>
+        <a class="btn btn-default btn-sm"
+           href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_seleccion_aspirante_bloquear', {'id': arAspirante.codigoAspirantePk }) }}', 'Bloquear', 500, 700)">Bloquear</a>
         <div class="btn-group">
             {% include 'estructura/botonera.html.twig' %}
         </div>
@@ -67,6 +69,18 @@
             <td class="td-in-well">{{ arAspirante.sexoRel.nombre }}</td>
             <td class="titulo">CARGO QUE ASPIRA:</td>
             <td class="td-label" align="right">{{ arAspirante.cargoAspira }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">BLOQUEADO:</td>
+            <td class="td-in-well">{{ arAspirante.estadoBloqueado ? 'SI' : 'NO' }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+            <td class="titulo"></td>
+            <td class="td-label" align="right"></td>
+        </tr>
+        <tr>
+            <td class="titulo">COMENTARIOS</td>
+            <td class="td-in-well" COLSPAN="5">{{ arAspirante.comentarios }} </td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

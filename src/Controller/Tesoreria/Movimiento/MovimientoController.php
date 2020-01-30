@@ -57,7 +57,7 @@ class MovimientoController extends MaestroController
      * @throws \Doctrine\ORM\ORMException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @Route("/tesoreria/movimiento/movimiento/movimiento/lista/{clase}", name="tesoreria_movimiento_movimiento_movimiento_lista")
+     * @Route("/tesoreria/movimiento/movimiento/lista/{clase}", name="tesoreria_movimiento_movimiento_movimiento_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator, $clase)
     {
@@ -126,7 +126,7 @@ class MovimientoController extends MaestroController
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/tesoreria/movimiento/movimiento/movimiento/nuevo/{id}/{clase}", name="tesoreria_movimiento_movimiento_movimiento_nuevo")
+     * @Route("/tesoreria/movimiento/movimiento/nuevo/{id}/{clase}", name="tesoreria_movimiento_movimiento_movimiento_nuevo")
      */
     public function nuevo(Request $request, $id, $clase)
     {
@@ -213,7 +213,7 @@ class MovimientoController extends MaestroController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/tesoreria/movimiento/movimiento/movimiento/movimiento/{id}", name="tesoreria_movimiento_movimiento_movimiento_detalle")
+     * @Route("/tesoreria/movimiento/movimiento/{id}", name="tesoreria_movimiento_movimiento_movimiento_detalle")
      */
     public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
@@ -332,7 +332,7 @@ class MovimientoController extends MaestroController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
-     * @Route("/tesoreria/movimiento/movimiento/movimiento/detalle/nuevo/{id}", name="tesoreria_movimiento_movimiento_movimiente_detalle_nuevo")
+     * @Route("/tesoreria/movimiento/movimiento/detalle/nuevo/{id}", name="tesoreria_movimiento_movimiento_movimiente_detalle_nuevo")
      */
     public function detalleNuevo(Request $request, $id, PaginatorInterface $paginator)
     {

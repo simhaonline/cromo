@@ -277,7 +277,8 @@ class FacturaElectronica
         if($arrFactura['doc_codigoDocumento'] == 'ND') {
             $xml = $this->generarXmlCadenaNotaDebito($arrFactura);
         }
-        $url = "https://api.efacturacadena.com/staging/vp-hab/documentos/proceso/alianzas";
+        //$url = "https://api.efacturacadena.com/staging/vp-hab/documentos/proceso/alianzas";
+        $url = "https://api.efacturacadena.com/v1/vp-hab/documentos/proceso/alianzas";
         $datos = base64_encode($xml);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -371,7 +372,7 @@ class FacturaElectronica
             $xml->writeElement('cbc:ProfileExecutionID', $arrFactura['dat_tipoAmbiente']);
             $xml->writeElement('cbc:ID', $numero);
             $xml->startElement('cbc:UUID');
-                $xml->writeAttribute('schemeID', '2');
+                $xml->writeAttribute('schemeID', $arrFactura['dat_tipoAmbiente']);
                 $xml->writeAttribute('schemeName', 'CUFE-SHA384');
                 $xml->text($cufeHash);
             $xml->endElement();
@@ -674,10 +675,10 @@ class FacturaElectronica
             $xml->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
             $xml->writeAttribute('xsi:schemaLocation', 'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2');
             $xml->writeElement('cbc:CustomizationID', '05');
-            $xml->writeElement('cbc:ProfileExecutionID', '2');
+            $xml->writeElement('cbc:ProfileExecutionID', $arrFactura['dat_tipoAmbiente']);
             $xml->writeElement('cbc:ID', $numero);
             $xml->startElement('cbc:UUID');
-                $xml->writeAttribute('schemeID', '2');
+                $xml->writeAttribute('schemeID', $arrFactura['dat_tipoAmbiente']);
                 $xml->writeAttribute('schemeName', 'CUDE-SHA384');
                 $xml->text($cudeHash);
             $xml->endElement();
@@ -999,10 +1000,10 @@ class FacturaElectronica
         $xml->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
         $xml->writeAttribute('xsi:schemaLocation', 'urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2     http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd');
         $xml->writeElement('cbc:CustomizationID', '05');
-        $xml->writeElement('cbc:ProfileExecutionID', '2');
+        $xml->writeElement('cbc:ProfileExecutionID', $arrFactura['dat_tipoAmbiente']);
         $xml->writeElement('cbc:ID', $numero);
         $xml->startElement('cbc:UUID');
-            $xml->writeAttribute('schemeID', '2');
+            $xml->writeAttribute('schemeID', $arrFactura['dat_tipoAmbiente']);
             $xml->writeAttribute('schemeName', 'CUDE-SHA384');
             $xml->text($cudeHash);
         $xml->endElement();

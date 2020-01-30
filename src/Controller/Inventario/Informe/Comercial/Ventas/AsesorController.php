@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Comercial\Ventas;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\General\GenAsesor;
@@ -21,8 +22,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class AsesorController extends AbstractController
+class AsesorController extends MaestroController
 {
+
+
+    public $tipo = "inventario";
+    public $proceso = "invi0014";
+
 
     /**
      * @param Request $request

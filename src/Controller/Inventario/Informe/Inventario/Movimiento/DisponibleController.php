@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Informe\Inventario\Movimiento;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvDocumentoTipo;
 use App\Entity\Inventario\InvInformeDisponible;
@@ -24,9 +25,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DisponibleController extends AbstractController
+class DisponibleController extends MaestroController
 {
-    protected $proceso = "0001";
+
+
+    public $tipo = "utilidad";
+    public $proceso = "invi0006";
+
+
     protected $procestoTipo = "I";
     protected $nombreProceso = "Kardex";
     protected $modulo = "Inventario";

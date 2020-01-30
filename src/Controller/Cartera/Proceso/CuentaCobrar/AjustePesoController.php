@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Proceso\CuentaCobrar;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
@@ -16,8 +17,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class AjustePesoController extends AbstractController
+class AjustePesoController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "carp0003";
+
+
+
+
     /**
      * @Route("/cartera/proceso/cuentacobrar/ajustepeso/lista", name="cartera_proceso_cuentacobrar_ajustepeso_lista")
      */

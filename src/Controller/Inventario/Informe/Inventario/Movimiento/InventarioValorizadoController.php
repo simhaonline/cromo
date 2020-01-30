@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Inventario\Movimiento;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvInventarioValorizado;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -18,8 +19,14 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\General\General;
 
-class InventarioValorizadoController extends AbstractController
+class InventarioValorizadoController extends MaestroController
 {
+
+    public $tipo = "inventario";
+    public $proceso = "invi0008";
+
+
+
     /**
      * @param Request $request
      * @return Response

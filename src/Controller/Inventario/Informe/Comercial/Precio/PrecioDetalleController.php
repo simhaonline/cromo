@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Comercial\Precio;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvPrecioDetalle;
 use App\General\General;
@@ -16,8 +17,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class PrecioDetalleController extends AbstractController
+class PrecioDetalleController extends MaestroController
 {
+    public $tipo = "inventario";
+    public $proceso = "invi0010";
+
+
     /**
      * @param Request $request
      * @return Response

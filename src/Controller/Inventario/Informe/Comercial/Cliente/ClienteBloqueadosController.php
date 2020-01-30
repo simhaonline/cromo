@@ -4,6 +4,7 @@
 namespace App\Controller\Inventario\Informe\Comercial\Cliente;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvPedidoTipo;
 use App\Entity\Inventario\InvTercero;
@@ -18,8 +19,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ClienteBloqueadosController extends AbstractController
+class ClienteBloqueadosController extends MaestroController
 {
+
+
+    public $tipo = "inventario";
+    public $proceso = "invi0015";
+
+
+
     /**
      * @param Request $request
      * @return Response

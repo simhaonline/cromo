@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Informe\Recibo;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboDetalle;
 use App\Entity\Cartera\CarReciboTipo;
@@ -19,8 +20,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class DetalleController extends AbstractController
+class DetalleController extends MaestroController
 {
+
+
+    public $tipo = "informe";
+    public $proceso = "cari0004";
+
+
 
     /**
      * @param Request $request

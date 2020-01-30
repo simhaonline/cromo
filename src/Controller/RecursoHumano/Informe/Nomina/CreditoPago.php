@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Informe\Nomina;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
@@ -13,8 +14,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreditoPago extends  AbstractController
+class CreditoPago extends  MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "rhui0005";
+
+
+
+
+
     /**
      * @Route("/recursohumano/informe/nomina/creditoPago/lista", name="recursohumano_informe_nomina_credito_pago")
      */

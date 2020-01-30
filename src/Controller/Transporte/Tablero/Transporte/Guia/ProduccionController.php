@@ -3,15 +3,24 @@
 namespace App\Controller\Transporte\Tablero\Transporte\Guia;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ob\HighchartsBundle\Highcharts\Highchart;
-class ProduccionController extends Controller
+class ProduccionController extends MaestroController
 {
-   /**
+
+
+
+    public $tipo = "transporte";
+    public $proceso = "ttet0004";
+
+
+
+    /**
     * @Route("/transporte/tablero/transporte/guia/produccion", name="transporte_tablero_transporte_guia_produccion")
     */    
     public function principal(Request $request)

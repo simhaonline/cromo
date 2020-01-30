@@ -4,11 +4,13 @@
 namespace App\Controller\RecursoHumano\Informe\SeguridadSocial;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -18,16 +20,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AporteController extends  Controller
+class AporteController extends  MaestroController
 {
+
+
+    public $tipo = "informe";
+    public $proceso = "rhui0007";
+
+
+
     /**
      * @Route("/recursohumano/informe/seguridadsocial/aporte/lista", name="recursohumano_informe_seguridadsocial_aporte_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtAnio', TextType::class, ['required' => false])
             ->add('txtMes', ChoiceType::class, [

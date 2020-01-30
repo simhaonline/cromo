@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Comercial\Pedido;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvPedidoDetalle;
 use App\Entity\Inventario\InvPedidoTipo;
 use App\General\General;
@@ -14,8 +15,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class PedidoPendienteController extends AbstractController
+class PedidoPendienteController extends MaestroController
 {
+
+    public $tipo = "inventario";
+    public $proceso = "invi0011";
+
     /**
      * @param Request $request
      * @return Response

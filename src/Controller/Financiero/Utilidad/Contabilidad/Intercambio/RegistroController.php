@@ -2,10 +2,12 @@
 
 namespace App\Controller\Financiero\Utilidad\Contabilidad\Intercambio;
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinConfiguracion;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\General\GenConfiguracion;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -18,18 +20,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Controller\Estructura\FuncionesController;
 
-class RegistroController extends Controller
+class RegistroController extends MaestroController
 {
+
+    public $tipo = "utilidad";
+    public $proceso = "finu0001";
+
     /**
      * @param Request $request
      * @return Response
      * @Route("/financiero/utilidad/contabilidad/intercambio/registro", name="financiero_utilidad_contabilidad_intercambio_registro")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])

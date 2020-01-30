@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Utilidad\Pago;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\RecursoHumano\RhuConfiguracion;
 use App\Entity\RecursoHumano\RhuGrupo;
@@ -19,8 +20,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class FormatoPagoMasivoController extends Controller
+class FormatoPagoMasivoController extends MaestroController
 {
+
+    public $tipo = "utilidad";
+    public $proceso = "rhuu0001";
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

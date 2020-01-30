@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Proceso\Contabilidad;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarRecibo;
 use App\Entity\Cartera\CarReciboTipo;
 use App\Entity\Transporte\TteFactura;
@@ -20,8 +21,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class ReciboController extends AbstractController
+class ReciboController extends MaestroController
 {
+
+
+
+    public $tipo = "informe";
+    public $proceso = "carp0001";
+
+
+
     /**
      * @param Request $request
      * @return Response

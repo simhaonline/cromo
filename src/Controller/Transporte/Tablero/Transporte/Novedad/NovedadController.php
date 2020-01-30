@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Tablero\Transporte\Novedad;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteNovedad;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,8 +10,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 
-class NovedadController extends Controller
+class NovedadController extends MaestroController
 {
+
+
+    public $tipo = "transporte";
+    public $proceso = "ttet0009";
+
+
+
     /**
      * @return Response
      * @throws \Doctrine\DBAL\DBALException

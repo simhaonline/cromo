@@ -2,11 +2,13 @@
 
 namespace App\Controller\Financiero\Utilidad\Contabilidad\Registro;
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinConfiguracion;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinRegistroInconsistencia;
 use App\Entity\General\GenConfiguracion;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -19,18 +21,24 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Controller\Estructura\FuncionesController;
 
-class InconsistenciaDocumentoController extends Controller
+class InconsistenciaDocumentoController extends MaestroController
 {
+
+    public $tipo = "utilidad";
+    public $proceso = "finu0003";
+
+
+
     /**
      * @param Request $request
      * @return Response
      * @Route("/financiero/utilidad/contabilidad/registro/inconsistenciaDocumento", name="financiero_utilidad_contabilidad_registro_inconsistenciaDocumento")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])

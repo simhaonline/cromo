@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Informe\CuentaCobrar\CuentaCobrar;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarAplicacion;
 use App\Entity\Cartera\CarCompromiso;
 use App\Entity\Cartera\CarCuentaCobrar;
@@ -27,8 +28,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class CuentaCobrarController extends AbstractController
+class CuentaCobrarController extends MaestroController
 {
+
+
+    public $tipo = "informe";
+    public $proceso = "cari0001";
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

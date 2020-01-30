@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Informe\Inventario\Movimiento;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvLote;
@@ -22,9 +23,16 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class DetalleController extends AbstractController
+class DetalleController extends MaestroController
 {
-    protected $proceso = "0002";
+
+
+
+
+    public $tipo = "inventario";
+    public $proceso = "invi0007";
+
+
     protected $procestoTipo = "I";
     protected $nombreProceso = "MovimientoDetalle";
     protected $modulo = "Inventario";

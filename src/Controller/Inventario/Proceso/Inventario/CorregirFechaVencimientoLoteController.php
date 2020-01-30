@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Proceso\Inventario;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
@@ -15,8 +16,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CorregirFechaVencimientoLoteController extends AbstractController
+class CorregirFechaVencimientoLoteController extends MaestroController
 {
+
+
+    public $tipo = "proceso";
+    public $proceso = "invp0002";
+
+
+
+
 
     /**
      * @param Request $request

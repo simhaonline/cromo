@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Utilidad\Certificado;
 
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenCiudad;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -21,8 +22,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class Ingreso extends AbstractController
+class Ingreso extends MaestroController
 {
+
+
+    public $tipo = "utilidad";
+    public $proceso = "rhuu0004";
+
+
+
     /**
      * @param Request $request
      * @Route("/recursohumano/utilidad/embargo/cartificado/ingreso/lista", name="recursohumano_utilidad__certificadoIngreso_lista")

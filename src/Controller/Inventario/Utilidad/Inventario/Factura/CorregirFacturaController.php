@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Utilidad\Inventario\Factura;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvLote;
@@ -25,9 +26,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CorregirFacturaController extends AbstractController
+class CorregirFacturaController extends MaestroController
 {
-    protected $proceso = "0011";
+
+    public $tipo = "utilidad";
+    public $proceso = "invu0002";
+
 
 
     /**

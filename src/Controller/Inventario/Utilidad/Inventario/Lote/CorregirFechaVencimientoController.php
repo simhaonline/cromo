@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Utilidad\Inventario\Lote;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\Inventario\Proceso\Contabilidad\MovimientoController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
@@ -22,9 +23,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CorregirFechaVencimientoController extends AbstractController
+class CorregirFechaVencimientoController extends MovimientoController
 {
-    protected $proceso = "0008";
+
+    public $tipo = "utilidad";
+    public $proceso = "invu0001";
+
 
 
     /**

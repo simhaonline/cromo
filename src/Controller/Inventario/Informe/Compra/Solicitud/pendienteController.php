@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Compra\Solicitud;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvSolicitud;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\Inventario\InvSolicitudTipo;
@@ -16,8 +17,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class pendienteController extends AbstractController
+class pendienteController extends MaestroController
 {
+
+
+    public $tipo = "inventario";
+    public $proceso = "invi0016";
+
+
     /**
      * @param Request $request
      * @return Response

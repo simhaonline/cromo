@@ -4,6 +4,7 @@
 namespace App\Controller\Cartera\utilidad\recibos;
 
 
+use App\Controller\MaestroController;
 use App\Formato\Cartera\ReciboMasivo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -12,8 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FormatoReciboMasivoController extends AbstractController
+class FormatoReciboMasivoController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "caru0001";
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

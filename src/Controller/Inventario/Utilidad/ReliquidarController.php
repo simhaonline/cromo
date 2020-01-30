@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Utilidad;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvMovimiento;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,8 +11,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ReliquidarController extends AbstractController
+class ReliquidarController extends MaestroController
 {
+
+
+    public $tipo = "utilidad";
+    public $proceso = "invu0003";
+
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

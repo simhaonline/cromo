@@ -3,6 +3,7 @@
 namespace App\Controller\Financiero\Informe\Contabilidad;
 
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinSaldo;
 use App\Entity\Transporte\TteFactura;
@@ -20,8 +21,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class BalancePruebaController extends Controller
+class BalancePruebaController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "fini0003";
+
+
+
     /**
      * @Route("/financiero/informe/contabilidad/balanceprueba/lista", name="financiero_informe_contabilidad_balanceprueba_lista")
      */
@@ -29,7 +36,7 @@ class BalancePruebaController extends Controller
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCuenta', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCuenta'), 'attr' => ['class' => 'form-control']])
             ->add('filtrarFecha', CheckboxType::class, array('required' => false, 'data' => $session->get('filtroFinRegistroFiltroFecha')))

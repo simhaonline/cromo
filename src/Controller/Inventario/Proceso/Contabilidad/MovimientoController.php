@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Proceso\Contabilidad;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Transporte\TteFactura;
@@ -20,8 +21,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class MovimientoController extends AbstractController
+class MovimientoController extends MaestroController
 {
+
+
+    public $tipo = "proceso";
+    public $proceso = "invp0004";
+
+
+
     /**
      * @param Request $request
      * @return Response

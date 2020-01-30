@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Tablero\Transporte\Despacho;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoDetalle;
@@ -20,9 +21,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ob\HighchartsBundle\Highcharts\Highchart;
-class DetalleController extends AbstractController
+class DetalleController extends MaestroController
 {
-   /**
+
+
+    public $tipo = "transporte";
+    public $proceso = "ttet0008";
+
+
+
+    /**
     * @Route("/transporte/tablero/transporte/despacho/detalle", name="transporte_tablero_transporte_despacho_detalle")
     */    
     public function principal(Request $request)

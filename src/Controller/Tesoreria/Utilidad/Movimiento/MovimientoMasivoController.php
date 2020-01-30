@@ -4,6 +4,7 @@
 namespace App\Controller\Tesoreria\Utilidad\Movimiento;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Tesoreria\TesMovimientoClase;
 use App\Formato\Cartera\ReciboMasivo;
 use App\Formato\Tesoreria\Compra;
@@ -18,8 +19,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MovimientoMasivoController extends AbstractController
+class MovimientoMasivoController extends MaestroController
 {
+
+
+
+
+    public $tipo = "utilidad";
+    public $proceso = "tesu0001";
+
+
+
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

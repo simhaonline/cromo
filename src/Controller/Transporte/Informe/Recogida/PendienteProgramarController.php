@@ -25,7 +25,7 @@ class PendienteProgramarController extends MaestroController
 
 
     public $tipo = "informe";
-    public $proceso = "ttei0020";
+    public $proceso = "ttei0018";
 
 
 

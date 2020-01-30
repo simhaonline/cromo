@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Tablero\Transporte\Guia;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteGuia;
 use Ob\HighchartsBundle\Highcharts\Highchart;
@@ -15,9 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class CostoController extends Controller
+class CostoController extends MaestroController
 {
-   /**
+
+
+    public $tipo = "transporte";
+    public $proceso = "ttet0005";
+
+
+
+    /**
     * @Route("/transporte/tablero/transporte/guia/costo", name="transporte_tablero_transporte_guia_costo")
     */    
     public function principal(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Tesoreria\Proceso\CuentaPagar;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
@@ -17,8 +18,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class CorregirSaldosController extends AbstractController
+class CorregirSaldosController extends MaestroController
 {
+
+    public $tipo = "proceso";
+    public $proceso = "tesp0002";
+
+
     /**
      * @Route("/tesoreria/proceso/cuentapagar/corregirsaldos/lista", name="tesoreria_proceso_cuentapagar_corregirsaldos_lista")
      */

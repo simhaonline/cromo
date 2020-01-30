@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Proceso\Inventario;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
@@ -15,8 +16,14 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegenerarController extends AbstractController
+class RegenerarController extends MaestroController
 {
+
+
+
+    public $tipo = "proceso";
+    public $proceso = "invp0001";
+
 
     /**
      * @param Request $request

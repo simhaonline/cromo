@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
@@ -23,8 +24,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class EstadoGuiasController extends Controller
+class EstadoGuiasController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0012";
+
     /**
      * @param Request $request
      * @param \Swift_Mailer $mailer
@@ -125,7 +130,7 @@ class EstadoGuiasController extends Controller
             'form' => $form->createView()]);
     }
 
-    private function exportarExcel($arrGuias, $arrNovedades) {
+    public function exportarExcel1($arrGuias, $arrNovedades) {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         if ($arrGuias) {

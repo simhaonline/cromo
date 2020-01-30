@@ -3,6 +3,7 @@
 namespace App\Controller\Financiero\Informe\Contabilidad;
 
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
@@ -10,6 +11,7 @@ use App\Formato\Financiero\Auxiliar1;
 use App\Formato\Transporte\ControlFactura;
 use App\Formato\Transporte\FacturaInforme;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,8 +22,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class AuxiliarController extends Controller
+class AuxiliarController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "fini0002";
+
+
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -29,11 +35,11 @@ class AuxiliarController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/financiero/informe/contabilidad/auxiliar/lista", name="financiero_informe_contabilidad_auxiliar_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtCodigoTercero', TextType::class, ['required' => false, 'data' => $session->get('filtroFinCodigoTercero'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombreCorto', TextType::class, ['required' => false, 'data' => $session->get('filtroFinNombreCliente'), 'attr' => ['class' => 'form-control', 'readonly' => 'reandonly']])

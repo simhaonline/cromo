@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Proceso\General;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCliente;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
@@ -17,8 +18,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class UnifircarClienteController extends AbstractController
+class UnifircarClienteController extends MaestroController
 {
+
+
+
+    public $tipo = "informe";
+    public $proceso = "carp0005";
+
+
+
+
     /**
      * @Route("/cartera/proceso/general/unificarcliente/lista", name="cartera_proceso_general_unificarcliente_lista")
      */

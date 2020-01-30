@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Proceso\Contabilidad;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenAsesor;
 use App\Entity\Inventario\InvImportacion;
 use App\Entity\Inventario\InvImportacionTipo;
@@ -21,8 +22,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class ImportacionController extends AbstractController
+class ImportacionController extends MaestroController
 {
+
+
+
+
+    public $tipo = "proceso";
+    public $proceso = "invp0003";
+
+
     /**
      * @param Request $request
      * @return Response

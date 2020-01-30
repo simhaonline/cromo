@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityRepository;
@@ -473,5 +474,73 @@ abstract class MaestroController extends AbstractController
             }
         }
         $this->generarExcel($campos, $queryBuilder->getQuery()->execute(), $this->nombre);
+    }
+
+
+    protected function exportarExcel1($arrGuias, $arrNovedades) {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arrGuias) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->setTitle('guias');
+            $j = 0;
+            $arrColumnas = ['GUIA', 'FECHA', 'DOCUMENTO', 'CLIENTE', 'DESTINATARIO', 'DESTINO', 'DESPACHO', 'ENTREGA', 'SOPORTE', 'UND', 'FLETE', 'MANEJO', 'DES', 'ENT', 'NOV'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arrGuias as $arrGuia) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arrGuia['codigoGuiaPk']);
+                $hoja->setCellValue('B' . $j, $arrGuia['fechaIngreso']->format('Y-m-d'));
+                $hoja->setCellValue('C' . $j, $arrGuia['documentoCliente']);
+                $hoja->setCellValue('D' . $j, $arrGuia['cliente']);
+                $hoja->setCellValue('E' . $j, $arrGuia['nombreDestinatario']);
+                $hoja->setCellValue('F' . $j, $arrGuia['ciudadDestinoNombre']);
+                $hoja->setCellValue('G' . $j, $arrGuia['fechaDespacho']?$arrGuia['fechaDespacho']->format('Y-m-d'):null);
+                $hoja->setCellValue('H' . $j, $arrGuia['fechaEntrega']?$arrGuia['fechaEntrega']->format('Y-m-d'):null);
+                $hoja->setCellValue('I' . $j, $arrGuia['fechaSoporte']?$arrGuia['fechaSoporte']->format('Y-m-d'):null);
+                $hoja->setCellValue('J' . $j, $arrGuia['unidades']);
+                $hoja->setCellValue('K' . $j, $arrGuia['vrFlete']);
+                $hoja->setCellValue('L' . $j, $arrGuia['vrManejo']);
+                $hoja->setCellValue('M' . $j, $arrGuia['estadoDespachado']?'SI':'NO');
+                $hoja->setCellValue('N' . $j, $arrGuia['estadoEntregado']?'SI':'NO');
+                $hoja->setCellValue('O' . $j, $arrGuia['estadoNovedad']?'SI':'NO');
+                $j++;
+            }
+
+            $hoja2 = new Worksheet($libro, "novedades");
+            $libro->addSheet($hoja2);
+            $j = 0;
+            $arrColumnas = ['ID', 'GUIA', 'FECHA', 'NOVEDAD', 'DESCRIPCION'];
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja2->getColumnDimension($i)->setAutoSize(true);
+                $hoja2->getStyle(1)->getFont()->setBold(true);;
+                $hoja2->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arrNovedades as $arrNovedad) {
+                $hoja2->setCellValue('A' . $j, $arrNovedad['codigoNovedadPk']);
+                $hoja2->setCellValue('B' . $j, $arrNovedad['codigoGuiaFk']);
+                $hoja2->setCellValue('C' . $j, $arrNovedad['fecha']->format('Y-m-d'));
+                $hoja2->setCellValue('D' . $j, $arrNovedad['novedadTipoNombre']);
+                $hoja2->setCellValue('E' . $j, $arrNovedad['descripcion']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename=estadoGuias.xls");
+            header('Cache-Control: max-age=0');
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }
     }
 }

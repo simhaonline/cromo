@@ -2,6 +2,7 @@
 
 namespace App\Controller\Cartera\Proceso\Ingreso;
 
+use App\Controller\MaestroController;
 use App\Entity\Cartera\CarCuentaCobrar;
 use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarRecibo;
@@ -23,8 +24,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class CrearReciboMasivoController extends AbstractController
+class CrearReciboMasivoController extends MaestroController
 {
+
+
+
+
+    public $tipo = "informe";
+    public $proceso = "carp0002";
+
+
+
     /**
      * @param Request $request
      * @param TokenStorageInterface $user

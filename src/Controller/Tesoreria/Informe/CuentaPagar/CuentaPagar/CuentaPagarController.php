@@ -3,6 +3,7 @@
 namespace App\Controller\Tesoreria\Informe\CuentaPagar\CuentaPagar;
 
 
+use App\Controller\MaestroController;
 use App\Entity\Tesoreria\TesCuentaPagar;
 use App\Entity\Tesoreria\TesCuentaPagarTipo;
 use App\Formato\Tesoreria\CarteraEdad;
@@ -23,8 +24,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class CuentaPagarController extends AbstractController
+class CuentaPagarController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "tesi0001";
+
+
+
     /**
      * @Route("/tesoreria/informe/cuentapagar/cuentapagar/pendiente", name="tesoreria_informe_cuentapagar_cuentapagar_pendiente")
      */

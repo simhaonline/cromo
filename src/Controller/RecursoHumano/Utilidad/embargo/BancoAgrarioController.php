@@ -3,6 +3,7 @@
 namespace App\Controller\RecursoHumano\Utilidad\embargo;
 
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuEmbargo;
@@ -16,8 +17,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BancoAgrarioController extends AbstractController
+class BancoAgrarioController extends MaestroController
 {
+
+
+    public $tipo = "proceso";
+    public $proceso = "rhuu0003";
+
     /**
      * @param Request $request
      * @Route("/recursohumano/utilidad/embargo/bancoAgrario/lista", name="recursohumano_utilidad_embargo_bancoAgrario_lista")

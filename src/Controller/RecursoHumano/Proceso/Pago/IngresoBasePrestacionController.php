@@ -2,6 +2,7 @@
 
 namespace App\Controller\RecursoHumano\Proceso\Pago;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvLote;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvOrdenCompraDetalle;
@@ -11,6 +12,7 @@ use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvSolicitudDetalle;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Utilidades\Mensajes;
+use ProxyManager\ProxyGenerator\AccessInterceptor\MethodGenerator\MagicWakeup;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,8 +20,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class IngresoBasePrestacionController extends AbstractController
+class IngresoBasePrestacionController extends MaestroController
 {
+
+    public $tipo = "proceso";
+    public $proceso = "rhup0001";
+
 
     /**
      * @param Request $request

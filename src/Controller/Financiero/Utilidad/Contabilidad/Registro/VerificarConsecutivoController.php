@@ -2,12 +2,14 @@
 
 namespace App\Controller\Financiero\Utilidad\Contabilidad\Registro;
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinConfiguracion;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinRegistroInconsistencia;
 use App\Entity\General\GenConfiguracion;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -20,18 +22,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Controller\Estructura\FuncionesController;
 
-class VerificarConsecutivoController extends Controller
+class VerificarConsecutivoController extends MaestroController
 {
+
+
+    public $tipo = "utilidad";
+    public $proceso = "finu0004";
+
     /**
      * @param Request $request
      * @return Response
      * @Route("/financiero/utilidad/contabilidad/registro/verificarConsecutivo", name="financiero_utilidad_contabilidad_registro_verificarconsecutivo")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'data' => $fecha])

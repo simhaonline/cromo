@@ -2,6 +2,7 @@
 
 namespace App\Controller\Financiero\Utilidad\Contabilidad\Intercambio;
 
+use App\Controller\MaestroController;
 use App\Entity\Financiero\FinRegistro;
 use App\Entity\Financiero\FinTercero;
 use App\Entity\General\GenConfiguracion;
@@ -12,8 +13,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Controller\Estructura\FuncionesController;
 
-class TerceroController extends Controller
+class TerceroController extends MaestroController
 {
+
+
+    public $tipo = "utilidad";
+    public $proceso = "finu0002";
+
+
     /**
      * @param Request $request
      * @return Response
@@ -22,7 +29,7 @@ class TerceroController extends Controller
     public function lista(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('btnIlimitada', SubmitType::class, ['label' => 'Generar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();

@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Informe\Contrato;
 
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenSegmento;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuContratoTipo;
@@ -12,6 +13,7 @@ use App\Entity\RecursoHumano\RhuGrupo;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use mysql_xdevapi\CollectionAdd;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -21,8 +23,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FechaRetiroController extends AbstractController
+class FechaRetiroController extends MaestroController
 {
+
+
+    public $tipo = "informe";
+    public $proceso = "rhui0002";
+
+
 
     /**
      * @Route("/recursohumano/informe/contrato/fecha/terminacion/lista", name="recursohumano_informe_contrato_fecha_terminacion_lista")

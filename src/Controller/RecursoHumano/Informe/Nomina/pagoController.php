@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Informe\Nomina;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuPago;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,8 +15,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class pagoController extends  Controller
+class pagoController extends  MaestroController
 {
+
+
+
+    public $tipo = "informe";
+    public $proceso = "rhui0003";
+
+
+
+
     /**
      * @Route("/recursohumano/informe/nomina/pago/lista", name="recursohumano_informe_nomina_pago_lista")
      */
@@ -24,7 +34,7 @@ class pagoController extends  Controller
         ini_set('memory_limit', '256M');
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('txtEmpleado', TextType::class, ['required' => false])
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd', 'data' => $session->get('filtroRhuInformePagoFechaDesde') ? date_create($session->get('filtroRhuInformePagoFechaDesde')): null])

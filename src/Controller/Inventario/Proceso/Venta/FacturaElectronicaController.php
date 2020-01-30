@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Proceso\Venta;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvMovimiento;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,8 +19,15 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class FacturaElectronicaController extends AbstractController
+class FacturaElectronicaController extends MaestroController
 {
+
+
+    public $tipo = "proceso";
+    public $proceso = "invp0005";
+
+
+
     /**
      * @param Request $request
      * @return Response

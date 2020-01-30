@@ -3,6 +3,7 @@
 namespace App\Controller\Inventario\Informe\Inventario\Lote;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvLote;
 use App\Formato\Inventario\ExistenciaLote;
@@ -19,9 +20,12 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ExistenciaController extends AbstractController
+class ExistenciaController extends MaestroController
 {
-    protected $proceso = "0002";
+
+    public $tipo = "utilidad";
+    public $proceso = "invi0004";
+
 
 
     /**

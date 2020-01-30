@@ -3,6 +3,7 @@
 
 namespace App\Controller\RecursoHumano\Utilidad\programaciones;
 
+use App\Controller\MaestroController;
 use App\Entity\General\GenConfiguracion;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
@@ -11,22 +12,27 @@ use App\Entity\RecursoHumano\RhuPagoDetalle;
 use App\Entity\RecursoHumano\RhuProgramacion;
 use App\Entity\RecursoHumano\RhuProgramacionDetalle;
 use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-    class ProgramacionesPagoController extends Controller
+    class ProgramacionesPagoController extends MaestroController
 {
+        public $tipo = "utilidad";
+        public $proceso = "rhuu0002";
+
+
     /**
      * @Route("/recursohumano/utilidad/intercambio/programacion", name="recursohumano_utilidad_intercambio_programacion")
      */
-    public function programaciones(Request $request)
+    public function programaciones(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Tablero\Recogida;
 
+use App\Controller\MaestroController;
 use App\Formato\Despacho;
 use App\Entity\Transporte\TteRecogida;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,9 +11,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ob\HighchartsBundle\Highcharts\Highchart;
 
-class ResumenController extends Controller
+class ResumenController extends MaestroController
 {
-   /**
+
+
+    public $tipo = "transporte";
+    public $proceso = "ttet0001";
+
+
+
+    /**
     * @Route("/transporte/tablero/recogida/recogida/resumen", name="transporte_tablero_recogida_recogida_resumen")
     */    
     public function principal(Request $request)

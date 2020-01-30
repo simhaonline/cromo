@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Comercial\Remision;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvRemisionDetalle;
 use App\Entity\Inventario\InvRemisionTipo;
@@ -17,8 +18,14 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class RemisionDetalleController extends AbstractController
+class RemisionDetalleController extends MaestroController
 {
+
+
+    public $tipo = "inventario";
+    public $proceso = "invi0013";
+
+
     /**
      * @param Request $request
      * @return Response

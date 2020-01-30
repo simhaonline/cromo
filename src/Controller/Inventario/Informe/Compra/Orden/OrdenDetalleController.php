@@ -2,6 +2,7 @@
 
 namespace App\Controller\Inventario\Informe\Compra\Orden;
 
+use App\Controller\MaestroController;
 use App\Entity\Inventario\InvBodega;
 use App\Entity\Inventario\InvOrdenDetalle;
 use App\Entity\Inventario\InvRemisionDetalle;
@@ -19,8 +20,14 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class OrdenDetalleController extends AbstractController
+class OrdenDetalleController extends MaestroController
 {
+
+    public $tipo = "inventario";
+    public $proceso = "invi0018";
+
+
+
     /**
      * @param Request $request
      * @return Response

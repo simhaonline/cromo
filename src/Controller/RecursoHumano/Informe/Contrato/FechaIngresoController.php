@@ -4,6 +4,7 @@
 namespace App\Controller\RecursoHumano\Informe\Contrato;
 
 
+use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuContrato;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -15,8 +16,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FechaIngresoController extends AbstractController
+class FechaIngresoController extends MaestroController
 {
+
+
+
+
+    public $tipo = "informe";
+    public $proceso = "rhui0001";
+
     /**
      * @Route("/recursohumano/informe/contrato/fecha/ingreso/lista", name="recursohumano_informe_contrato_fecha_ingreso_lista")
      */

@@ -182,10 +182,10 @@ class RhuPagoDetalleRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("p.codigoContratoFk = {$session->get('filtroRhuInformePagoDetalleCodigoContrato')}");
         }
         if ($session->get('filtroRhuInformePagoDetalleFechaDesde') != null) {
-            $queryBuilder->andWhere("p.fechaDesde >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
+            $queryBuilder->andWhere("p.fechaDesdeContrato >= '{$session->get('filtroRhuInformePagoDetalleFechaDesde')} 00:00:00'");
         }
         if ($session->get('filtroRhuInformePagoDetalleFechaHasta') != null) {
-            $queryBuilder->andWhere("p.fechaHasta <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
+            $queryBuilder->andWhere("p.fechaHastaContrato <= '{$session->get('filtroRhuInformePagoDetalleFechaHasta')} 23:59:59'");
         }
 
         return $queryBuilder->getQuery()->getResult();

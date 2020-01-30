@@ -30,9 +30,9 @@
         </tr>
         <tr>
             <td class="titulo">EMPLEADO:</td>
-            <td class="td-in-well">{{ arVacacion.empleadoRel.nombreCorto }}</td>
-            <td class="titulo">IDENTIFICACIÓN:</td>
-            <td class="td-in-well">{{ arVacacion.empleadoRel.numeroIdentificacion }}</td>
+            <td class="td-in-well">{{ arVacacion.codigoEmpleadoFk }}-{{ arVacacion.empleadoRel.numeroIdentificacion }}-{{ arVacacion.empleadoRel.nombreCorto }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
             <td class="titulo">RECARGO NOCTURNO:</td>
             <td class="td-in-well"
                 align="right">{{ arVacacion.vrRecargoNocturno | number_format(0, '.', ',') }}</td>

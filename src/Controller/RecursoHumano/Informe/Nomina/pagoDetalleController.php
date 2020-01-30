@@ -125,7 +125,7 @@ class pagoDetalleController extends Controller
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('PagoDetalle');
             $j = 0;
-            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'DEVENGADO', 'DEDUCCION', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL', 'PV'];
+            $arrColumnas = ['ID', 'TIPO', 'NUMERO', 'COD', 'NI', 'EMPLEADO', 'CONT', 'GRUPO', 'COD', 'CONCEPTO', 'DESDE', 'HASTA', 'VR_PAGO', 'DEVENGADO', 'DEDUCCION', 'H', 'D', '%', 'IBC', 'IBP', 'CRE', 'PEN', 'SAL', 'PV'];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
@@ -150,23 +150,24 @@ class pagoDetalleController extends Controller
                 $hoja->setCellValue('D' . $j, $arPagoDetalle['pagoCodigoEmpleadoFk']);
                 $hoja->setCellValue('E' . $j, $arPagoDetalle['empleadoNumeroIdentificacion']);
                 $hoja->setCellValue('F' . $j, $arPagoDetalle['empleadoNombreCorto']);
-                $hoja->setCellValue('G' . $j, $arPagoDetalle['grupoNombre']);
-                $hoja->setCellValue('H' . $j, $arPagoDetalle['codigoConceptoFk']);
-                $hoja->setCellValue('I' . $j, $arPagoDetalle['conceptoNombre']);
-                $hoja->setCellValue('J' . $j, $arPagoDetalle['pagoFechaDesde']->format('Y-m-d'));
-                $hoja->setCellValue('K' . $j, $arPagoDetalle['pagoFechaHasta']->format('Y-m-d'));
-                $hoja->setCellValue('L' . $j, $arPagoDetalle['vrPagoOperado']);
-                $hoja->setCellValue('M' . $j, $devengado);
-                $hoja->setCellValue('N' . $j, $deduccion);
-                $hoja->setCellValue('O' . $j, $arPagoDetalle['horas']);
-                $hoja->setCellValue('P' . $j, $arPagoDetalle['dias']);
-                $hoja->setCellValue('Q' . $j, $arPagoDetalle['porcentaje']);
-                $hoja->setCellValue('R' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
-                $hoja->setCellValue('S' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
-                $hoja->setCellValue('T' . $j, $arPagoDetalle['codigoCreditoFk']);
-                $hoja->setCellValue('U' . $j, FuncionesController::boolTexto($arPagoDetalle['pension']));
-                $hoja->setCellValue('V' . $j, FuncionesController::boolTexto($arPagoDetalle['salud']));
-                $hoja->setCellValue('W' . $j, $arPagoDetalle['porcentajeVacaciones']);
+                $hoja->setCellValue('G' . $j, $arPagoDetalle['codigoContratoFk']);
+                $hoja->setCellValue('H' . $j, $arPagoDetalle['grupoNombre']);
+                $hoja->setCellValue('I' . $j, $arPagoDetalle['codigoConceptoFk']);
+                $hoja->setCellValue('J' . $j, $arPagoDetalle['conceptoNombre']);
+                $hoja->setCellValue('K' . $j, $arPagoDetalle['pagoFechaDesde']->format('Y-m-d'));
+                $hoja->setCellValue('L' . $j, $arPagoDetalle['pagoFechaHasta']->format('Y-m-d'));
+                $hoja->setCellValue('M' . $j, $arPagoDetalle['vrPagoOperado']);
+                $hoja->setCellValue('N' . $j, $devengado);
+                $hoja->setCellValue('O' . $j, $deduccion);
+                $hoja->setCellValue('P' . $j, $arPagoDetalle['horas']);
+                $hoja->setCellValue('Q' . $j, $arPagoDetalle['dias']);
+                $hoja->setCellValue('R' . $j, $arPagoDetalle['porcentaje']);
+                $hoja->setCellValue('S' . $j, $arPagoDetalle['vrIngresoBaseCotizacion']);
+                $hoja->setCellValue('T' . $j, $arPagoDetalle['vrIngresoBasePrestacion']);
+                $hoja->setCellValue('U' . $j, $arPagoDetalle['codigoCreditoFk']);
+                $hoja->setCellValue('V' . $j, FuncionesController::boolTexto($arPagoDetalle['pension']));
+                $hoja->setCellValue('W' . $j, FuncionesController::boolTexto($arPagoDetalle['salud']));
+                $hoja->setCellValue('X' . $j, $arPagoDetalle['porcentajeVacaciones']);
                 $j++;
             }
 

@@ -102,7 +102,6 @@ class GenConfiguracionRepository extends ServiceEntityRepository
             ->addSelect('c.nombre')
             ->addSelect('c.correo')
             ->addSelect('c.direccion')
-            ->addSelect('c.feToken')
             ->addSelect('c.codigoTipoPersonaFk')
             ->addSelect('c.matriculaMercantil')
             ->addSelect('ciu.nombre as ciudadNombre')

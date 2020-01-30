@@ -3,6 +3,7 @@
 namespace App\Form\Type\General;
 
 use App\Entity\General\GenConfiguracion;
+use App\Entity\General\GenTipoPersona;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -28,6 +29,16 @@ class ConfiguracionType extends AbstractType
                 },
                 'choice_label' => 'nombre',
                 'label' => 'Identificacion:'
+            ])
+            ->add('tipoPersonaRel',EntityType::class,[
+                'required' => true,
+                'class' => GenTipoPersona::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('tp')
+                        ->orderBy('tp.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'label' => 'Tipo persona:'
             ])
             ->add('ciudadRel',EntityType::class,[
                 'required' => true,

@@ -138,26 +138,6 @@ class GenConfiguracion
     private $codigoEmpresaOxigeno;
 
     /**
-     * @ORM\Column(name="fe_token", type="string", length=200, nullable=true)
-     */
-    private $feToken;
-
-    /**
-     * @ORM\Column(name="fe_usuario", type="string", length=50, nullable=true)
-     */
-    private $feUsuario;
-
-    /**
-     * @ORM\Column(name="fe_clave", type="string", length=50, nullable=true)
-     */
-    private $feClave;
-
-    /**
-     * @ORM\Column(name="fe_codigo_empresa", type="string", length=10, nullable=true)
-     */
-    private $feCodigoEmpresa;
-
-    /**
      * @ORM\Column(name="codigo_tipo_persona_fk", type="string", length=3, nullable=true)
      */
     private $codigoTipoPersonaFk;
@@ -540,6 +520,22 @@ class GenConfiguracion
     /**
      * @return mixed
      */
+    public function getCorreo()
+    {
+        return $this->correo;
+    }
+
+    /**
+     * @param mixed $correo
+     */
+    public function setCorreo($correo): void
+    {
+        $this->correo = $correo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCodigoEmpresaOxigeno()
     {
         return $this->codigoEmpresaOxigeno;
@@ -551,6 +547,38 @@ class GenConfiguracion
     public function setCodigoEmpresaOxigeno($codigoEmpresaOxigeno): void
     {
         $this->codigoEmpresaOxigeno = $codigoEmpresaOxigeno;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoTipoPersonaFk()
+    {
+        return $this->codigoTipoPersonaFk;
+    }
+
+    /**
+     * @param mixed $codigoTipoPersonaFk
+     */
+    public function setCodigoTipoPersonaFk($codigoTipoPersonaFk): void
+    {
+        $this->codigoTipoPersonaFk = $codigoTipoPersonaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMatriculaMercantil()
+    {
+        return $this->matriculaMercantil;
+    }
+
+    /**
+     * @param mixed $matriculaMercantil
+     */
+    public function setMatriculaMercantil($matriculaMercantil): void
+    {
+        $this->matriculaMercantil = $matriculaMercantil;
     }
 
     /**
@@ -588,134 +616,6 @@ class GenConfiguracion
     /**
      * @return mixed
      */
-    public function getFeToken()
-    {
-        return $this->feToken;
-    }
-
-    /**
-     * @param mixed $feToken
-     */
-    public function setFeToken($feToken): void
-    {
-        $this->feToken = $feToken;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFeUsuario()
-    {
-        return $this->feUsuario;
-    }
-
-    /**
-     * @param mixed $feUsuario
-     */
-    public function setFeUsuario($feUsuario): void
-    {
-        $this->feUsuario = $feUsuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFeClave()
-    {
-        return $this->feClave;
-    }
-
-    /**
-     * @param mixed $feClave
-     */
-    public function setFeClave($feClave): void
-    {
-        $this->feClave = $feClave;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFeCodigoEmpresa()
-    {
-        return $this->feCodigoEmpresa;
-    }
-
-    /**
-     * @param mixed $feCodigoEmpresa
-     */
-    public function setFeCodigoEmpresa($feCodigoEmpresa): void
-    {
-        $this->feCodigoEmpresa = $feCodigoEmpresa;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoTipoPersonaFk()
-    {
-        return $this->codigoTipoPersonaFk;
-    }
-
-    /**
-     * @param mixed $codigoTipoPersonaFk
-     */
-    public function setCodigoTipoPersonaFk($codigoTipoPersonaFk): void
-    {
-        $this->codigoTipoPersonaFk = $codigoTipoPersonaFk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMatriculaMercantil()
-    {
-        return $this->matriculaMercantil;
-    }
-
-    /**
-     * @param mixed $matriculaMercantil
-     */
-    public function setMatriculaMercantil($matriculaMercantil): void
-    {
-        $this->matriculaMercantil = $matriculaMercantil;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInfoLog(): array
-    {
-        return $this->infoLog;
-    }
-
-    /**
-     * @param array $infoLog
-     */
-    public function setInfoLog(array $infoLog): void
-    {
-        $this->infoLog = $infoLog;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCorreo()
-    {
-        return $this->correo;
-    }
-
-    /**
-     * @param mixed $correo
-     */
-    public function setCorreo($correo): void
-    {
-        $this->correo = $correo;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTipoPersonaRel()
     {
         return $this->tipoPersonaRel;
@@ -728,7 +628,6 @@ class GenConfiguracion
     {
         $this->tipoPersonaRel = $tipoPersonaRel;
     }
-
 
 
 }

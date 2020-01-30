@@ -1817,8 +1817,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         }
                         if($procesoFacturaElectronica['estado'] == 'EX') {
                             $arFactura = $em->getRepository(InvMovimiento::class)->find($codigo);
-                            $arFactura->setEstadoFacturaElectronica(1);
-                            $arFactura->setProcesoFacturaElectronica(null);
+                            $arFactura->setEstadoElectronico(1);
+                            //$arFactura->setProcesoFacturaElectronica(null);
                             $em->persist($arFactura);
                             $em->flush();
                         }

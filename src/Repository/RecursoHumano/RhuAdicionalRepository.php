@@ -97,11 +97,13 @@ class RhuAdicionalRepository extends ServiceEntityRepository
         $codigoEmpleado = null;
         $estadoInactivo = null;
         $estadoInactivoPeriodo = null;
+        $concepto = null;
 
         if ($filtros) {
             $codigoEmpleado = $filtros['codigoEmpleado'] ?? null;
             $estadoInactivo = $filtros['estadoInactivo'] ?? null;
             $estadoInactivoPeriodo = $filtros['estadoInactivoPeriodo'] ?? null;
+            $concepto = $filtros['concepto'] ?? null;
         }
 
         $session = new Session();
@@ -119,6 +121,9 @@ class RhuAdicionalRepository extends ServiceEntityRepository
 
         if ($codigoEmpleado) {
             $queryBuilder->andWhere("a.codigoEmpleadoFk  = '{$codigoEmpleado}'");
+        }
+        if ($concepto) {
+            $queryBuilder->andWhere("a.codigoConceptoFk = '{$concepto}'");
         }
         switch ($estadoInactivo) {
             case '0':

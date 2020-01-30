@@ -2247,6 +2247,7 @@ class MigracionController extends Controller
                 $arSolicitud->setEstadoAutorizado($row['estado_aprobado']);
                 $arSolicitud->setEstadoAprobado($row['estado_cerrado']);
                 $arSolicitud->setComentarios(utf8_encode($row['comentarios']));
+                $arSolicitud->setClienteReferencia(utf8_encode($row['cliente_referencia']));
                 $arSolicitud->setUsuario(utf8_encode($row['codigo_usuario']));
                 if ($row['codigo_clasificacion_riesgo_externo']) {
                     $arSolicitud->setClasificacionRiesgoRel($em->getReference(RhuClasificacionRiesgo::class, $row['codigo_clasificacion_riesgo_externo']));

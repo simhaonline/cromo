@@ -7,13 +7,16 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAdicional;
+use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuContrato;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Form\Type\RecursoHumano\AdicionalType;
 use App\General\General;
 use App\Utilidades\Mensajes;
+use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -55,6 +58,19 @@ class AdicionalController extends MaestroController
             'filtros'=> $session->get('filtroRhuAdicional')
         ];
         $form = $this->createFormBuilder()
+            ->add('codigoConceptoFk', EntityType::class, [
+                'class' => RhuConcepto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.codigoConceptoPk', 'ASC');
+                },
+                'required' => false,
+                'choice_label' => 'nombre',
+                'placeholder' => 'TODOS',
+                'attr' => ['class' => 'form-control to-select-2'],
+                'data'=>  $raw['filtros']['concepto'] ? $em->getReference(RhuConcepto::class, $raw['filtros']['concepto']) : null
+
+            ])
             ->add('codigoEmpleadoFk', SearchType::class, ['required' => false,  'data'=>$raw['filtros']['codigoEmpleado']])
             ->add('estadoInactivo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data'=>$raw['filtros']['estadoInactivo'], 'required' => false])
             ->add('estadoInactivoPeriodo', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'data'=>$raw['filtros']['estadoInactivoPeriodo'], 'required' => false])
@@ -162,6 +178,12 @@ class AdicionalController extends MaestroController
             'estadoInactivo' => $form->get('estadoInactivo')->getData(),
             'estadoInactivoPeriodo' => $form->get('estadoInactivoPeriodo')->getData(),
         ];
+        $arConcepto = $form->get('codigoConceptoFk')->getData();
+        if (is_object($arConcepto)) {
+            $filtro['concepto'] = $arConcepto->getCodigoConceptoPk();
+        } else {
+            $filtro['concepto'] = $arConcepto;
+        }
         $session->set('filtroRhuAdicional', $filtro);
         return $filtro;
     }

@@ -110,8 +110,13 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="separador-1"></div>
-                <div class="btn-toolbar" style="float: right">
+                <div class="btn-group" style="float: left">
+                    <div class="btn btn-default btn-sm">Registros
+                        <span class="badge">{{ arAspirantes.getTotalItemCount }}
+                </span>
+                    </div>
+                </div>
+                <div class="btn-group" style="float: right; margin-right: 5px !important;">
                     {% if arSolicitud.estadoAprobado == 0 %}
                         <div class="btn-group">
                             <a class="btn btn-default btn-sm"
@@ -169,6 +174,12 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                <div class="btn-group" style="float: left">
+                    <div class="btn btn-default btn-sm">Registros
+                        <span class="badge">{{ arSelecciones.getTotalItemCount }}
+                </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

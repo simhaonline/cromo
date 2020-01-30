@@ -3,6 +3,7 @@
 namespace App\Form\Type\RecursoHumano;
 
 
+use App\Entity\Financiero\FinCentroCosto;
 use App\Entity\RecursoHumano\RhuEstudioTipo;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use Doctrine\ORM\EntityRepository;
@@ -32,6 +33,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('gp')
                         ->orderBy('gp.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Grupo pago:'
             ])
@@ -42,6 +44,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('sm')
                         ->orderBy('sm.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Solicitud motivo:'
             ])
@@ -52,6 +55,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Cargo:'
             ])
@@ -62,6 +66,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('cr')
                         ->orderBy('cr.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Clasificacion riesgo:'
             ])
@@ -72,6 +77,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('cs')
                         ->orderBy('cs.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Ciudad residencia:'
             ])
@@ -82,6 +88,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('et')
                         ->orderBy('et.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Nivel de estudio:'
             ])
@@ -92,6 +99,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('ec')
                         ->orderBy('ec.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Estado civil:'
             ])
@@ -102,6 +110,7 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('g')
                         ->orderBy('g.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Sexo:'
             ])
@@ -112,20 +121,34 @@ class SolicitudType extends AbstractType
                     return $er->createQueryBuilder('se')
                         ->orderBy('se.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Experiencia:'
             ])
             ->add('zonaRel',EntityType::class,[
-                'required' => true,
+                'required' => false,
                 'class' => 'App\Entity\RecursoHumano\RhuZona',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('z')
                         ->orderBy('z.nombre', 'ASC');
                 },
+                'attr' => ['class' => 'form-control to-select-2'],
                 'choice_label' => 'nombre',
                 'label' => 'Zona:'
             ])
+            ->add('centroCostoRel',EntityType::class,[
+                'required' => false,
+                'class' => FinCentroCosto::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('cc')
+                        ->orderBy('cc.nombre', 'ASC');
+                },
+                'attr' => ['class' => 'form-control to-select-2'],
+                'choice_label' => 'nombre',
+                'label' => 'Centro costo:'
+            ])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
+            ->add('clienteReferencia',TextType::class,['required' => false,'label' => 'Cliente referencia:'])
             ->add('cantidadSolicitada',IntegerType::class,['required' => true,'label' => 'Cantidad:'])
             ->add('vrSalario', NumberType::class,['required' => true,'label' => 'Salario:'])
             ->add('vrNoSalarial',NumberType::class,['required' => false,'label' => 'No salarial:'])
@@ -136,6 +159,7 @@ class SolicitudType extends AbstractType
             ->add('codigoTipoVehiculoFk', ChoiceType::class, array('choices'   => array('CARRO' => '1', 'MOTO' => '2', 'NO APLICA' => '0')))
             ->add('codigoLicenciaCarroFk', ChoiceType::class, array('choices'   => array('SI' => '1', 'NO' => '2', 'NO APLICA' => '0')))
             ->add('codigoLicenciaMotoFk', ChoiceType::class, array('choices'   => array('SI' => '1', 'NO' => '2', 'NO APLICA' => '0')))
+            ->add('requiereArma', CheckboxType::class)
             ->add('comentarios', TextareaType::class, array('required' => false))
             ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }

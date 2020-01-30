@@ -24,13 +24,21 @@
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-1 col-sm-offset-9 control-label">Aprobado:</label>
+                        <label class="col-sm-1 control-label">Desde:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaDesde) }}
+                        </div>
+                        <label class="col-sm-1 col-sm-offset-6 control-label">Aprobado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAprobado) }}
                         </div>
                     </div>
                     <div class="form-group form-group-sm">
-                        <label class="col-sm-1 col-sm-offset-9 control-label">Anulado:</label>
+                        <label class="col-sm-1 control-label">Hasta:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.fechaHasta) }}
+                        </div>
+                        <label class="col-sm-1 col-sm-offset-6 control-label">Anulado:</label>
                         <div class="col-sm-2">
                             {{ form_widget(form.estadoAnulado) }}
                         </div>
@@ -51,6 +59,7 @@
             <th>FECHA</th>
             <th>MOTIVO</th>
             <th>NOMBRE</th>
+            <th>CLIENTE REF</th>
             <th>GRUPO</th>
             <th title="CANTIDAD SOLICITADA">CANT</th>
             <th>FIJO</th>
@@ -70,6 +79,7 @@
                 <td>{{ arSolicitud.fecha | date ('Y-m-d') }}</td>
                 <td>{{ arSolicitud.motivo }}</td>
                 <td>{{ arSolicitud.nombre }}</td>
+                <td>{{ arSolicitud.clienteReferencia }}</td>
                 <td>{{ arSolicitud.grupo }}</td>
                 <td>{{ arSolicitud.cantidadSolicitada }}</td>
                 <td>{{ arSolicitud.salarioFijo ? 'SI' : 'NO' }}</td>

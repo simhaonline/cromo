@@ -8,20 +8,8 @@
             <div class="form-group form-group-sm">
                 <label for="form_solicitudMotivoRel" class="col-sm-2 control-label">Motivo:</label>
                 <div class="col-sm-10">
-                    {{ form_widget(form.solicitudMotivoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.solicitudMotivoRel) }}
                     <div style="color:red;">{{ form_errors(form.solicitudMotivoRel) }}</div>
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_grupoPagoRel" class="col-sm-2 control-label">Grupo pago:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.grupoRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.grupoRel) }}
-                </div>
-                <label for="form_cargoRel" class="col-sm-2 control-label">Cargo:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.cargoRel, { 'attr': {'class': 'form-control'} }) }}
-                    {{ form_errors(form.cargoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -37,6 +25,35 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label for="form_nombre" class="col-sm-2 control-label">Cliente referencia:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.clienteReferencia, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_errors(form.clienteReferencia) }}
+                </div>
+                <label for="form_fechaContratacion" class="col-sm-2 control-label">Fecha vencimiento:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.fechaVencimiento) }}
+                    {{ form_errors(form.fechaVencimiento) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información contratación</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="form_grupoPagoRel" class="col-sm-2 control-label">Grupo pago:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.grupoRel) }}
+                    {{ form_errors(form.grupoRel) }}
+                </div>
+                <label for="form_cargoRel" class="col-sm-2 control-label">Cargo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.cargoRel) }}
+                    {{ form_errors(form.cargoRel) }}
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
                 <label for="form_vrSalario" class="col-sm-2 control-label">Salario:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.vrSalario, { 'attr': {'class': 'form-control'} }) }}
@@ -49,9 +66,20 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label"></label>
+                <div class="sol-sm-10">
+                    <div class="col-sm-2"><input type="radio" name="tipo"
+                                                 value="salarioFijo" {{ arSolicitud.salarioFijo == true?"checked='checked'":"" }}>Salario
+                        fijo
+                    </div>
+                    <div class="col-sm-2"><input type="radio" name="tipo"
+                                                 value="salarioVariable" {{ arSolicitud.salarioVariable == true?"checked='checked'":"" }}>Salario
+                        variable
+                    </div>
+                </div>
                 <label for="form_clasificacionRiesgo" class="col-sm-2 control-label">Clasificacion del riesgo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.clasificacionRiesgoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.clasificacionRiesgoRel) }}
                     {{ form_errors(form.clasificacionRiesgoRel) }}
                 </div>
             </div>
@@ -61,12 +89,31 @@
                     {{ form_widget(form.fechaContratacion) }}
                     {{ form_errors(form.fechaContratacion) }}
                 </div>
-                <label for="form_fechaContratacion" class="col-sm-2 control-label">Fecha vencimiento:</label>
+                <label for="form_zonaRel" class="col-sm-2 control-label">Zona:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.fechaVencimiento) }}
-                    {{ form_errors(form.fechaVencimiento) }}
+                    {{ form_widget(form.zonaRel) }}
+                    {{ form_errors(form.zonaRel) }}
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label for="form_fechaContratacion" class="col-sm-2 control-label">Centro costo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.centroCostoRel) }}
+                    {{ form_errors(form.centroCostoRel) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comentario:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información del personal</div>
+        <div class="panel-body">
             <div class="form-group form-group-sm">
                 <label for="form_edadMinima" class="col-sm-2 control-label">Edad min:</label>
                 <div class="col-sm-1">
@@ -78,37 +125,33 @@
                     {{ form_widget(form.edadMaxima, { 'attr': {'class': 'form-control'} }) }}
                     {{ form_errors(form.edadMaxima) }}
                 </div>
-                <label class="col-sm-2 control-label"></label>
-                <div class="sol-sm-10" style="display: flex">
-                    <div class="col-sm-5"><input type="radio" name="tipo"
-                                                 value="salarioFijo" {{ arSolicitud.salarioFijo == true?"checked='checked'":"" }}>Salario fijo
-                    </div>
-                    <div class="col-sm-5"><input type="radio" name="tipo"
-                                                 value="salarioVariable" {{ arSolicitud.salarioVariable == true?"checked='checked'":"" }}>Salario variable
-                    </div>
+                <label for="form_edadMaxima" class="col-sm-2 control-label"></label>
+                <div class="col-sm-1">
+                    {{ form_widget(form.requiereArma) }}
+                    {{ form_errors(form.requiereArma) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_ciudadRel" class="col-sm-2 control-label">Ciudad residencia:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.ciudadRel, {'attr':{'class': 'to-select-2'}}) }}
+                    {{ form_widget(form.ciudadRel) }}
                     {{ form_errors(form.ciudadRel) }}
                 </div>
                 <label for="form_estudioTipoRel" class="col-sm-2 control-label">Nivel de estudio:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.estudioTipoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.estudioTipoRel) }}
                     {{ form_errors(form.estudioTipoRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label for="form_estadoCivilRel" class="col-sm-2 control-label">Estado civil:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.estadoCivilRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.estadoCivilRel) }}
                     {{ form_errors(form.estadoCivilRel) }}
                 </div>
                 <label for="form_sexoRel" class="col-sm-2 control-label">Sexo:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.sexoRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.sexoRel) }}
                     {{ form_errors(form.sexoRel) }}
                 </div>
             </div>
@@ -134,20 +177,8 @@
             <div class="form-group form-group-sm">
                 <label for="form_solicitudExperienciaRel" class="col-sm-2 control-label">Experiencia:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.solicitudExperienciaRel, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.solicitudExperienciaRel) }}
                     {{ form_errors(form.solicitudExperienciaRel) }}
-                </div>
-                <label for="form_zonaRel" class="col-sm-2 control-label">Zona:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.zonaRel) }}
-                    {{ form_errors(form.zonaRel) }}
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Comentario:</label>
-                <div class="col-sm-10">
-                    {{ form_widget(form.comentarios, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                    {{ form_errors(form.comentarios) }}
                 </div>
             </div>
         </div>

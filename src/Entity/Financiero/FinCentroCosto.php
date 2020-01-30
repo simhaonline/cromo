@@ -80,6 +80,11 @@ class FinCentroCosto
     protected $contratosCentroCostoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitud", mappedBy="centroCostoRel")
+     */
+    protected $solicitudesCentroCostoRel;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tesoreria\TesMovimientoDetalle", mappedBy="centroCostoRel")
      */
     protected $movimientosDetallesCentroCostoRel;
@@ -263,6 +268,38 @@ class FinCentroCosto
     public function setCarMovimientosDetallesCentroCostoRel($carMovimientosDetallesCentroCostoRel): void
     {
         $this->carMovimientosDetallesCentroCostoRel = $carMovimientosDetallesCentroCostoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolicitudesCentroCostoRel()
+    {
+        return $this->solicitudesCentroCostoRel;
+    }
+
+    /**
+     * @param mixed $solicitudesCentroCostoRel
+     */
+    public function setSolicitudesCentroCostoRel($solicitudesCentroCostoRel): void
+    {
+        $this->solicitudesCentroCostoRel = $solicitudesCentroCostoRel;
     }
 
 

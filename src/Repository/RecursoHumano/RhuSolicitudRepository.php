@@ -22,6 +22,8 @@ class RhuSolicitudRepository extends ServiceEntityRepository
 
         $codigoSolicitud = null;
         $nombre = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
         $estadoAutorizado = null;
         $estadoAprobado = null;
         $estadoAnulado = null;
@@ -32,6 +34,8 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             $estadoAutorizado = $filtros['estadoAutorizado'] ?? null;
             $estadoAprobado = $filtros['estadoAprobado'] ?? null;
             $estadoAnulado = $filtros['estadoAnulado'] ?? null;
+            $fechaDesde = $filtros['fechaDesde'] ?? null;
+            $fechaHasta = $filtros['fechaHasta'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuSolicitud::class, 's')
@@ -41,6 +45,7 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             ->addSelect('g.nombre AS grupo')
             ->addSelect('s.cantidadSolicitada')
             ->addSelect('s.nombre')
+            ->addSelect('s.clienteReferencia')
             ->addSelect('s.salarioFijo')
             ->addSelect('s.salarioVariable')
             ->addSelect('s.edadMinima')
@@ -80,6 +85,12 @@ class RhuSolicitudRepository extends ServiceEntityRepository
             case '1':
                 $queryBuilder->andWhere("s.estadoAnulado = 1");
                 break;
+        }
+        if ($fechaDesde) {
+            $queryBuilder->andWhere("s.fecha >= '{$fechaDesde} 00:00:00'");
+        }
+        if ($fechaHasta) {
+            $queryBuilder->andWhere("s.fecha <= '{$fechaHasta} 23:59:59'");
         }
         $queryBuilder->addOrderBy('s.codigoSolicitudPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);

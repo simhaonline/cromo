@@ -68,6 +68,11 @@ class RhuSolicitud
     private $codigoSexoFk;
 
     /**
+     * @ORM\Column(name="codigo_centro_costo_fk", type="string", length=20, nullable=true)
+     */
+    private $codigoCentroCostoFk;
+
+    /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
@@ -103,6 +108,11 @@ class RhuSolicitud
      * @ORM\Column(name="vr_no_salarial", type="float", nullable=true)
      */
     private $VrNoSalarial = 0;
+
+    /**
+     * @ORM\Column(name="requiere_arma", type="boolean",options={"default":false})
+     */
+    private $requiereArma = false;
 
     /**
      * @ORM\Column(name="salario_fijo", type="boolean",options={"default":false})
@@ -157,6 +167,11 @@ class RhuSolicitud
      * )
      */
     private $comentarios;
+
+    /**
+     * @ORM\Column(name="cliente_referencia", type="string", length=300, nullable=true)
+     */
+    private $clienteReferencia;
 
     /**
      * @ORM\Column(name="usuario", type="string", length=50, nullable=true)
@@ -247,6 +262,12 @@ class RhuSolicitud
      * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
      */
     protected $zonaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Financiero\FinCentroCosto", inversedBy="solicitudesCentroCostoRel")
+     * @ORM\JoinColumn(name="codigo_centro_costo_fk", referencedColumnName="codigo_centro_costo_pk")
+     */
+    protected $centroCostoRel;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuSolicitudAspirante", mappedBy="solicitudRel")
@@ -971,6 +992,70 @@ class RhuSolicitud
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClienteReferencia()
+    {
+        return $this->clienteReferencia;
+    }
+
+    /**
+     * @param mixed $clienteReferencia
+     */
+    public function setClienteReferencia($clienteReferencia): void
+    {
+        $this->clienteReferencia = $clienteReferencia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCentroCostoFk()
+    {
+        return $this->codigoCentroCostoFk;
+    }
+
+    /**
+     * @param mixed $codigoCentroCostoFk
+     */
+    public function setCodigoCentroCostoFk($codigoCentroCostoFk): void
+    {
+        $this->codigoCentroCostoFk = $codigoCentroCostoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCentroCostoRel()
+    {
+        return $this->centroCostoRel;
+    }
+
+    /**
+     * @param mixed $centroCostoRel
+     */
+    public function setCentroCostoRel($centroCostoRel): void
+    {
+        $this->centroCostoRel = $centroCostoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequiereArma()
+    {
+        return $this->requiereArma;
+    }
+
+    /**
+     * @param mixed $requiereArma
+     */
+    public function setRequiereArma($requiereArma): void
+    {
+        $this->requiereArma = $requiereArma;
     }
 
 

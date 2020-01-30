@@ -21,6 +21,7 @@ use function Complex\add;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -52,6 +53,8 @@ class SolicitudController extends MaestroController
         $form = $this->createFormBuilder()
             ->add('codigoSolicitudPk', TextType::class, array('required' => false))
             ->add('nombre', TextType::class, ['required' => false])
+            ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
+            ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'])
             ->add('estadoAutorizado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAprobado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
             ->add('estadoAnulado', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false])
@@ -72,7 +75,7 @@ class SolicitudController extends MaestroController
                 General::get()->setExportar($em->getRepository(RhuSolicitud::class)->lista($raw), "Solicitudes");
             }
         }
-        $arSolicitudes = $paginator->paginate($em->getRepository(RhuSolicitud::class)->lista($raw), $request->query->getInt('page', 1), 30);
+        $arSolicitudes = $paginator->paginate($em->getRepository(RhuSolicitud::class)->lista($raw), $request->query->getInt('page', 1), 50);
         return $this->render('recursohumano/movimiento/seleccion/solicitud/lista.html.twig', [
             'arSolicitudes' => $arSolicitudes,
             'form' => $form->createView(),
@@ -124,7 +127,7 @@ class SolicitudController extends MaestroController
     /**
      * @Route("recursohumano/movimiento/seleccion/solicitud/detalle/{id}", name="recursohumano_movimiento_seleccion_solicitud_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request, $id, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
@@ -160,9 +163,8 @@ class SolicitudController extends MaestroController
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_detalle', ['id' => $id]));
             }
         }
-
-        $arAspirantes = $em->getRepository(RhuSolicitudAspirante::class)->lista($raw = null, $id);
-        $arSelecciones = $em->getRepository(RhuSeleccion::class)->findBy(array('codigoSolicitudFk' => $id));
+        $arAspirantes = $paginator->paginate($em->getRepository(RhuSolicitudAspirante::class)->lista($raw = null, $id), $request->query->getInt('page', 1), 500);
+        $arSelecciones = $paginator->paginate($em->getRepository(RhuSeleccion::class)->findBy(array('codigoSolicitudFk' => $id)), $request->query->getInt('page', 1), 500);
         return $this->render('recursohumano/movimiento/seleccion/solicitud/detalle.html.twig', [
             'arAspirantes' => $arAspirantes,
             'arSolicitud' => $arSolicitud,
@@ -216,6 +218,8 @@ class SolicitudController extends MaestroController
         $filtro = [
             'codigoSolicitud' => $form->get('codigoSolicitudPk')->getData(),
             'nombre' => $form->get('nombre')->getData(),
+            'fechaDesde' => $form->get('fechaDesde')->getData() ? $form->get('fechaDesde')->getData()->format('Y-m-d') : null,
+            'fechaHasta' => $form->get('fechaHasta')->getData() ? $form->get('fechaHasta')->getData()->format('Y-m-d') : null,
             'estadoAutorizado' => $form->get('estadoAutorizado')->getData(),
             'estadoAprobado' => $form->get('estadoAprobado')->getData(),
             'estadoAnulado' => $form->get('estadoAnulado')->getData(),

@@ -229,6 +229,11 @@ class RhuAspirante
     private $estadoBloqueado = false;
 
     /**
+     * @ORM\Column(name="comentarios", type="string", length=300, nullable=true)
+     */
+    private $comentarios;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\General\GenIdentificacion", inversedBy="rhuAspirantesIdentificacionRel")
      * @ORM\JoinColumn(name="codigo_identificacion_fk",referencedColumnName="codigo_identificacion_pk")
      */
@@ -990,6 +995,23 @@ class RhuAspirante
     {
         $this->solicitudesAspiranteRel = $solicitudesAspiranteRel;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getComentarios()
+    {
+        return $this->comentarios;
+    }
+
+    /**
+     * @param mixed $comentarios
+     */
+    public function setComentarios($comentarios): void
+    {
+        $this->comentarios = $comentarios;
+    }
+
 
 
 }

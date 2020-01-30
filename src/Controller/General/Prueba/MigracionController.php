@@ -2159,6 +2159,7 @@ class MigracionController extends Controller
                 $arAspirante->setEstadoAutorizado($row['estado_autorizado']);
                 $arAspirante->setEstadoAprobado($row['estado_aprobado']);
                 $arAspirante->setEstadoBloqueado($row['bloqueado']);
+                $arAspirante->setComentarios(utf8_encode($row['comentarios']));
                 $em->persist($arAspirante);
                 $metadata = $em->getClassMetaData(get_class($arAspirante));
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);

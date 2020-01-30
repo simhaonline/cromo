@@ -1,0 +1,22 @@
+{% extends 'base_sin_menu.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label for="identificacionRel" class="col-sm-2 control-label">Motivo:</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.comentarios) }}
+                    {{ form_errors(form.comentarios) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm" href="{{ path('recursohumano_movimiento_seleccion_aspirante_lista') }}">Cancelar</a>
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

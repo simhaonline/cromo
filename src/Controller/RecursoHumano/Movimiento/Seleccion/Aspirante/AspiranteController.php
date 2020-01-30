@@ -8,6 +8,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
 use App\Controller\MaestroController;
 use App\Entity\RecursoHumano\RhuAspirante;
+use App\Entity\RecursoHumano\RhuSeleccion;
 use App\Entity\RecursoHumano\RhuSolicitud;
 use App\Entity\RecursoHumano\RhuSolicitudAspirante;
 use App\Form\Type\RecursoHumano\AspiranteType;
@@ -20,6 +21,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -238,6 +240,48 @@ class AspiranteController extends MaestroController
             }
         }
         return $this->render('recursohumano/movimiento/seleccion/aspirante/aplicar.html.twig', array(
+            'arAspirante' => $arAspirante,
+            'form' => $form->createView()));
+    }
+
+    /**
+     * @param Request $request
+     * @param $codigoAspirante
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("recursohumano/movimiento/seleccion/aspirante/bloquear/{id}", name="recursohumano_movimiento_seleccion_aspirante_bloquear")
+     */
+    public function bloquearAction(Request $request, $id)
+    {
+        /**
+         * @var $arAspirante RhuAspirante
+         */
+        $em = $this->getDoctrine()->getManager();
+        $arAspirante = $em->getRepository(RhuAspirante::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->add('comentarios', TextareaType::class, array('data' => $arAspirante->getComentarios(), 'required' => false))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar'))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $arSeleccion = $em->getRepository(RhuSeleccion::class)->findBy(array('numeroIdentificacion' => $arAspirante->getNumeroIdentificacion()));
+            if (count($arSeleccion) > 0) {
+                Mensajes::error("No puede bloquear un aspirante que se encuentra en proceso de seleccion");
+            } else {
+                if ($form->get('btnGuardar')->isClicked()) {
+                    $arAspirante->setEstadoBloqueado(1);
+                    $arAspirante->setComentarios($form->get('comentarios')->getData());
+                    $em->persist($arAspirante);
+                    $em->flush();
+                    echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                }
+            }
+
+            if ($form->get('btnCancelar')->isClicked()) {
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+
+        return $this->render('recursohumano/movimiento/seleccion/aspirante/bloquear.html.twig', array(
             'arAspirante' => $arAspirante,
             'form' => $form->createView()));
     }

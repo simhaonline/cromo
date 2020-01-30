@@ -9,6 +9,7 @@ use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
 use App\Entity\Transporte\TteOperacion;
 use App\Form\Type\Transporte\OperacionType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,12 +33,11 @@ class OperacionController extends MaestroController
     /**
      * @Route("/transporte/administracion/general/operacion/lista", name="transporte_administracion_general_operacion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $this->request = $request;
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this-> createFormBuilder()
             ->add('txtCodigo', TextType::class, ['required' => false, 'data' => $session->get('filtroTteOperacionCodigo'), 'attr' => ['class' => 'form-control']])
             ->add('txtNombre', TextType::class, ['required' => false, 'data' => $session->get('filtroTteOperacionNombre'), 'attr' => ['class' => 'form-control']])

@@ -2,8 +2,10 @@
 
 namespace App\Controller\Transporte\Informe\Comercial\Facturacion;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteGuia;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,8 +17,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class PendienteFacturaController extends Controller
+class PendienteFacturaController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0026";
+
+
 
     /**
      * @param Request $request
@@ -25,10 +32,10 @@ class PendienteFacturaController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/comercial/facturacion/pendienteFactura", name="transporte_informe_comercial_facturacion_pendienteFactura")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $session = new Session();
         $form = $this->createFormBuilder()
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))

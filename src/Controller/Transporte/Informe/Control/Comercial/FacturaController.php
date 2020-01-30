@@ -3,6 +3,7 @@
 namespace App\Controller\Transporte\Informe\Control\Comercial;
 
 use App\Controller\Estructura\MensajesController;
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteFactura;
 use App\Entity\Transporte\TteFacturaTipo;
 use App\Formato\Transporte\ControlFactura;
@@ -17,8 +18,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class FacturaController extends Controller
+class FacturaController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0028";
+
+
+
+
     /**
      * @Route("/transporte/informe/control/comercial/factura", name="transporte_informe_control_comercial_factura")
      */

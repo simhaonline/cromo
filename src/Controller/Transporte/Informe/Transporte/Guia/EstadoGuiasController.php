@@ -2,13 +2,11 @@
 
 namespace App\Controller\Transporte\Informe\Transporte\Guia;
 
-use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use App\General\General;
 use App\Utilidades\Mensajes;
-use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,12 +23,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class EstadoGuiasController extends MaestroController
+class EstadoGuiasController extends Controller
 {
-    public $tipo = "informe";
-    public $proceso = "ttei0012";
-
-
     /**
      * @param Request $request
      * @param \Swift_Mailer $mailer

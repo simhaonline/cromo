@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Financiero;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteDespacho;
 use App\Entity\Transporte\TteDespachoTipo;
@@ -23,8 +24,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class RentabilidadController extends AbstractController
+class RentabilidadController extends MaestroController
 {
+
+
+    public $tipo = "informe";
+    public $proceso = "ttei0029";
+
     /**
      * @param Request $request
      * @return Response

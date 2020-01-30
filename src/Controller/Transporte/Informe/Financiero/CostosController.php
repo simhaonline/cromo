@@ -2,6 +2,7 @@
 
 namespace App\Controller\Transporte\Informe\Financiero;
 
+use App\Controller\MaestroController;
 use App\Entity\Transporte\TteCliente;
 use App\Entity\Transporte\TteCosto;
 use App\Entity\Transporte\TteDespacho;
@@ -9,6 +10,7 @@ use App\Entity\Transporte\TteGuia;
 use App\Entity\Transporte\TteNovedad;
 use App\Formato\Transporte\Rentabilidad;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +22,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class CostosController extends Controller
+class CostosController extends MaestroController
 {
+
+    public $tipo = "informe";
+    public $proceso = "ttei0030";
+
+
     /**
      * @param Request $request
      * @return Response
@@ -29,10 +36,10 @@ class CostosController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/informe/financiero/general/costos/", name="transporte_informe_financiero_general_costos")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $fecha = new \DateTime('now');
         $form = $this->createFormBuilder()
             ->add('txtAnio', NumberType::class)

@@ -144,10 +144,10 @@ class TesMovimientoRepository extends ServiceEntityRepository
             }
         }
         $totalNeto = 0;
-        if($arDocumento->getNaturaleza() == 'D') {
+        if ($arDocumento->getNaturaleza() == 'D') {
             $totalNeto = $debito - $credito;
         }
-        if($arDocumento->getNaturaleza() == 'C') {
+        if ($arDocumento->getNaturaleza() == 'C') {
             $totalNeto = $credito - $debito;
         }
         $arMovimiento->setVrTotalNeto($totalNeto);
@@ -228,17 +228,17 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                     $error = true;
                                     break;
                                 }
-                                if($arCuenta->getExigeBase() && $arMovimientoDetalle->getVrBase() <= 0) {
+                                if ($arCuenta->getExigeBase() && $arMovimientoDetalle->getVrBase() <= 0) {
                                     Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " exige base no tiene");
                                     $error = true;
                                     break;
                                 }
-                                if($arCuenta->getExigeDocumentoReferencia() && $arMovimientoDetalle->getCodigoCuentaPagarFk() == null && $arMovimiento->getMovimientoClaseRel() == 'EG') {
+                                if ($arCuenta->getExigeDocumentoReferencia() && $arMovimientoDetalle->getCodigoCuentaPagarFk() == null && $arMovimiento->getMovimientoClaseRel() == 'EG') {
                                     Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " exige documento referencia y no lo tiene");
                                     $error = true;
                                     break;
                                 }
-                                if(!$arCuenta->getPermiteMovimiento()) {
+                                if (!$arCuenta->getPermiteMovimiento()) {
                                     Mensajes::error('En detalle ' . $arMovimientoDetalle->getCodigoMovimientoDetallePk() . " la cuenta no permite movimiento");
                                     $error = true;
                                     break;
@@ -333,29 +333,30 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
             $validarCuentaPagar = true;
             $arCuentaPagar = $em->getRepository(TesCuentaPagar::class)->findOneBy(['modelo' => "TesMovimiento", "codigoDocumento" => $arMovimiento->getCodigoMovimientoPk()]);
-            if ($arCuentaPagar->getVrAbono() <= 0) {
-                $arCuentaPagar->setEstadoAnulado(1);
-                $arCuentaPagar->setVrSubtotal(0);
-                $arCuentaPagar->setVrIva(0);
-                $arCuentaPagar->setVrRetencionFuente(0);
-                $arCuentaPagar->setVrRetencionIva(0);
-                $arCuentaPagar->setVrTotal(0);
-                $arCuentaPagar->setVrSaldo(0);
-                $arCuentaPagar->setVrSaldoOriginal(0);
-                $arCuentaPagar->setVrSaldoOperado(0);
-                $em->persist($arCuentaPagar);
-            } else {
-                Mensajes::error("La cuenta por pagar tiene abonos y no se puede anular");
-                $validarCuentaPagar = false;
+            if ($arCuentaPagar) {
+                if ($arCuentaPagar->getVrAbono() <= 0) {
+                    $arCuentaPagar->setEstadoAnulado(1);
+                    $arCuentaPagar->setVrSubtotal(0);
+                    $arCuentaPagar->setVrIva(0);
+                    $arCuentaPagar->setVrRetencionFuente(0);
+                    $arCuentaPagar->setVrRetencionIva(0);
+                    $arCuentaPagar->setVrTotal(0);
+                    $arCuentaPagar->setVrSaldo(0);
+                    $arCuentaPagar->setVrSaldoOriginal(0);
+                    $arCuentaPagar->setVrSaldoOperado(0);
+                    $em->persist($arCuentaPagar);
+                } else {
+                    Mensajes::error("La cuenta por pagar tiene abonos y no se puede anular");
+                    $validarCuentaPagar = false;
+                }
             }
-            if($validarCuentaPagar) {
+            if ($validarCuentaPagar) {
                 $em->flush();
             }
 
         } else {
             Mensajes::error("El documento debe estar aprobado y no puede estar contabilizado");
         }
-
     }
 
     public function registroContabilizar($codigo)
@@ -417,7 +418,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setCuentaRel($arCuenta);
                                             $arRegistro->setComprobanteRel($arComprobante);
                                             $arRegistro->setNumero($arMovimiento['numero']);
-                                            if($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
+                                            if ($arMovimiento['codigoMovimientoClaseFk'] == 'CP') {
                                                 $arRegistro->setNumeroReferencia($arMovimientoDetalle['numero']);
                                             } else {
                                                 $arRegistro->setNumeroReferencia($arMovimientoDetalle['numeroDocumento']);
@@ -435,7 +436,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                             $arRegistro->setDescripcion($descripcion);
                                             $arRegistro->setCodigoModeloFk('TesMovimiento');
                                             $arRegistro->setCodigoDocumento($arMovimiento['codigoMovimientoPk']);
-                                            if($arMovimientoDetalle['codigoCentroCostoFk']) {
+                                            if ($arMovimientoDetalle['codigoCentroCostoFk']) {
                                                 $arRegistro->setCentroCostoRel($em->getReference(FinCentroCosto::class, $arMovimientoDetalle['codigoCentroCostoFk']));
                                             }
                                             $em->persist($arRegistro);
@@ -488,7 +489,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                         $arRegistro->setCuentaRel($arCuenta);
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arMovimiento['numero']);
-                                        if($arCuenta->getExigeDocumentoReferencia()) {
+                                        if ($arCuenta->getExigeDocumentoReferencia()) {
                                             $arRegistro->setNumeroReferencia($arMovimiento['numeroDocumento']);
                                         }
                                         $arRegistro->setFecha($fecha);
@@ -518,7 +519,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
                                         $arRegistro->setCuentaRel($arCuenta);
                                         $arRegistro->setComprobanteRel($arComprobante);
                                         $arRegistro->setNumero($arMovimiento['numero']);
-                                        if($arCuenta->getExigeDocumentoReferencia()) {
+                                        if ($arCuenta->getExigeDocumentoReferencia()) {
                                             $arRegistro->setNumeroReferencia($arMovimiento['numeroDocumento']);
                                         }
                                         $arRegistro->setFecha($fecha);
@@ -602,8 +603,8 @@ class TesMovimientoRepository extends ServiceEntityRepository
         $codigoMovimientoDesde = null;
         $codigoMovimientoHasta = null;
         $codigoMovimientoClase = null;
-        $fechaDesde=null;
-        $fechaHasta=null;
+        $fechaDesde = null;
+        $fechaHasta = null;
         if ($arrDatos) {
             $codigoMovimientoPk = $arrDatos['codigoMovimientoPk'] ?? null;
             $codigoMovimientoDesde = $arrDatos['codigoMovimientoDesde'] ?? null;
@@ -635,7 +636,7 @@ class TesMovimientoRepository extends ServiceEntityRepository
             ->leftJoin('m.terceroRel', 'tl')
             ->leftJoin('m.cuentaRel', 'cu')
             ->leftJoin('cu.bancoRel', 'ba');
-        if($codigoMovimientoPk){
+        if ($codigoMovimientoPk) {
             $queryBuilder->where("m.codigoMovimientoPk = {$codigoMovimientoPk}");
         } else {
             if ($codigoMovimientoDesde) {
@@ -659,18 +660,19 @@ class TesMovimientoRepository extends ServiceEntityRepository
 
     }
 
-    public function validarNumero($codigoMovimiento, $codigoTercero, $numero) {
+    public function validarNumero($codigoMovimiento, $codigoTercero, $numero)
+    {
         $em = $this->getEntityManager();
         $validar = true;
         $queryBuilder = $em->createQueryBuilder()->from(TesMovimiento::class, 'm')
             ->select('m.codigoMovimientoPk')
             ->andWhere("m.codigoTerceroFk = " . $codigoTercero)
             ->andWhere("m.numeroDocumento = '{$numero}'");
-        if($codigoMovimiento) {
+        if ($codigoMovimiento) {
             $queryBuilder->andWhere("m.codigoMovimientoPk <> {$codigoMovimiento}");
         }
         $arMovimiento = $queryBuilder->getQuery()->getResult();
-        if($arMovimiento) {
+        if ($arMovimiento) {
             $validar = false;
         }
         return $validar;

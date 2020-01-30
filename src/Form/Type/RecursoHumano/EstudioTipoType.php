@@ -37,7 +37,7 @@ class EstudioTipoType extends AbstractType
             ->add('codigoEstudioTipoPk', TextType::class, array('required' => true, 'label'=>'Codigo'))
             ->add('nombre', TextType::class, array('required' => true, 'label'=>'nombre'))
             ->add('validarVencimiento', CheckboxType::class, array('required' => false))
-            ->add('guardar', SubmitType::class, ['attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -45,26 +45,6 @@ class EstudioTipoType extends AbstractType
         $resolver->setDefaults([
             'data_class' => RhuEstudioTipo::class,
         ]);
-    }
-
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoEstudioTipoPk", "tipo":"pk"   ,"ayuda":"Codigo del registro","titulo":"ID"},
-            {"campo":"nombre", "tipo":"texto"   ,"ayuda":"Tipo de embargo","titulo":"TIPO"},
-            {"campo":"validarVencimiento"                 ,"tipo":"bool"  ,"ayuda":"Validar vencimiento","titulo":"VALIDAR VENCIMIENTO"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoEstudioTipoPk", "tipo":"pk"   ,"ayuda":"Codigo del registro","titulo":"ID"},
-            {"campo":"nombre", "tipo":"texto"   ,"ayuda":"Tipo de embargo","titulo":"TIPO"},
-            {"campo":"validarVencimiento"                 ,"tipo":"bool"  ,"ayuda":"Validar vencimiento","titulo":"validarVencimiento"}
-        ]';
-        return $campos;
     }
 
 }

@@ -43,5 +43,67 @@ class RhuEstudioTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, RhuEstudioTipo::class);
     }
 
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
 
+        $codigo = null;
+        $nombre = null;
+        $validarVencimiento = null;
+
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+            $validarVencimiento = $filtros['validarVencimiento'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEstudioTipo::class, 'et')
+            ->select('et.codigoEstudioTipoPk')
+            ->addSelect('et.nombre')
+            ->addSelect('et.validarVencimiento');
+
+        if ($codigo) {
+            $queryBuilder->andWhere("et.codigoEstudioTipoPk = '{$codigo}'");
+        }
+
+        if($nombre){
+            $queryBuilder->andWhere("et.nombre LIKE '%{$nombre}%'");
+        }
+
+        switch ($validarVencimiento) {
+            case '0':
+                $queryBuilder->andWhere("et.validarVencimiento = 0");
+                break;
+            case '1':
+                $queryBuilder->andWhere("et.validarVencimiento = 1");
+                break;
+        }
+
+        $queryBuilder->addOrderBy('et.codigoEstudioTipoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrDetallesSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $arRegistro = $em->getRepository(RhuEstudioTipo::class)->find($codigo);
+                    if ($arRegistro) {
+                        $em->remove($arRegistro);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+                }
+            }
+        }else{
+            Mensajes::error("No existen registros para eliminar");
+        }
+    }
 }

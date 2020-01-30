@@ -1,42 +1,45 @@
 <?php
 
-namespace App\Controller\General\ejemploCrud;
+
+namespace App\Controller\RecursoHumano\Administracion\General;
+
 
 use App\Controller\MaestroController;
-
+use App\Entity\RecursoHumano\RhuEstudioTipo;
+use App\Form\Type\RecursoHumano\EstudioTipoType;
+use App\Utilidades\Mensajes;
+use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Utilidades\Mensajes;
-use Knp\Component\Pager\PaginatorInterface;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-class ejemploCrud  extends  MaestroController
+class EstudioTipoController extends  MaestroController
 {
     public $tipo = "administracion";
-    public $modelo = "TurItem";
-    public $entidad = TurItem::class;
+    public $modelo = "rhuEstudioTipo";
+    public $entidad = RhuEstudioTipo::class;
 
     /**
-     * @Route("/turno/administracion/venta/item/lista", name="turno_administracion_venta_item_lista")
+     * 	@Route("recursohumano/adminsitracion/general/estudioTipo/lista", name="recursohumano_administracion_general_estudioTipo_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
-        $session = new Session();
-        $raw = ['filtros'=> $session->get('filtroTurItem')];
         $form = $this->createFormBuilder()
-            ->add('codigo', TextType::class, array('required' => false, 'data'=>$raw['filtros']['codigo'] ))
-            ->add('nombre', TextType::class, array('required' => false, 'data'=>$raw['filtros']['nombre'] ))
+            ->add('codigo', TextType::class, array('required' => false ))
+            ->add('nombre', TextType::class, array('required' => false))
+            ->add('validarVencimiento', ChoiceType::class, ['choices' => ['TODOS' => '', 'SI' => '1', 'NO' => '0'], 'required' => false ])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
-        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
+        $raw = ['limiteRegistros'=> $form->get('limiteRegistros')->getData()] ;
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->filtros($form);
@@ -51,14 +54,14 @@ class ejemploCrud  extends  MaestroController
             }
         }
         $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('turno/administracion/comercial/item/lista.html.twig', [
+        return $this->render ('recursohumano/administracion/general/estudioTipo/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/turno/administracion/venta/item/nuevo/{id}", name="turno_administracion_venta_item_nuevo")
+     * 	@Route("recursohumano/adminsitracion/general/estudioTipo/nuevo/{id}", name="recursohumano_administracion_general_estudioTipo_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -67,30 +70,30 @@ class ejemploCrud  extends  MaestroController
         if ($id != 0) {
             $arRegistro = $em->getRepository($this->entidad)->find($id);
         }
-        $form = $this->createForm( ItemType::class, $arRegistro);
+        $form = $this->createForm( EstudioTipoType::class, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('turno_administracion_venta_item_detalle', array('id' => $arRegistro->getCodigoItemPk())));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_general_estudioTipo_detalle', array('id' => $arRegistro->getCodigoEstudioTipoPk())));
             }
         }
-        return $this->render('turno/administracion/comercial/item/nuevo.html.twig', [
+        return $this->render ('recursohumano/administracion/general/estudioTipo/nuevo.html.twig', [
             'form' => $form->createView(),
             'arRegistro' => $arRegistro
         ]);
     }
 
     /**
-     * @Route("/turno/administracion/comercial/item/detalle/{id}", name="turno_administracion_venta_item_detalle")
+     * 	@Route("recursohumano/adminsitracion/general/estudioTipo/detalle/{id}", name="recursohumano_administracion_general_estudioTipo_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->entidad)->find($id);
-        return $this->render('turno/administracion/comercial/item/detalle.html.twig', [
+        return $this->render ('recursohumano/administracion/general/estudioTipo/detalle.html.twig', [
             'arRegistro' => $arRegistro,
         ]);
     }
@@ -101,6 +104,7 @@ class ejemploCrud  extends  MaestroController
         $filtro = [
             'codigo' => $form->get('codigo')->getData(),
             'nombre' => $form->get('nombre')->getData(),
+            'validarVencimiento' => $form->get('validarVencimiento')->getData(),
         ];
         $session->set('filtroTurItem.', $filtro);
         return $filtro;
@@ -117,7 +121,7 @@ class ejemploCrud  extends  MaestroController
             $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
             $hoja->setTitle('Items');
             $j = 0;
-            $arrColumnas=['ID', 'NOMBRE', 'IVA', '%', 'IRTE'];
+            $arrColumnas=['ID', 'NOMBRE', 'VENCIMINETO'];
 
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
@@ -129,11 +133,9 @@ class ejemploCrud  extends  MaestroController
             $j = 2;
             foreach ($arRegistros as $arRegistro) {
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
-                $hoja->setCellValue('A' . $j, $arRegistro['codigoItemPk']);
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoEstudioTipoPk']);
                 $hoja->setCellValue('B' . $j, $arRegistro['nombre']);
-                $hoja->setCellValue('C' . $j, $arRegistro['codigoImpuestoIvaVentaFk']);
-                $hoja->setCellValue('D' . $j, $arRegistro['porcentajeIva']);
-                $hoja->setCellValue('E' . $j, $arRegistro['codigoImpuestoRetencionFk']);
+                $hoja->setCellValue('C' . $j, $arRegistro['validarVencimiento']);
                 $j++;
             }
             $libro->setActiveSheetIndex(0);

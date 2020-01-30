@@ -11,11 +11,11 @@
                 <div class="form-group form-group-sm">
                     <label class="col-sm-1 control-label">Código:</label>
                     <div class="col-sm-2">
-                        {{ form_widget(form.itemCodigo) }}
+                        {{ form_widget(form.codigo) }}
                     </div>
                     <label class="col-sm-1 control-label">Nombre:</label>
                     <div class="col-sm-2">
-                        {{ form_widget(form.itemNombre) }}
+                        {{ form_widget(form.nombre) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -42,25 +42,25 @@
         </tr>
         </thead>
         <tbody>
-        {% for arItem in arItems %}
+        {% for arRegistro in arRegistros %}
             <tr>
-                <td>{{ arItem.codigoItemPk }}</td>
-                <td>{{ arItem.nombre }}</td>
-                <td>{{ arItem.codigoImpuestoIvaVentaFk }}</td>
-                <td>{{ arItem.porcentajeIva }}</td>
-                <td>{{ arItem.codigoImpuestoRetencionFk }}</td>
+                <td>{{ arRegistro.codigoItemPk }}</td>
+                <td>{{ arRegistro.nombre }}</td>
+                <td>{{ arRegistro.codigoImpuestoIvaVentaFk }}</td>
+                <td>{{ arRegistro.porcentajeIva }}</td>
+                <td>{{ arRegistro.codigoImpuestoRetencionFk }}</td>
                 <td class="text-center">
-                    <a href="{{ path('turno_administracion_venta_item_nuevo',{'id': arItem.codigoItemPk  }) }}"><i
+                    <a href="{{ path('turno_administracion_venta_item_nuevo',{'id': arRegistro.codigoItemPk  }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td class="text-center">
-                    <a href="{{ path('turno_administracion_venta_item_detalle',{'id' : arItem.codigoItemPk  }) }}">
+                    <a href="{{ path('turno_administracion_venta_item_detalle',{'id' : arRegistro.codigoItemPk  }) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arItem.codigoItemPk }}"/>
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arRegistro.codigoItemPk }}"/>
                 </td>
             </tr>
         {% endfor %}
@@ -69,12 +69,11 @@
 
     <div class="btn-group" style="float: left">
         <div class="btn btn-default btn-sm">Registros
-            <span class="badge">{{ arItems.getTotalItemCount }}
-                </span>
+            <span class="badge">{{ arRegistros.getTotalItemCount }}</span>
         </div>
     </div>
     <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
-        {{ knp_pagination_render(arItems) }}
+        {{ knp_pagination_render(arRegistros) }}
     </div>
     <div class="btn-group btn-xs" style="float: left; width: 60px">
         {{ form_widget(form.limiteRegistros) }}

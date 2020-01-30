@@ -20,11 +20,11 @@ class TurItemRepository extends ServiceEntityRepository
     {
         $limiteRegistros = $raw['limiteRegistros'] ?? 100;
         $filtros = $raw['filtros'] ?? null;
-        $itemCodigo = null;
-        $itemNombre = null;
+        $codigo = null;
+        $nombre = null;
         if ($filtros) {
-            $itemCodigo = $filtros['itemCodigo'] ?? null;
-            $itemNombre = $filtros['itemNombre'] ?? null;
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
         }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurItem::class, 'i')
             ->select('i.codigoItemPk')
@@ -33,11 +33,11 @@ class TurItemRepository extends ServiceEntityRepository
             ->addSelect('i.porcentajeIva')
             ->addSelect('i.codigoImpuestoRetencionFk');
 
-        if ($itemCodigo) {
-            $queryBuilder->andWhere("i.codigoItemPk = '{$itemCodigo}'");
+        if ($codigo) {
+            $queryBuilder->andWhere("i.codigoItemPk = '{$codigo}'");
         }
-        if ($itemNombre) {
-            $queryBuilder->andWhere("i.nombre like '%{$itemNombre}%' ");
+        if ($nombre) {
+            $queryBuilder->andWhere("i.nombre like '%{$nombre}%' ");
         }
 
         $queryBuilder->addOrderBy('i.codigoItemPk', 'DESC');

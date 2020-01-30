@@ -368,7 +368,7 @@ class FacturaElectronica
                 $xml->endElement();
             $xml->endElement();
             $xml->writeElement('cbc:CustomizationID', '05');
-            $xml->writeElement('cbc:ProfileExecutionID', '2');
+            $xml->writeElement('cbc:ProfileExecutionID', $arrFactura['dat_tipoAmbiente']);
             $xml->writeElement('cbc:ID', $numero);
             $xml->startElement('cbc:UUID');
                 $xml->writeAttribute('schemeID', '2');

@@ -18,12 +18,12 @@ class ResolucionType extends AbstractType
     {
         $builder
             ->add('numero',TextType::class,['required' => true,'label' => 'Numero:'])
-            ->add('prefijo',TextType::class,['required' => true,'label' => 'Prefijo:'])
+            ->add('prefijo',TextType::class,['required' => false,'label' => 'Prefijo:'])
             ->add('numeroDesde',TextType::class,['required' => true,'label' => 'Numero desde:'])
             ->add('numeroHasta',TextType::class,['required' => true,'label' => 'Numero hasta:'])
-            ->add('claveTecnica',TextType::class,['required' => true,'label' => 'Llave tecnica:'])
-            ->add('setPruebas',TextType::class,['required' => true,'label' => 'Set pruebas:'])
-            ->add('pin',TextType::class,['required' => true,'label' => 'Pin:'])
+            ->add('claveTecnica',TextType::class,['required' => false,'label' => 'Llave tecnica:'])
+            ->add('setPruebas',TextType::class,['required' => false,'label' => 'Set pruebas:'])
+            ->add('pin',TextType::class,['required' => false,'label' => 'Pin:'])
             ->add('ambiente',TextType::class,['required' => true,'label' => 'Ambiente:'])
             ->add('prueba', CheckboxType::class, ['required' => false])
             ->add('estadoActivo', CheckboxType::class, ['required' => false])

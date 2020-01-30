@@ -322,6 +322,9 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
     public function terceroFinanciero($codigo)
     {
+        /**
+         * @var $arEmpleado RhuEmpleado
+         */
         $em = $this->getEntityManager();
         $arTercero = null;
         $arEmpleado = $em->getRepository(RhuEmpleado::class)->find($codigo);
@@ -331,9 +334,15 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
                 $arTercero = new FinTercero();
                 $arTercero->setIdentificacionRel($arEmpleado->getIdentificacionRel());
                 $arTercero->setNumeroIdentificacion($arEmpleado->getNumeroIdentificacion());
+                $arTercero->setCiudadRel($arEmpleado->getCiudadRel());
                 $arTercero->setNombreCorto($arEmpleado->getNombreCorto());
+                $arTercero->setNombre1($arEmpleado->getNombre1());
+                $arTercero->setNombre2($arEmpleado->getNombre2());
+                $arTercero->setApellido1($arEmpleado->getApellido1());
+                $arTercero->setApellido2($arEmpleado->getApellido2());
                 $arTercero->setDireccion($arEmpleado->getDireccion());
                 $arTercero->setTelefono($arEmpleado->getTelefono());
+                $arTercero->setCelular($arEmpleado->getCelular());
                 $em->persist($arTercero);
             }
         }
@@ -410,23 +419,23 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
 
     public function ValidarNumeroIdentificacion($arEmpleado)
     {
-        if ($arEmpleado){
-            if ($arEmpleado->getCodigoEmpleadoPK()){
+        if ($arEmpleado) {
+            if ($arEmpleado->getCodigoEmpleadoPK()) {
                 $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
                     ->select('e')
                     ->where("e.numeroIdentificacion = {$arEmpleado->getNumeroIdentificacion()}")
                     ->andWhere("e.codigoEmpleadoPk <> {$arEmpleado->getCodigoEmpleadoPK()}");
                 $arEmpleado = $queryBuilder->getQuery()->getResult();
             } else {
-                $arEmpleado = $this->_em->getRepository(RhuEmpleado::class)->findBy(['numeroIdentificacion'=>$arEmpleado->getNumeroIdentificacion()]);
+                $arEmpleado = $this->_em->getRepository(RhuEmpleado::class)->findBy(['numeroIdentificacion' => $arEmpleado->getNumeroIdentificacion()]);
             }
-            if (!$arEmpleado){
+            if (!$arEmpleado) {
                 return true;
-            }else{
+            } else {
                 Mensajes::error("Ya existe un empleado con número de identificación");
                 return false;
             }
-        }else{
+        } else {
             Mensajes::error("Es necesario un número de identificación");
             return false;
         }
@@ -440,18 +449,18 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         $filtros = $raw['filtros'] ?? null;
         $nombreCorto = null;
         $numeroIdentificacion = null;
-        if ($filtros){
-            $nombreCorto = $filtros['nombreCorto']??null;
-            $numeroIdentificacion = $filtros['numeroIdentificacion']??null;
+        if ($filtros) {
+            $nombreCorto = $filtros['nombreCorto'] ?? null;
+            $numeroIdentificacion = $filtros['numeroIdentificacion'] ?? null;
         }
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuEmpleado::class, 'e')
             ->select('e.codigoEmpleadoPk as value')
             ->addSelect("CONCAT(e.nombreCorto, ' ', e.numeroIdentificacion)  as label")
             ->orderBy('e.nombreCorto', 'ASC');
-        if($nombreCorto){
+        if ($nombreCorto) {
             $queryBuilder->orWhere("e.nombreCorto LIKE '%{$nombreCorto}%'");
         }
-        if($numeroIdentificacion){
+        if ($numeroIdentificacion) {
             $queryBuilder->orWhere("e.numeroIdentificacion LIKE '%{$numeroIdentificacion}%'");
         }
         $queryBuilder->addOrderBy('e.codigoEmpleadoPk', 'DESC');

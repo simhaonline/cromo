@@ -99,7 +99,12 @@ class Pago extends \FPDF
         $this->Cell(25, 4, "CARGO:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(50, 4, $arPago->getContratoRel()->getCargoRel()->getNombre() ? $arPago->getContratoRel()->getCargoRel()->getNombre() : '', 1, 0, 'L', 1);
+        if($arPago->getContratoRel()->getCargoRel()){
+            $this->Cell(50, 4, $arPago->getContratoRel()->getCargoRel()->getNombre() , 1, 0, 'L', 1);
+        }else{
+            $this->Cell(50, 4, "" , 1, 0, 'L', 1);
+
+        }
         $this->SetFont('Arial', 'B', 7);
         $this->SetFillColor(200, 200, 200);
         $this->Cell(30, 4, "DESDE:", 1, 0, 'L', 1);
@@ -111,7 +116,7 @@ class Pago extends \FPDF
         $this->Cell(25, 4, "PENSION:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 4, $arPago->getContratoRel()->getEntidadPensionRel() ? $arPago->getContratoRel()->getEntidadPensionRel()->getNombre() : '', 1, 0, 'L', 1);
+        $this->Cell(30, 4, $arPago->getContratoRel()->getEntidadPensionRel() ? $arPago->getContratoRel()->getEntidadPensionRel()->getNombreCorto() : '', 1, 0, 'L', 1);
 
 
         $this->SetXY(10, $intY + 12);
@@ -132,7 +137,7 @@ class Pago extends \FPDF
         $this->Cell(25, 4, "SALUD:", 1, 0, 'L', 1);
         $this->SetFont('Arial', '', 7);
         $this->SetFillColor(272, 272, 272);
-        $this->Cell(30, 4, $arPago->getContratoRel()->getEntidadSaludRel() ? $arPago->getContratoRel()->getEntidadSaludRel()->getNombre() : '', 1, 0, 'L', 1);
+        $this->Cell(30, 4, $arPago->getContratoRel()->getEntidadSaludRel() ? $arPago->getContratoRel()->getEntidadSaludRel()->getNombreCorto() : '', 1, 0, 'L', 1);
 
 
         $this->SetXY(10, $intY + 16);

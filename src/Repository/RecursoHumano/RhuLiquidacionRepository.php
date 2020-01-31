@@ -1399,7 +1399,7 @@ class RhuLiquidacionRepository extends ServiceEntityRepository
                     $arPago->setVrDevengado($devengado);
                     $arPago->setVrDeduccion($deduccion);
                     $arPago->setVrNeto($neto);
-                    $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arConfiguracion);
+                    $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arLiquidacion->getContratoRel(), $arConfiguracion);
                     $arLiquidacion->setEstadoAprobado(1);
                     $arLiquidacion->setFecha($arLiquidacion->getFechaHasta());
                     $em->persist($arLiquidacion);

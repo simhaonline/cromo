@@ -693,7 +693,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPago->setVrIngresoBasePrestacion($arrDatosGenerales['ingresoBasePrestacion']);
             $arPago->setVrIngresoBasePrestacionVacacion($arrDatosGenerales['ingresoBasePrestacionVacacion']);
             //Calcular provision
-            $this->liquidarProvision($arPago, $arConfiguracion);
+            $this->liquidarProvision($arPago, $arContrato, $arConfiguracion);
 
             $em->persist($arPago);
             $neto = $arrDatosGenerales['neto'];
@@ -1003,7 +1003,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPago->setVrIngresoBasePrestacion($arrDatosGenerales['ingresoBasePrestacion']);
             $arPago->setVrIngresoBasePrestacionVacacion($arrDatosGenerales['ingresoBasePrestacionVacacion']);
 
-            $this->liquidarProvision($arPago, $arConfiguracion);
+            $this->liquidarProvision($arPago, $arContrato, $arConfiguracion);
             $em->persist($arPago);
             $neto = $arrDatosGenerales['neto'];
         }
@@ -1218,7 +1218,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPago->setVrIngresoBasePrestacion($arrDatosGenerales['ingresoBasePrestacion']);
             $arPago->setVrIngresoBasePrestacionVacacion($arrDatosGenerales['ingresoBasePrestacionVacacion']);
 
-            $this->liquidarProvision($arPago, $arConfiguracion);
+            $this->liquidarProvision($arPago, $arContrato, $arConfiguracion);
             $em->persist($arPago);
             $neto = $arrDatosGenerales['neto'];
 
@@ -1327,7 +1327,7 @@ class RhuPagoRepository extends ServiceEntityRepository
             $arPago->setVrIngresoBasePrestacion($arrDatosGenerales['ingresoBasePrestacion']);
             $arPago->setVrIngresoBasePrestacionVacacion($arrDatosGenerales['ingresoBasePrestacionVacacion']);
 
-            $this->liquidarProvision($arPago, $arConfiguracion);
+            $this->liquidarProvision($arPago, $arContrato, $arConfiguracion);
             $em->persist($arPago);
             $neto = $arrDatosGenerales['neto'];
 
@@ -1683,12 +1683,19 @@ class RhuPagoRepository extends ServiceEntityRepository
         $arPagos = $queryBuilder->getQuery()->getResult();
         foreach ($arPagos as $arPago) {
             $arPago = $em->getRepository(RhuPago::class)->find($arPago['codigoPagoPk']);
-            $ingresoBasePrestacion = $arPago->getVrIngresoBasePrestacion();
-            $ingresoBasePrestacionVacacion = $arPago->getVrIngresoBasePrestacionVacacion();
-            $cesantia = ($ingresoBasePrestacion * $porcentajeCesantia) / 100; // Porcentaje 8.33
-            $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
-            $prima = ($ingresoBasePrestacion * $porcentajePrima) / 100; // 8.33
-            $vacacion = ($ingresoBasePrestacionVacacion * $porcentajeVacacion) / 100; // 5
+            $arContrato = $arPago->getContratoRel();
+            $cesantia = 0;
+            $interes = 0;
+            $prima = 0;
+            $vacacion = 0;
+            if($arContrato->getCodigoContratoClaseFk() != 'APR' && $arContrato->getCodigoContratoClaseFk() != 'PRA' && $arContrato->getCodigoContratoClaseFk() != 'PDS' && $arContrato->getSalarioIntegral() == 0) {
+                $ingresoBasePrestacion = $arPago->getVrIngresoBasePrestacion();
+                $ingresoBasePrestacionVacacion = $arPago->getVrIngresoBasePrestacionVacacion();
+                $cesantia = ($ingresoBasePrestacion * $porcentajeCesantia) / 100; // Porcentaje 8.33
+                $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
+                $prima = ($ingresoBasePrestacion * $porcentajePrima) / 100; // 8.33
+                $vacacion = ($ingresoBasePrestacionVacacion * $porcentajeVacacion) / 100; // 5
+            }
             $arPago->setVrCesantia($cesantia);
             $arPago->setVrInteres($interes);
             $arPago->setVrPrima($prima);
@@ -2367,24 +2374,27 @@ class RhuPagoRepository extends ServiceEntityRepository
 
     /**
      * @param $arPago RhuPago
+     * @param $arContrato RhuContrato
      * @param $arConfiguracion
      */
-    public function liquidarProvision($arPago, $arConfiguracion)
+    public function liquidarProvision($arPago, $arContrato, $arConfiguracion)
     {
-        $em = $this->getEntityManager();
-        $porcentajeCesantia = $arConfiguracion['provisionPorcentajeCesantia'];
-        $porcentajeInteres = $arConfiguracion['provisionPorcentajeInteres'];
-        $porcentajePrima = $arConfiguracion['provisionPorcentajePrima'];
-        $porcentajeVacacion = $arConfiguracion['provisionPorcentajeVacacion'];
-        $cesantia = ($arPago->getVrIngresoBasePrestacion() * $porcentajeCesantia) / 100; // Porcentaje 8.33
-        $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
-        $prima = ($arPago->getVrIngresoBasePrestacion() * $porcentajePrima) / 100; // 8.33
-        $vacacion = ($arPago->getVrIngresoBasePrestacionVacacion() * $porcentajeVacacion) / 100; // 5
-        $arPago->setVrCesantia($cesantia);
-        $arPago->setVrInteres($interes);
-        $arPago->setVrPrima($prima);
-        $arPago->setVrVacacion($vacacion);
+        if($arContrato->getCodigoContratoClaseFk() != 'APR' && $arContrato->getCodigoContratoClaseFk() != 'PRA' && $arContrato->getCodigoContratoClaseFk() != 'PDS' && $arContrato->getSalarioIntegral() == 0) {
+            $porcentajeCesantia = $arConfiguracion['provisionPorcentajeCesantia'];
+            $porcentajeInteres = $arConfiguracion['provisionPorcentajeInteres'];
+            $porcentajePrima = $arConfiguracion['provisionPorcentajePrima'];
+            $porcentajeVacacion = $arConfiguracion['provisionPorcentajeVacacion'];
 
+            $cesantia = ($arPago->getVrIngresoBasePrestacion() * $porcentajeCesantia) / 100; // Porcentaje 8.33
+            $interes = ($cesantia * $porcentajeInteres) / 100; // Porcentaje 1 sobre las cesantias
+            $prima = ($arPago->getVrIngresoBasePrestacion() * $porcentajePrima) / 100; // 8.33
+            $vacacion = ($arPago->getVrIngresoBasePrestacionVacacion() * $porcentajeVacacion) / 100; // 5
+
+            $arPago->setVrCesantia($cesantia);
+            $arPago->setVrInteres($interes);
+            $arPago->setVrPrima($prima);
+            $arPago->setVrVacacion($vacacion);
+        }
     }
 
     public function listaIbpSalario($fechaDesde, $fechaHasta, $codigoContrato)

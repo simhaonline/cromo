@@ -284,7 +284,7 @@ class RhuVacacionRepository extends ServiceEntityRepository
                     $arPago->setVrDevengado($devengado);
                     $arPago->setVrDeduccion($deduccion);
                     $arPago->setVrNeto($neto);
-                    $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arConfiguracion);
+                    $em->getRepository(RhuPago::class)->liquidarProvision($arPago, $arVacacion->getContratoRel(), $arConfiguracion);
 
                     if ($validar == '') {
                         $arVacacion->setFecha(new \DateTime('now'));

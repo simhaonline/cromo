@@ -9,6 +9,7 @@ use App\Entity\turno\turnoCliente;
 use App\Entity\Turno\TurPedidoTipo;
 use App\Form\Type\Turno\PedidoTipoType;
 use App\General\General;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,11 +33,10 @@ class PedidoTipoController extends MaestroController
     /**
      * @Route("/turno/administracion/comercial/pedidotipo/lista", name="turno_administracion_comercial_pedidotipo_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request,PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNombre', TextType::class, array('label'  => 'Nombre','data' => $session->get('filtroTurnoPedidoTipoNombre')))
             ->add('btnFiltrar', SubmitType::class, array('label'  => 'Filtrar'))

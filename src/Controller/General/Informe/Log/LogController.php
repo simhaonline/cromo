@@ -7,6 +7,7 @@ use App\Controller\Estructura\EntityListener;
 use App\Controller\MaestroController;
 use App\Entity\General\GenLog;
 use App\Entity\General\GenModelo;
+use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -42,10 +43,9 @@ class LogController extends MaestroController {
     /**
      * @Route("/general/informe/log/lista", name="general_informe_log_lista")
      */
-    public function lista(Request $request){
+    public function lista(Request $request,PaginatorInterface $paginator){
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $dateFecha = new \DateTime('now');
         $strFechaDesde = $dateFecha->format('Y/m/') . "01";
         $intUltimoDia = $strUltimoDiaMes = date("d", (mktime(0, 0, 0, $dateFecha->format('m') + 1, 1, $dateFecha->format('Y')) - 1));

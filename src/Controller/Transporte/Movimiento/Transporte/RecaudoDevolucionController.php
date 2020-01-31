@@ -73,11 +73,10 @@ class RecaudoDevolucionController extends MaestroController
     /**
      * @Route("/transporte/movimiento/transporte/recaudodevolucion/detalle/{id}", name="transporte_movimiento_transporte_recaudodevolucion_detalle")
      */
-    public function detalle(Request $request, $id)
+    public function detalle(Request $request,PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRecaudo = $em->getRepository(TteRecaudoDevolucion::class)->find($id);
-        $paginator  = $this->get('knp_paginator');
         $form = Estandares::botonera($arRecaudo->getEstadoAutorizado(),$arRecaudo->getEstadoAprobado(),$arRecaudo->getEstadoAnulado());
         $form->add('btnExcel', SubmitType::class, array('label' => 'Excel'));
         $arrBtnRetirar = ['label' => 'Retirar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];

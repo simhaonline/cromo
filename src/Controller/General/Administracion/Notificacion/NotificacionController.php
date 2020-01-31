@@ -4,6 +4,7 @@ namespace App\Controller\General\Administracion\Notificacion;
 
 use App\Controller\MaestroController;
 use App\Entity\General\GenNotificacion;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,11 +60,10 @@ class NotificacionController extends MaestroController
      * @param TokenStorageInterface $user
      * @Route("/general/administracion/notificacion/todasNotificaciones", name="general_administracion_notificacion__todasNotificaciones")
      */
-    public function todasNotificaciones(Request $request, TokenStorageInterface $user){
+    public function todasNotificaciones(Request $request, PaginatorInterface $paginator,TokenStorageInterface $user){
         $em=$this->getDoctrine()->getManager();
         $usuario=$user->getToken()->getUser();
         $arNotificacion=$em->getRepository('App:General\GenNotificacion')->lista($usuario->getUsername());
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('btnEliminar', SubmitType::class, ['label' => 'Eliminar', 'attr' => ['class' => 'btn btn-sm btn-danger']])
             ->getForm();

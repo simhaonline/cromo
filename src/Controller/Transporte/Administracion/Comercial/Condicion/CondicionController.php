@@ -12,6 +12,7 @@ use App\Entity\Transporte\TteDescuentoZona;
 use App\Form\Type\Transporte\CondicionType;
 use App\Form\Type\Transporte\CondicionFleteType;
 use App\Utilidades\Estandares;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,11 +37,10 @@ class CondicionController extends MaestroController
     /**
      * @Route("/transporte/administracion/comercial/condicion/lista", name="transporte_administracion_comercial_condicion_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator  = $this->get('knp_paginator');
         $form = $this->createFormBuilder()
             ->add('txtNombre', TextType::class, ['label' => 'Nombre: ', 'required' => false, 'data' => $session->get('filtroNombreCondicion')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])

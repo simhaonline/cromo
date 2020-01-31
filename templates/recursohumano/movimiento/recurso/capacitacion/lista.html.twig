@@ -57,15 +57,15 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>FECHA CAPACITACIÓN</th>
+            <th>FECHA</th>
             <th>TIPO</th>
-            <th>TEME</th>
+            <th>TEMA</th>
             <th>METODOLOGIA</th>
             <th>ZONA</th>
             <th>LUGAR</th>
             <th>PUESTO</th>
-            <th TITLE="Número personas capacitadas">N P C</th>
-            <th TITLE="Número personas asistieron">N P A</th>
+            <th TITLE="Número personas a capacitar">PAC</th>
+            <th TITLE="Número personas que asistieron">PQA</th>
             <th title="Estado autorizado">AUT</th>
             <th title="Estado aprobado">APR</th>
             <th title="Estado anulado">ANU</th>
@@ -80,10 +80,10 @@
                 <td>{{ arCapacitacion.fechaCapacitacion | date('Y-m-d') }}</td>
                 <td>{{ arCapacitacion.codigoCapacitacionTipoFk }}</td>
                 <td>{{ arCapacitacion.tema }}</td>
-                <td>{{ arCapacitacion.codigoCapacitacionMetodologiaFk }}</td>
-                <td>{{ arCapacitacion.codigoZonaFk }}</td>
+                <td>{{ arCapacitacion.metodologia }}</td>
+                <td>{{ arCapacitacion.zona }}</td>
                 <td>{{ arCapacitacion.lugar }}</td>
-                <td>{{ arCapacitacion.codigoPuestoFk }}</td>
+                <td>{{ arCapacitacion.puesto }}</td>
                 <td>{{ arCapacitacion.numeroPersonasCapacitar }}</td>
                 <td>{{ arCapacitacion.numeroPersonasAsistieron }}</td>
                 <td>{{ arCapacitacion.estadoAutorizado ? 'SI':'NO' }}</td>

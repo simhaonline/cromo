@@ -131,11 +131,6 @@ class SolicitudController extends MaestroController
     {
         $em = $this->getDoctrine()->getManager();
         $arSolicitud = $em->getRepository(RhuSolicitud::class)->find($id);
-        if ($id != 0) {
-            if (!$arSolicitud) {
-                return $this->redirect($this->generateUrl('recursohumano_movimiento_seleccion_solicitud_lista'));
-            }
-        }
         $arrGenerarSeleccion = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Generar seleccion', 'disabled' => false];
         if ($arSolicitud->getEstadoAprobado()) {
             $arrGenerarSeleccion['disabled'] = true;

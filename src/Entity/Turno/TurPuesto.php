@@ -268,6 +268,11 @@ class TurPuesto
     protected $puestosAdicionalesPuestoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacion", mappedBy="puestoRel")
+     */
+    protected $rhuCapacitacionesPuestoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoPuestoPk()
@@ -969,6 +974,22 @@ class TurPuesto
     public function setPuestosAdicionalesPuestoRel($puestosAdicionalesPuestoRel): void
     {
         $this->puestosAdicionalesPuestoRel = $puestosAdicionalesPuestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRhuCapacitacionesPuestoRel()
+    {
+        return $this->rhuCapacitacionesPuestoRel;
+    }
+
+    /**
+     * @param mixed $rhuCapacitacionesPuestoRel
+     */
+    public function setRhuCapacitacionesPuestoRel($rhuCapacitacionesPuestoRel): void
+    {
+        $this->rhuCapacitacionesPuestoRel = $rhuCapacitacionesPuestoRel;
     }
 
 

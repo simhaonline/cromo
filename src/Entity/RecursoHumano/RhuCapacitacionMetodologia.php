@@ -19,8 +19,7 @@ class RhuCapacitacionMetodologia
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_capacitacion_metodologia_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_capacitacion_metodologia_pk", type="string", length=10)
      */
     private $codigoCapacitacionMetodologiaPk;
 
@@ -28,6 +27,27 @@ class RhuCapacitacionMetodologia
      * @ORM\Column(name="nombre", type="string", length=60, nullable=true)
      */
     private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacion", mappedBy="capacitacionMetadologiaRel")
+     */
+    protected $capacitacionesCapacitacionMetodologiaRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -60,6 +80,23 @@ class RhuCapacitacionMetodologia
     {
         $this->nombre = $nombre;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionesCapacitacionMetodologiaRel()
+    {
+        return $this->capacitacionesCapacitacionMetodologiaRel;
+    }
+
+    /**
+     * @param mixed $capacitacionesCapacitacionMetodologiaRel
+     */
+    public function setCapacitacionesCapacitacionMetodologiaRel($capacitacionesCapacitacionMetodologiaRel): void
+    {
+        $this->capacitacionesCapacitacionMetodologiaRel = $capacitacionesCapacitacionMetodologiaRel;
+    }
+
 
 
 }

@@ -19,8 +19,7 @@ class RhuCapacitacionTipo
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_capacitacion_tipo_pk", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="codigo_capacitacion_tipo_pk", type="string", length=10)
      */
     private $codigoCapacitacionTipoPk;
 
@@ -28,6 +27,27 @@ class RhuCapacitacionTipo
      * @ORM\Column(name="nombre", type="string", length=200)
      */
     private $nombre;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacion", mappedBy="capacitacionTipoRel")
+     */
+    protected $capacitacionesCapacitacionTipoRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -60,6 +80,23 @@ class RhuCapacitacionTipo
     {
         $this->nombre = $nombre;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionesCapacitacionTipoRel()
+    {
+        return $this->capacitacionesCapacitacionTipoRel;
+    }
+
+    /**
+     * @param mixed $capacitacionesCapacitacionTipoRel
+     */
+    public function setCapacitacionesCapacitacionTipoRel($capacitacionesCapacitacionTipoRel): void
+    {
+        $this->capacitacionesCapacitacionTipoRel = $capacitacionesCapacitacionTipoRel;
+    }
+
 
 
 }

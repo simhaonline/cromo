@@ -243,6 +243,32 @@ class RhuEmpleadoRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function listaBuscarCapacitacion()
+    {
+        $session = new Session();
+        $queryBuilder = $this->_em->createQueryBuilder()->from(RhuEmpleado::class, 'e')
+            ->select('e.codigoEmpleadoPk')
+            ->addSelect('e.nombreCorto')
+            ->addSelect('e.numeroIdentificacion')
+            ->addSelect('e.estadoContrato')
+            ->addSelect('car.nombre as cargo')
+            ->addSelect('g.nombre AS grupo')
+            ->where('e.estadoContrato = 1')
+            ->leftJoin('e.contratoRel', 'c')
+            ->leftJoin('c.cargoRel', 'car')
+        ->leftJoin('c.grupoRel', 'g');
+        if ($session->get('filtroTurEmpleadoCodigo')) {
+            $queryBuilder->andWhere("e.codigoEmpleadoPk = {$session->get('filtroTurEmpleadoCodigo')}");
+        }
+        if ($session->get('filtroTurEmpleadoNombre')) {
+            $queryBuilder->andWhere("e.nombreCorto LIKE '%{$session->get('filtroTurEmpleadoNombre')}%'");
+        }
+        if ($session->get('filtroTurEmpleadoIdentificacion')) {
+            $queryBuilder->andWhere("e.numeroIdentificacion = '{$session->get('filtroTurEmpleadoIdentificacion')}' ");
+        }
+        return $queryBuilder;
+    }
+
     public function listaBuscarProgramacion()
     {
         $session = new Session();

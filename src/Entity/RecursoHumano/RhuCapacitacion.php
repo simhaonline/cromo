@@ -15,7 +15,7 @@ class RhuCapacitacion
 {
     public $infoLog = [
         "primaryKey" => "codigoCapacitacionPk",
-        "todos"     => true,
+        "todos" => true,
     ];
 
     /**
@@ -26,9 +26,19 @@ class RhuCapacitacion
     private $codigoCapacitacionPk;
 
     /**
-     * @ORM\Column(name="codigo_capacitacion_tipo_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_capacitacion_tipo_fk", type="string", length=10, nullable=true)
      */
     private $codigoCapacitacionTipoFk;
+
+    /**
+     * @ORM\Column(name="codigo_capacitacion_tema_fk", type="integer", nullable=true)
+     */
+    private $codigoCapacitacionTemaFk;
+
+    /**
+     * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
+     */
+    private $codigoPuestoFk;
 
     /**
      * @ORM\Column(name="fecha", type="date", nullable=true)
@@ -44,20 +54,6 @@ class RhuCapacitacion
      * @ORM\Column(name="usuario", type="string",length=80, nullable=true)
      */
     private $usuario;
-
-    /**
-     * @ORM\Column(name="tema", type="string", length=150, nullable=true)
-     * @Assert\Length(
-     *     max = 150,
-     *     maxMessage="El campo no puede contener mas de 150 caracteres"
-     * )
-     */
-    private $tema;
-
-    /**
-     * @ORM\Column(name="codigo_puesto_fk", type="integer", nullable=true)
-     */
-    private $codigoPuestoFk;
 
     /**
      * @ORM\Column(name="vr_capacitacion", type="float")
@@ -96,19 +92,11 @@ class RhuCapacitacion
 
     /**
      * @ORM\Column(name="lugar", type="string", length=150, nullable=true)
-     * @Assert\Length(
-     *     max = 150,
-     *     maxMessage="El campo no puede contener mas de 150 caracteres"
-     * )
      */
     private $lugar;
 
     /**
      * @ORM\Column(name="duracion", type="string", length=20, nullable=false)
-     * @Assert\Length(
-     *     max = 20,
-     *     maxMessage="El campo no puede tener mas de 20 caracteres"
-     * )
      */
     private $duracion;
 
@@ -118,20 +106,12 @@ class RhuCapacitacion
     private $objetivo;
 
     /**
-     * @ORM\Column(name="numero_identificacion_facilitador", type="string", length=20, nullable=false)
-     * @Assert\Length(
-     *     max = 20,
-     *     maxMessage="El campo no puede contener mas de 20 caracteres"
-     * )
+     * @ORM\Column(name="numero_identificacion_facilitador", type="string", length=20, nullable=true)
      */
     private $numeroIdentificacionFacilitador;
 
     /**
      * @ORM\Column(name="facilitador", type="string", length=100, nullable=true)
-     * @Assert\Length(
-     *     max = 100,
-     *     maxMessage="El campo no puede contener mas de 100 caracteres"
-     * )
      */
     private $facilitador;
 
@@ -141,14 +121,71 @@ class RhuCapacitacion
     private $codigoCiudadFk;
 
     /**
-     * @ORM\Column(name="codigo_capacitacion_metodologia_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_capacitacion_metodologia_fk", type="string", length=10, nullable=true)
      */
     private $codigoCapacitacionMetodologiaFk;
 
     /**
-     * @ORM\Column(name="codigo_zona_fk", type="integer", nullable=true)
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=10, nullable=true)
      */
     private $codigoZonaFk;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenCiudad", inversedBy="rhuSolicitudesCiudadRel")
+     * @ORM\JoinColumn(name="codigo_ciudad_fk", referencedColumnName="codigo_ciudad_pk")
+     */
+    protected $ciudadRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCapacitacionTipo", inversedBy="capacitacionesCapacitacionTipoRel")
+     * @ORM\JoinColumn(name="codigo_capacitacion_tipo_fk", referencedColumnName="codigo_capacitacion_tipo_pk")
+     */
+    protected $capacitacionTipoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCapacitacionTema", inversedBy="capacitacionesCapacitacionTemaRel")
+     * @ORM\JoinColumn(name="codigo_capacitacion_tema_fk", referencedColumnName="codigo_capacitacion_tema_pk")
+     */
+    protected $capacitacionTemaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCapacitacionMetodologia", inversedBy="capacitacionesCapacitacionMetodologiaRel")
+     * @ORM\JoinColumn(name="codigo_capacitacion_metodologia_fk", referencedColumnName="codigo_capacitacion_metodologia_pk")
+     */
+    protected $capacitacionMetadologiaRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurPuesto", inversedBy="rhuCapacitacionesPuestoRel")
+     * @ORM\JoinColumn(name="codigo_puesto_fk", referencedColumnName="codigo_puesto_pk")
+     */
+    protected $puestoRel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuZona", inversedBy="capacitacionesZonaRel")
+     * @ORM\JoinColumn(name="codigo_zona_fk", referencedColumnName="codigo_zona_pk")
+     */
+    protected $zonaRel;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacionDetalle", mappedBy="capacitacionRel")
+     */
+    protected $capacitacionesDetallesCapacitacionRel;
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
 
     /**
      * @return mixed
@@ -180,6 +217,38 @@ class RhuCapacitacion
     public function setCodigoCapacitacionTipoFk($codigoCapacitacionTipoFk): void
     {
         $this->codigoCapacitacionTipoFk = $codigoCapacitacionTipoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoCapacitacionTemaFk()
+    {
+        return $this->codigoCapacitacionTemaFk;
+    }
+
+    /**
+     * @param mixed $codigoCapacitacionTemaFk
+     */
+    public function setCodigoCapacitacionTemaFk($codigoCapacitacionTemaFk): void
+    {
+        $this->codigoCapacitacionTemaFk = $codigoCapacitacionTemaFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoPuestoFk()
+    {
+        return $this->codigoPuestoFk;
+    }
+
+    /**
+     * @param mixed $codigoPuestoFk
+     */
+    public function setCodigoPuestoFk($codigoPuestoFk): void
+    {
+        $this->codigoPuestoFk = $codigoPuestoFk;
     }
 
     /**
@@ -244,22 +313,6 @@ class RhuCapacitacion
     public function setTema($tema): void
     {
         $this->tema = $tema;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCodigoPuestoFk()
-    {
-        return $this->codigoPuestoFk;
-    }
-
-    /**
-     * @param mixed $codigoPuestoFk
-     */
-    public function setCodigoPuestoFk($codigoPuestoFk): void
-    {
-        $this->codigoPuestoFk = $codigoPuestoFk;
     }
 
     /**
@@ -501,5 +554,119 @@ class RhuCapacitacion
     {
         $this->codigoZonaFk = $codigoZonaFk;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCiudadRel()
+    {
+        return $this->ciudadRel;
+    }
+
+    /**
+     * @param mixed $ciudadRel
+     */
+    public function setCiudadRel($ciudadRel): void
+    {
+        $this->ciudadRel = $ciudadRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionTipoRel()
+    {
+        return $this->capacitacionTipoRel;
+    }
+
+    /**
+     * @param mixed $capacitacionTipoRel
+     */
+    public function setCapacitacionTipoRel($capacitacionTipoRel): void
+    {
+        $this->capacitacionTipoRel = $capacitacionTipoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionTemaRel()
+    {
+        return $this->capacitacionTemaRel;
+    }
+
+    /**
+     * @param mixed $capacitacionTemaRel
+     */
+    public function setCapacitacionTemaRel($capacitacionTemaRel): void
+    {
+        $this->capacitacionTemaRel = $capacitacionTemaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionMetadologiaRel()
+    {
+        return $this->capacitacionMetadologiaRel;
+    }
+
+    /**
+     * @param mixed $capacitacionMetadologiaRel
+     */
+    public function setCapacitacionMetadologiaRel($capacitacionMetadologiaRel): void
+    {
+        $this->capacitacionMetadologiaRel = $capacitacionMetadologiaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPuestoRel()
+    {
+        return $this->puestoRel;
+    }
+
+    /**
+     * @param mixed $puestoRel
+     */
+    public function setPuestoRel($puestoRel): void
+    {
+        $this->puestoRel = $puestoRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZonaRel()
+    {
+        return $this->zonaRel;
+    }
+
+    /**
+     * @param mixed $zonaRel
+     */
+    public function setZonaRel($zonaRel): void
+    {
+        $this->zonaRel = $zonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionesDetallesCapacitacionRel()
+    {
+        return $this->capacitacionesDetallesCapacitacionRel;
+    }
+
+    /**
+     * @param mixed $capacitacionesDetallesCapacitacionRel
+     */
+    public function setCapacitacionesDetallesCapacitacionRel($capacitacionesDetallesCapacitacionRel): void
+    {
+        $this->capacitacionesDetallesCapacitacionRel = $capacitacionesDetallesCapacitacionRel;
+    }
+
+
 
 }

@@ -562,6 +562,11 @@ class RhuEmpleado
     protected $cambiosSalariosEmpleadoRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacionDetalle", mappedBy="empleadoRel")
+     */
+    protected $capacitacionesDetallesEmpleadoRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoEmpleadoPk()
@@ -2127,6 +2132,38 @@ class RhuEmpleado
     public function setCambiosSalariosEmpleadoRel($cambiosSalariosEmpleadoRel): void
     {
         $this->cambiosSalariosEmpleadoRel = $cambiosSalariosEmpleadoRel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfoLog(): array
+    {
+        return $this->infoLog;
+    }
+
+    /**
+     * @param array $infoLog
+     */
+    public function setInfoLog(array $infoLog): void
+    {
+        $this->infoLog = $infoLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCapacitacionesDetallesEmpleadoRel()
+    {
+        return $this->capacitacionesDetallesEmpleadoRel;
+    }
+
+    /**
+     * @param mixed $capacitacionesDetallesEmpleadoRel
+     */
+    public function setCapacitacionesDetallesEmpleadoRel($capacitacionesDetallesEmpleadoRel): void
+    {
+        $this->capacitacionesDetallesEmpleadoRel = $capacitacionesDetallesEmpleadoRel;
     }
 
 

@@ -4,6 +4,7 @@
 namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuCapacitacion;
+use App\Entity\RecursoHumano\RhuCapacitacionDetalle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -43,17 +44,21 @@ class RhuCapacitacionRepository extends ServiceEntityRepository
             ->select('c.codigoCapacitacionPk')
             ->addSelect('c.fechaCapacitacion')
             ->addSelect('c.codigoCapacitacionTipoFk')
-            ->addSelect('c.tema')
-            ->addSelect('c.codigoCapacitacionMetodologiaFk')
-            ->addSelect('c.codigoZonaFk')
+            ->addSelect('cte.nombre AS tema')
+            ->addSelect('cm.nombre AS metodologia')
+            ->addSelect('z.nombre AS zona')
             ->addSelect('c.lugar')
-            ->addSelect('c.codigoPuestoFk')
+            ->addSelect('p.nombre AS puesto')
             ->addSelect('c.numeroPersonasCapacitar')
             ->addSelect('c.numeroPersonasAsistieron')
             ->addSelect('c.estadoAutorizado')
             ->addSelect('c.estadoAprobado')
-            ->addSelect('c.estadoAnulado');
-
+            ->addSelect('c.estadoAnulado')
+            ->leftJoin('c.capacitacionTemaRel', 'cte')
+            ->leftJoin('c.capacitacionTipoRel', 'ct')
+            ->leftJoin('c.capacitacionMetadologiaRel', 'cm')
+            ->leftJoin('c.zonaRel', 'z')
+            ->leftJoin('c.puestoRel', 'p');
         if ($codigoCapacitacion) {
             $queryBuilder->andWhere("c.codigoCapacitacionPk = '{$codigoCapacitacion}'");
         }
@@ -96,5 +101,14 @@ class RhuCapacitacionRepository extends ServiceEntityRepository
         $queryBuilder->addOrderBy('c.codigoCapacitacionPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function contarDetalles($codigoCapacitacion)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuCapacitacionDetalle::class, 'cd')
+            ->select("COUNT(cd.codigoCapacitacionDetallePk)")
+            ->where("cd.codigoCapacitacionFk = {$codigoCapacitacion} ");
+        $resultado = $queryBuilder->getQuery()->getSingleResult();
+        return $resultado[1];
     }
 }

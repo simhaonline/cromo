@@ -43,6 +43,11 @@ class RhuZona
     protected $seleccionesZonaRel;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacion", mappedBy="zonaRel")
+     */
+    protected $capacitacionesZonaRel;
+
+    /**
      * @return mixed
      */
     public function getCodigoZonaPk()
@@ -109,6 +114,22 @@ class RhuZona
     /**
      * @return mixed
      */
+    public function getSolicitudesZonaRel()
+    {
+        return $this->solicitudesZonaRel;
+    }
+
+    /**
+     * @param mixed $solicitudesZonaRel
+     */
+    public function setSolicitudesZonaRel($solicitudesZonaRel): void
+    {
+        $this->solicitudesZonaRel = $solicitudesZonaRel;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSeleccionesZonaRel()
     {
         return $this->seleccionesZonaRel;
@@ -125,17 +146,17 @@ class RhuZona
     /**
      * @return mixed
      */
-    public function getSolicitudesZonaRel()
+    public function getCapacitacionesZonaRel()
     {
-        return $this->solicitudesZonaRel;
+        return $this->capacitacionesZonaRel;
     }
 
     /**
-     * @param mixed $solicitudesZonaRel
+     * @param mixed $capacitacionesZonaRel
      */
-    public function setSolicitudesZonaRel($solicitudesZonaRel): void
+    public function setCapacitacionesZonaRel($capacitacionesZonaRel): void
     {
-        $this->solicitudesZonaRel = $solicitudesZonaRel;
+        $this->capacitacionesZonaRel = $capacitacionesZonaRel;
     }
 
 

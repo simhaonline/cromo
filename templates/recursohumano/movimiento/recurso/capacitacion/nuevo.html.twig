@@ -7,13 +7,13 @@
             <div class="form-group form-group-sm">
                 <label for="form_capacitacionTipoRel" class="col-sm-2 control-label">Tipo:</label>
                 <div class="col-sm-4">
-{#                    {{ form_widget(form.capacitacionTipoRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}#}
-{#                    {{ form_errors(form.capacitacionTipoRel) }}#}
+                    {{ form_widget(form.capacitacionTipoRel) }}
+                    {{ form_errors(form.capacitacionTipoRel) }}
                 </div>
                 <label for="form_ciudadRel" class="col-sm-1 control-label">Ciudad:</label>
                 <div class="col-sm-4">
-{#                    {{ form_widget(form.ciudadRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}#}
-{#                    {{ form_errors(form.ciudadRel) }}#}
+                    {{ form_widget(form.ciudadRel) }}
+                    {{ form_errors(form.ciudadRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -26,8 +26,8 @@
             <div class="form-group form-group-sm">
                 <label for="form_ciudadRel" class="col-sm-2 control-label">Puesto:</label>
                 <div class="col-sm-4">
-{#                    {{ form_widget(form.puestoRel, { 'attr': {'class': 'form-control to-select-2','autofocus':'autofocus'} }) }}#}
-{#                    {{ form_errors(form.puestoRel) }}#}
+                    {{ form_widget(form.puestoRel) }}
+                    {{ form_errors(form.puestoRel) }}
                 </div>
                 <label for="form_lugar" class="col-sm-1 control-label">Lugar:</label>
                 <div class="col-sm-4">
@@ -38,8 +38,8 @@
             <div class="form-group form-group-sm">
                 <label for="form_zonaRel" class="col-sm-2 control-label">Zona:</label>
                 <div class="col-sm-4">
-{#                    {{ form_widget(form.zonaRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}#}
-{#                    {{ form_errors(form.zonaRel) }}#}
+                    {{ form_widget(form.zonaRel) }}
+                    {{ form_errors(form.zonaRel) }}
                 </div>
                 <label for="form_duracion" class="col-sm-1 control-label">Duración:</label>
                 <div class="col-sm-4">
@@ -50,13 +50,13 @@
             <div class="form-group form-group-sm">
                 <label for="form_tema" class="col-sm-2 control-label">Tema:</label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.tema, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                    {{ form_errors(form.tema) }}
+                    {{ form_widget(form.capacitacionTemaRel) }}
+                    {{ form_errors(form.capacitacionTemaRel) }}
                 </div>
                 <label for="form_capacitacionMetodologiaRel" class="col-sm-1 control-label">Metodología:</label>
                 <div class="col-sm-4">
-{#                    {{ form_widget(form.capacitacionMetodologiaRel, { 'attr': {'class': 'form-control','autofocus':'autofocus'} }) }}#}
-{#                    {{ form_errors(form.capacitacionMetodologiaRel) }}#}
+                    {{ form_widget(form.capacitacionMetadologiaRel) }}
+                    {{ form_errors(form.capacitacionMetadologiaRel) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -99,7 +99,7 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm" style="float: left;"
-           href="{{ path('recursohumano_movimiento_recurso_capacitacion_lista') }}">Volver</a>
+           href="{{ path('recursohumano_movimiento_recurso_capacitacion_lista') }}">Cancelar</a>
         {{ form_widget(form.guardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
 {% endblock %}

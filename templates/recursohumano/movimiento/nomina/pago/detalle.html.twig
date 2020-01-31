@@ -10,6 +10,12 @@
             <a class="btn btn-default btn-sm" href="javascript:abrirVentana3('{{ path('recursohumano_movimiento_nomina_pago_programacion', { 'id': arPago.codigoPagoPk }) }}', 'VerTurnos', 500, 1200)">Turnos</a>
         </div>
     </div>
+    <div style="float:right">
+        {% if arPago.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arPago.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arPago.estadoContabilizado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arPago.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-informacion">
         <tr>

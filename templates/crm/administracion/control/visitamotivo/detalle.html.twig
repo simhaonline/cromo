@@ -3,7 +3,7 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('cartera_administracion_cuentacobrar_cuentacobrartipo_lista') }}">Volver</a> &nbsp;&nbsp;
+               href="{{ path('crm_administracion_control_visitamotivo_lista') }}">Volver</a> &nbsp;&nbsp;
         </div>
     </div>
     <br><br>
@@ -11,11 +11,9 @@
         <tbody>
         <tr>
             <td class="titulo">ID:</td>
-            <td class="td-in-well">{{ arRegistro.codigoCuentaCobrarTipoPk }}</td>
+            <td class="td-in-well">{{ arRegistro.codigoVisitaMotivoPk }}</td>
             <td class="titulo">NOMBRE:</td>
             <td class="td-in-well">{{ arRegistro.nombre }}</td>
-            <td class="titulo">SALDO INICIAL:</td>
-            <td class="td-in-well">{{ arRegistro.saldoInicial }}</td>
         </tr>
         </tbody>
     </table>

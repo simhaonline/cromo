@@ -7,8 +7,8 @@
             <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">Codigo </label>
                 <div class="col-sm-4">
-                    {{ form_widget(form.codigoCuentaCobrarTipoPk,{ 'attr' : {'class' : 'form-control'}}) }}
-                    <div style="color:red;">{{ form_errors(form.codigoCuentaCobrarTipoPk) }}</div>
+                    {{ form_widget(form.codigoVisitaMotivoPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoVisitaMotivoPk) }}</div>
                 </div>
                 <label class="col-sm-2 control-label">Nombre </label>
                 <div class="col-sm-4">
@@ -17,19 +17,11 @@
                 </div>
 
             </div>
-
-                <label class="col-sm-2 control-label">Saldo inicial </label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.saldoInicial,{ 'attr' : {'class' : 'form-control'}}) }}
-                    <div style="color:red;">{{ form_errors(form.saldoInicial) }}</div>
-                </div>
-
-            </div>
         </div>
     </div>
     <div class="modal-footer">
         <a class="btn btn-default btn-sm"
-           href="{{ path('cartera_administracion_cuentacobrar_cuentacobrartipo_lista') }}">Cancelar</a>
+           href="{{ path('crm_administracion_control_visitamotivo_lista') }}">Cancelar</a>
         {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
     </div>
     {{ form_end(form) }}

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Repository\Cartera;
+namespace App\Repository\Crm;
 
-use App\Entity\Cartera\CarCuentaCobrarTipo;
-use App\Entity\Transporte\TteGuiaTipo;
+use App\Entity\Crm\CrmVisitaMotivo;
+use App\Entity\Crm\CrmVisitaTipo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Session\Session;
 
-class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
+
+class CrmVisitaMotivoRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CarCuentaCobrarTipo::class);
+        parent::__construct($registry, CrmVisitaMotivo::class);
     }
 
 
@@ -30,19 +30,19 @@ class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
             $nombre = $filtros['nombre'] ?? null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrarTipo::class, 'ct')
-            ->select('ct.codigoCuentaCobrarTipoPk')
-            ->addSelect('ct.nombre')
-              ->addSelect('ct.saldoInicial');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CrmVisitaMotivo::class, 'vm')
+            ->select('vm.codigoVisitaMotivoPk')
+            ->addSelect('vm.nombre');
+
         if ($codigo) {
-            $queryBuilder->andWhere("ct.codigoCuentaCobrarTipoPk = '{$codigo}'");
+            $queryBuilder->andWhere("vm.codigoVisitaMotivoPk = '{$codigo}'");
         }
 
         if($nombre){
-            $queryBuilder->andWhere("ct.nombre LIKE '%{$nombre}%'");
+            $queryBuilder->andWhere("vm.nombre LIKE '%{$nombre}%'");
         }
 
-        $queryBuilder->addOrderBy('ct.codigoCuentaCobrarTipoPk', 'DESC');
+        $queryBuilder->addOrderBy('vm.codigoVisitaMotivoPk', 'DESC');
         $queryBuilder->setMaxResults($limiteRegistros);
         return $queryBuilder->getQuery()->getResult();
 
@@ -54,7 +54,7 @@ class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
         if ($arrDetallesSeleccionados) {
             if (count($arrDetallesSeleccionados)) {
                 foreach ($arrDetallesSeleccionados as $codigo) {
-                    $arRegistro = $em->getRepository(CarCuentaCobrarTipo::class)->find($codigo);
+                    $arRegistro = $em->getRepository(CrmVisitaMotivo::class)->find($codigo);
                     if ($arRegistro) {
                         $em->remove($arRegistro);
                     }
@@ -69,4 +69,5 @@ class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
             Mensajes::error("No existen registros para eliminar");
         }
     }
+
 }

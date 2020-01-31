@@ -1,23 +1,21 @@
 <?php
 
 
-namespace App\Controller\Cartera\Administracion\CuentaCobrar;
+namespace App\Controller\Crm\Administracion\Control;
 
 
 use App\Controller\MaestroController;
-use App\Entity\Cartera\CarAnticipoConcepto;
 use App\Entity\Cartera\CarAnticipoTipo;
-use App\Entity\Cartera\CarCuentaCobrarTipo;
 use App\Entity\Cartera\CarDescuentoConcepto;
 use App\Entity\Cartera\CarIngresoConcepto;
 use App\Entity\Cartera\CarReciboTipo;
+use App\Entity\Crm\CrmVisitaMotivo;
 use App\Entity\RecursoHumano\RhuExamenTipo;
-use App\Form\Type\Cartera\AnticipoConceptoType;
 use App\Form\Type\Cartera\AnticipoTipoType;
-use App\Form\Type\Cartera\CuentaCobrarTipoType;
 use App\Form\Type\Cartera\DescuentoConceptoType;
 use App\Form\Type\Cartera\IngresoConceptoType;
 use App\Form\Type\Cartera\ReciboTipoType;
+use App\Form\Type\Crm\VisitaMotivoType;
 use App\Form\Type\RecursoHumano\ExamenItemType;
 use App\Form\Type\RecursoHumano\ExamenTipoType;
 use App\General\General;
@@ -30,15 +28,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CuentaCobrarTipoController extends  MaestroController
+class VisitaMotivoController extends  MaestroController
 {
 
     public $tipo = "administracion";
-    public $modelo = "CarCuentaCobrarTipo";
-    public $entidad = CarCuentaCobrarTipo::class;
+    public $modelo = "CrmVisitaMotivo";
+    public $entidad = CrmVisitaMotivo::class;
 
     /**
-     * @Route("/cartera/administracion/cuentacobrar/cuentacobrartipo/lista", name="cartera_administracion_cuentacobrar_cuentacobrartipo_lista")
+     * @Route("/crm/administracion/control/visitamotivo/lista", name="crm_administracion_control_visitamotivo_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator )
     {
@@ -46,7 +44,6 @@ class CuentaCobrarTipoController extends  MaestroController
         $form = $this->createFormBuilder()
             ->add('codigo', TextType::class, array('required' => false ))
             ->add('nombre', TextType::class, array('required' => false ))
-            ->add('saldoInicial', TextType::class, array('required' => false ))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -64,18 +61,18 @@ class CuentaCobrarTipoController extends  MaestroController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arRegistros = $em->getRepository($this->entidad)->lista($raw);
-                $this->excelLista($arRegistros, "cuentacobrartipo");
+                $this->excelLista($arRegistros, "visitamotivo");
             }
         }
         $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('cartera/administracion/cuentacobrar/cuentacobrartipo/lista.html.twig', [
+        return $this->render('crm/administracion/control/visitamotivo/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     *  @Route("/cartera/administracion/cuentacobrar/cuentacobrartipo/nuevo/{id}", name="cartera_administracion_cuentacobrar_cuentacobrartipo_nuevo")
+     *  @Route("/crm/administracion/control/visitamotivo/nuevo/{id}", name="crm_administracion_control_visitamotivo_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -84,31 +81,31 @@ class CuentaCobrarTipoController extends  MaestroController
         if ($id != 0 ||  $id != "") {
             $arRegistro = $em->getRepository($this->entidad)->find($id);
         }
-        $form = $this->createForm( CuentaCobrarTipoType::class, $arRegistro);
+        $form = $this->createForm( VisitaMotivoType::class, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('cartera_administracion_cuentacobrar_cuentacobrartipo_detalle', array('id' => $arRegistro->getcodigoCuentaCobrarTipoPk())));
+                return $this->redirect($this->generateUrl('crm_administracion_control_visitamotivo_detalle', array('id' => $arRegistro->getcodigoVisitaMotivoPk())));
             }
         }
-        return $this->render('cartera/administracion/cuentacobrar/cuentacobrartipo/nuevo.html.twig', [
+        return $this->render('crm/administracion/control/visitamotivo/nuevo.html.twig', [
             'form' => $form->createView(),
             'arRegistro' => $arRegistro
         ]);
     }
 
     /**
-     *  @Route("/cartera/administracion/cuentacobrar/cuentacobrartipo/detalle/{id}", name="cartera_administracion_cuentacobrar_cuentacobrartipo_detalle")
+     *  @Route("/crm/administracion/control/visitamotivo/detalle/{id}", name="crm_administracion_control_visitamotivo_detalle")
 
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->entidad)->find($id);
-        return $this->render('cartera/administracion/cuentacobrar/cuentacobrartipo/detalle.html.twig', [
+        return $this->render('crm/administracion/control/visitamotivo/detalle.html.twig', [
 
             'arRegistro' => $arRegistro,
         ]);
@@ -119,7 +116,6 @@ class CuentaCobrarTipoController extends  MaestroController
         $filtro = [
             'codigo' => $form->get('codigo')->getData(),
             'nombre' => $form->get('nombre')->getData(),
-            'saldoinicial' => $form->get('saldoInicial')->getData(),
         ];
         return $filtro;
 
@@ -147,7 +143,7 @@ class CuentaCobrarTipoController extends  MaestroController
             $j = 2;
             foreach ($arRegistros as $arRegistro) {
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
-                $hoja->setCellValue('A' . $j, $arRegistro['codigoCuentaCobrarTipoPk']);
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoVisitaMotivoPk']);
                 $hoja->setCellValue('B' . $j, $arRegistro['nombre']);
 
                 $j++;

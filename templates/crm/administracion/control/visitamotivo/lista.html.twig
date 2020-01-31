@@ -18,13 +18,7 @@
                         <div class="col-sm-4">
                             {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                    </div>
-                    <div class="form-group form-group-sm">
 
-                    <label class="col-sm-2 control-label">Saldo inicial</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.saldoInicial, { 'attr': {'class': 'form-control'} }) }}
-                        </div>
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -40,7 +34,6 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
-            <th>SALDO INICIAL</th>
             <th></th>
             <th></th>
             <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos" onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')"> </th>
@@ -49,21 +42,20 @@
         <tbody>
         {% for arRegistro in arRegistros %}
             <tr>
-                <td>{{ arRegistro.codigoCuentaCobrarTipoPk }}</td>
+                <td>{{ arRegistro.codigoVisitaMotivoPk}}</td>
                 <td>{{ arRegistro.nombre }}</td>
-                <td class="numero">{{ arRegistro.saldoInicial | number_format(0, '.', ',')  }}</td>
                 <td class="text-center">
-                    <a href="{{ path('cartera_administracion_cuentacobrar_cuentacobrartipo_nuevo',{'id': arRegistro.codigoCuentaCobrarTipoPk }) }}"><i
+                    <a href="{{ path('crm_administracion_control_visitamotivo_nuevo',{'id': arRegistro.codigoVisitaMotivoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('cartera_administracion_cuentacobrar_cuentacobrartipo_detalle',{'id' : arRegistro.codigoCuentaCobrarTipoPk}) }}">
+                    <a href="{{ path('crm_administracion_control_visitamotivo_detalle',{'id' : arRegistro.codigoVisitaMotivoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arRegistro.codigoCuentaCobrarTipoPk }}"/>
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arRegistro.codigoVisitaMotivoPk }}"/>
                 </td>
             </tr>
         {% endfor %}
@@ -88,7 +80,7 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('cartera_administracion_cuentacobrar_cuentacobrartipo_nuevo',{'id':0}) }}">Nuevo</a>
+           href="{{ path('crm_administracion_control_visitamotivo_nuevo',{'id':0}) }}">Nuevo</a>
     </div>
     <br><br><br>
     {{ form_end(form) }}

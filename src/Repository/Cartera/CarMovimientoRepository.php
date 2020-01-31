@@ -84,10 +84,10 @@ class CarMovimientoRepository extends ServiceEntityRepository
             $queryBuilder->andWhere("i.numero = '{$numero}'");
         }
         if ($fechaDesde) {
-            $queryBuilder->andWhere("i.fecha >= '{$fechaDesde} 00:00:00'");
+            $queryBuilder->andWhere("i.fecha >= '{$fechaDesde}'");
         }
         if ($fechaHasta) {
-            $queryBuilder->andWhere("i.fecha <= '{$fechaHasta} 23:59:59'");
+            $queryBuilder->andWhere("i.fecha <= '{$fechaHasta}'");
         }
         switch ($estadoAutorizado) {
             case '0':

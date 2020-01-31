@@ -32,6 +32,11 @@ class GenModelo
     private $codigoGrupoFk;
 
     /**
+     * @ORM\Column(name="descontinuado", type="boolean", options={"default" : false}, nullable=true)
+     */
+    private $descontinuado = false;
+
+    /**
      * @return mixed
      */
     public function getCodigoModeloPk()
@@ -93,6 +98,22 @@ class GenModelo
     public function setCodigoGrupoFk($codigoGrupoFk): void
     {
         $this->codigoGrupoFk = $codigoGrupoFk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescontinuado()
+    {
+        return $this->descontinuado;
+    }
+
+    /**
+     * @param mixed $descontinuado
+     */
+    public function setDescontinuado($descontinuado): void
+    {
+        $this->descontinuado = $descontinuado;
     }
 
 

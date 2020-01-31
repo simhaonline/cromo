@@ -225,6 +225,7 @@ class GenModelo extends Fixture
                 $arModelo->setCodigoModuloFk($arrModelo['modulo']);
                 $arModelo->setCodigoFuncionFk($arrModelo['funcion']);
                 $arModelo->setCodigoGrupoFk($arrModelo['grupo']);
+                $arModelo->setDescontinuado($arrModelo['descontinuado']);
                 $manager->persist($arModelo);
             }
         }

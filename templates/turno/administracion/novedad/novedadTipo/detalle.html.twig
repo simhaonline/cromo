@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_novedad_novedadTipo_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+            <tr>
+                <td class="titulo">ID:</td>
+                <td class="td-in-well">{{ arRegistro.codigoNovedadTipoPk }}</td>
+                <td class="titulo">NOMBRE:</td>
+                <td class="td-in-well">{{ arRegistro.nombre }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">LICENCIA:</td>
+                <td class="td-in-well">{{ arRegistro.estadoLicencia?"SI":"NO" }}</td>
+                <td class="titulo">INCAPACIDAD:</td>
+                <td class="td-in-well">{{ arRegistro.estadoIncapacidad?"SI":"NO" }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">INGRESO:</td>
+                <td class="td-in-well">{{ arRegistro.estadoIngreso?"SI":"NO" }}</td>
+                <td class="titulo">RETIRO:</td>
+                <td class="td-in-well">{{ arRegistro.estadoRetiro?"SI":"NO" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

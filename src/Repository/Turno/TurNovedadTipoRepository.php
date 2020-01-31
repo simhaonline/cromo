@@ -32,7 +32,13 @@ class TurNovedadTipoRepository  extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurNovedadTipo::class, 'nt')
             ->select('nt.codigoNovedadTipoPk')
-            ->addSelect('nt.nombre');
+            ->addSelect('nt.nombre')
+            ->addSelect('nt.estadoLicencia')
+            ->addSelect('nt.estadoIncapacidad')
+            ->addSelect('nt.estadoIngreso')
+            ->addSelect('nt.estadoRetiro')
+            ->addSelect('nt.estadoRetiro')
+        ;
         if ($codigoNovedadTipo) {
             $queryBuilder->andWhere("nt.codigoIncidentePk = '{$codigoNovedadTipo}'");
         }

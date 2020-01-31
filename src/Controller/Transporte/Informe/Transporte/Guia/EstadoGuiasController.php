@@ -85,7 +85,7 @@ class EstadoGuiasController extends MaestroController
                     if($raw['filtros']['fechaDesde'] && $raw['filtros']['fechaHasta'] && $raw['filtros']['codigoCliente']) {
                         $arrGuias = $em->getRepository(TteGuia::class)->estadoGuia()->getQuery()->getResult();
                         $arrNovedades = $em->getRepository(TteNovedad::class)->fechaGuia($raw);
-                        $this->exportarExcel($arrGuias, $arrNovedades);
+                        $this->excelLista($arrGuias, $arrNovedades);
                     } else {
                         Mensajes::error("Debe seleccionar las fechas y el cliente");
                     }
@@ -130,7 +130,7 @@ class EstadoGuiasController extends MaestroController
             'form' => $form->createView()]);
     }
 
-    public function exportarExcel1($arrGuias, $arrNovedades) {
+    public function excelLista($arrGuias, $arrNovedades) {
         set_time_limit(0);
         ini_set("memory_limit", -1);
         if ($arrGuias) {

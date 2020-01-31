@@ -315,13 +315,16 @@ class CarMovimientoRepository extends ServiceEntityRepository
                     }
                     $arMovimientoDetalle->setVrPago(0);
                     $arMovimientoDetalle->setVrRetencion(0);
+                    $arMovimientoDetalle->setVrBase(0);
+                    $em->persist($arMovimientoDetalle);
+
                 }
                 $arMovimiento->setVrRetencion(0);
                 $arMovimiento->setVrTotalBruto(0);
-                $arMovimiento->setVrTotalBruto(0);
+                $arMovimiento->setVrTotalNeto(0);
                 $arMovimiento->setEstadoAnulado(1);
-                $this->_em->persist($arMovimiento);
-                $this->_em->flush();
+                $em->persist($arMovimiento);
+                $em->flush();
             }
         } else {
             $respuesta = "El registro se encuentra contabilizado";

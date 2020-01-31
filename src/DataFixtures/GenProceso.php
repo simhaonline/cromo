@@ -180,7 +180,7 @@ class GenProceso extends Fixture
             ['codigo' => 'tesu0001',          'modulo' => 'General',               'tipo' => 'u',           'grupo' => 'Movimiento',           'nombre' => 'Imprimir movimiento masivo'],
             ['codigo' => 'tesi0001',          'modulo' => 'General',               'tipo' => 'i',           'grupo' => 'Cuenta pagar',         'nombre' => 'Pendientes'],
 
-            ['codigo' => 'geni0001',          'modulo' => 'General',               'tipo' => 'i',           'grupo' => 'Log',                  'nombre' => 'General'],
+
 
         );
         $arrProcesos = array(

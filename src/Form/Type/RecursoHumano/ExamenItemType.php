@@ -20,9 +20,9 @@ class ExamenItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add("codigoExamenItemPk", TextType::class, ['required'=>true, 'label'=>'nombre'])
             ->add("nombre", TextType::class, ['required'=>true, 'label'=>'nombre'])
-            ->add('ingreso', CheckboxType::class, array('required'  => false))
-            ->add('guardar', SubmitType::class);
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -31,24 +31,5 @@ class ExamenItemType extends AbstractType
             'data_class' => RhuExamenItem::class,
         ]);
     }
-
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoExamenItemPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",        "tipo":"nombre",   "ayuda":"nombre",    "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoExamenItemPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",        "tipo":"nombre",   "ayuda":"nombre",    "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
-
 
 }

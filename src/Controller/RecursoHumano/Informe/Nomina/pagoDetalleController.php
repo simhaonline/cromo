@@ -6,6 +6,7 @@ namespace App\Controller\RecursoHumano\Informe\Nomina;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\Estructura\FuncionesController;
+use App\Controller\MaestroController;
 use App\Entity\General\GenModulo;
 use App\Entity\RecursoHumano\RhuConcepto;
 use App\Entity\RecursoHumano\RhuPagoDetalle;
@@ -13,6 +14,7 @@ use App\Entity\RecursoHumano\RhuPagoTipo;
 use App\Entity\RecursoHumano\RhuRequisito;
 use App\General\General;
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -25,8 +27,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class pagoDetalleController extends Controller
+class pagoDetalleController extends MaestroController
 {
+    public $tipo = "informe";
+    public $proceso = "rhui0004";
+
+
 
     /**
      * @param Request $request
@@ -35,11 +41,11 @@ class pagoDetalleController extends Controller
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/recursohumano/informe/nomina/pagodetalle/lista", name="recursohumano_informe_nomina_pagodetalle_lista")
      */
-    public function lista(Request $request)
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
+
         $form = $this->createFormBuilder()
             ->add('codigoEmpleadoFk', TextType::class, ['required' => false])
             ->add('codigoContratoFk', TextType::class, ['required' => false])

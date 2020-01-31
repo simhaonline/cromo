@@ -15,26 +15,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AnticipoTipoType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoAnticipoTipoPk', TextType::class, ['label'=> 'Codigo anticipo tipo pk', 'required' => true])
-            ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
-            ->add('cuentaCobrarTipoRel',EntityType::class,[
-                'class' => 'App\Entity\Cartera\CarCuentaCobrarTipo',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('cct')
-                        ->orderBy('cct.nombre', 'ASC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Cuenta cobrar tipo:',
-                'required' => true
-            ])
-            ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
-            ->add('orden', IntegerType::class, ['label' => 'Orden', 'required' => true])
-            ->add('codigoComprobanteFk', TextType::class, ['label' => 'Comprobante:','required' => false])
-            ->add('prefijo', TextType::class, ['label' => 'Prefijo:','required' => false])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add("codigoAnticipoTipoPk", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add("nombre", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -14,9 +14,9 @@ class AnticipoConceptoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoAnticipoConceptoPk', TextType::class, ['label'=> 'Codigo concepto pk', 'required' => true])
-            ->add('nombre', TextType::class, ['label' => 'Nombre', 'required' => true])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add("codigoAnticipoConceptoPk", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add("nombre", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 

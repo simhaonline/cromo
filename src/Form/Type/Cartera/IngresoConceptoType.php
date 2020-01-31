@@ -2,6 +2,7 @@
 
 namespace App\Form\Type\Cartera;
 
+use App\Entity\Cartera\CarIngresoConcepto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,33 +12,23 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-class IngresoConceptoType extends AbstractType {
+class IngresoConceptoType extends AbstractType
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+{
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
-            ->add('codigoIngresoConceptoPk', TextType::class, array('label' => 'Codigo:', 'required' => true))
-            ->add('nombre', TextType::class, array('label' => 'Nombre:','required' => true))
-            ->add('codigoCuentaFk', TextType::class, array('label' => 'Cuenta:','required' => true))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']));
+            ->add("codigoIngresoConceptoPk", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add("nombre", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Cartera\CarIngresoConcepto'
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix() {
-        return 'App_cartera';
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => CarIngresoConcepto::class,
+        ]);
     }
 
 }

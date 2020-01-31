@@ -16,78 +16,57 @@ class CarCuentaCobrarTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, CarCuentaCobrarTipo::class);
     }
 
-    public function lista(): array
-    {
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from(CarCuentaCobrarTipo::class, 'cct');
-        $qb->select('cct.codigoCuentaCobrarTipoPk')
-            ->addSelect('cct.nombre')
-            ->addSelect('cct.codigoCuentaClienteFk')
-            ->addSelect('cct.codigoCuentaRetencionFuenteFk')
-            ->addSelect('cct.codigoCuentaRetencionIcaFk')
-            ->addSelect('cct.codigoCuentaRetencionIvaFk')
-            ->addSelect('cct.tipoCuentaCliente')
-            ->where('cct.codigoCuentaCobrarTipoPk <> 0')
-            ->orderBy('cct.codigoCuentaCobrarTipoPk', 'DESC');
-        $query = $qb->getDQL();
-        $query = $em->createQuery($query);
 
-        return $query->execute();
+    public function  lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigo = null;
+        $nombre = null;
+
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(CarCuentaCobrarTipo::class, 'ct')
+            ->select('ct.codigoCuentaCobrarTipoPk')
+            ->addSelect('ct.nombre');
+
+        if ($codigo) {
+            $queryBuilder->andWhere("ct.codigoCuentaCobrarTipoPk = '{$codigo}'");
+        }
+
+        if($nombre){
+            $queryBuilder->andWhere("ct.nombre LIKE '%{$nombre}%'");
+        }
+
+        $queryBuilder->addOrderBy('ct.codigoCuentaCobrarTipoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+
     }
 
-    public function eliminar($arrSeleccionados)
+    public function eliminar($arrDetallesSeleccionados)
     {
-        $respuesta = '';
         $em = $this->getEntityManager();
-        if ($arrSeleccionados) {
-            foreach ($arrSeleccionados AS $codigo) {
-                $ar = $em->getRepository(CarCuentaCobrarTipo::class)->find($codigo);
-                if ($ar) {
-                    $em->remove($ar);
+        if ($arrDetallesSeleccionados) {
+            if (count($arrDetallesSeleccionados)) {
+                foreach ($arrDetallesSeleccionados as $codigo) {
+                    $arRegistro = $em->getRepository(CarCuentaCobrarTipo::class)->find($codigo);
+                    if ($arRegistro) {
+                        $em->remove($arRegistro);
+                    }
+                }
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
                 }
             }
-            try {
-                $em->flush();
-            } catch (\Exception $exception) {
-                $respuesta = 'No se puede eliminar, el registro esta siendo utilizado en el sistema';
-            }
+        }else{
+            Mensajes::error("No existen registros para eliminar");
         }
-        return $respuesta;
-    }
-
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function llenarCombo()
-    {
-        $session = new Session();
-        $array = [
-            'class' => CarCuentaCobrarTipo::class,
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('cc')
-                    ->orderBy('cc.nombre', 'ASC');
-            },
-            'choice_label' => 'nombre',
-            'required' => false,
-            'empty_data' => "",
-            'placeholder' => "TODOS",
-            'data' => ""
-        ];
-        if ($session->get('filtroCarCuentaCobrarTipo')) {
-            $array['data'] = $this->getEntityManager()->getReference(CarCuentaCobrarTipo::class, $session->get('filtroCarCuentaCobrarTipo'));
-        }
-        return $array;
-    }
-    /*
-    * se creo esta función para cumplir las necesidad del caso 30
-     * att andres
-    */
-    public function selectCodigoNombre()
-    {
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder()->from(CarCuentaCobrarTipo::class, 'cct');
-        $qb->select('cct.codigoCuentaCobrarTipoPk')
-            ->addSelect('cct.nombre');
-        return $qb->getQuery()->getResult();
     }
 }

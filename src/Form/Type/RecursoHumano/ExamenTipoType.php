@@ -22,7 +22,7 @@ class ExamenTipoType extends AbstractType
         $builder
             ->add("nombre", TextType::class, ['required'=>true, 'label'=>'nombre'])
             ->add('ingreso', CheckboxType::class, array('required'  => false))
-            ->add('guardar', SubmitType::class);
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -32,25 +32,25 @@ class ExamenTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoExamenTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",        "tipo":"nombre",   "ayuda":"nombre",    "titulo":"NOMBRE"},
-            {"campo":"ingreso",    "tipo":"bool",  "ayuda":"Remunerada",    "titulo":"INGRESO"}
-        ]';
-        return $campos;
-    }
+//    public function getEstructuraPropiedadesLista()
+//    {
+//        $campos = '[
+//            {"campo":"codigoExamenTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+//            {"campo":"nombre",        "tipo":"nombre",   "ayuda":"nombre",    "titulo":"NOMBRE"},
+//            {"campo":"ingreso",    "tipo":"bool",  "ayuda":"Remunerada",    "titulo":"INGRESO"}
+//        ]';
+//        return $campos;
+//    }
 
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoExamenTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
-            {"campo":"nombre",        "tipo":"nombre",   "ayuda":"nombre",    "titulo":"NOMBRE"},
-            {"campo":"ingreso",    "tipo":"bool",  "ayuda":"Ingreso",    "titulo":"INGRESO"}
-        ]';
-        return $campos;
-    }
+//    public function getEstructuraPropiedadesExportar()
+//    {
+//        $campos = '[
+//            {"campo":"codigoExamenTipoPk", "tipo":"pk",    "ayuda":"Codigo del registro", "titulo":"ID"},
+//            {"campo":"nombre",        "tipo":"nombre",   "ayuda":"nombre",    "titulo":"NOMBRE"},
+//            {"campo":"ingreso",    "tipo":"bool",  "ayuda":"Ingreso",    "titulo":"INGRESO"}
+//        ]';
+//        return $campos;
+//    }
 
 
 }

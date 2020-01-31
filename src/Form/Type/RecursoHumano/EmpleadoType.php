@@ -7,6 +7,7 @@ use App\Entity\RecursoHumano\RhuBanco;
 use App\Entity\RecursoHumano\RhuDepartamento;
 use App\Entity\RecursoHumano\RhuEmpleado;
 use App\Entity\RecursoHumano\RhuEstudioTipo;
+use App\Entity\RecursoHumano\RhuSector;
 use App\Entity\RecursoHumano\RhuZona;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -129,7 +130,7 @@ class EmpleadoType extends AbstractType
             ])
             ->add('sectorRel', EntityType::class, [
                 'required' => false,
-                'class' => RhuZona::class,
+                'class' => RhuSector::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('s')
                         ->orderBy('s.nombre', 'ASC');

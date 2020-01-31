@@ -16,8 +16,9 @@ class ZonaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoZonaPk', TextType::class, ['required' => true, 'label'=>'Nombre'])
             ->add('nombre', TextType::class, ['required' => true, 'label'=>'Nombre'])
-            ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
     }
 
@@ -28,19 +29,4 @@ class ZonaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoZonaPk",            "tipo":"pk",        "ayuda":"Codigo del registro",      "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE"}
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoZonaPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"}
-        ]';
-        return $campos;
-    }
 }

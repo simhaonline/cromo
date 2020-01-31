@@ -19,6 +19,7 @@ class OperacionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('codigoOperacionPk', TextType::class, ['required' => true ])
             ->add('nombre', TextType::class, ['required' => true, 'label'=>'Nombre'])
             ->add('nombreCorto', TextType::class, ['required' => true, 'label'=>'Nombre corto'])
             ->add('clienteRel', EntityType::class, [
@@ -32,7 +33,7 @@ class OperacionType extends AbstractType
                 'choice_label' => 'nombreCorto',
                 'placeholder' => 'TODOS',
             ])
-            ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
     }
 
@@ -43,26 +44,4 @@ class OperacionType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoOperacionPk",           "tipo":"pk",        "ayuda":"Codigo del registro",      "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE"},
-            {"campo":"nombreCorto",                 "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE CORTO"},
-            {"campo":"clienteRel.nombreCorto",      "tipo":"texto",     "ayuda":"CLIENTE",                           "titulo":"TIPO",         "relacion":""}
-
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoOperacionPk", "tipo":"pk",    "ayuda":"Codigo del registro",                    "titulo":"ID"},
-            {"campo":"nombre",             "tipo":"texto", "ayuda":"Nombre del registro",                    "titulo":"NOMBRE"},
-            {"campo":"nombreCorto",                      "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE CORTO"},
-            {"campo":"clienteRel.nombreCorto",      "tipo":"texto",     "ayuda":"CLIENTE",                           "titulo":"TIPO",         "relacion":""}
-
-
-        ]';
-        return $campos;
-    }
 }

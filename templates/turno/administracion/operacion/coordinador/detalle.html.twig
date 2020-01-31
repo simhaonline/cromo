@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('turno_administracion_operacion_coordinador_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+            <tr>
+                <td class="titulo">ID:</td>
+                <td class="td-in-well">{{ arRegistro.codigoCoordinadorPk }}</td>
+                <td class="titulo">NOMBRE:</td>
+                <td class="td-in-well">{{ arRegistro.nombre }}</td>
+                <td class="titulo">NUMERO IDENTIFICACION:</td>
+                <td class="td-in-well">{{ arRegistro.numeroIdentificacion }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CORREO:</td>
+                <td class="td-in-well">{{ arRegistro.correo }}</td>
+                <td class="titulo">CELULAR:</td>
+                <td class="td-in-well">{{ arRegistro.celular }}</td>
+                <td class="titulo"></td>
+                <td class="td-in-well"></td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

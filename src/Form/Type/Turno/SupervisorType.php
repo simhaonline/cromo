@@ -22,7 +22,7 @@ class SupervisorType extends AbstractType
             ->add('numeroIdentificacion', TextType::class, ['required' => true, 'label'=>'Identificacion'])
             ->add('correo', EmailType::class, ['required' => true, 'label'=>'Correo'])
             ->add('celular', TextType::class, ['required' => true, 'label'=>'Celular'])
-            ->add('guardar', SubmitType::class, array('label' => 'Guardar',))
+            ->add('btnGuardar', SubmitType::class, array('label' => 'Guardar',))
             ->getForm();
     }
 
@@ -33,25 +33,4 @@ class SupervisorType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoSupervisorPk",      "tipo":"pk",        "ayuda":"Codigo del registro",      "titulo":"ID"},	
-            {"campo":"nombre",                  "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE"},
-            {"campo":"numeroIdentificacion",    "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"IDENTIFICACIÓN"},
-            {"campo":"correo",                  "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"CORREO"},
-            {"campo":"celular",                 "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"CELULAR"}
-        ]';
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoSupervisorPk",      "tipo":"pk",        "ayuda":"Codigo del registro",      "titulo":"ID"},	
-            {"campo":"nombre",                  "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE"},
-            {"campo":"numeroIdentificacion",    "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"IDENTIFICACIÓN"},
-            {"campo":"correo",                  "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"CORREO"},
-            {"campo":"celular",                 "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"CELULAR"}
-        ]';
-        return $campos;
-    }
 }

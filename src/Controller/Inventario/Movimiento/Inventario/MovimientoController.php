@@ -138,6 +138,8 @@ class MovimientoController extends MaestroController
                 General::get()->setExportar($em->getRepository(InvMovimiento::class)->lista($raw, $codigoDocumento, $this->getUser()), "Movimientos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
                 $arMovimientos = $em->getRepository(InvMovimiento::class)->findBy(['codigoDocumentoTipoFk' => 'FAC']);
                 foreach ($arMovimientos as $arMovimiento) {
                     $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);

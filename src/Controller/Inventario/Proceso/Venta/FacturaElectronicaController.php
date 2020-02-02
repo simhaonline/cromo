@@ -4,6 +4,7 @@ namespace App\Controller\Inventario\Proceso\Venta;
 
 use App\Controller\MaestroController;
 use App\Entity\Inventario\InvMovimiento;
+use App\Utilidades\FacturaElectronica;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,6 +44,7 @@ class FacturaElectronicaController extends MaestroController
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('btnEnviar', SubmitType::class, ['label' => 'Enviar', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnPrueba', SubmitType::class, ['label' => 'Prueba', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -57,7 +59,10 @@ class FacturaElectronicaController extends MaestroController
                 if($arr) {
                     $this->getDoctrine()->getRepository(InvMovimiento::class)->facturaElectronica($arr);
                 }
-
+            }
+            if ($form->get('btnPrueba')->isClicked()) {
+                $facturaElectronica = new FacturaElectronica($em);
+                $facturaElectronica->consultarSuscriptor();
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaFacturaElectronica(), $request->query->getInt('page', 1),30);

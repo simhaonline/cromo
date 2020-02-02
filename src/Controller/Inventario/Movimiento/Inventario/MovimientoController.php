@@ -138,8 +138,17 @@ class MovimientoController extends MaestroController
                 General::get()->setExportar($em->getRepository(InvMovimiento::class)->lista($raw, $codigoDocumento, $this->getUser()), "Movimientos");
             }
             if ($form->get('btnEliminar')->isClicked()) {
-                $arrSeleccionados = $request->query->get('ChkSeleccionar');
-                $em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
+                $arMovimientos = $em->getRepository(InvMovimiento::class)->findBy(['codigoDocumentoTipoFk' => 'FAC']);
+                foreach ($arMovimientos as $arMovimiento) {
+                    $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+                }
+                $arMovimientos = $em->getRepository(InvMovimiento::class)->findBy(['codigoDocumentoTipoFk' => 'NC']);
+                foreach ($arMovimientos as $arMovimiento) {
+                    $em->getRepository(InvMovimiento::class)->liquidar($arMovimiento);
+                }
+
+                //$arrSeleccionados = $request->query->get('ChkSeleccionar');
+                //$em->getRepository(InvMovimiento::class)->eliminar($arrSeleccionados);
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->lista($raw, $codigoDocumento, $this->getUser()), $request->query->getInt('page', 1), 30);

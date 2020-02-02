@@ -277,8 +277,8 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $retencionFuenteSinBase = $arMovimiento->getTerceroRel()->getRetencionFuenteSinBase();
         $vrTotalBrutoGlobal = 0;
         $vrTotalGlobal = 0;
-        $vrTotalNetoGlobal = 0;
         $vrDescuentoGlobal = 0;
+        $vrBaseIvaGlobal = 0;
         $vrIvaGlobal = 0;
         $vrSubtotalGlobal = 0;
         $vrRetencionFuenteGlobal = 0;
@@ -286,7 +286,9 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $vrAutoretencion = 0;
         $arMovimientoDetalles = $this->getEntityManager()->getRepository(InvMovimientoDetalle::class)->findBy(['codigoMovimientoFk' => $arMovimiento->getCodigoMovimientoPk()]);
         $arrImpuestoRetenciones = $this->retencion($arMovimientoDetalles, $retencionFuenteSinBase);
+        /** @var $arMovimientoDetalle InvMovimientoDetalle */
         foreach ($arMovimientoDetalles as $arMovimientoDetalle) {
+
             if ($arMovimiento->getCodigoDocumentoTipoFk() == "SAL") {
                 $arMovimientoDetalle->setVrPrecio($arMovimientoDetalle->getVrCosto());
             }
@@ -296,13 +298,21 @@ class InvMovimientoRepository extends ServiceEntityRepository
             }
             $vrSubtotal = $vrPrecio * $arMovimientoDetalle->getCantidad();
             $vrDescuento = ($arMovimientoDetalle->getVrPrecio() * $arMovimientoDetalle->getCantidad()) - $vrSubtotal;
-            $vrIva = ($vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva()) / 100);
+            $vrBaseIva = 0;
+            $vrIva = 0;
+            if($arMovimientoDetalle->getCodigoImpuestoIvaFk()) {
+                if($arMovimientoDetalle->getCodigoImpuestoIvaFk() != 'I00') {
+                    $vrBaseIva = $vrSubtotal;
+                    $vrIva = ($vrSubtotal * ($arMovimientoDetalle->getPorcentajeIva()) / 100);
+                }
+            }
             $vrTotalBruto = $vrSubtotal;
             $vrTotal = $vrTotalBruto + $vrIva;
             $vrRetencionFuente = 0;
             $vrTotalGlobal += $vrTotal;
             $vrTotalBrutoGlobal += $vrTotalBruto;
             $vrDescuentoGlobal += $vrDescuento;
+            $vrBaseIvaGlobal += $vrBaseIva;
             $vrIvaGlobal += $vrIva;
             $vrSubtotalGlobal += $vrSubtotal;
             if ($arMovimiento->getCodigoDocumentoTipoFk() == 'FAC' || $arMovimiento->getCodigoDocumentoTipoFk() == 'COM') {
@@ -317,6 +327,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             $vrRetencionFuenteGlobal += $vrRetencionFuente;
             $arMovimientoDetalle->setVrSubtotal($vrSubtotal);
             $arMovimientoDetalle->setVrDescuento($vrDescuento);
+            $arMovimientoDetalle->setVrBaseIva($vrBaseIva);
             $arMovimientoDetalle->setVrIva($vrIva);
             $arMovimientoDetalle->setVrTotal($vrTotal);
             $arMovimientoDetalle->setVrRetencionFuente($vrRetencionFuente);
@@ -342,6 +353,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
 
 
         $vrTotalNetoGlobal = $vrTotalGlobal - $vrRetencionFuenteGlobal - $vrRetencionIvaGlobal;
+        $arMovimiento->setVrBaseIva($vrBaseIvaGlobal);
         $arMovimiento->setVrIva($vrIvaGlobal);
         $arMovimiento->setVrSubtotal($vrSubtotalGlobal);
         $arMovimiento->setVrTotal($vrTotalGlobal);
@@ -1737,6 +1749,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         'doc_fecha' => $arFactura['fecha']->format('Y-m-d'),
                         'doc_fecha_vence' => $arFactura['fechaVence']->format('Y-m-d'),
                         'doc_hora' => '12:00:00-05:00',
+                        'doc_hora2' => '12:00:00',
                         'doc_subtotal' => number_format($arFactura['vrSubtotal'], 2, '.', ''),
                         'doc_iva' => number_format($arFactura['vrIva'], 2, '.', ''),
                         'doc_inc' => number_format(0, 2, '.', ''),
@@ -1805,7 +1818,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                     $respuesta = $facturaElectronica->validarDatos($arrFactura);
                     if($respuesta['estado'] == 'ok') {
                         //$procesoFacturaElectronica = $facturaElectronica->enviarDispapeles($arrFactura);
-                        $procesoFacturaElectronica = $facturaElectronica->enviarCadena($arrFactura);
+                        $procesoFacturaElectronica = $facturaElectronica->enviarSoftwareEstrategico($arrFactura);
                         if($procesoFacturaElectronica['estado'] == 'CN') {
                             break;
                         }

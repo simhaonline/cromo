@@ -113,6 +113,11 @@ class InvMovimiento
     private $ciudadFactura;
 
     /**
+     * @ORM\Column(name="vr_base_iva", type="float", nullable=true, options={"default" : 0})
+     */
+    private $vrBaseIva = 0;
+
+    /**
      * @ORM\Column(name="vr_iva", type="float", nullable=true)
      */
     private $vrIva;
@@ -1129,6 +1134,22 @@ class InvMovimiento
     public function setCue($cue): void
     {
         $this->cue = $cue;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVrBaseIva()
+    {
+        return $this->vrBaseIva;
+    }
+
+    /**
+     * @param mixed $vrBaseIva
+     */
+    public function setVrBaseIva($vrBaseIva): void
+    {
+        $this->vrBaseIva = $vrBaseIva;
     }
 
 

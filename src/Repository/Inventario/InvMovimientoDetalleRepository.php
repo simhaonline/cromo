@@ -36,6 +36,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.porcentajeDescuento')
             ->addSelect('md.vrDescuento')
             ->addSelect('md.porcentajeIva')
+            ->addSelect('md.vrBaseIva')
             ->addSelect('md.vrIva')
             ->addSelect('md.vrTotal')
             ->addSelect('md.codigoRemisionDetalleFk')
@@ -770,7 +771,7 @@ class InvMovimientoDetalleRepository extends ServiceEntityRepository
             ->addSelect('md.vrTotal')
             ->addSelect('md.porcentajeIva')
             ->addSelect('md.codigoItemFk')
-            ->addSelect('i.descripcion as itemNombre')
+            ->addSelect('i.nombre as itemNombre')
             ->leftJoin('md.itemRel', 'i')
             ->where("md.codigoMovimientoFk = {$codigoMovimiento} ");
         $arrMovimiento = $queryBuilder->getQuery()->getResult();

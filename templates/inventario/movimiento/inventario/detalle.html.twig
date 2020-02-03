@@ -303,7 +303,7 @@
                         {% endif %}
 
                         {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' or arMovimiento.codigoDocumentoTipoFk == 'NC' or arMovimiento.codigoDocumentoTipoFk == 'ND'%}
-                            {% if arMovimiento.codigoDocumentoTipoFk == 'NC' %}
+                            {% if arMovimiento.codigoDocumentoTipoFk == 'NC' or arMovimiento.codigoDocumentoTipoFk == 'ND' %}
                                 <div class="btn-group">
                                     <a class="btn btn-default btn-sm"
                                        href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_movimiento_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>

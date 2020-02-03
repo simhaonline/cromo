@@ -10,6 +10,11 @@
             {% include 'estructura/botonera.html.twig' %}
         </div>
     </div>
+    <div style="float:right">
+        {% if arCapacitacion.estadoAutorizado == true %}<span class="label label-default">Autorizado</span>{% endif %}
+        {% if arCapacitacion.estadoAprobado == true %}<span class="label label-success">Aprobado</span>{% endif %}
+        {% if arCapacitacion.estadoAnulado == true %}<span class="label label-danger">Anulado</span>{% endif %}
+    </div>
     <br/><br/>
     <table width="100%" class="table table-condensed table-bordered tabla-datos">
         <tr>
@@ -34,7 +39,7 @@
             <td class="titulo">TEMA:</td>
             <td class="td-in-well">{{ arCapacitacion.capacitacionTemaRel.nombre |default('') }}</td>
             <td class="titulo">METODOLOGIA:</td>
-            <td class="td-in-well">{{ arCapacitacion.capacitacionMetodologiaRel.nombre | default('') }}</td>
+            <td class="td-in-well">{{ arCapacitacion.capacitacionMetodologiaRel.nombre | default('')  }}</td>
         </tr>
         <tr>
             <td class="titulo">OBJETIVO:</td>
@@ -57,8 +62,8 @@
             <td class="td-in-well">{{ arCapacitacion.zonaRel.nombre | default('') }}</td>
             <td class="titulo">AUTORIZADO:</td>
             <td class="td-in-well">{{ arCapacitacion.estadoAutorizado ? "SI" : "NO" }}</td>
-            <td class="titulo">ABIERTO:</td>
-            <td class="td-in-well" align="rigth">{{ arCapacitacion.numeroPersonasAsistieron }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well" align="rigth"></td>
         </tr>
     </table>
     <ul class="nav nav-tabs">

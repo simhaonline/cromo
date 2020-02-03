@@ -28,6 +28,10 @@ use App\Entity\RecursoHumano\RhuAporte;
 use App\Entity\RecursoHumano\RhuAporteDetalle;
 use App\Entity\RecursoHumano\RhuAspirante;
 use App\Entity\RecursoHumano\RhuCambioSalario;
+use App\Entity\RecursoHumano\RhuCapacitacion;
+use App\Entity\RecursoHumano\RhuCapacitacionDetalle;
+use App\Entity\RecursoHumano\RhuCapacitacionMetodologia;
+use App\Entity\RecursoHumano\RhuCapacitacionTema;
 use App\Entity\RecursoHumano\RhuCargo;
 use App\Entity\RecursoHumano\RhuCargoSupervigilancia;
 use App\Entity\RecursoHumano\RhuClasificacionRiesgo;
@@ -232,6 +236,12 @@ class MigracionController extends Controller
                         case 'rhu_embargo':
                             $this->rhuEmbargo($conn);
                             break;
+                        case 'rhu_capacitacion':
+                            $this->rhuCapacitacion($conn);
+                            break;
+                        case 'rhu_capacitacion_detalle':
+                            $this->rhuCapacitacionDetalle($conn);
+                            break;
                         case 'rhu_credito':
                             $this->rhuCredito($conn);
                             break;
@@ -343,6 +353,8 @@ class MigracionController extends Controller
             ['clase' => 'rhu_cambio_salario', 'registros' => $this->contarRegistros('RhuCambioSalario', 'RecursoHumano', 'codigoCambioSalarioPk')],
             ['clase' => 'rhu_adicional', 'registros' => $this->contarRegistros('RhuAdicional', 'RecursoHumano', 'codigoAdicionalPk')],
             ['clase' => 'rhu_embargo', 'registros' => $this->contarRegistros('RhuEmbargo', 'RecursoHumano', 'codigoEmbargoPk')],
+            ['clase' => 'rhu_capacitacion', 'registros' => $this->contarRegistros('RhuCapacitacion', 'RecursoHumano', 'codigoCapacitacionPk')],
+            ['clase' => 'rhu_capacitacion_detalle', 'registros' => $this->contarRegistros('RhuCapacitacionDetalle', 'RecursoHumano', 'codigoCapacitacionDetallePk')],
             ['clase' => 'rhu_credito', 'registros' => $this->contarRegistros('RhuCredito', 'RecursoHumano', 'codigoCreditoPk')],
             ['clase' => 'rhu_credito_pago', 'registros' => $this->contarRegistros('RhuCreditoPago', 'RecursoHumano', 'codigoCreditoPagoPk')],
             ['clase' => 'rhu_vacacion', 'registros' => $this->contarRegistros('RhuVacacion', 'RecursoHumano', 'codigoVacacionPk')],
@@ -906,6 +918,118 @@ class MigracionController extends Controller
             $em->persist($arEmpleado);
         }
         $em->flush();
+    }
+
+    private function rhuCapacitacion($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_capacitacion_pk FROM rhu_capacitacion ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                rhu_capacitacion.codigo_capacitacion_pk,
+                rhu_capacitacion.codigo_capacitacion_tipo_fk,
+                rhu_capacitacion.fecha,
+                rhu_capacitacion.fecha_capacitacion,
+                rhu_capacitacion.objetivo,
+                rhu_capacitacion.contenido,
+                rhu_capacitacion.numero_personas_capacitar,
+                rhu_capacitacion.numero_personas_asistieron,
+                rhu_capacitacion.vr_capacitacion,
+                rhu_capacitacion.lugar,
+                rhu_capacitacion.codigo_ciudad_fk,
+                rhu_capacitacion.codigo_capacitacion_metodologia_fk,
+                rhu_capacitacion.duracion,
+                rhu_capacitacion.numero_identificacion_facilitador,
+                rhu_capacitacion.facilitador,
+                rhu_capacitacion.codigo_zona_fk,
+                rhu_capacitacion.codigo_puesto_fk,
+                rhu_capacitacion.estado_autorizado
+                rhu_capacitacion.usuario
+                FROM rhu_capacitacion
+                ORDER BY codigo_capacitacion_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arCapacitacion = new RhuCapacitacion();
+                $arCapacitacion->setCodigoCapacitacionPk($row['codigo_capacitacion_pk']);
+                $arCapacitacion->setFecha(date_create($row['fecha']));
+                $arCapacitacion->setFechaCapacitacion(date_create($row['fecha_capacitacion']));
+                $arCapacitacion->setContenido(utf8_encode($row['contenido']));
+                $arCapacitacion->setObjetivo(utf8_encode($row['objetivo']));
+                $arCapacitacion->setNumeroPersonasAsistieron($row['numero_personas_asistieron']);
+                $arCapacitacion->setNumeroPersonasCapacitar($row['numero_personas_capacitar']);
+                $arCapacitacion->setLugar(utf8_encode($row['lugar']));
+                $arCapacitacion->setDuracion(utf8_encode($row['duracion']));
+                $arCapacitacion->setNumeroIdentificacionFacilitador(utf8_encode($row['numero_identificacion_facilitador']));
+                $arCapacitacion->setFacilitador(utf8_encode($row['facilitador']));
+                $arCapacitacion->setEstadoAutorizado($row['estado_autorizado']);
+                if ($row['codigo_ciudad_fk']) {
+                    $arCapacitacion->setCiudadRel($em->getReference(GenCiudad::class, $row['codigo_ciudad_fk']));
+                }
+                if ($row['codigo_puesto_fk']) {
+                    $arCapacitacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));
+                }
+                if ($row['codigo_capacitacion_metodologia_fk']) {
+                    $arCapacitacion->setCapacitacionMetadologiaRel($em->getReference(RhuCapacitacionMetodologia::class, $row['codigo_capacitacion_metodologia_fk']));
+                }
+                if ($row['codigo_zona_fk']) {
+                    $arCapacitacion->setZonaRel($em->getReference(RhuZona::class, $row['codigo_zona_fk']));
+                }
+                $arCapacitacion->setCapacitacionTemaRel($em->getReference(RhuCapacitacionTema::class, 1));
+                $em->persist($arCapacitacion);
+                $metadata = $em->getClassMetaData(get_class($arCapacitacion));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
+    }
+
+    private function rhuCapacitacionDetalle($conn)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $rango = 5000;
+        $arr = $conn->query("SELECT codigo_capacitacion_detalle_pk FROM rhu_capacitacion_detalle ");
+        $registros = $arr->num_rows;
+        $totalPaginas = $registros / $rango;
+        for ($pagina = 0; $pagina <= $totalPaginas; $pagina++) {
+            $lote = $pagina * $rango;
+            $datos = $conn->query("SELECT
+                rhu_capacitacion_detalle.codigo_capacitacion_detalle_pk,
+                rhu_capacitacion_detalle.codigo_capacitacion_fk,
+                rhu_capacitacion_detalle.numero_identificacion,
+                rhu_capacitacion_detalle.nombre_corto,
+                rhu_capacitacion_detalle.codigo_empleado_fk,
+                rhu_capacitacion_detalle.asistencia,
+                rhu_capacitacion_detalle.evaluacion
+                FROM rhu_capacitacion_detalle
+                ORDER BY codigo_capacitacion_detalle_pk limit {$lote},{$rango}");
+            foreach ($datos as $row) {
+                $arCapacitacionDetalle = new RhuCapacitacionDetalle();
+                $arCapacitacionDetalle->setCodigoCapacitacionDetallePk($row['codigo_capacitacion_detalle_pk']);
+                $arCapacitacionDetalle->setCapacitacionRel($em->getReference(RhuCapacitacion::class, $row['codigo_capacitacion_fk']));
+                $arCapacitacionDetalle->setNumeroIdentificacion(utf8_encode($row['nombre_corto']));
+                $arCapacitacionDetalle->setNombreCorto(utf8_encode($row['numero_identificacion']));
+                $arCapacitacionDetalle->setAsistencia($row['asistencia']);
+                $arCapacitacionDetalle->setEvaluacion($row['evaluacion']);
+                if ($row['codigo_empleado_fk']) {
+                    $arCapacitacionDetalle->setEmpleadoRel($em->getReference(RhuEmpleado::class, $row['codigo_empleado_fk']));
+                }
+                $em->persist($arCapacitacionDetalle);
+                $metadata = $em->getClassMetaData(get_class($arCapacitacionDetalle));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+            }
+            $em->flush();
+            $em->clear();
+            $datos->free();
+            ob_clean();
+        }
     }
 
     private function rhuCambioSalario($conn)

@@ -29,7 +29,7 @@ class RhuCapacitacionMetodologia
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacion", mappedBy="capacitacionMetadologiaRel")
+     * @ORM\OneToMany(targetEntity="App\Entity\RecursoHumano\RhuCapacitacion", mappedBy="capacitacionMetodologiaRel")
      */
     protected $capacitacionesCapacitacionMetodologiaRel;
 

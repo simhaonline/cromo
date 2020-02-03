@@ -120,22 +120,48 @@ class CapacitacionController extends MaestroController
     }
 
     /**
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @Route("recursohumano/movimiento/recurso/capacitacion/detalle/{id}", name="recursohumano_movimiento_recurso_capacitacion_detalle")
      */
     public function detalle(Request $request, PaginatorInterface $paginator, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arCapacitacion = $em->getRepository(RhuCapacitacion::class)->find($id);
-        $arrActualizarDetalle = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar', 'disabled' => false];
-        $arrAsiste = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Asiste', 'disabled' => false];
-        $arrNoAsiste = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'No asiste', 'disabled' => false];
+
+        $arrBtnActualizarDetalle = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Actualizar', 'disabled' => false];
+        $arrBtnAsiste = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'Asiste', 'disabled' => false];
+        $arrBtnNoAsiste = ['attr' => ['class' => 'btn btn-sm btn-default'], 'label' => 'No asiste', 'disabled' => false];
+
+        if ($arCapacitacion->getEstadoAprobado()) {
+            $arrBtnActualizarDetalle['disabled'] = true;
+            $arrBtnAsiste['disabled'] = true;
+            $arrBtnNoAsiste['disabled'] = true;
+        }
+
         $form = Estandares::botonera($arCapacitacion->getEstadoAutorizado(), $arCapacitacion->getEstadoAprobado(), $arCapacitacion->getEstadoAnulado());
-        $form->add('btnActualizarDetalle', SubmitType::class, $arrActualizarDetalle);
-        $form->add('btnAsiste', SubmitType::class, $arrAsiste);
-        $form->add('btnNoAsiste', SubmitType::class, $arrNoAsiste);
+        $form->add('btnActualizarDetalle', SubmitType::class, $arrBtnActualizarDetalle);
+        $form->add('btnAsiste', SubmitType::class, $arrBtnAsiste);
+        $form->add('btnNoAsiste', SubmitType::class, $arrBtnNoAsiste);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $arrControles = $request->request->All();
+            if ($form->get('btnAutorizar')->isClicked()) {
+                $em->getRepository(RhuCapacitacion::class)->autorizar($arCapacitacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_capacitacion_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnDesautorizar')->isClicked()) {
+                $em->getRepository(RhuCapacitacion::class)->desautorizar($arCapacitacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_capacitacion_detalle', ['id' => $id]));
+            }
+            if ($form->get('btnAprobar')->isClicked()) {
+                $em->getRepository(RhuCapacitacion::class)->aprobar($arCapacitacion);
+                return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_capacitacion_detalle', ['id' => $id]));
+            }
             if ($form->get('btnActualizarDetalle')->isClicked()) {
                 $em->getRepository(RhuCapacitacionDetalle::class)->actualizarDetalles($arrControles, $form, $arCapacitacion);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_capacitacion_detalle', ['id' => $id]));
@@ -143,11 +169,13 @@ class CapacitacionController extends MaestroController
             if ($form->get('btnAsiste')->isClicked()) {
                 $arSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuCapacitacionDetalle::class)->asiste($arSeleccionados);
+                $this->asistencia($id);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_capacitacion_detalle', ['id' => $id]));
             }
             if ($form->get('btnNoAsiste')->isClicked()) {
                 $arSeleccionados = $request->request->get('ChkSeleccionar');
                 $em->getRepository(RhuCapacitacionDetalle::class)->noAsiste($arSeleccionados);
+                $this->asistencia($id);
                 return $this->redirect($this->generateUrl('recursohumano_movimiento_recurso_capacitacion_detalle', ['id' => $id]));
             }
         }
@@ -209,5 +237,16 @@ class CapacitacionController extends MaestroController
 
         return $filtro;
 
+    }
+
+    public function asistencia($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $arCapacitacionDetalleAsistencia = $em->getRepository(RhuCapacitacionDetalle::class)->findBy(array('codigoCapacitacionFk' => $id, 'asistencia' => 1));
+
+        $arCapacitacion = $em->getRepository(RhuCapacitacion::class)->find($id);
+        $arCapacitacion->setNumeroPersonasAsistieron(count($arCapacitacionDetalleAsistencia));
+        $em->persist($arCapacitacion);
+        $em->flush();
     }
 }

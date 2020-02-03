@@ -5,6 +5,7 @@ namespace App\Repository\RecursoHumano;
 
 use App\Entity\RecursoHumano\RhuCapacitacion;
 use App\Entity\RecursoHumano\RhuCapacitacionDetalle;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -111,4 +112,55 @@ class RhuCapacitacionRepository extends ServiceEntityRepository
         $resultado = $queryBuilder->getQuery()->getSingleResult();
         return $resultado[1];
     }
+
+    /**
+     * @param $arCapacitacion RhuCapacitacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function autorizar($arCapacitacion)
+    {
+        $em = $this->getEntityManager();
+        if ($arCapacitacion->getEstadoAutorizado() == 0) {
+
+            $arCapacitacion->setEstadoAutorizado(1);
+            $em->persist($arCapacitacion);
+            $em->flush();
+
+        } else {
+            Mensajes::error('El registro de capacitacion ya se encuentra autorizado');
+        }
+    }
+
+    /**
+     * @param $arCapacitacion RhuCapacitacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function desautorizar($arCapacitacion)
+    {
+        $em = $this->getEntityManager();
+        if ($arCapacitacion->getEstadoAutorizado() == 1) {
+
+            $arCapacitacion->setEstadoAutorizado(0);
+            $em->persist($arCapacitacion);
+            $em->flush();
+
+        } else {
+            Mensajes::error('El registro de la capacitacion ya se encuentra autorizada o aprobada');
+        }
+    }
+
+    /**
+     * @param $arCapaciacion RhuCapacitacion
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function aprobar($arCapaciacion)
+    {
+        $arCapaciacion->setEstadoAprobado(1);
+        $this->getEntityManager()->persist($arCapaciacion);
+        $this->getEntityManager()->flush();
+    }
+
 }

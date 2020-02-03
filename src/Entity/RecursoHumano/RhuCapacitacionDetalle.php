@@ -30,7 +30,7 @@ class RhuCapacitacionDetalle
     private $codigoCapacitacionFk;
 
     /**
-     * @ORM\Column(name="numero_identificacion", type="string", length=20, nullable=true)
+     * @ORM\Column(name="numero_identificacion", type="string", length=50, nullable=true)
      */
     private $numeroIdentificacion;
 

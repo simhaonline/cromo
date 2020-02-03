@@ -152,7 +152,7 @@ class RhuCapacitacion
      * @ORM\ManyToOne(targetEntity="App\Entity\RecursoHumano\RhuCapacitacionMetodologia", inversedBy="capacitacionesCapacitacionMetodologiaRel")
      * @ORM\JoinColumn(name="codigo_capacitacion_metodologia_fk", referencedColumnName="codigo_capacitacion_metodologia_pk")
      */
-    protected $capacitacionMetadologiaRel;
+    protected $capacitacionMetodologiaRel;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Turno\TurPuesto", inversedBy="rhuCapacitacionesPuestoRel")
@@ -297,22 +297,6 @@ class RhuCapacitacion
     public function setUsuario($usuario): void
     {
         $this->usuario = $usuario;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTema()
-    {
-        return $this->tema;
-    }
-
-    /**
-     * @param mixed $tema
-     */
-    public function setTema($tema): void
-    {
-        $this->tema = $tema;
     }
 
     /**
@@ -606,17 +590,17 @@ class RhuCapacitacion
     /**
      * @return mixed
      */
-    public function getCapacitacionMetadologiaRel()
+    public function getCapacitacionMetodologiaRel()
     {
-        return $this->capacitacionMetadologiaRel;
+        return $this->capacitacionMetodologiaRel;
     }
 
     /**
-     * @param mixed $capacitacionMetadologiaRel
+     * @param mixed $capacitacionMetodologiaRel
      */
-    public function setCapacitacionMetadologiaRel($capacitacionMetadologiaRel): void
+    public function setCapacitacionMetodologiaRel($capacitacionMetodologiaRel): void
     {
-        $this->capacitacionMetadologiaRel = $capacitacionMetadologiaRel;
+        $this->capacitacionMetodologiaRel = $capacitacionMetodologiaRel;
     }
 
     /**

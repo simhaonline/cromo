@@ -218,6 +218,11 @@ class InvMovimiento
     private $cue;
 
     /**
+     * @ORM\Column(name="codigo_externo", type="string", length=500, nullable=true)
+     */
+    private $codigoExterno;
+
+    /**
      * @internal Para saber si el documento genera costo promedio
      * @ORM\Column(name="genera_costo_promedio", type="boolean", options={"default":false})
      */
@@ -1150,6 +1155,22 @@ class InvMovimiento
     public function setVrBaseIva($vrBaseIva): void
     {
         $this->vrBaseIva = $vrBaseIva;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodigoExterno()
+    {
+        return $this->codigoExterno;
+    }
+
+    /**
+     * @param mixed $codigoExterno
+     */
+    public function setCodigoExterno($codigoExterno): void
+    {
+        $this->codigoExterno = $codigoExterno;
     }
 
 

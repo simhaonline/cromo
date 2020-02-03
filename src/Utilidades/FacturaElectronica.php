@@ -1320,7 +1320,9 @@ class FacturaElectronica
 
     public function enviarSoftwareEstrategico($arrFactura){
         $em = $this->em;
-        $procesoFacturaElectronica = ['estado' => 'NO'];
+        $procesoFacturaElectronica = [
+            'estado' => 'NO',
+            'codigoExterno' => ''];
         $url = "https://tufactura.co/habilitacion/api/ConValidacionPrevia/CrearSetPrueba";
         $arrSoftwareEstrategico = $this->arrSoftwareEstrategico($arrFactura);
         $json = json_encode($arrSoftwareEstrategico);
@@ -1354,6 +1356,7 @@ class FacturaElectronica
                 $validaciones = $resp['Validaciones'];
                 if($validaciones['Valido']) {
                     $procesoFacturaElectronica['estado'] = 'EX';
+                    $procesoFacturaElectronica['codigoExterno'] = $validaciones['DoceId'];
                 } else {
                     $procesoFacturaElectronica['estado'] = 'ER';
                     $detalles = $validaciones['Detalle'];
@@ -1366,6 +1369,9 @@ class FacturaElectronica
                     $arRespuesta->setCodigoModeloFk('InvMovimiento');
                     $arRespuesta->setCodigoDocumento($arrFactura['doc_codigo']);
                     $arRespuesta->setErrorReason(json_encode($datos));
+                    if(isset($validaciones['Descripcion'])) {
+                        $arRespuesta->setErrorMessage($validaciones['Descripcion']);
+                    }
                     $em->persist($arRespuesta);
                     $em->flush();
                 }
@@ -1379,9 +1385,11 @@ class FacturaElectronica
         $numero = $arrFactura['res_prefijo'] . $arrFactura['doc_numero'];
         $tipo = '01';
         if($arrFactura['doc_tipo'] == 'NC') {
+            $numero = $arrFactura['doc_numero'];
             $tipo = '91';
         }
         if($arrFactura['doc_tipo'] == 'ND') {
+            $numero = $arrFactura['doc_numero'];
             $tipo = '92';
         }
         $arrDatos = [
@@ -1511,6 +1519,13 @@ class FacturaElectronica
                     ],
                     "ImpuestosRetenidosLinea"=> [],
                     "CargosDescuentosLinea"=> []
+                ];
+        }
+        if($tipo == '91') {
+            $arrDatos['FacturaVenta']['DocumentoReferencia'] =
+                [
+                    "DedrDocumentoReferencia" => $arrFactura['ref_codigoExterno'],
+                    "CodigoConcepto" => "2"
                 ];
         }
         return $arrDatos;

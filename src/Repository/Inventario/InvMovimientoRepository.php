@@ -1626,6 +1626,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.codigoDocumentoFk')
             ->addSelect('m.codigoDocumentoTipoFk')
             ->addSelect('m.cue')
+            ->addSelect('m.codigoExterno')
             ->addSelect('i.codigoEntidad as tipoIdentificacion')
             ->addSelect('t.numeroIdentificacion as numeroIdentificacion')
             ->addSelect('t.digitoVerificacion as digitoVerificacion')
@@ -1657,6 +1658,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('mr.numero as referenciaNumero')
             ->addSelect('mr.prefijo as referenciaPrefijo')
             ->addSelect('mr.fecha as referenciaFecha')
+            ->addSelect('mr.codigoExterno as referenciaCodigoExterno')
             ->leftJoin('m.terceroRel', 't')
             ->leftJoin('t.identificacionRel', 'i')
             ->leftJoin('t.tipoPersonaRel', 'tp')
@@ -1750,6 +1752,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         'doc_ica' => number_format(0, 2, '.', ''),
                         'doc_total' => number_format($arFactura['vrTotal'], 2, '.', ''),
                         'ref_cue' => $arFactura['referenciaCue'],
+                        'ref_codigoExterno' => $arFactura['referenciaCodigoExterno'],
                         'ref_numero' => $arFactura['referenciaNumero'],
                         'ref_prefijo' => $arFactura['referenciaPrefijo'],
                         'ref_fecha' => $arFactura['referenciaFecha']?$arFactura['referenciaFecha']->format('Y-m-d'):null,
@@ -1826,6 +1829,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         if($procesoFacturaElectronica['estado'] == 'EX') {
                             $arFactura = $em->getRepository(InvMovimiento::class)->find($codigo);
                             $arFactura->setEstadoElectronico(1);
+                            $arFactura->setCodigoExterno($procesoFacturaElectronica['codigoExterno']);
                             $em->persist($arFactura);
                             $em->flush();
                         }

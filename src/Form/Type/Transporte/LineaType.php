@@ -31,8 +31,7 @@ class LineaType extends AbstractType
             ])
             ->add('linea',IntegerType::class,['required' => true,'label' => 'Linea:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -43,20 +42,4 @@ class LineaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoLineaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"codigoMarcaFk",         "tipo":"texto",     "ayuda":"Codigo marca",            "titulo":"CODIGO MARCA"},	
-            {"campo":"linea",                 "tipo":"texto",     "ayuda":"Linea",                   "titulo":"LINEA"},	
-            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoLineaPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"codigoMarcaFk",         "tipo":"texto",     "ayuda":"Codigo marca",            "titulo":"CODIGO MARCA"},	
-            {"campo":"linea",                 "tipo":"texto",     "ayuda":"Linea",                   "titulo":"LINEA"},	
-            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
 }

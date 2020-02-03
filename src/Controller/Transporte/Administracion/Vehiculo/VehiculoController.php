@@ -10,6 +10,7 @@ use App\Formato\Transporte\Vehiculo;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Entity\Transporte\TteVehiculo;
 use App\Form\Type\Transporte\VehiculoType;
@@ -24,53 +25,44 @@ class VehiculoController extends MaestroController
 {
     public $tipo = "administracion";
     public $modelo = "TteVehiculo";
+    public $entidad = TteVehiculo::class;
 
-    protected $class = TteVehiculo::class;
-    protected $claseNombre = "TteVehiculo";
-    protected $modulo = "Transporte";
-    protected $funcion = "Administracion";
-    protected $grupo = "Transporte";
-    protected $nombre = "Vehiculo";
 
     /**
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("/transporte/administracion/vehiculo/lista", name="transporte_administracion_transporte_vehiculo_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
-        $this->request = $request;
         $em = $this->getDoctrine()->getManager();
-        $formBotonera = MaestroController::botoneraLista();
-        $formBotonera->handleRequest($request);
-        $formFiltro = $this->getFiltroLista();
-        $formFiltro->handleRequest($request);
-        if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
-            if ($formFiltro->get('btnFiltro')->isClicked()) {
-                FuncionesController::generarSession($this->modulo, $this->nombre, $this->claseNombre, $formFiltro);
+        $form = $this->createFormBuilder()
+            ->add('placa', TextType::class, array('required' => false, ))
+            ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
+            ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
+            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->getForm();
+        $form->handleRequest($request);
+        $raw = ['limiteRegistros' => $form->get('limiteRegistros')->getData()];
+        if ($form->isSubmitted()) {
+            if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
+                $raw['filtros'] = $this->filtros($form);
             }
-        }
-        $datos = $this->getDatosLista(true, true, $paginator);
-        if ($formBotonera->isSubmitted() && $formBotonera->isValid()) {
-            if ($formBotonera->get('btnExcel')->isClicked()) {
-                General::get()->setExportar($em->getRepository(TteVehiculo::class)->lista()->getQuery()->getResult(), "Vehiculos");
-            }
-            if ($formBotonera->get('btnEliminar')->isClicked()) {
+            if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-//                $em->getRepository(TteDespachoRecogida::class)->eliminar($arrSeleccionados);
-                return $this->redirect($this->generateUrl('transporte_administracion_transporte_vehiculo_lista'));
+                $em->getRepository($this->entidad)-> eliminar($arrSeleccionados);
+            }
+            if ($form->get('btnExcel')->isClicked()) {
+                $arRegistros = $em->getRepository($this->entidad)->lista($raw);
+                $this->excelLista($arRegistros, "VEHICULOS");
             }
         }
-
-        return $this->render('transporte/administracion/vehiculo/lista.html.twig', [
-            'arrDatosLista' => $datos,
-            'formBotonera' => $formBotonera->createView(),
-            'formFiltro' => $formFiltro->createView(),
+        $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
+        return $this->render('transporte/administracion/vehiculo/vehiculo/lista.html.twig', [
+            'arRegistros' => $arRegistros,
+            'form' => $form->createView(),
         ]);
-
     }
+
 
     /**
      * @Route("/transporte/administracion/vehiculo/nuevo/{id}", name="transporte_administracion_transporte_vehiculo_nuevo")
@@ -107,7 +99,7 @@ class VehiculoController extends MaestroController
                 }
             }
         }
-        return $this->render('transporte/administracion/vehiculo/nuevo.html.twig', [
+        return $this->render('transporte/administracion/vehiculo/vehiculo//nuevo.html.twig', [
             'arVehiculo' => $arVehiculo,
             'form' => $form->createView()
         ]);
@@ -133,10 +125,65 @@ class VehiculoController extends MaestroController
                 $formato->Generar($em, $id);
             }
         }
-        return $this->render('transporte/administracion/vehiculo/detalle.html.twig', [
+        return $this->render('transporte/administracion/vehiculo/vehiculo/detalle.html.twig', [
             'clase' => array('clase' => 'TteVehiculo', 'codigo' => $id),
             'arVehiculo' => $arVehiculo,
             'form' => $form->createView()]);
+    }
+
+    public function filtros($form)
+    {
+        $filtro = [
+            'placa' => $form->get('placa')->getData(),
+        ];
+        return $filtro;
+
+    }
+
+    public function excelLista($arRegistros, $nombre)
+    {
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        if ($arRegistros) {
+            $libro = new Spreadsheet();
+            $hoja = $libro->getActiveSheet();
+            $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+            $hoja->setTitle('Items');
+            $j = 0;
+            $arrColumnas=['ID', 'placa', 'placa remolque', 'motor', 'numeroEjes', 'celular', 'fechaVencePoliza', 'marca', 'propietario', 'poseedor'];
+
+            for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
+                $hoja->getColumnDimension($i)->setAutoSize(true);
+                $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
+                $hoja->getStyle(1)->getFont()->setBold(true);
+                $hoja->setCellValue($i . '1', strtoupper($arrColumnas[$j]));
+                $j++;
+            }
+            $j = 2;
+            foreach ($arRegistros as $arRegistro) {
+                $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoVehiculoPk']);
+                $hoja->setCellValue('B' . $j, $arRegistro['placa']);
+                $hoja->setCellValue('C' . $j, $arRegistro['modelo']);
+                $hoja->setCellValue('D' . $j, $arRegistro['placaRemolque']);
+                $hoja->setCellValue('E' . $j, $arRegistro['motor']);
+                $hoja->setCellValue('F' . $j, $arRegistro['numeroEjes']);
+                $hoja->setCellValue('G' . $j, $arRegistro['celular']);
+                $hoja->setCellValue('H' . $j, $arRegistro['fechaVencePoliza']);
+                $hoja->setCellValue('I' . $j, $arRegistro['marca']);
+                $hoja->setCellValue('J' . $j, $arRegistro['propietario']);
+                $hoja->setCellValue('K' . $j, $arRegistro['poseedor']);
+                $j++;
+            }
+            $libro->setActiveSheetIndex(0);
+            header('Content-Type: application/vnd.ms-excel');
+            header("Content-Disposition: attachment;filename={$nombre}.xls");
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
+            $writer->save('php://output');
+        }else{
+            Mensajes::error("No existen registros para exportar");
+        }
     }
 
 }

@@ -18,7 +18,7 @@ class AseguradoraType extends AbstractType
             ->add('numeroIdentificacion',NumberType::class,['required' => true,'label' => 'Numero identificacion:'])
             ->add('digitoVerificacion',NumberType::class,['required' => true,'label' => 'Digito:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
         ;
     }
 
@@ -29,21 +29,5 @@ class AseguradoraType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[
-            {"campo":"codigoAseguradoraPk",         "tipo":"pk"         ,"ayuda":"Codigo del registro",             "titulo":"ID"},
-            {"campo":"numeroIdentificacion",        "tipo":"texto"      ,"ayuda":"Numero de identificacion",        "titulo":"NUMERO IDENTIFICACION"},
-            {"campo":"digitoVerificacion",          "tipo":"texto"      ,"ayuda":"Digito de verificacion",          "titulo":"DIGITO VERIFICACION"},
-            {"campo":"nombre",                      "tipo":"texto"      ,"ayuda":"Nombre del registro",             "titulo":"NOMBRE DEL REGISTRO"}
-        ]';
-    }
 
-    public function getEstructuraPropiedadesExportar(){
-        return '[
-            {"campo":"codigoAseguradoraPk",         "tipo":"pk"         ,"ayuda":"Codigo del registro",             "titulo":"ID"},
-            {"campo":"numeroIdentificacion",        "tipo":"texto"      ,"ayuda":"Numero de identificacion",        "titulo":"NUMERO IDENTIFICACION"},
-            {"campo":"digitoVerificacion",          "tipo":"texto"      ,"ayuda":"Digito de verificacion",          "titulo":"DIGITO VERIFICACION"},
-            {"campo":"nombre",                      "tipo":"texto"      ,"ayuda":"Nombre del registro",             "titulo":"NOMBRE DEL REGISTRO"}
-        ]';
-    }
 }

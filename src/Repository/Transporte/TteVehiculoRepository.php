@@ -14,9 +14,17 @@ class TteVehiculoRepository extends ServiceEntityRepository
         parent::__construct($registry, TteVehiculo::class);
     }
 
-    public function lista()
+    public function lista($raw)
     {
-        $session = new Session();
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $placa = null;
+
+        if ($filtros) {
+            $placa = $filtros['placa'] ?? null;
+        }
+
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteVehiculo::class, 'v')
             ->select('v.codigoVehiculoPk')
             ->addSelect('v.placa')
@@ -24,6 +32,8 @@ class TteVehiculoRepository extends ServiceEntityRepository
             ->addSelect('v.placaRemolque')
             ->addSelect('v.motor')
             ->addSelect('v.numeroEjes')
+            ->addSelect('v.celular')
+            ->addSelect('v.fechaVencePoliza')
             ->addSelect('m.nombre AS marca')
             ->addSelect('pro.nombreCorto AS propietario')
             ->addSelect('pos.nombreCorto AS poseedor')
@@ -32,11 +42,14 @@ class TteVehiculoRepository extends ServiceEntityRepository
             ->leftJoin('v.poseedorRel', 'pos')
             ->where('v.codigoVehiculoPk IS NOT NULL')
             ->orderBy('v.placa', 'ASC');
-        if ($session->get('TteVehiculo_placa')) {
-            $queryBuilder->andWhere("v.codigoVehiculoPk = '{$session->get('TteVehiculo_placa')}'");
+
+        if ($placa) {
+            $queryBuilder->andWhere("v.placa = '{$placa}'");
         }
 
-        return $queryBuilder;
+        $queryBuilder->addOrderBy('v.codigoVehiculoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function listaDql()

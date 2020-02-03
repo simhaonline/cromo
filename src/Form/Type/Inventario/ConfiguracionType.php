@@ -16,10 +16,7 @@ class ConfiguracionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('informacionLegalMovimiento',TextareaType::class,['label' => 'Información legal'])
             ->add('informacionPagoMovimiento',TextareaType::class,['label' => 'Información pago'])
-            ->add('informacionContactoMovimiento',TextareaType::class,['label' => 'Información contacto'])
-            ->add('informacionResolucionDianMovimiento',TextareaType::class,['label' => 'Información resolución DIAN'])
             ->add('codigoFormatoMovimiento',TextType::class,['label' => 'Código formato'])
             ->add('codigoDocumentoMovimientosSalidaBodega',TextType::class,['label' => 'Documento salida de bodega'])
             ->add('codigoDocumentoMovimientosEntradaBodega',TextType::class,['label' => 'Documento entrada de bodega'])

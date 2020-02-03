@@ -5,23 +5,9 @@
         <div class="panel-heading">Configuracion inventario</div>
         <div class="panel-body">
             <div class="form-group form-group-sm">
-                <label for="form_informacionLegalMovimiento" class="col-sm-2 control-label">Informacion legal movimiento:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.informacionLegalMovimiento, { 'attr': {'style':'text-transform:uppercase;','onblur':'javascript:this.value=this.value.toUpperCase()','class': 'form-control'} }) }}
-                </div>
                 <label for="form_informacionPagoMovimiento" class="col-sm-2 control-label">Informacion pago movimiento:</label>
                 <div class="col-sm-4">
                     {{ form_widget(form.informacionPagoMovimiento) }}
-                </div>
-            </div>
-            <div class="form-group form-group-sm">
-                <label for="form_informacionContactoMovimiento" class="col-sm-2 control-label">Informacion contacto movimiento:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.informacionContactoMovimiento) }}
-                </div>
-                <label for="form_informacionResolucionDianMovimiento" class="col-sm-2 control-label">Resolucion DIAN:</label>
-                <div class="col-sm-4">
-                    {{ form_widget(form.informacionResolucionDianMovimiento) }}
                 </div>
             </div>
             <div class="form-group form-group-sm">

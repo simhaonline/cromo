@@ -49,6 +49,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>DOCUMENTO</th>
             <th>NUMERO</th>
             <th>FECHA</th>
             <th>NIT</th>
@@ -67,6 +68,7 @@
         {% for arMovimiento in arMovimientos %}
             <tr>
                 <td>{{ arMovimiento.codigoMovimientoPk }}</td>
+                <td>{{ arMovimiento.documentoNombre }}</td>
                 <td>{{ arMovimiento.numero }}</td>
                 <td>{{ arMovimiento.fecha | date('Y-m-d') }}</td>
                 <td>{{ arMovimiento.clienteNumeroIdentificacion }}</td>

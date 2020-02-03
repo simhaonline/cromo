@@ -1521,7 +1521,7 @@ class FacturaElectronica
                     "CargosDescuentosLinea"=> []
                 ];
         }
-        if($tipo == '91') {
+        if($tipo == '91' || $tipo == '92' ) {
             $arrDatos['FacturaVenta']['DocumentoReferencia'] =
                 [
                     "DedrDocumentoReferencia" => $arrFactura['ref_codigoExterno'],

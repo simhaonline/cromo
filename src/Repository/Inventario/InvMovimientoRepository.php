@@ -72,6 +72,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('m.codigoMovimientoPk')
             ->addSelect('m.codigoDocumentoFk')
+            ->addSelect('m.codigoDocumentoTipoFk')
             ->addSelect('m.numero')
             ->addSelect('t.nombreCorto AS terceroNombreCorto')
             ->addSelect('c.nombre AS terceroCiudad')

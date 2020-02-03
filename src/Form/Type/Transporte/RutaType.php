@@ -36,7 +36,7 @@ class RutaType extends AbstractType
                 'choice_label' => 'nombre',
             ))
             ->add('nombre', TextType::class, ['required' => true, 'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -46,20 +46,20 @@ class RutaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        return '[	
-            {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"codigoDespachoClaseFk",                      "tipo":"texto",     "ayuda":"V: viajaes - R: reparto",     "titulo":"CLASE"},	
-            {"campo":"operacionRel.nombre","tipo":"texto",     "ayuda":"Codigo operacin",     "titulo":"OPERACION","relacion":""}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar()
-    {
-        return '[	
-            {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
+//    public function getEstructuraPropiedadesLista()
+//    {
+//        return '[
+//            {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+//            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},
+//            {"campo":"codigoDespachoClaseFk",                      "tipo":"texto",     "ayuda":"V: viajaes - R: reparto",     "titulo":"CLASE"},
+//            {"campo":"operacionRel.nombre","tipo":"texto",     "ayuda":"Codigo operacin",     "titulo":"OPERACION","relacion":""}
+//        ]';
+//    }
+//    public function getEstructuraPropiedadesExportar()
+//    {
+//        return '[
+//            {"campo":"codigoRutaPk",                "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},
+//            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}
+//        ]';
+//    }
 }

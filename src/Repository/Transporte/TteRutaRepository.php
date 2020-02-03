@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteRuta;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -47,5 +48,58 @@ class TteRutaRepository extends ServiceEntityRepository
             $array['data'] = $this->getEntityManager()->getReference(TteRuta::class, $session->get('filtroTteDespachoGuiaCodigoRuta'));
         }
         return $array;
+    }
+
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigo = null;
+        $nombre = null;
+
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteRuta::class, 't')
+            ->select('t.codigoRutaPk')
+            ->addSelect('t.nombre')
+            ->addSelect('t.codigoDespachoClaseFk')
+            ->addSelect('o.nombre as operacion')
+            ->leftJoin('t.operacionRel', 'o');
+
+        if ($codigo) {
+            $queryBuilder->andWhere("t.codigoRutaPk = '{$codigo}'");
+        }
+
+        if($nombre){
+            $queryBuilder->andWhere("t.nombre LIKE '%{$nombre}%'");
+        }
+
+        $queryBuilder->addOrderBy('t.codigoRutaPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $em->getRepository(TteRuta::class)->find($codigo);
+                if ($arRegistro) {
+                    $em->remove($arRegistro);
+                }
+            }
+            try {
+                $em->flush();
+            } catch (\Exception $e) {
+                Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+            }
+        }else{
+            Mensajes::error("No existen registros para eliminar");
+        }
     }
 }

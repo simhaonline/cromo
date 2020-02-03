@@ -15,6 +15,7 @@ class TteNovedadTipoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TteNovedadTipo::class);
     }
+
     public function camposPredeterminados(){
         $qb = $this-> _em->createQueryBuilder()
             ->from('App:Transporte\TteNovedadTipo','nt')
@@ -42,5 +43,60 @@ class TteNovedadTipoRepository extends ServiceEntityRepository
             $array['data'] = $this->getEntityManager()->getReference(TteNovedadTipo::class, $session->get('filtroTteCodigoNovedadTipo'));
         }
         return $array;
+    }
+
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigo = null;
+        $nombre = null;
+
+
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteNovedadTipo::class, 'nt')
+            ->select('nt.codigoNovedadTipoPk')
+            ->addSelect('nt.interna')
+            ->addSelect('nt.nombre');
+
+        if ($codigo) {
+            $queryBuilder->andWhere("nt.codigoNovedadTipoPk = '{$codigo}'");
+        }
+
+        if($nombre){
+            $queryBuilder->andWhere("nt.nombre LIKE '%{$nombre}%'");
+        }
+
+
+
+        $queryBuilder->addOrderBy('nt.codigoNovedadTipoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $em->getRepository(TteNovedadTipo::class)->find($codigo);
+                if ($arRegistro) {
+                    $em->remove($arRegistro);
+                }
+            }
+            try {
+                $em->flush();
+            } catch (\Exception $e) {
+                Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+            }
+        }else{
+            Mensajes::error("No existen registros para eliminar");
+        }
     }
 }

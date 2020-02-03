@@ -25,7 +25,7 @@ class NovedadTipoType extends AbstractType {
             ->add('codigoNovedadTipoPk',TextType::class, array('required' => true,'label'=>"Codigo novedad tipo:"))
             ->add('nombre',TextType::class, array('required' => true,'label'=>'Nombre:'))
             ->add('interna', CheckboxType::class, array('required'  => false, 'label' => 'Interna'))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar','attr'=>['class'=>'btn btn-primary btn-sm']));
+            ->add('btnGuardar', SubmitType::class,array('label'=>'Guardar','attr'=>['class'=>'btn btn-primary btn-sm']));
     }
 
     /**
@@ -42,20 +42,6 @@ class NovedadTipoType extends AbstractType {
      */
     public function getBlockPrefix() {
         return 'App_novedadTipo';
-    }
-
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoNovedadTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"interna",          "tipo":"bool",      "ayuda":"Interna",            "titulo":"INT"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoNovedadTipoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
     }
 
 }

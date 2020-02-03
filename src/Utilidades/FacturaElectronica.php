@@ -1299,22 +1299,18 @@ class FacturaElectronica
     public function validarDatos($arrFactura) {
         $arrRespuesta = ['estado' => 'error', 'mensaje' => null];
         if($arrFactura['dat_nitFacturador']) {
-            if($arrFactura['dat_claveTecnica']) {
-                if($arrFactura['em_tipoPersona']) {
-                    if($arrFactura['ad_tipoPersona']) {
-                        if($arrFactura['doc_codigoDocumento'] =='NC' || ($arrFactura['res_numero'] && $arrFactura['res_prefijo'] && $arrFactura['res_fechaDesde'] && $arrFactura['res_fechaHasta'] && $arrFactura['res_desde'] && $arrFactura['res_hasta'])) {
-                            $arrRespuesta = ['estado' => 'ok', 'mensaje' => null];
-                        } else {
-                            $arrRespuesta = ['estado' => 'error', 'mensaje' => 'Faltan datos de la resolucion o el documento no tiene resolucion asignada'];
-                        }
+            if($arrFactura['em_tipoPersona']) {
+                if($arrFactura['ad_tipoPersona']) {
+                    if($arrFactura['doc_codigoDocumento'] =='NC' || ($arrFactura['res_numero'] && $arrFactura['res_prefijo'] && $arrFactura['res_fechaDesde'] && $arrFactura['res_fechaHasta'] && $arrFactura['res_desde'] && $arrFactura['res_hasta'])) {
+                        $arrRespuesta = ['estado' => 'ok', 'mensaje' => null];
                     } else {
-                        $arrRespuesta = ['estado' => 'error', 'mensaje' => 'El adquiriente no tiene tipo de persona'];
+                        $arrRespuesta = ['estado' => 'error', 'mensaje' => 'Faltan datos de la resolucion o el documento no tiene resolucion asignada'];
                     }
                 } else {
-                    $arrRespuesta = ['estado' => 'error', 'mensaje' => 'El emisor no tiene tipo de persona definido'];
+                    $arrRespuesta = ['estado' => 'error', 'mensaje' => 'El adquiriente no tiene tipo de persona'];
                 }
             } else {
-                $arrRespuesta = ['estado' => 'error', 'mensaje' => 'Falta la clave tecnica'];
+                $arrRespuesta = ['estado' => 'error', 'mensaje' => 'El emisor no tiene tipo de persona definido'];
             }
         } else {
             $arrRespuesta = ['estado' => 'error', 'mensaje' => 'Debe seleccionar en configuracion el nit del facturador'];
@@ -1381,6 +1377,13 @@ class FacturaElectronica
 
     private function arrSoftwareEstrategico($arrFactura) {
         $numero = $arrFactura['res_prefijo'] . $arrFactura['doc_numero'];
+        $tipo = '01';
+        if($arrFactura['doc_tipo'] == 'NC') {
+            $tipo = '91';
+        }
+        if($arrFactura['doc_tipo'] == 'ND') {
+            $tipo = '92';
+        }
         $arrDatos = [
             "Solicitud" => [
                 "Nonce"=> "af4c65a3-0a18-4b09-8ca7-475c95b45894",
@@ -1393,7 +1396,7 @@ class FacturaElectronica
                     "DoceCantidadItems"=> $arrFactura['doc_cantidad_item'],
                     "AmbdCodigo"=> $arrFactura['dat_tipoAmbiente'],
                     "TipoCodigo"=> "05",
-                    "DoetCodigo"=> "01",
+                    "DoetCodigo"=> $tipo,
                     "MoneCodigo"=> "COP",
                     "RefvNumero"=> $arrFactura['res_numero']
                 ],

@@ -18,20 +18,6 @@ class FacturaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('facturaTipoRel',EntityType::class,[
-                'required' => true,
-                'class' => 'App\Entity\Inventario\InvFacturaTipo',
-                'query_builder' => function (EntityRepository $er) use ($options) {
-                    $notaCredito = 0;
-                    if($options['data']->getDocumentoRel()->getNotaCredito()) {
-                        $notaCredito = 1;
-                    }
-                        return $er->createQueryBuilder('ft')
-                        ->orderBy('ft.nombre', 'ASC')
-                        ->where('ft.notaCredito=' . $notaCredito);
-                },
-                'choice_label' => 'nombre'
-            ])
             ->add('asesorRel',EntityType::class,[
                 'required' => true,
                 'class' => 'App\Entity\General\GenAsesor',

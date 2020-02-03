@@ -175,7 +175,7 @@
             {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
         </div>
         <div class="btn-group" style="float: right;">
-            {% if tipoDocumento == 'FAC' %}
+            {% if tipoDocumento == 'FAC' or tipoDocumento == 'NC' or tipoDocumento == 'ND' %}
                 <a class="btn btn-sm btn-default"
                    href="{{ path('inventario_movimiento_inventario_movimiento_nuevo_factura',{'codigoDocumento': codigoDocumento, 'tipoDocumento': tipoDocumento, 'id' : 0 }) }}">Nuevo</a>
             {% elseif tipoDocumento == 'COM' %}

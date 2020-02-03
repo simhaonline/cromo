@@ -1623,6 +1623,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->addSelect('m.estadoAprobado')
             ->addSelect('m.estadoElectronico')
             ->addSelect('m.codigoDocumentoFk')
+            ->addSelect('m.codigoDocumentoTipoFk')
             ->addSelect('m.cue')
             ->addSelect('i.codigoEntidad as tipoIdentificacion')
             ->addSelect('t.numeroIdentificacion as numeroIdentificacion')
@@ -1690,19 +1691,10 @@ class InvMovimientoRepository extends ServiceEntityRepository
             ->leftJoin('m.terceroRel', 't')
             ->where('m.estadoElectronico =  0')
             ->andWhere('m.estadoAprobado = 1')
-            ->andWhere("m.codigoDocumentoTipoFk='FAC'")
-            ->andWhere("m.codigoDocumentoFk='FAC'")
+            ->andWhere("m.codigoDocumentoTipoFk='FAC' or m.codigoDocumentoTipoFk='NC' or m.codigoDocumentoTipoFk='ND'")
+
             ->orderBy('m.fecha', 'DESC');
         $fecha =  new \DateTime('now');
-        /*if($session->get('filtroTteFacturaNumero') != ''){
-            $queryBuilder->andWhere("f.numero = {$session->get('filtroTteFacturaNumero')}");
-        }
-        if($session->get('filtroTteFacturaCodigo') != ''){
-            $queryBuilder->andWhere("f.codigoFacturaPk = {$session->get('filtroTteFacturaCodigo')}");
-        }
-        if($session->get('filtroTteCodigoCliente')){
-            $queryBuilder->andWhere("f.codigoClienteFk = {$session->get('filtroTteCodigoCliente')}");
-        }*/
         if($session->get('filtroFecha') == true){
             if ($session->get('filtroFechaDesde') != null) {
                 $queryBuilder->andWhere("m.fecha >= '{$session->get('filtroFechaDesde')}'");
@@ -1715,9 +1707,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
                 $queryBuilder->andWhere("m.fecha <= '" . $fecha->format('Y-m-d') . " 23:59:59'");
             }
         }
-        /*if($session->get('filtroTteFacturaCodigoFacturaTipo')) {
-            $queryBuilder->andWhere("f.codigoFacturaTipoFk = '" . $session->get('filtroTteFacturaCodigoFacturaTipo') . "'");
-        }*/
 
         return $queryBuilder->getQuery()->execute();
     }
@@ -1726,13 +1715,6 @@ class InvMovimientoRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         if ($arr) {
-            //Generar cue
-            foreach ($arr AS $codigo) {
-                $this->generarCue($codigo);
-            }
-            $em->flush();
-            //Generar cue fin
-
             $arrConfiguracion = $em->getRepository(GenConfiguracion::class)->facturaElectronica();
             foreach ($arr AS $codigo) {
                 $arFactura = $em->getRepository(InvMovimiento::class)->movimientoFacturaElectronica($codigo);
@@ -1751,6 +1733,7 @@ class InvMovimientoRepository extends ServiceEntityRepository
                         'res_hasta' => $arFactura['resolucionNumeroHasta'],
                         'res_prueba' => $arFactura['resolucionPrueba'],
                         'doc_codigo' => $arFactura['codigoMovimientoPk'],
+                        'doc_tipo' => $arFactura['codigoDocumentoTipoFk'],
                         'doc_codigoDocumento' => $arFactura['codigoDocumentoFk'],
                         'doc_cue' => $arFactura['cue'],
                         'doc_prefijo' => $arFactura['prefijo'],

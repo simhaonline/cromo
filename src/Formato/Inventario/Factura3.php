@@ -2,6 +2,8 @@
 
 namespace App\Formato\Inventario;
 
+use App\Entity\General\GenResolucion;
+use App\Entity\Inventario\InvConfiguracion;
 use App\Entity\Inventario\InvMovimiento;
 use App\Entity\Inventario\InvMovimientoDetalle;
 use App\Entity\Inventario\InvTercero;
@@ -247,6 +249,8 @@ class Factura3 extends \FPDF
          */
         $arMovimiento = self::$em->getRepository('App:Inventario\InvMovimiento')->find(self::$codigoMovimiento);
         $arConfiguracion = self::$em->getRepository('App:General\GenConfiguracion')->find(1);
+        $arConfiguracionIventario = self::$em->getRepository(InvConfiguracion::class)->find(1);
+        $arResolucion = self::$em->getRepository(GenResolucion::class)->find($arMovimiento->getCodigoResolucionFk());
         $this->Ln();
         $this->SetFont('Arial', 'B', 7.5);
         //Bloque informacion de conformidad
@@ -265,8 +269,8 @@ class Factura3 extends \FPDF
         $this->Text(80, 228, utf8_decode('FECHA:________________________________'));
         $this->Text(140, 228, utf8_decode('FECHA:________________________________'));
         //Bloque resolucion facturacion
-        $this->Text(48,236, utf8_decode($arMovimiento->getFacturaTipoRel()->getNumeroResolucionDianFactura()) . ' Intervalo ' . $arMovimiento->getFacturaTipoRel()->getNumeracionDesde(). ' al '. $arMovimiento->getFacturaTipoRel()->getNumeracionHasta());
-        $this->Text(32,240, utf8_decode($arMovimiento->getFacturaTipoRel()->getInformacionCuentaPago()));
+        $this->Text(40, 236, utf8_decode('Número de Autorización de Facturación ' . $arResolucion->getNumero() . ' de ' . $arResolucion->getFecha()->format('Y-m-d') . ' Intervalo ' . $arResolucion->getNumeroDesde() . ' al ' . $arResolucion->getNumeroHasta()));
+        $this->Text(32, 240, utf8_decode($arConfiguracionIventario->getInformacionPagoMovimiento()));
         //Informacion final
         $this->Text(143, 246, utf8_decode('Impreso por computador'));
         $this->Text(130, 250, utf8_decode($arConfiguracion->getNombre() .' Nit: ') . $arConfiguracion->getNit() . '-' . $arConfiguracion->getDigitoVerificacion());

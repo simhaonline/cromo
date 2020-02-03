@@ -232,7 +232,7 @@ class Factura2 extends \FPDF
         $arFactura = self::$em->getRepository('App:Transporte\TteFactura')->find(self::$codigoFactura);
         $this->SetXY(10, 214);
         $this->SetFont('Arial', '', 7);
-        $this->MultiCell(62, 3, utf8_decode("EL RETRASO EN EL PAGO OCASIONARA LOS INTERESES MAXIMOS DE MORA QUE AUTORIZA LA SUPERINTENDENCIA BANCARIA, FAVOR CANCELAR CON CHEQUE CRUZADO A NOMBRE DE COTRASCAL S.A.S O CANCELAR A CUENTA CORRIENTE 30265690912 de BANCOLOMBIA O A LA CUENTA CORRIENTE 657-04856-7 de BANCO DE OCCIDENTE de Bucaramanga"), 1, 'L');
+        $this->MultiCell(62, 3, utf8_decode("EL RETRASO EN EL PAGO OCASIONARA LOS INTERESES MAXIMOS DE MORA QUE AUTORIZA LA SUPERINTENDENCIA BANCARIA, FAVOR CANCELAR CON CHEQUE CRUZADO A NOMBRE DE COTRASCAL S.A.S O CANCELAR A CUENTA CORRIENTE 30265690912 de BANCOLOMBIA O A LA CUENTA CORRIENTE 657-04856-7 de BANCO DE OCCIDENTE DE BUCARAMANGA"), 1, 'L');
         $this->SetXY(75, 214);
         $this->SetFont('Arial', '', 8);
         $this->MultiCell(58, 3, utf8_decode("OBSERVACIONES: " . substr($arFactura->getComentario(), 0, 40)), 0, 'L');

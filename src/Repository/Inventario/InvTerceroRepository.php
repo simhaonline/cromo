@@ -59,6 +59,7 @@ class InvTerceroRepository extends ServiceEntityRepository
             ->addSelect('t.nombreCorto')
             ->addSelect('t.telefono')
             ->addSelect('t.direccion')
+            ->addSelect('t.email')
             ->addSelect('c.nombre AS ciudadNombre')
             ->addSelect('t.cliente')
             ->addSelect('t.proveedor')

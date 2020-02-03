@@ -90,8 +90,15 @@
                 style="text-align: right;">{{ arMovimiento.vrAutoretencion | number_format(0, '.', ',') }}</td>
         </tr>
         <tr>
-            <td class="titulo"></td>
-            <td class="td-in-well"></td>
+            <td class="titulo">REFERENCIA:</td>
+            <td class="td-in-well">
+                {% if arMovimiento.codigoDocumentoTipoFk == 'NC' or arMovimiento.codigoDocumentoTipoFk == 'ND' %}
+                    COD: {{ arMovimiento.codigoMovimientoFk  | default("") }} NUM: {{ arMovimiento.movimientoRel.numero   | default("") }}
+                    {% if arMovimiento.estadoAutorizado == 0 %}
+                        <a class="btn btn-default btn-xs" href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_agregarreferencia', {'id': arMovimiento.codigoMovimientoPk }) }}', 'AdicionarFactura', 600, 900)">Agregar</a>
+                    {% endif %}
+                {% endif %}
+            </td>
             <td class="titulo"></td>
             <td class="td-in-well" style="text-align: left;"></td>
             <td class="titulo">NETO:</td>
@@ -295,8 +302,8 @@
                             </div>
                         {% endif %}
 
-                        {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' %}
-                            {% if arMovimiento.documentoRel.notaCredito == 1 %}
+                        {% if arMovimiento.codigoDocumentoTipoFk == 'FAC' or arMovimiento.codigoDocumentoTipoFk == 'NC' or arMovimiento.codigoDocumentoTipoFk == 'ND'%}
+                            {% if arMovimiento.codigoDocumentoTipoFk == 'NC' %}
                                 <div class="btn-group">
                                     <a class="btn btn-default btn-sm"
                                        href="javascript:abrirVentana3('{{ path('inventario_movimiento_inventario_movimiento_movimiento_nuevo', {'id':arMovimiento.codigoMovimientoPk }) }}', 'MovimientoAdicionarDetalle', 600, 900)">Nuevo</a>

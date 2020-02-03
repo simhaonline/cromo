@@ -1357,8 +1357,9 @@ class FacturaElectronica
             if(isset($resp['Validaciones'])) {
                 $validaciones = $resp['Validaciones'];
                 if($validaciones['Valido']) {
-
+                    $procesoFacturaElectronica['estado'] = 'EX';
                 } else {
+                    $procesoFacturaElectronica['estado'] = 'ER';
                     $detalles = $validaciones['Detalle'];
                     $datos = [];
                     foreach ($detalles as $detalle) {
@@ -1437,7 +1438,7 @@ class FacturaElectronica
                         "ImpuCodigo"=> "01",
                         "Detalle"=> [
                             [
-                                "DediBase"=> $arrFactura['doc_subtotal'],
+                                "DediBase"=> $arrFactura['doc_baseIva'],
                                 "DediValor"=> $arrFactura['doc_iva'],
                                 "DediFactor"=> 19,
                                 "UnimCodigo"=> "1"
@@ -1456,7 +1457,7 @@ class FacturaElectronica
                 ],
                 "TotalesFactura"=> [
                     "DoetSubtotal"=> $arrFactura['doc_subtotal'],
-                    "DoetBase"=> $arrFactura['doc_subtotal'],
+                    "DoetBase"=> $arrFactura['doc_baseIva'],
                     "DoetTotalImpuestos"=> $arrFactura['doc_iva'],
                     "DoetSubtotalMasImpuestos"=> $arrFactura['doc_total'],
                     "DoetTotalDescuentos"=> 0,
@@ -1485,7 +1486,7 @@ class FacturaElectronica
                     "DoeiTotalDescuentos"=> 0,
                     "DoeiTotalCargos"=> 0,
                     "DoeiTotalImpuestos"=> $item['item_iva'],
-                    "DoeiBase"=> $item['item_base_iva'],
+                    "DoeiBase"=> $item['item_baseIva'],
                     "DoeiSubtotal"=> $item['item_subtotal'],
                     "TicpCodigo"=> "999",
                     "UnimCodigo"=> "94",
@@ -1497,7 +1498,7 @@ class FacturaElectronica
                             "ImpuCodigo"=> "01",
                             "Detalle"=> [
                                 [
-                                    "DediBase"=> $item['item_base_iva'],
+                                    "DediBase"=> $item['item_baseIva'],
                                     "DediValor"=> $item['item_iva'],
                                     "DediFactor"=> $item['item_porcentaje_iva'],
                                     "UnimCodigo"=> "1"

@@ -44,7 +44,7 @@ class FacturaElectronicaController extends MaestroController
             ->add('fechaDesde', DateType::class, ['label' => 'Fecha desde: ',  'required' => false, 'data' => date_create($session->get('filtroFechaDesde'))])
             ->add('fechaHasta', DateType::class, ['label' => 'Fecha hasta: ', 'required' => false, 'data' => date_create($session->get('filtroFechaHasta'))])
             ->add('btnEnviar', SubmitType::class, ['label' => 'Enviar', 'attr' => ['class' => 'btn btn-sm btn-default']])
-            ->add('btnPrueba', SubmitType::class, ['label' => 'Prueba', 'attr' => ['class' => 'btn btn-sm btn-default']])
+            ->add('btnPaquetePrueba', SubmitType::class, ['label' => 'Paquete de pruebas', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
             ->getForm();
         $form->handleRequest($request);
@@ -57,12 +57,11 @@ class FacturaElectronicaController extends MaestroController
             if ($form->get('btnEnviar')->isClicked()) {
                 $arr = $request->request->get('ChkSeleccionar');
                 if($arr) {
-                    $this->getDoctrine()->getRepository(InvMovimiento::class)->facturaElectronica($arr);
+                    $this->getDoctrine()->getRepository(InvMovimiento::class)->facturaElectronica($arr, false);
                 }
             }
-            if ($form->get('btnPrueba')->isClicked()) {
-                $facturaElectronica = new FacturaElectronica($em);
-                $facturaElectronica->consultarSuscriptor();
+            if ($form->get('btnPaquetePrueba')->isClicked()) {
+                $this->getDoctrine()->getRepository(InvMovimiento::class)->facturaElectronica($arr, true);
             }
         }
         $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaFacturaElectronica(), $request->query->getInt('page', 1),30);

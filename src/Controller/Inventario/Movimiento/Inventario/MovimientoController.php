@@ -41,6 +41,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -984,6 +985,36 @@ class MovimientoController extends MaestroController
             'arMovimientoDetalle' => $arMovimientoDetalle,
             'arPedidoDetalle' => $arPedidoDetalle,
             'arOrdenDetalle' => $arOrdenDetalle
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/inventario/movimiento/inventario/movimiento/agregarreferencia/{id}", name="inventario_movimiento_inventario_movimiento_agregarreferencia")
+     */
+    public function agregarReferencia(Request $request, PaginatorInterface $paginator, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = new Session();
+        $arMovimiento = $em->getRepository(InvMovimiento::class)->find($id);
+        $form = $this->createFormBuilder()
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($request->request->get('OpSeleccionar')) {
+                $codigo = $request->request->get('OpSeleccionar');
+                $arMovimientoReferencia = $em->getRepository(InvMovimiento::class)->find($codigo);
+                $arMovimiento->setMovimientoRel($arMovimientoReferencia);
+                $em->persist($arMovimiento);
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+            }
+        }
+        $arMovimientos = $paginator->paginate($em->getRepository(InvMovimiento::class)->listaReferencia($arMovimiento->getCodigoTerceroFk()), $request->query->getInt('page', 1), 50);
+        return $this->render('inventario/movimiento/inventario/agregarReferencia.html.twig', [
+            'form' => $form->createView(),
+            'arMovimientos' => $arMovimientos
         ]);
     }
 }

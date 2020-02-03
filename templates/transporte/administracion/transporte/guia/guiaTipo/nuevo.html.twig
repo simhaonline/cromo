@@ -1,0 +1,76 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoGuiaTipoPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoGuiaTipoPk) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">nombre</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.nombre, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.nombre) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Tipo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.facturaTipoRel,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.facturaTipoRel) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Mensaje formato</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.mensajeFormato, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.mensajeFormato) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Consecutivo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.consecutivo,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.consecutivo) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Orden</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.orden, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.orden) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Validar caracteres</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.validarCaracteres,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.validarCaracteres) }}</div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-4 col-sm-offset-2">
+                    {{ form_widget(form.factura) }}
+                    <div style="color:red;">{{ form_errors(form.factura) }}</div>
+                    {{ form_widget(form.cortesia) }}
+                    <div style="color:red;">{{ form_errors(form.cortesia) }}</div>
+                    {{ form_widget(form.exigeNumero) }}
+                    <div style="color:red;">{{ form_errors(form.exigeNumero) }}</div>
+                    {{ form_widget(form.validarFlete) }}
+                    <div style="color:red;">{{ form_errors(form.validarFlete) }}</div>
+                    {{ form_widget(form.validarRango) }}
+                    <div style="color:red;">{{ form_errors(form.validarRango) }}</div>
+                    {{ form_widget(form.generaCobro) }}
+                    <div style="color:red;">{{ form_errors(form.generaCobro) }}</div>
+                    {{ form_widget(form.generaCobroEntrega) }}
+                    <div style="color:red;">{{ form_errors(form.generaCobroEntrega) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_administracion_transporte_guia_guiaTipo_lista') }}">Cancelar</a>
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

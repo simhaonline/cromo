@@ -42,7 +42,7 @@ class GuiaTipoType extends AbstractType
             ->add('validarRango', CheckboxType::class, array('required'  => false))
             ->add('generaCobro', CheckboxType::class, array('required'  => false))
             ->add('generaCobroEntrega', CheckboxType::class, array('required'  => false))
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -53,33 +53,5 @@ class GuiaTipoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoGuiaTipoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",      "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE"},	
-            {"campo":"factura",                     "tipo":"bool",      "ayuda":"Factura",                  "titulo":"FACTURA"},	
-            {"campo":"consecutivo",                 "tipo":"texto",     "ayuda":"Consecutivo",              "titulo":"CONSECUTIVO"},	
-            {"campo":"codigoFacturaTipoFk",         "tipo":"texto",     "ayuda":"Codigo factura tipo",      "titulo":"CODIGO FACTURA TIPO"},	
-            {"campo":"exigeNumero",                 "tipo":"bool",      "ayuda":"Exige numero",             "titulo":"EXIGE NUMERO"},	
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Orden",                    "titulo":"ORDEN"},	
-            {"campo":"validarFlete",                "tipo":"bool",      "ayuda":"Validar flete",            "titulo":"VALIDAR FLETE"},	
-            {"campo":"validarRango",                "tipo":"bool",      "ayuda":"Validar rango",            "titulo":"VALIDAR RANGO"},	
-            {"campo":"cortesia",                    "tipo":"bool",      "ayuda":"Cortesia",                 "titulo":"CORTESIA"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoGuiaTipoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",      "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",      "titulo":"NOMBRE"},	
-            {"campo":"factura",                     "tipo":"bool",      "ayuda":"Factura",                  "titulo":"FACTURA"},	
-            {"campo":"consecutivo",                 "tipo":"texto",     "ayuda":"Consecutivo",              "titulo":"CONSECUTIVO"},	
-            {"campo":"codigoFacturaTipoFk",         "tipo":"texto",     "ayuda":"Codigo factura tipo",      "titulo":"CODIGO FACTURA TIPO"},	
-            {"campo":"exigeNumero",                 "tipo":"bool",      "ayuda":"Exige numero",             "titulo":"EXIGE NUMERO"},	
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Orden",                    "titulo":"ORDEN"},	
-            {"campo":"validarFlete",                "tipo":"bool",      "ayuda":"Validar flete",            "titulo":"VALIDAR FLETE"},	
-            {"campo":"validarRango",                "tipo":"bool",      "ayuda":"Validar rango",            "titulo":"VALIDAR RANGO"},	
-            {"campo":"cortesia",                    "tipo":"bool",      "ayuda":"Cortesia",                 "titulo":"CORTESIA"}	
-        ]';
-    }
 }
 

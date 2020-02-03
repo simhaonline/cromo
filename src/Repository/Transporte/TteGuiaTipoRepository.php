@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteGuiaTipo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -51,7 +52,6 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
         return $array;
     }
 
-
     public function apiWindowsLista($raw) {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder()->from(TteGuiaTipo::class, 'gt')
@@ -83,6 +83,70 @@ class TteGuiaTipoRepository extends ServiceEntityRepository
             }
         } else {
             return ["error" => "Faltan datos para la api"];
+        }
+    }
+
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigo = null;
+        $nombre = null;
+        $incidenteTipo = null;
+        $fechaDesde = null;
+        $fechaHasta = null;
+        $estadoAutorizado = null;
+        $estadoAprobado = null;
+        $estadoAnulado = null;
+
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteGuiaTipo::class, 'gt')
+            ->select('gt.codigoGuiaTipoPk')
+            ->addSelect('gt.nombre')
+            ->addSelect('gt.factura')
+            ->addSelect('gt.consecutivo')
+            ->addSelect('gt.codigoFacturaTipoFk')
+            ->addSelect('gt.exigeNumero')
+            ->addSelect('gt.orden')
+            ->addSelect('gt.validarFlete')
+            ->addSelect('gt.validarRango')
+            ->addSelect('gt.cortesia');
+
+        if ($codigo) {
+            $queryBuilder->andWhere("gt.codigoGuiaTipoPk = '{$codigo}'");
+        }
+
+        if($nombre){
+            $queryBuilder->andWhere("gt.nombre LIKE '%{$nombre}%'");
+        }
+
+        $queryBuilder->addOrderBy('gt.codigoGuiaTipoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $em->getRepository(TteGuiaTipo::class)->find($codigo);
+                if ($arRegistro) {
+                    $em->remove($arRegistro);
+                }
+            }
+            try {
+                $em->flush();
+            } catch (\Exception $e) {
+                Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+            }
+        }else{
+            Mensajes::error("No existen registros para eliminar");
         }
     }
 

@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo</label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoRedespachoMotivoPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoRedespachoMotivoPk) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">nombre</label>
+                <div class="col-sm-3">
+                    {{ form_widget(form.nombre, { 'attr': {'class' : 'form-control','onblur': 'javascript:calcularDigitoVerificacion(this.value)'} }) }}
+                    <div style="color:red;">{{ form_errors(form.nombre) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_administracion_transporte_guia_redespachoMotivo_lista') }}">Cancelar</a>
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

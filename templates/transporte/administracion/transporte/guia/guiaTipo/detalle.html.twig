@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_administracion_transporte_guia_guiaTipo_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arRegistro.codigoGuiaTipoPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arRegistro.nombre }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FACTURA TIPO:</td>
+            <td class="td-in-well">{{ arRegistro.facturaTipoRel.nombre | default("") }}</td>
+            <td class="titulo">NOMBRE FORMATO:</td>
+            <td class="td-in-well">{{ arRegistro.mensajeFormato }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">FACTURA:</td>
+            <td class="td-in-well">{{ arRegistro.factura ?"SI":"NO" }}</td>
+            <td class="titulo">CORTESIA:</td>
+            <td class="td-in-well">{{ arRegistro.cortesia ?"SI":"NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">EXIGE NUMERO:</td>
+            <td class="td-in-well">{{ arRegistro.exigeNumero ?"SI":"NO" }}</td>
+            <td class="titulo">VALIDAR FLETE:</td>
+            <td class="td-in-well">{{ arRegistro.validarFlete ?"SI":"NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">GENERAR COBRO:</td>
+            <td class="td-in-well">{{ arRegistro.generaCobro ?"SI":"NO" }}</td>
+            <td class="titulo">VALIDAR RANGO:</td>
+            <td class="td-in-well">{{ arRegistro.validarRango ?"SI":"NO" }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">GENERAR COBRO ENTRAGA:</td>
+            <td class="td-in-well">{{ arRegistro.generaCobroEntrega ?"SI":"NO" }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

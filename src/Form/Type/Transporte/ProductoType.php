@@ -20,8 +20,7 @@ class ProductoType extends AbstractType
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('codigoTransporte',IntegerType::class,['required' => true,'label' => 'Codigo transporte:'])
             ->add('orden',IntegerType::class,['required' => true,'label' => 'Orden:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -32,20 +31,4 @@ class ProductoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoProductoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"codigoTransporte",            "tipo":"texto",     "ayuda":"Codigo transporte",       "titulo":"CODIGO TRANSPORTE"},	
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Numero",                  "titulo":"NUMERO"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoProductoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"codigoTransporte",            "tipo":"texto",     "ayuda":"Codigo transporte",       "titulo":"CODIGO TRANSPORTE"},	
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Numero",                  "titulo":"NUMERO"}	
-        ]';
-    }
 }

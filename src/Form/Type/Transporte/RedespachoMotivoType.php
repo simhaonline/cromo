@@ -16,7 +16,7 @@ class RedespachoMotivoType extends AbstractType
         $builder
             ->add('codigoRedespachoMotivoPk',TextType::class, array('required' => true,'label'=>"Codigo redespacho motivo:"))
             ->add('nombre',TextType::class, array('required' => true,'label'=>'Nombre:'))
-            ->add('guardar', SubmitType::class,array('label'=>'Guardar','attr'=>['class'=>'btn btn-primary btn-sm']))
+            ->add('btnGuardar', SubmitType::class,array('label'=>'Guardar','attr'=>['class'=>'btn btn-primary btn-sm']))
         ;
     }
 
@@ -27,16 +27,4 @@ class RedespachoMotivoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoRedespachoMotivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoRedespachoMotivoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
 }

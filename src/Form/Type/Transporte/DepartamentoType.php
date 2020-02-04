@@ -16,8 +16,7 @@ class DepartamentoType extends AbstractType
         $builder
             ->add('codigoDepartamentoPk',TextType::class,['required' => true,'label' => 'Codigo departamento:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-            ->add('guardarnuevo', SubmitType::class, ['label'=>'Guardar y nuevo','attr' => ['class' => 'btn btn-sm btn-primary']]);;
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -28,16 +27,4 @@ class DepartamentoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoDepartamentoPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                          "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoDepartamentoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                       "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
 }

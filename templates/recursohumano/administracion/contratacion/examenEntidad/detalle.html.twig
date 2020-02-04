@@ -5,11 +5,28 @@
     <div class="btn-toolbar" style="float:left">
         <div class="btn-group">
             <a class="btn btn-default btn-sm"
-               href="{{ path('recursohumano_administracion_examen_entidadexamen_lista') }}">Volver</a>
+               href="{{ path('recursohumano_administracion_contratacion_examenEntidad_lista') }}">Volver</a>
         </div>
     </div>
     <br/><br/>
-    {% include 'recursohumano/administracion/examen/entidadexamen/informacion.html.twig' %}
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tr>
+            <td class="titulo">CODIGO:</td>
+            <td class="td-in-well">{{ arRegistro.codigoExamenEntidadPk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arRegistro.nombre }}</td>
+            <td class="titulo">NIT:</td>
+            <td class="td-in-well">{{ arRegistro.nit }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">DIRECCION:</td>
+            <td class="td-in-well">{{ arRegistro.direccion }}</td>
+            <td class="titulo">TELEFONO:</td>
+            <td class="td-in-well">{{ arRegistro.telefono }}</td>
+            <td class="titulo"></td>
+            <td class="td-in-well"></td>
+        </tr>
+    </table>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
     </ul>
@@ -28,20 +45,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for arEntidadExamenDetalle in arEntidadExamenDetalle %}
+                        {% for arExamenEntidadDetalle in arExamenEntidadDetalles %}
                             <tr>
-                                <td>{{ arEntidadExamenDetalle.codigoExamenListaPrecioPk }}<input type="hidden"
+                                <td>{{ arExamenEntidadDetalle.codigoExamenListaPrecioPk }}<input type="hidden"
                                                                                                  name="arrCodigo[]"
-                                                                                                 value="{{ arEntidadExamenDetalle.codigoExamenListaPrecioPk }}">
+                                                                                                 value="{{ arExamenEntidadDetalle.codigoExamenListaPrecioPk }}">
                                 </td>
-                                <td>{{ arEntidadExamenDetalle.examenTipoRel.nombre }}</td>
+                                <td>{{ arExamenEntidadDetalle.examenTipoRel.nombre }}</td>
                                 <td style="text-align: center;"><input class="input-grid" type="text"
-                                                                       name="arrPrecio[{{ arEntidadExamenDetalle.codigoExamenListaPrecioPk }}]"
-                                                                       value="{{ arEntidadExamenDetalle.vrPrecio }} "
+                                                                       name="arrPrecio[{{ arExamenEntidadDetalle.codigoExamenListaPrecioPk }}]"
+                                                                       value="{{ arExamenEntidadDetalle.vrPrecio }} "
                                                                        style="text-align: right; width:60px"
                                                                        size="10"></td>
                                 <td align="center"><input type="checkbox" name="ChkSeleccionar[]"
-                                                          value="{{ arEntidadExamenDetalle.codigoExamenListaPrecioPk }}"/>
+                                                          value="{{ arExamenEntidadDetalle.codigoExamenListaPrecioPk }}"/>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -51,7 +68,7 @@
                 <div class="btn-toolbar" style="float: right">
                                     <div class="btn-group">
                                         <a class="btn btn-default btn-sm"
-                                           href="javascript:abrirVentana3('{{ path('recursohumano_administracion_examen_entidadexamen_detalle_nuevo', {'codigoEntidadExamenPk': arEntidadExamenes.codigoEntidadExamenPk,'id': 0 }) }}', 'EntidadExamenAdicionarDetalle', 600, 900)">Nuevo</a>
+                                           href="javascript:abrirVentana3('{{ path('recursohumano_administracion_examen_examenEntidad_detalle_nuevo', {'codigoEntidadExamenPk': arRegistro.codigoExamenEntidadPk, 'id': 0 }) }}', 'EntidadExamenAdicionarDetalle', 600, 900)">Nuevo</a>
                                     </div>
                     <div class="btn-group">
                         {{ form_widget(form.btnActualizar) }}

@@ -4561,47 +4561,50 @@ class MigracionController extends Controller
             $datos = $conn->query("SELECT
                     codigo_programacion_detalle_pk,
                     codigo_recurso_fk,
-                    codigo_puesto_fk,
+                    tur_programacion_detalle.codigo_puesto_fk,
                     codigo_pedido_detalle_fk,
-                    anio,
-                    mes,
-                    dia_1,
-                    dia_2,
-                    dia_3,
-                    dia_4,
-                    dia_5,
-                    dia_6,
-                    dia_7,
-                    dia_8,
-                    dia_9,
-                    dia_10,
-                    dia_11,
-                    dia_12,
-                    dia_13,
-                    dia_14,
-                    dia_15,
-                    dia_16,
-                    dia_17,
-                    dia_18,
-                    dia_19,
-                    dia_20,
-                    dia_21,
-                    dia_22,
-                    dia_23,
-                    dia_24,
-                    dia_25,
-                    dia_26,
-                    dia_27,
-                    dia_28,
-                    dia_29,
-                    dia_30,
-                    dia_31,
-                    horas,
-                    horas_diurnas,
-                    horas_nocturnas,
-                    complementario,
-                    adicional
-                 FROM tur_programacion_detalle  ORDER BY codigo_programacion_detalle_pk limit {$lote},{$rango}");
+                    tur_pedido_detalle.codigo_pedido_fk,
+                    tur_programacion_detalle.anio,
+                    tur_programacion_detalle.mes,
+                    tur_programacion_detalle.dia_1,
+                    tur_programacion_detalle.dia_2,
+                    tur_programacion_detalle.dia_3,
+                    tur_programacion_detalle.dia_4,
+                    tur_programacion_detalle.dia_5,
+                    tur_programacion_detalle.dia_6,
+                    tur_programacion_detalle.dia_7,
+                    tur_programacion_detalle.dia_8,
+                    tur_programacion_detalle.dia_9,
+                    tur_programacion_detalle.dia_10,
+                    tur_programacion_detalle.dia_11,
+                    tur_programacion_detalle.dia_12,
+                    tur_programacion_detalle.dia_13,
+                    tur_programacion_detalle.dia_14,
+                    tur_programacion_detalle.dia_15,
+                    tur_programacion_detalle.dia_16,
+                    tur_programacion_detalle.dia_17,
+                    tur_programacion_detalle.dia_18,
+                    tur_programacion_detalle.dia_19,
+                    tur_programacion_detalle.dia_20,
+                    tur_programacion_detalle.dia_21,
+                    tur_programacion_detalle.dia_22,
+                    tur_programacion_detalle.dia_23,
+                    tur_programacion_detalle.dia_24,
+                    tur_programacion_detalle.dia_25,
+                    tur_programacion_detalle.dia_26,
+                    tur_programacion_detalle.dia_27,
+                    tur_programacion_detalle.dia_28,
+                    tur_programacion_detalle.dia_29,
+                    tur_programacion_detalle.dia_30,
+                    tur_programacion_detalle.dia_31,
+                    tur_programacion_detalle.horas,
+                    tur_programacion_detalle.horas_diurnas,
+                    tur_programacion_detalle.horas_nocturnas,
+                    tur_programacion_detalle.complementario,
+                    tur_programacion_detalle.adicional
+                 FROM tur_programacion_detalle
+                 left join tur_pedido_detalle on codigo_pedido_detalle_fk = tur_pedido_detalle.codigo_pedido_detalle_pk
+                   ORDER BY codigo_programacion_detalle_pk limit {$lote},{$rango}");
             foreach ($datos as $row) {
                 if ($row['codigo_recurso_fk']) {
                     $arProgramacion = new TurProgramacion();
@@ -4611,6 +4614,9 @@ class MigracionController extends Controller
                     }
                     if ($row['codigo_pedido_detalle_fk']) {
                         $arProgramacion->setPedidoDetalleRel($em->getReference(TurPedidoDetalle::class, $row['codigo_pedido_detalle_fk']));
+                    }
+                    if ($row['codigo_pedido_fk']) {
+                        $arProgramacion->setPedidoRel($em->getReference(TurPedido::class, $row['codigo_pedido_fk']));
                     }
                     if ($row['codigo_puesto_fk']) {
                         $arProgramacion->setPuestoRel($em->getReference(TurPuesto::class, $row['codigo_puesto_fk']));

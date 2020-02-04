@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-lg-10">
                                     <div class="input-group">
-                                        <input id="form_txtNombreCliente" class="form-control" readonly>
+                                        <input id="form_txtNombreCliente"  name="form_txtNombreCliente"  type="text" class="form-control" value="{{ nombreCliente.nombreCorto }}" readOnly="ReadOnly" />
                                         <span class="input-group-btn">
                                             <a class="btn btn-default btn-sm"
                                                href="javascript:abrirVentana3('{{ path('turno_buscar_cliente',

@@ -264,10 +264,9 @@ class EmpleadoController extends MaestroController
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @Route("recursohumano/administracion/recurso/empleado/nuevo/enlazar/seleccion", name="recursohumano_administracion_recurso_empleado_enlazar_seleccion")
      */
-    public function EnlazarSeleccion(Request $request){
+    public function EnlazarSeleccion(Request $request, PaginatorInterface $paginator){
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
-        $paginator = $this->get('knp_paginator');
         $form = $this-> createFormBuilder()
             ->add('identificacion', TextType::class,['required' => false, 'data' => $session->get('filtroIdentificacion')])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])

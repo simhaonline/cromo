@@ -6,6 +6,7 @@ namespace App\Controller\Turno\Informe\Operacion;
 
 use App\Controller\Estructura\FuncionesController;
 
+use App\Entity\Turno\TurCliente;
 use App\Entity\Turno\TurFestivo;
 use App\Entity\Turno\TurProgramacion;
 use App\Formato\Turno\informeProgramacion;
@@ -29,19 +30,19 @@ class Programacion extends AbstractController
     /**
      * @Route("/turno/informe/operacion/programacion/lista", name="turno_informe_operacion_programacion_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator )
+    public function lista(Request $request, PaginatorInterface $paginator)
     {
         $session = new Session();
         $em = $this->getDoctrine()->getManager();
         $dateFecha = (new \DateTime('now'));
         $arrDiaSemana = "";
         $form = $this->createFormBuilder()
-            ->add('txtAnio', TextType::class, ['required' => false, 'data' =>  $dateFecha->format('Y'), 'attr' => ['class' => 'form-control']])
+            ->add('txtAnio', TextType::class, ['required' => false, 'data' => $dateFecha->format('Y'), 'attr' => ['class' => 'form-control']])
             ->add('txtMes', TextType::class, ['required' => false, 'data' => $dateFecha->format('m'), 'attr' => ['class' => 'form-control']])
-            ->add('txtEmpleado', TextType::class, ['required' => false, 'data'=> $session->get('filtroRhuEmpleadoCodigoEmpleado'),'attr' => ['class' => 'form-control']])
-            ->add('codigoClienteFk', TextType::class, ['required' => false, 'data'=> $session->get('filtroTurCodigoCliente'),'attr' => ['class' => 'form-control']])
-            ->add('codigoPuesto', TextType::class, ['required' => false, 'data'=> $session->get('filtroTurProgramacionCodigoPuesto'),'attr' => ['class' => 'form-control']])
-            ->add('numeroPedido', TextType::class, ['required' => false, 'data'=> $session->get('filtroTurProgramacionNumeroPedido'),'attr' => ['class' => 'form-control']])
+            ->add('txtEmpleado', TextType::class, ['required' => false, 'data' => $session->get('filtroRhuEmpleadoCodigoEmpleado'), 'attr' => ['class' => 'form-control']])
+            ->add('codigoClienteFk', TextType::class, ['required' => false, 'data' => $session->get('filtroTurCodigoCliente'), 'attr' => ['class' => 'form-control']])
+            ->add('codigoPuesto', TextType::class, ['required' => false, 'data' => $session->get('filtroTurProgramacionCodigoPuesto'), 'attr' => ['class' => 'form-control']])
+            ->add('numeroPedido', TextType::class, ['required' => false, 'data' => $session->get('filtroTurProgramacionNumeroPedido'), 'attr' => ['class' => 'form-control']])
             ->add('btnExcel', SubmitType::class, ['label' => 'Excel', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnImprimir', SubmitType::class, ['label' => 'Imprimir', 'attr' => ['class' => 'btn-sm btn btn-default']])
             ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar', 'attr' => ['class' => 'btn btn-sm btn-default']])
@@ -55,6 +56,7 @@ class Programacion extends AbstractController
                 $session->set('filtroTurCodigoCliente', $form->get('codigoClienteFk')->getData());
                 $session->set('filtroTurProgramacionCodigoPuesto', $form->get('codigoPuesto')->getData());
                 $session->set('filtroTurProgramacionNumeroPedido', $form->get('numeroPedido')->getData());
+                $nombreCliente = $em->getRepository(TurCliente::class)->find($form->get('codigoClienteFk')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones();
@@ -71,6 +73,7 @@ class Programacion extends AbstractController
         return $this->render('turno/informe/operacion/programacion/programacion.html.twig', [
             'arProgramaciones' => $arProgramaciones,
             'arrDiaSemana' => $arrDiaSemana,
+            'nombreCliente' => $nombreCliente ?? null,
             'form' => $form->createView()
         ]);
     }
@@ -84,7 +87,7 @@ class Programacion extends AbstractController
             $hoja = $libro->getActiveSheet();
             $hoja->setTitle('programacion');
             $j = 0;
-            $arrColumnas=['ID', 'AÑO','MES', 'COD', 'CLIENTE', 'COD', 'PUESTO','COD', 'IDENTIFICACION','EMPLEADO','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','H', 'HD', 'HN','PD',];
+            $arrColumnas = ['ID', 'AÑO', 'MES', 'COD', 'CLIENTE', 'COD', 'PUESTO', 'COD', 'IDENTIFICACION', 'EMPLEADO', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', 'H', 'HD', 'HN', 'PD',];
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
                 $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);

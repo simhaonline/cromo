@@ -614,7 +614,7 @@ class FacturaController extends MaestroController
             ->setCellValue('A2', 'ORIGEN')//Tipo de movimiento de la factura
             ->setCellValue('B2', 'TIPODCTO')//Tipo de movimiento de la factura
             ->setCellValue('C2', 'NRODCTO')//Numero de documento de la factura
-            ->setCellValue('D2', 'BODEGA')//Bodega
+            ->setCellValue('D2', 'BODEGA')//bodega
             ->setCellValue('E2', 'PRODUCTO')//codigo de interfaz del concepto de servicio
             ->setCellValue('F2', 'NOMBRE')//Nombre del concepto de servicio
             ->setCellValue('G2', 'CANTIDAD')//Cantidad unitaria

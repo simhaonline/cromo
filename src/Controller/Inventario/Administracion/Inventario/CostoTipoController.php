@@ -4,9 +4,11 @@ namespace App\Controller\Inventario\Administracion\Inventario;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
+use App\Entity\Inventario\InvCostoTipo;
 use App\Entity\Inventario\InvDocumento;
 use App\Entity\Inventario\InvFacturaTipo;
 use App\Entity\Inventario\InvItem;
+use App\Form\Type\Inventario\CostoTipoType;
 use App\Form\Type\Inventario\DocumentoType;
 use App\Form\Type\Inventario\FacturaTipoType;
 use App\Form\Type\Inventario\ItemType;
@@ -22,15 +24,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-class FacturaTipoController extends MaestroController
+class CostoTipoController extends MaestroController
 {
 
     public $tipo = "administracion";
-    public $modelo = "InvFacturaTipo";
-    public $entidad = InvFacturaTipo::class;
+    public $modelo = "InvCostoTipo";
+    public $entidad = InvCostoTipo::class;
 
     /**
-     * @Route("/inventario/administracion/inventario/facturatipo/lista", name="inventario_administracion_inventario_facturatipo_lista")
+     * @Route("/inventario/administracion/inventario/costotipo/lista", name="inventario_administracion_inventario_costotipo_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator)
     {
@@ -66,7 +68,7 @@ class FacturaTipoController extends MaestroController
     }
 
     /**
-     * @Route("/inventario/administracion/inventario/facturatipo/nuevo/{id}", name="inventario_administracion_inventario_facturatipo_nuevo")
+     * @Route("/inventario/administracion/inventario/costotipo/nuevo/{id}", name="inventario_administracion_inventario_costotipo_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -75,30 +77,30 @@ class FacturaTipoController extends MaestroController
         if ($id != 0 || $id != "") {
             $arRegistro = $em->getRepository($this->entidad)->find($id);
         }
-        $form = $this->createForm(FacturaTipoType::class, $arRegistro);
+        $form = $this->createForm(CostoTipoType::class, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_inventario_facturatipo_detalle', array('id' => $arRegistro->getcodigoFacturaTipoPk())));
+                return $this->redirect($this->generateUrl('inventario_administracion_inventario_costotipo_detalle', array('id' => $arRegistro->getcodigoCostoTipoPk())));
             }
         }
-        return $this->render('inventario/administracion/inventario/facturatipo/nuevo.html.twig', [
+        return $this->render('inventario/administracion/inventario/costotipo/nuevo.html.twig', [
             'form' => $form->createView(),
             'arRegistro' => $arRegistro
         ]);
     }
 
     /**
-     * @Route("/inventario/administracion/inventario/facturatipo/detalle/{id}", name="inventario_administracion_inventario_facturatipo_detalle")
+     * @Route("/inventario/administracion/inventario/costotipo/detalle/{id}", name="inventario_administracion_inventario_costotipo_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->entidad)->find($id);
-        return $this->render('inventario/administracion/inventario/facturatipo/detalle.html.twig', [
+        return $this->render('inventario/administracion/inventario/costotipo/detalle.html.twig', [
 
             'arRegistro' => $arRegistro,
         ]);
@@ -136,7 +138,7 @@ class FacturaTipoController extends MaestroController
             $j = 2;
             foreach ($arRegistros as $arRegistro) {
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
-                $hoja->setCellValue('A' . $j, $arRegistro['codigoFacturaTipoPk']);
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoCostoTipoPk']);
                 $hoja->setCellValue('B' . $j, $arRegistro['nombre']);
 
                 $j++;

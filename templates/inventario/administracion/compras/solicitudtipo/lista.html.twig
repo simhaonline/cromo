@@ -42,20 +42,20 @@
         <tbody>
         {% for arRegistro in arRegistros %}
             <tr>
-                <td>{{ arRegistro.codigoMarcaPk}}</td>
+                <td>{{ arRegistro.codigoSolicitudTipoPk}}</td>
                 <td>{{ arRegistro.nombre }}</td>
                 <td class="text-center">
-                    <a href="{{ path('inventario_administracion_inventario_marca_nuevo',{'id': arRegistro.codigoMarcaPk }) }}"><i
+                    <a href="{{ path('inventario_administracion_compras_solicitudtipo_nuevo',{'id': arRegistro.codigoSolicitudTipoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('inventario_administracion_inventario_marca_detalle',{'id' : arRegistro.codigoMarcaPk}) }}">
+                    <a href="{{ path('inventario_administracion_compras_solicitudtipo_detalle',{'id' : arRegistro.codigoSolicitudTipoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arRegistro.codigoMarcaPk }}"/>
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{  arRegistro.codigoSolicitudTipoPk }}"/>
                 </td>
             </tr>
         {% endfor %}
@@ -80,7 +80,7 @@
     </div>
     <div class="btn-group" style="float: right; margin-right: 5px !important;">
         <a class="btn btn-default btn-sm"
-           href="{{ path('inventario_administracion_inventario_marca_nuevo',{'id':0}) }}">Nuevo</a>
+           href="{{ path('inventario_administracion_compras_solicitudtipo_nuevo',{'id':0}) }}">Nuevo</a>
     </div>
     <br><br><br>
     {{ form_end(form) }}

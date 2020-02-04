@@ -29,7 +29,7 @@ class FacturaTipoType extends AbstractType
             ->add('numeroResolucionDianFactura',TextareaType::class,['label' => 'Resolucion DIAN: '])
             ->add('informacionCuentaPago',TextareaType::class,['label' => 'Informacion cuenta de pago: '])
             ->add('notaCredito', CheckboxType::class, ['required' => false, 'label' => ''])
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

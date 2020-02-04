@@ -19,7 +19,7 @@ class PedidoTipoType extends AbstractType
             ->add('codigoPedidoTipoPk',TextType::class,['label' => 'Código pedido tipo: '])
             ->add('nombre',TextType::class,['label' => 'Nombre: '])
             ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo','required' => true])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar'])
         ;
     }
 

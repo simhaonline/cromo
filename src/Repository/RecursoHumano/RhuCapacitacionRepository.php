@@ -57,7 +57,7 @@ class RhuCapacitacionRepository extends ServiceEntityRepository
             ->addSelect('c.estadoAnulado')
             ->leftJoin('c.capacitacionTemaRel', 'cte')
             ->leftJoin('c.capacitacionTipoRel', 'ct')
-            ->leftJoin('c.capacitacionMetadologiaRel', 'cm')
+            ->leftJoin('c.capacitacionMetodologiaRel', 'cm')
             ->leftJoin('c.zonaRel', 'z')
             ->leftJoin('c.puestoRel', 'p');
         if ($codigoCapacitacion) {

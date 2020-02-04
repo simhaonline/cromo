@@ -784,7 +784,7 @@ class RhuAporteRepository extends ServiceEntityRepository
             $ibcSalud = $this->redondearIbc2($arAporte->getIbcSalud());
             $ibcRiesgos = $this->redondearIbc2($arAporte->getIbcRiesgosProfesionales());
             $ibcCaja = $this->redondearIbc2($arAporte->getIbcCaja());
-            $ibcOtrosParafiscales = 0;
+            $ibcOtrosParafiscales = $ibc;
             $ibcCajaTotal = 0;
 
             // se valida si es empleado devenga mas de 25 SMLV y aporta unicamente sobre los 25 SMLv

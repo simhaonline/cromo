@@ -68,4 +68,26 @@ class CarReciboTipoRepository extends ServiceEntityRepository
             Mensajes::error("No existen registros para eliminar");
         }
     }
+
+    public function llenarCombo()
+    {
+        $session = new Session();
+        $array = [
+            'class' => CarReciboTipo::class,
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('rt')
+                    ->orderBy('rt.nombre', 'ASC');
+            },
+            'choice_label' => 'nombre',
+            'required' => false,
+            'empty_data' => "",
+            'placeholder' => "TODOS",
+            'data' => ""
+        ];
+        if ($session->get('filtroCarReciboCodigoReciboTipo')) {
+            $array['data'] = $this->getEntityManager()->getReference(CarReciboTipo::class, $session->get('filtroCarReciboCodigoReciboTipo'));
+        }
+        return $array;
+    }
+
 }

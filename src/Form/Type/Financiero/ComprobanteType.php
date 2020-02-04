@@ -10,15 +10,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
 class ComprobanteType extends AbstractType
 {
+
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoComprobantePk', TextType::class, ['label' => 'Codigo comprobante:'])
-            ->add('nombre', TextType::class, ['label' => 'Nombre:'])
-            ->add('consecutivo', NumberType::class, ['label' => 'Consecutivo:'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add("codigoComprobantePk", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add("nombre", TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('consecutivo', NumberType::class, array('required' => false))
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 
@@ -27,25 +30,5 @@ class ComprobanteType extends AbstractType
         $resolver->setDefaults([
             'data_class' => FinComprobante::class,
         ]);
-    }
-
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[
-            {"campo":"codigoComprobantePk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del comprobante",       "titulo":"NOMBRE"},
-            {"campo":"consecutivo",                  "tipo":"texto"  ,"ayuda":"Consecutivo",       "titulo":"CONSECUTIVO"}          
-                                                                          
-        ]';
-        return $campos;
-    }
-
-    public function getEstructuraPropiedadesExportar()
-    {
-        $campos = '[
-            {"campo":"codigoComprobantePk",     "tipo":"pk"     ,"ayuda":"Codigo del registro",          "titulo":"ID"},
-            {"campo":"nombre",                  "tipo":"texto"  ,"ayuda":"Nombre del comprobante",       "titulo":"NOMBRE"}                               
-        ]';
-        return $campos;
     }
 }

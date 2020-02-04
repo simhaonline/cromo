@@ -10,6 +10,9 @@ use App\Form\Type\RecursoHumano\ExamenTipoType;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,9 +32,9 @@ class ExamenTipoController extends  MaestroController
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigo', TextType::class, array('required' => false ))
+            ->add('codigo', NumberType::class, array('required' => false ))
             ->add('nombre', TextType::class, array('required' => false ))
-            ->add('ingreso', TextType::class, array('required' => false ))
+            ->add('ingreso', ChoiceType::class, ['choices' => [  'SI' => '1', 'NO' => '0'], 'required' => false ])
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
@@ -66,7 +69,7 @@ class ExamenTipoController extends  MaestroController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = new $this->entidad;
-        if ($id != 0) {
+        if ($id != 0||  $id != "") {
             $arRegistro = $em->getRepository($this->entidad)->find($id);
         }
         $form = $this->createForm( ExamenTipoType::class, $arRegistro);
@@ -76,7 +79,7 @@ class ExamenTipoController extends  MaestroController
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('', array('id' => $arRegistro->getCodigoExamenTipoPk())));
+                return $this->redirect($this->generateUrl('recursohumano_administracion_contratacion_examentipo_detalle', array('id' => $arRegistro->getcodigoExamenTipoPk())));
             }
         }
         return $this->render('recursohumano/administracion/contratacion/examentipo/nuevo.html.twig', [
@@ -104,6 +107,7 @@ class ExamenTipoController extends  MaestroController
         $filtro = [
             'codigo' => $form->get('codigo')->getData(),
             'nombre' => $form->get('nombre')->getData(),
+            'ingreso' => $form->get('ingreso')->getData(),
         ];
         return $filtro;
 

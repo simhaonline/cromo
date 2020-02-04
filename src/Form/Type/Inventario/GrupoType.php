@@ -16,18 +16,9 @@ class GrupoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoGrupoPk',TextType::class,['label' => 'Código grupo: '])
-            ->add('lineaRel',EntityType::class,[
-                'class' => 'App\Entity\Inventario\InvLinea',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('l')
-                        ->orderBy('l.nombre','DESC');
-                },
-                'choice_label' => 'nombre',
-                'label' => 'Linea:'
-            ])
-            ->add('nombre',TextType::class,['label' => 'Nombre: '])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('codigoGrupoPk',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('nombre',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 
@@ -37,5 +28,23 @@ class GrupoType extends AbstractType
             'data_class' => InvGrupo::class,
         ]);
     }
+
+//        $builder
+//            ->add('codigoGrupoPk',TextType::class,['label' => 'Código grupo: '])
+//            ->add('lineaRel',EntityType::class,[
+//                'class' => 'App\Entity\Inventario\InvLinea',
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('l')
+//                        ->orderBy('l.nombre','DESC');
+//                },
+//                'choice_label' => 'nombre',
+//                'label' => 'Linea:'
+//            ])
+//            ->add('nombre',TextType::class,['label' => 'Nombre: '])
+//            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+//        ;
+
+
+
 
 }

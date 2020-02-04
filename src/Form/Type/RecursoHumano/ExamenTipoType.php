@@ -20,6 +20,7 @@ class ExamenTipoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add("codigoExamenTipoPk", TextType::class, ['required'=>true, 'label'=>'nombre'])
             ->add("nombre", TextType::class, ['required'=>true, 'label'=>'nombre'])
             ->add('ingreso', CheckboxType::class, array('required'  => false))
             ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);

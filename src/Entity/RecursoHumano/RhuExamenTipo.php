@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class RhuExamenTipo
 {
     public $infoLog = [
-        "primaryKey" => "codigoExamenClasePk",
+        "primaryKey" => "codigoExamenTipoPk",
         "todos" => true,
     ];
 

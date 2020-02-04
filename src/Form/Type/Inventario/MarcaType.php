@@ -14,9 +14,9 @@ class MarcaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoMarcaPk',TextType::class,['label' => 'Código marca: '])
-            ->add('nombre',TextType::class,['label' => 'Nombre: ','required' => false])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('codigoMarcaPk',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('nombre',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 

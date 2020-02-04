@@ -14,9 +14,9 @@ class BodegaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoBodegaPk',TextType::class,['label' => 'Código bodega: '])
-            ->add('nombre',TextType::class,['label' => 'Nombre: '])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('codigoBodegaPk',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('nombre',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 

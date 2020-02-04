@@ -22,15 +22,18 @@ class RhuExamenTipoRepository extends ServiceEntityRepository
 
         $codigo = null;
         $nombre = null;
+        $ingreso = null;
 
         if ($filtros) {
             $codigo = $filtros['codigo'] ?? null;
             $nombre = $filtros['nombre'] ?? null;
+            $ingreso = $filtros['ingreso'] ?? null;
         }
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(RhuExamenTipo::class, 'et')
             ->select('et.codigoExamenTipoPk')
-            ->addSelect('et.nombre');
+            ->addSelect('et.nombre')
+            ->addSelect('et.ingreso');
 
         if ($codigo) {
             $queryBuilder->andWhere("et.codigoExamenTipoPk = '{$codigo}'");
@@ -38,6 +41,10 @@ class RhuExamenTipoRepository extends ServiceEntityRepository
 
         if($nombre){
             $queryBuilder->andWhere("et.nombre LIKE '%{$nombre}%'");
+        }
+
+        if($ingreso){
+            $queryBuilder->andWhere("et.ingreso LIKE '%{$ingreso}%'");
         }
 
         $queryBuilder->addOrderBy('et.codigoExamenTipoPk', 'DESC');
@@ -52,7 +59,7 @@ class RhuExamenTipoRepository extends ServiceEntityRepository
         if ($arrDetallesSeleccionados) {
             if (count($arrDetallesSeleccionados)) {
                 foreach ($arrDetallesSeleccionados as $codigo) {
-                    $arRegistro = $em->getRepository(RhuEstudioTipo::class)->find($codigo);
+                    $arRegistro = $em->getRepository(RhuExamenTipo::class)->find($codigo);
                     if ($arRegistro) {
                         $em->remove($arRegistro);
                     }

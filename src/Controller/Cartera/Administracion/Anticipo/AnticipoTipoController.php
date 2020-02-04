@@ -59,7 +59,7 @@ class AnticipoTipoController extends  MaestroController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arRegistros = $em->getRepository($this->entidad)->lista($raw);
-                $this->excelLista($arRegistros, "anticipotipo");
+                $this->excelLista($arRegistros, "AnticipoTipo");
             }
         }
         $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
@@ -81,7 +81,7 @@ class AnticipoTipoController extends  MaestroController
         }
         $form = $this->createForm( AnticipoTipoType::class, $arRegistro);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
@@ -156,4 +156,5 @@ class AnticipoTipoController extends  MaestroController
             Mensajes::error("No existen registros para exportar");
         }
     }
+
 }

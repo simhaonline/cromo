@@ -14,9 +14,9 @@ class LineaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoLineaPk',TextType::class,['label' => 'Código linea: '])
-            ->add('nombre',TextType::class,['label' => 'Nombre: '])
-            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('codigoLineaPk',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('nombre',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 

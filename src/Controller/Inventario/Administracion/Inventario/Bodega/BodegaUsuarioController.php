@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Inventario\Administracion\Inventario\BodegaUsuario;
+namespace App\Controller\Inventario\Administracion\Inventario\Bodega;
 
 
 use App\Controller\Estructura\FuncionesController;

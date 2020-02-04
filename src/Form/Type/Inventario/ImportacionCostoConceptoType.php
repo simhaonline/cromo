@@ -14,9 +14,9 @@ class ImportacionCostoConceptoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigoImportacionCostoConceptoPk',TextType::class,['label' => 'Codigo importacion concepto:'])
-            ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
-            ->add('guardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']]);
+            ->add('codigoImportacionCostoConceptoPk',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('nombre',TextType::class, ['required' => true, 'label' => 'nombre'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar']);
         ;
     }
 

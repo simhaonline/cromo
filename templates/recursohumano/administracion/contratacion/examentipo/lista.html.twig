@@ -19,12 +19,11 @@
                             {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
-                    <div class="form-group form-group-sm">
-                        <label class="col-sm-2 control-label">Ingreso:</label>
-                        <div class="col-sm-4">
-                            {{ form_widget(form.ingreso, { 'attr': {'class': 'form-control'} }) }}
-                        </div>
+                    <label class="col-sm-2 control-label">Ingreso:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.ingreso, { 'attr': {'class': 'form-control'} }) }}
                     </div>
+
                 </div>
                 <div class="form-group form-group-sm">
                     <div class="col-sm-offset-2 col-sm-10">
@@ -52,11 +51,11 @@
                 <td>{{ arRegistro.nombre }}</td>
                 <td>{{ arRegistro.ingreso ? "SI": "NO" }}</td>
                 <td class="text-center">
-                    <a href="{{ path('recursohumano_administracion_general_estudioTipo_nuevo',{'id': arRegistro.codigoExamenTipoPk }) }}"><i
+                    <a href="{{ path('recursohumano_administracion_contratacion_examentipo_nuevo',{'id': arRegistro.codigoExamenTipoPk }) }}"><i
                                 class="fa fa-edit" style="color: black;font-size: large;"></i></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{{ path('recursohumano_administracion_general_estudioTipo_detalle',{'id' : arRegistro.codigoExamenTipoPk}) }}">
+                    <a href="{{ path('recursohumano_administracion_contratacion_examentipo_detalle',{'id' : arRegistro.codigoExamenTipoPk}) }}">
                         <i class="fa fa-share-square-o" style="font-size: large;color: black;">
                         </i>
                     </a>

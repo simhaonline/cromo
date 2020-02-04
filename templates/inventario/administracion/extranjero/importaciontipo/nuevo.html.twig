@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">Información general</div>
+        <div class="panel-body">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">Codigo </label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.codigoImportacionTipoPk,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.codigoImportacionTipoPk) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Nombre </label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.nombre,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.nombre) }}</div>
+                </div>
+                <label class="col-sm-2 control-label">Consecutivo </label>
+                <div class="col-sm-4">
+                    {{ form_widget(form.consecutivo,{ 'attr' : {'class' : 'form-control'}}) }}
+                    <div style="color:red;">{{ form_errors(form.consecutivo) }}</div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('inventario_administracion_extranjero_importaciontipo_lista') }}">Cancelar</a>
+        {{ form_widget(form.btnGuardar, { 'attr': {'class': 'btn btn-primary btn-sm'} }) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

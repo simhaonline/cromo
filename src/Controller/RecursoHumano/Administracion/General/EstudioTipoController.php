@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EstudioTipoController extends  MaestroController
 {
     public $tipo = "administracion";
-    public $modelo = "rhuEstudioTipo";
+    public $modelo = "RhuEstudioTipo";
     public $entidad = RhuEstudioTipo::class;
 
     /**

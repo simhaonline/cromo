@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_administracion_transporte_despachoTipo_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+            <tr>
+                <td class="titulo">ID:</td>
+                <td class="td-in-well">{{ arRegistro.codigoDespachoTipoPk }}</td>
+                <td class="titulo">NOMBRE:</td>
+                <td class="td-in-well">{{ arRegistro.nombre }}</td>
+                <td class="titulo">INTERNA:</td>
+                <td class="td-in-well">{{ arRegistro.consecutivo }}</td>
+            </tr>
+            <tr>
+                <td class="titulo">VIAJE:</td>
+                <td class="td-in-well">{{ arRegistro.viaje }}</td>
+                <td class="titulo">CUENTA PAGAR:</td>
+                <td class="td-in-well">{{ arRegistro.codigoCuentaPagarTipoFk }}</td>
+                <td class="titulo">CUENTA PAGAR TIPO ANTICIPO:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaPagarTipoAnticipoFk}}</td>
+            </tr>
+            <tr>
+                <td class="titulo">COMPROBANTE:</td>
+                <td class="td-in-well">{{arRegistro.codigoComprobanteFk}}</td>
+                <td class="titulo">CUENTA FLETE:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaFleteFk}}</td>
+                <td class="titulo">CUENTA RETENCION FUENTE:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaRetencionFuenteFk}}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CUENTA INDUSTRIA COMERCIO:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaIndustriaComercioFk}}</td>
+                <td class="titulo">CUENTA SEGURIDAD:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaSeguridadFk}}</td>
+                <td class="titulo">CUENTA CARGUE:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaCargueFk}}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CUENTA ESTAMPILLA:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaEstampillaFk}}</td>
+                <td class="titulo">CUENTA PAPELERIA:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaPapeleriaFk}}</td>
+                <td class="titulo">CUENTA ANTICIPO:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaAnticipoFk}}</td>
+            </tr>
+            <tr>
+                <td class="titulo">CUENTA PAGAR:</td>
+                <td class="td-in-well">{{arRegistro.codigoCuentaPagarFk}}</td>
+                <td class="titulo">DESPACHO CLASE:</td>
+                <td class="td-in-well">{{arRegistro.codigoDespachoClaseFk}}</td>
+                <td class="titulo"></td>
+                <td class="td-in-well"></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

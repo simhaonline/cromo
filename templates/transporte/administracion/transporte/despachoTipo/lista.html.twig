@@ -1,0 +1,121 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div id="content sortable-grid ui-sortable">
+        <div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-collapsed="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-filter"></i> </span>
+                <h2>Filtro</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-1 control-label">Código:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.codigo) }}
+                        </div>
+                        <label class="col-sm-1 control-label">Nombre:</label>
+                        <div class="col-sm-2">
+                            {{ form_widget(form.nombre) }}
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {{ form_widget(form.btnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover tabla-datos tabla-informacion">
+        <thead>
+        <tr>
+            <th title="Codigo del registro">ID</th>
+            <th title="Nombre del registro">NOMBRE</th>
+            <th title="Consecutivo">CONSECUTIVO</th>
+            <th title="Viaje">VIAJE</th>
+            <th title="Genera cuenta pagar">GEN(CXP)</th>
+            <th title="Codigo cuenta pagar tipo">CXP</th>
+            <th title="Codigo cuenta pagar tipo anticipo">CXP_ANT</th>
+            <th title="Codigo comprobante">COMP</th>
+            <th title="Codigo cuenta flete">CTA FLETE</th>
+            <th title="Codigo cuenta retencion fuente">CTA RTE FTE</th>
+            <th title="Codigo cuenta industria comercio">CTA ICA</th>
+            <th title="Codigo cuenta seguridad">CTA SEG</th>
+            <th title="Codigo cuenta cargue">CTA CAR</th>
+            <th title="Codigo cuenta estampilla">CTA EST</th>
+            <th title="Codigo cuenta papeleria">CTA PAPA</th>
+            <th title="Codigo cuenta anticipo">CTA ANT</th>
+            <th title="Codigo cuenta pagar">CTA PAG</th>
+            <th title="V: viajaes - R: reparto">CLASE</th>
+            <th></th>
+            <th></th>
+            <th class="text-center" title="seleccionar todos"><input type="checkbox" name="ChkSeleccionarTodos"
+                                                                     onclick="ChequearTodosTabla(this, 'ChkSeleccionar[]')">
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for arRegistro in arRegistros %}
+            <tr>
+                <td>{{ arRegistro.codigoDespachoTipoPk }}</td>
+                <td>{{ arRegistro.nombre }}</td>
+                <td>{{ arRegistro.consecutivo }}</td>
+                <td>{{ arRegistro.viaje ?"SI":"NO" }}</td>
+                <td>{{ arRegistro.generaCuentaPagar ?"SI":"NO" }}</td>
+                <td>{{ arRegistro.codigoCuentaPagarTipoFk }}</td>
+                <td>{{arRegistro.codigoCuentaPagarTipoAnticipoFk}}</td>
+                <td>{{arRegistro.codigoComprobanteFk}}</td>
+                <td>{{arRegistro.codigoCuentaFleteFk}}</td>
+                <td>{{arRegistro.codigoCuentaRetencionFuenteFk}}</td>
+                <td>{{arRegistro.codigoCuentaIndustriaComercioFk}}</td>
+                <td>{{arRegistro.codigoCuentaSeguridadFk}}</td>
+                <td>{{arRegistro.codigoCuentaCargueFk}}</td>
+                <td>{{arRegistro.codigoCuentaEstampillaFk}}</td>
+                <td>{{arRegistro.codigoCuentaPapeleriaFk}}</td>
+                <td>{{arRegistro.codigoCuentaAnticipoFk}}</td>
+                <td>{{arRegistro.codigoCuentaPagarFk}}</td>
+                <td>{{arRegistro.codigoDespachoClaseFk}}</td>
+
+                <td class="text-center">
+                    <a href="{{ path('transporte_administracion_transporte_despachoTipo_nuevo',{'id': arRegistro.codigoDespachoTipoPk }) }}"><i
+                                class="fa fa-edit" style="color: black;font-size: large;"></i></a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('transporte_administracion_transporte_despachoTipo_detalle',{'id' : arRegistro.codigoDespachoTipoPk }) }}">
+                        <i class="fa fa-share-square-o" style="font-size: large;color: black;">
+                        </i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="ChkSeleccionar[]" value="{{ arRegistro.codigoDespachoTipoPk }}"/>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="btn-group" style="float: left">
+        <div class="btn btn-default btn-sm">Registros
+            <span class="badge">{{ arRegistros.getTotalItemCount }}</span>
+        </div>
+    </div>
+    <div class="btn-group btn-xs" style="float: left;margin-top: -18px;">
+        {{ knp_pagination_render(arRegistros) }}
+    </div>
+    <div class="btn-group btn-xs" style="float: left; width: 60px">
+        {{ form_widget(form.limiteRegistros) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnEliminar, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        {{ form_widget(form.btnExcel, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+    </div>
+    <div class="btn-group" style="float: right; margin-right: 5px !important;">
+        <a class="btn btn-default btn-sm"
+           href="{{ path('transporte_administracion_transporte_despachoTipo_nuevo', {'id': 0}) }}">Nuevo</a>
+    </div>
+    {{ form_end(form) }}
+    <br/><br/><br/>
+{% endblock %}

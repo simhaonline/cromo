@@ -3,6 +3,7 @@
 namespace App\Repository\Transporte;
 
 use App\Entity\Transporte\TteDespachoTipo;
+use App\Utilidades\Mensajes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -49,6 +50,74 @@ class TteDespachoTipoRepository extends ServiceEntityRepository
             $array['data'] = $this->getEntityManager()->getReference(TteDespachoTipo::class, $session->get('filtroTteDespachoTipo'));
         }
         return $array;
+    }
+
+    public function lista($raw)
+    {
+        $limiteRegistros = $raw['limiteRegistros'] ?? 100;
+        $filtros = $raw['filtros'] ?? null;
+
+        $codigo = null;
+        $nombre = null;
+
+        if ($filtros) {
+            $codigo = $filtros['codigo'] ?? null;
+            $nombre = $filtros['nombre'] ?? null;
+        }
+
+
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TteDespachoTipo::class, 'dt')
+            ->select('dt.codigoDespachoTipoPk')
+            ->addSelect('dt.nombre')
+            ->addSelect('dt.consecutivo')
+            ->addSelect('dt.viaje')
+            ->addSelect('dt.generaCuentaPagar')
+            ->addSelect('dt.codigoCuentaPagarTipoFk')
+            ->addSelect('dt.codigoCuentaPagarTipoAnticipoFk')
+            ->addSelect('dt.codigoComprobanteFk')
+            ->addSelect('dt.codigoCuentaFleteFk')
+            ->addSelect('dt.codigoCuentaRetencionFuenteFk')
+            ->addSelect('dt.codigoCuentaIndustriaComercioFk')
+            ->addSelect('dt.codigoCuentaSeguridadFk')
+            ->addSelect('dt.codigoCuentaCargueFk')
+            ->addSelect('dt.codigoCuentaEstampillaFk')
+            ->addSelect('dt.codigoCuentaPapeleriaFk')
+            ->addSelect('dt.codigoCuentaAnticipoFk')
+            ->addSelect('dt.codigoCuentaPagarFk')
+            ->addSelect('dt.codigoDespachoClaseFk');
+
+        if ($codigo) {
+            $queryBuilder->andWhere("dt.codigoDespachoTipoPk = '{$codigo}'");
+        }
+
+        if($nombre){
+            $queryBuilder->andWhere("dt.nombre LIKE '%{$nombre}%'");
+        }
+
+
+        $queryBuilder->addOrderBy('dt.codigoDespachoTipoPk', 'DESC');
+        $queryBuilder->setMaxResults($limiteRegistros);
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function eliminar($arrSeleccionados)
+    {
+        $em = $this->getEntityManager();
+        if ($arrSeleccionados) {
+            foreach ($arrSeleccionados as $codigo) {
+                $arRegistro = $em->getRepository(TteDespachoTipo::class)->find($codigo);
+                if ($arRegistro) {
+                    $em->remove($arRegistro);
+                }
+            }
+            try {
+                $em->flush();
+            } catch (\Exception $e) {
+                Mensajes::error('No se puede eliminar, el registro se encuentra en uso en el sistema');
+            }
+        }else{
+            Mensajes::error("No existen registros para eliminar");
+        }
     }
 
 }

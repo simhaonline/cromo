@@ -37,6 +37,7 @@ class TtePrecioDetalleRepository extends ServiceEntityRepository
             ->addSelect('prd.vrPesoTope')
             ->addSelect('prd.vrPesoTopeAdicional')
             ->addSelect('prd.minimo')
+            ->addSelect('prd.codigoZonaFk')
             ->addSelect('z.nombre as zonaNombre')
             ->addSelect('cdz.nombre as zonaCiudadDestino')
             ->leftJoin('prd.productoRel', 'p')

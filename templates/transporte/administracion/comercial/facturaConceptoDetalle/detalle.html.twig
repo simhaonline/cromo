@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+{% block content %}
+    <div class="btn-toolbar" style="float:left">
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm"
+               href="{{ path('transporte_administracion_comercial_facturaConceptoDetalle_lista') }}">Volver</a> &nbsp;&nbsp;
+        </div>
+    </div>
+    <br><br>
+    <table width="100%" class="table table-condensed table-bordered tabla-informacion">
+        <tbody>
+        <tr>
+            <td class="titulo">ID:</td>
+            <td class="td-in-well">{{ arRegistro.codigoFacturaConceptoDetallePk }}</td>
+            <td class="titulo">NOMBRE:</td>
+            <td class="td-in-well">{{ arRegistro.nombre }}</td>
+            <td class="titulo">IMPUESTO RETENCION:</td>
+            <td class="td-in-well">{{ arRegistro.impuestoRetencionRel.nombre | default('') }}</td>
+        </tr>
+        <tr>
+            <td class="titulo">IMPUESTO IVA VENTA:</td>
+            <td class="td-in-well">{{ arRegistro.impuestoIvaVentaRel.nombre | default('') }}</td>
+            <td class="titulo">CUENTA:</td>
+            <td class="td-in-well">{{ arRegistro.codigoCuentaFk  }}</td>
+
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

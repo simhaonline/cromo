@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Controller\Transporte\Administracion\Comercial\facturaConcepto;
+namespace App\Controller\Transporte\Administracion\Comercial\facturaConceptoDetalle;
 
 
 use App\Controller\MaestroController;
-use App\Entity\Transporte\TteFacturaConcepto;
-use App\Form\Type\Transporte\FacturaConceptoType;
+use App\Entity\Transporte\TteFacturaConceptoDetalle;
+use App\Form\Type\Transporte\FacturaConceptoDetalleType;
 use App\Utilidades\Mensajes;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -15,14 +15,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class facturaConcepto extends MaestroController
+class facturaConceptoDetalle extends MaestroController
 {
     public $tipo = "administracion";
-    public $modelo = "TteFacturaConcepto";
-    protected $entidad = TteFacturaConcepto::class;
+    public $modelo = "TteFacturaConceptoDetalle";
+    protected $entidad = TteFacturaConceptoDetalle::class;
 
     /**
-     * @Route("/transporte/administracion/comercial/facturaConcepto/lista", name="transporte_administracion_comercial_facturaConcepto_lista")
+     * @Route("/transporte/administracion/comercial/facturaConceptoDetalle/lista", name="transporte_administracion_comercial_facturaConceptoDetalle_lista")
      */
     public function lista(Request $request, PaginatorInterface $paginator )
     {
@@ -47,18 +47,18 @@ class facturaConcepto extends MaestroController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arRegistros = $em->getRepository($this->entidad)->lista($raw);
-                $this->excelLista($arRegistros, "FacturaConcepto");
+                $this->excelLista($arRegistros, "FacturaConceptoDetalle");
             }
         }
         $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('transporte/administracion/comercial/facturaConcepto/lista.html.twig', [
+        return $this->render('transporte/administracion/comercial/facturaConceptoDetalle/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/transporte/administracion/comercial/facturaConcepto/nuevo/{id}", name="transporte_administracion_comercial_facturaConcepto_nuevo")
+     * @Route("/transporte/administracion/comercial/facturaConceptoDetalle/nuevo/{id}", name="transporte_administracion_comercial_facturaConceptoDetalle_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
@@ -67,30 +67,30 @@ class facturaConcepto extends MaestroController
         if ($id != null) {
             $arRegistro = $em->getRepository($this->entidad)->find($id);
         }
-        $form = $this->createForm( FacturaConceptoType::class, $arRegistro);
+        $form = $this->createForm( FacturaConceptoDetalleType::class, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('transporte_administracion_comercial_facturaConcepto_detalle', array('id' => $arRegistro->getCodigoFacturaConceptoPk())));
+                return $this->redirect($this->generateUrl('transporte_administracion_comercial_facturaConceptoDetalle_detalle', array('id' => $arRegistro->getCodigoFacturaConceptoDetallePk())));
             }
         }
-        return $this->render('transporte/administracion/comercial/facturaConcepto/nuevo.html.twig', [
+        return $this->render('transporte/administracion/comercial/facturaConceptoDetalle/nuevo.html.twig', [
             'form' => $form->createView(),
             'arRegistro' => $arRegistro
         ]);
     }
 
     /**
-     * @Route("/transporte/administracion/comercial/facturaConcepto/detalle/{id}", name="transporte_administracion_comercial_facturaConcepto_detalle")
+     * @Route("/transporte/administracion/comercial/facturaConceptoDetalle/detalle/{id}", name="transporte_administracion_comercial_facturaConceptoDetalle_detalle")
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->entidad)->find($id);
-        return $this->render('transporte/administracion/comercial/facturaConcepto/detalle.html.twig', [
+        return $this->render('transporte/administracion/comercial/facturaConceptoDetalle/detalle.html.twig', [
             'arRegistro' => $arRegistro,
         ]);
     }
@@ -112,9 +112,9 @@ class facturaConcepto extends MaestroController
             $libro = new Spreadsheet();
             $hoja = $libro->getActiveSheet();
             $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
-            $hoja->setTitle('FacturaConcepto');
+            $hoja->setTitle('FacturaConceptoDetalle');
             $j = 0;
-            $arrColumnas=['ID', 'nombre'];
+            $arrColumnas=['ID', 'nombre', 'codigoCuentaFk','impuestoRetencion','impuestoIvaVenta'];
 
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
@@ -126,8 +126,11 @@ class facturaConcepto extends MaestroController
             $j = 2;
             foreach ($arRegistros as $arRegistro) {
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
-                $hoja->setCellValue('A' . $j, $arRegistro['codigoFacturaConceptoPk']);
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoFacturaConceptoDetallePk']);
                 $hoja->setCellValue('B' . $j, $arRegistro['nombre']);
+                $hoja->setCellValue('C' . $j, $arRegistro['codigoCuentaFk']);
+                $hoja->setCellValue('D' . $j, $arRegistro['impuestoRetencion']);
+                $hoja->setCellValue('E' . $j, $arRegistro['impuestoIvaVenta']);
                 $j++;
             }
             $libro->setActiveSheetIndex(0);

@@ -21,7 +21,7 @@ class FacturaConceptoType extends AbstractType
             ->add('codigoFacturaConceptoPk',TextType::class,['required' => true,'label' => 'Codigo factura concepto:'])
             ->add('nombre',TextType::class,['required' => true,'label' => 'Nombre:'])
             ->add('liberarGuias', CheckboxType::class, array('required' => false))
-            ->add('guardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->add('btnGuardar', SubmitType::class, ['label'=>'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
         ;
     }
 
@@ -32,16 +32,4 @@ class FacturaConceptoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoFacturaConceptoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"{"campo":"codigoFacturaConceptoPk",         "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"}	
-        ]';
-    }
 }

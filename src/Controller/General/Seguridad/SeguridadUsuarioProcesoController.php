@@ -74,10 +74,9 @@ class SeguridadUsuarioProcesoController extends AbstractController
                     if ($arGenProcesoValidar && $arUsuario) {
                         $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(['codigoUsuarioFk'=>$arUsuario->getUsername(),'codigoProcesoFk'=>$arGenProcesoValidar->getCodigoProcesoPk()]);
                         if(!$arSegUsuarioProceso) {
-                            $arSegUsuarioProceso = (new SegUsuarioProceso())
-                                ->setIngreso(1)
-                                ->setCodigoUsuarioFk($arUsuario->getUsername())
-                                ->setProcesoRel($arGenProcesoValidar);
+                            $arSegUsuarioProceso = (new SegUsuarioProceso());
+                            $arSegUsuarioProceso->setCodigoUsuarioFk($arUsuario->getUsername());
+                            $arSegUsuarioProceso->setCodigoProcesoFk($arGenProcesoValidar->getCodigoProcesoPk());
 
                             $em->persist($arSegUsuarioProceso);
                         }

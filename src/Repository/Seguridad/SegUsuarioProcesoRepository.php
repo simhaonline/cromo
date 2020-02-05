@@ -20,20 +20,24 @@ class SegUsuarioProcesoRepository extends ServiceEntityRepository
         parent::__construct($registry, SegUsuarioProceso::class);
     }
 
-    public function lista($idUsuario){
-        $em=$this->getEntityManager();
+    public function lista($idUsuario)
+    {
+        $em = $this->getEntityManager();
+        $strSql = "SELECT codigo_seguridad_usuario_proceso_pk ,
+                        codigo_proceso_fk,
+                        codigo_usuario_fk, 
+                        nombre, codigo_modulo_fk
+                        FROM
+                        seg_usuario_proceso
+                        LEFT JOIN gen_proceso 
+                        ON seg_usuario_proceso.codigo_proceso_fk  = gen_proceso.codigo_proceso_pk
+                        WHERE  codigo_usuario_fk = '{$idUsuario}'";
+        $connection = $em->getConnection();
+        $statement = $connection->prepare($strSql);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        return $results;
 
-        $arSeguridadUsuarioProceso=$em->createQueryBuilder()
-            ->from('App:Seguridad\SegUsuarioProceso','arsup')
-            ->join('arsup.procesoRel','p')
-            ->join('p.procesoTipoRel','pt')
-            ->select('arsup.codigoSeguridadUsuarioProcesoPk as codigoSeguridadProceso')
-            ->addSelect('pt.nombre as tipo')
-            ->addSelect('p.nombre as nombre')
-            ->addSelect('p.codigoModuloFk as modulo')
-            ->addSelect('arsup.ingreso as lista')
-            ->where("arsup.codigoUsuarioFk='{$idUsuario}'")
-            ->getQuery()->getResult();
 
         return $arSeguridadUsuarioProceso;
     }

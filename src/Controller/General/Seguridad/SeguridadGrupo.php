@@ -6,8 +6,11 @@ namespace App\Controller\General\Seguridad;
 
 use App\Entity\General\GenModelo;
 use App\Entity\General\GenModulo;
+use App\Entity\General\GenProceso;
+use App\Entity\General\GenProcesoTipo;
 use App\Entity\Seguridad\SegGrupo;
 use App\Entity\Seguridad\SegGrupoModelo;
+use App\Entity\Seguridad\SegGrupoProceso;
 use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Form\Type\General\GrupoType;
 use App\General\General;
@@ -107,6 +110,7 @@ class SeguridadGrupo extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
             ->add('btnElimarGrupoModelo', SubmitType::class, array('label' => 'Eliminar'))
+            ->add('btnElimarGrupoProceso', SubmitType::class, array('label' => 'Eliminar'))
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -114,13 +118,19 @@ class SeguridadGrupo extends AbstractController
                 $arrSeleccionados = $request->request->get('ChkSeleccionarPermiso');
                 $em->getRepository(SegGrupoModelo::class)->eliminar($arrSeleccionados);
             }
+            if ($form->get('btnElimarGrupoProceso')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionarGrupoProcesos');
+                $em->getRepository(SegGrupoProceso::class)->eliminar($arrSeleccionados);
+            }
         }
         $arGrupo = $em->getRepository(SegGrupo::class)->find($id);
         $arGrupoModelos = $em->getRepository(SegGrupoModelo::class)->findBy(['codigoGrupoFk' => $id]);
+        $arGrupoProcesos = $em->getRepository(SegGrupoProceso::class)->lista($id);
         return $this->render('general/seguridad/grupo/detalle.html.twig', [
             'form' =>$form->createView(),
             'arGrupo' => $arGrupo,
-            'arGrupoModelos' => $arGrupoModelos
+            'arGrupoModelos' => $arGrupoModelos,
+            'arGrupoProcesos' =>$arGrupoProcesos
         ]);
     }
 
@@ -157,7 +167,7 @@ class SeguridadGrupo extends AbstractController
                 'required' => false,
                 'empty_data' => "",
                 'placeholder' => "TODOS",
-                'data' => $session->get('arSeguridadUsuarioModulofiltroModulo') || ""
+                'data' => $session->get('arGrupoProcesoModulofiltroModulo') || ""
             ))
             ->add('checkLista', CheckboxType::class, ['required' => false, 'label' => 'Lista'])
             ->add('checkDetalle', CheckboxType::class, ['required' => false, 'label' => 'Detalle'])
@@ -262,5 +272,83 @@ class SeguridadGrupo extends AbstractController
             'arGrupoModelo'=>$arGrupoModelo
         ]);
 
+    }
+
+    /**
+     * @Route("/general/seguridad/grupo/nuevo/proceso/{id}/{codigoGrupo}", name="general_seguridad_grupo_proceso_nuevo")
+     */
+    public function nuevoProceso(Request $request, $id, $codigoGrupo){
+        $em=$this->getDoctrine()->getManager();
+        $session=new Session();
+        $form = $this->createFormBuilder()
+            ->add('cboModulo', EntityType::class, array(
+                'class' => GenModulo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.codigoModuloPk', 'ASC');
+                },
+                'choice_label' => 'codigoModuloPk',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'data' => $session->get('arGrupoProcesoProcesofiltroModulo')||""
+            ))
+            ->add('cboTipoProceso', EntityType::class, array(
+                'class' => GenProcesoTipo::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->orderBy('m.nombre', 'ASC');
+                },
+                'choice_label' => 'nombre',
+                'required' => false,
+                'empty_data' => "",
+                'placeholder' => "TODOS",
+                'data' => $session->get('arGrupoProcesoProcesofiltroProcesoTipo')||""
+            ))
+            ->add('btnFiltrar', SubmitType::class, ['label' => 'Filtrar'])
+            ->add('btnGuardar', SubmitType::class, ['label' => 'Guardar', 'attr' => ['class' => 'btn btn-sm btn-primary']])
+            ->getForm();
+        $form->handleRequest($request);
+
+        //eliminar variables de session solo cuando se cierre la pestaña
+
+        if ($form->get('btnFiltrar')->isClicked()) {
+            $session->set('arGrupoProcesoProcesofiltroModulo',$form->get('cboModulo')->getData());
+            $session->set('arGrupoProcesoProcesofiltroProcesoTipo',$form->get('cboTipoProceso')->getData());
+        }
+
+        if($form->get('btnGuardar')->isClicked()) {
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');
+            if ($arrSeleccionados) {
+                foreach ($arrSeleccionados as $codigoProceso) {
+                    $arGenProcesoValidar = $em->getRepository(GenProceso::class)->find($codigoProceso);
+                    if ($arGenProcesoValidar) {
+                        $arSegGrupoProceso=$em->getRepository(SegGrupoProceso::class)->findOneBy(['codigoGrupoFk'=>$codigoGrupo,'codigoProcesoFk'=>$arGenProcesoValidar->getCodigoProcesoPk()]);
+                        if(!$arSegGrupoProceso) {
+                            $arSegGrupoProceso = new SegGrupoProceso();
+                            $arSegGrupoProceso->setCodigoGrupoFk($codigoGrupo);
+                            $arSegGrupoProceso->setCodigoProcesoFk($arGenProcesoValidar->getCodigoProcesoPk());
+                            $em->persist($arSegGrupoProceso);
+                        }
+                    }
+                }
+                $em->flush();
+                echo "<script languaje='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                $session->set('arGrupoProcesoProcesofiltroModulo',null);
+                $session->set('arGrupoProcesoProcesofiltroProcesoTipo',null);
+            }
+            else{
+                Mensajes::error("No selecciono ningun dato para grabar");
+            }
+        }
+        if(!$form->get('btnGuardar')->isClicked() && !$form->get('btnFiltrar')->isClicked()) {
+            $session->set('arGrupoProcesoProcesofiltroModulo', null);
+            $session->set('arGrupoProcesoProcesofiltroProcesoTipo', null);
+        }
+        $arGenProceso=$em->getRepository(GenProceso::class)->lista();
+        return $this->render('general/seguridad/seguridad_usuario_proceso/nuevo.html.twig', [
+            'form'          =>  $form->createView(),
+            'arGenProceso'   =>  $arGenProceso,
+        ]);
     }
 }

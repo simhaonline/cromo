@@ -28,7 +28,6 @@
             <thead>
             <tr>
                 <th>MODULO</th>
-                <th>TIPO</th>
                 <th>PROCESO</th>
                 <th>NOMBRE</th>
                 <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodosTabla(this, 'ChkSeleccionar[]');"/></th>
@@ -38,7 +37,6 @@
             {%for arGenProceso in arGenProceso %}
                 <tr>
                     <td>{{  arGenProceso.modulo}}</td>
-                    <td>{{  arGenProceso.tipo}}</td>
                     <td>{{  arGenProceso.codigoProcesoPk}}</td>
                     <td>{{  arGenProceso.nombre}}</td>
                     <td align="center"><input type="checkbox"  name="ChkSeleccionar[]" value="{{ arGenProceso.codigoProcesoPk }}"/></td>

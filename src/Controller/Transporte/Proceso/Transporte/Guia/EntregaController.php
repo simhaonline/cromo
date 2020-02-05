@@ -104,8 +104,14 @@ class EntregaController extends MaestroController
                     Mensajes::error('El documento debe contener solamente una hoja');
                     echo "<script language='Javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
                 } else {
+                    $error = false;
                     foreach ($reader->getWorksheetIterator() as $worksheet) {
                         $highestRow = $worksheet->getHighestRow();
+                        if($highestRow > 10000) {
+                            Mensajes::error("La hoja contiene mas de 10.000 registros y no es permitido para el proceso, puede que tenga filas en blanco");
+                            $error = true;
+                            break;
+                        }
                         for ($row = 2; $row <= $highestRow; ++$row) {
                             $cell = $worksheet->getCellByColumnAndRow(1, $row);
                             if ($cell->getValue() != '') {
@@ -128,43 +134,45 @@ class EntregaController extends MaestroController
                             $i++;
                         }
                     }
-                    if (count($arrSinNumero) > 0) {
-                        Mensajes::error('Las siguientes filas no tienen id de guia: ' . implode(', ', $arrSinNumero));
-                    } elseif (count($arrSinFecha)) {
-                        Mensajes::error('Las siguientes filas no tienen fecha de entrega: ' . implode(', ', $arrSinFecha));
-                    } elseif (count($arrSinHora)) {
-                        Mensajes::error('Las siguientes filas no tienen hora de entrega: ' . implode(', ', $arrSinHora));
-                    } else {
-                        if ($arrCargas) {
-                            foreach ($arrCargas as $arrCarga) {
-                                $arrCarga['fecha'] = str_replace("'", '', $arrCarga['fecha']);
-                                $arrCarga['hora'] = str_replace("'", '', $arrCarga['hora']);
-                                $arGuia = $em->find(TteGuia::class, $arrCarga['guia']);
-                                if ($arGuia) {
-                                    if ($arGuia->getEstadoDespachado() && !$arGuia->getEstadoEntregado()) {
-                                        $fechaHora = date_create($arrCarga['fecha'] . ' ' . $arrCarga['hora']);
-                                        if($arGuia->getFechaDespacho() < $fechaHora) {
-                                            $arGuia->setEstadoEntregado(1);
-                                            $arGuia->setFechaEntrega($fechaHora);
-                                            if ($form->get('chkSoporte')->getData()) {
-                                                if(!$arGuia->getEstadoSoporte()){
-                                                    $arGuia->setEstadoSoporte(1);
-                                                    $arGuia->setFechaSoporte(new \DateTime('now'));
+                    if($error == false) {
+                        if (count($arrSinNumero) > 0) {
+                            Mensajes::error('Las siguientes filas no tienen id de guia: ' . implode(', ', $arrSinNumero));
+                        } elseif (count($arrSinFecha)) {
+                            Mensajes::error('Las siguientes filas no tienen fecha de entrega: ' . implode(', ', $arrSinFecha));
+                        } elseif (count($arrSinHora)) {
+                            Mensajes::error('Las siguientes filas no tienen hora de entrega: ' . implode(', ', $arrSinHora));
+                        } else {
+                            if ($arrCargas) {
+                                foreach ($arrCargas as $arrCarga) {
+                                    $arrCarga['fecha'] = str_replace("'", '', $arrCarga['fecha']);
+                                    $arrCarga['hora'] = str_replace("'", '', $arrCarga['hora']);
+                                    $arGuia = $em->find(TteGuia::class, $arrCarga['guia']);
+                                    if ($arGuia) {
+                                        if ($arGuia->getEstadoDespachado() && !$arGuia->getEstadoEntregado()) {
+                                            $fechaHora = date_create($arrCarga['fecha'] . ' ' . $arrCarga['hora']);
+                                            if($arGuia->getFechaDespacho() < $fechaHora) {
+                                                $arGuia->setEstadoEntregado(1);
+                                                $arGuia->setFechaEntrega($fechaHora);
+                                                if ($form->get('chkSoporte')->getData()) {
+                                                    if(!$arGuia->getEstadoSoporte()){
+                                                        $arGuia->setEstadoSoporte(1);
+                                                        $arGuia->setFechaSoporte(new \DateTime('now'));
+                                                    }
                                                 }
+                                                $em->persist($arGuia);
                                             }
-                                            $em->persist($arGuia);
                                         }
+                                    } else {
+                                        $arrNoEncontrado[] = $arrCarga['guia'];
                                     }
-                                } else {
-                                    $arrNoEncontrado[] = $arrCarga['guia'];
                                 }
                             }
-                        }
-                        if (count($arrNoEncontrado) > 0) {
-                            Mensajes::error('Las guías con los siguientes numero no fueron encontradas: ' . implode(', ', $arrNoEncontrado));
-                        } else {
-                            $em->flush();
-                            echo "<script language='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                            if (count($arrNoEncontrado) > 0) {
+                                Mensajes::error('Las guías con los siguientes numero no fueron encontradas: ' . implode(', ', $arrNoEncontrado));
+                            } else {
+                                $em->flush();
+                                echo "<script language='javascript' type='text/javascript'>window.close();window.opener.location.reload();</script>";
+                            }
                         }
                     }
                 }

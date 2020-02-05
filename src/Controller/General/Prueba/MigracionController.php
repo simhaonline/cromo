@@ -4352,8 +4352,8 @@ class MigracionController extends Controller
                 } else {
                     $arPedidoDetalleCompuesto->setPeriodo("D");
                 }
-                $arPedidoDetalleCompuesto->setDiaDesde(date_create($row['dia_desde']));
-                $arPedidoDetalleCompuesto->setDiaHasta(date_create($row['dia_hasta']));
+                $arPedidoDetalleCompuesto->setDiaDesde($row['dia_desde']);
+                $arPedidoDetalleCompuesto->setDiaHasta($row['dia_hasta']);
                 $arPedidoDetalleCompuesto->setDias($row['dias']);
                 $arPedidoDetalleCompuesto->setHoras($row['horas']);
                 $arPedidoDetalleCompuesto->setHorasDiurnas($row['horas_diurnas']);

@@ -153,22 +153,28 @@
                                 <td>{{ arPedidoDetalle.itemNombre }}</td>
                                 <td>{{ arPedidoDetalle.codigoModalidadFk }}</td>
                                 <td>{{ arPedidoDetalle.periodo }}</td>
-                                <td>{{ arPedidoDetalle.diaDesde }}</td>
-                                <td>{{ arPedidoDetalle.diaHasta }}</td>
-                                <td>{{ arPedidoDetalle.horaDesde | date('H:i') }}</td>
-                                <td>{{ arPedidoDetalle.horaHasta | date('H:i') }}</td>
-                                <td>{{ arPedidoDetalle.cantidad }}</td>
-                                <td>{{ arPedidoDetalle.lunes ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.martes ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.miercoles ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.jueves  ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.viernes ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.sabado  ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.domingo ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.festivo ? 'S':'N' }}</td>
-                                <td>{{ arPedidoDetalle.horas | number_format }}({{ arPedidoDetalle.horasProgramadas | number_format }})</td>
-                                <td>{{ arPedidoDetalle.horasDiurnas | number_format }}({{ arPedidoDetalle.horasDiurnasProgramadas | number_format }})</td>
-                                <td>{{ arPedidoDetalle.horasNocturnas | number_format }}({{ arPedidoDetalle.horasNocturnasProgramadas | number_format }})</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.diaDesde }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.diaHasta }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.horaDesde | date('H:i') }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.horaHasta | date('H:i') }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.cantidad }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.lunes ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.martes ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.miercoles ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.jueves  ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.viernes ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.sabado  ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.domingo ? 'S':'N' }}{% endif %}</td>
+                                <td>{% if arPedidoDetalle.compuesto == 0 %}{{ arPedidoDetalle.festivo ? 'S':'N' }}{% endif %}</td>
+                                <td>{{ arPedidoDetalle.horas | number_format }}
+                                    ({{ arPedidoDetalle.horasProgramadas | number_format }})
+                                </td>
+                                <td>{{ arPedidoDetalle.horasDiurnas | number_format }}
+                                    ({{ arPedidoDetalle.horasDiurnasProgramadas | number_format }})
+                                </td>
+                                <td>{{ arPedidoDetalle.horasNocturnas | number_format }}
+                                    ({{ arPedidoDetalle.horasNocturnasProgramadas | number_format }})
+                                </td>
                                 <td class="numero">{{ arPedidoDetalle.vrSalarioBase | number_format() }}</td>
                                 <td class="numero">{{ arPedidoDetalle.vrPrecioMinimo | number_format() }}</td>
                                 {% if arPedido.estadoAutorizado == 0 %}
@@ -200,13 +206,9 @@
                                 <td class="numero">{{ arPedidoDetalle.vrSubtotal | number_format(0,'.',',') }}</td>
                                 {% if arPedidoDetalle.compuesto %}
                                     <td class="text-center">
-                                        {% if arPedido.estadoAutorizado == 0 %}
-                                            <a href="{{ path('turno_movimiento_venta_pedido_detalle_compuesto',{'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk}) }}">
-                                                <i class="fa fa-share-square-o"
-                                                   style="font-size: large;color: black;"></i></a>
-                                        {% else %}
-                                            SI
-                                        {% endif %}
+                                        <a href="{{ path('turno_movimiento_venta_pedido_detalle_compuesto',{'codigoPedidoDetalle': arPedidoDetalle.codigoPedidoDetallePk}) }}">
+                                            <i class="fa fa-share-square-o"
+                                               style="font-size: large;color: black;"></i></a>
                                     </td>
                                 {% else %}
                                     <td class="text-center">NO</td>

@@ -53,8 +53,8 @@ class ControllerListener extends MaestroController{
                     $this->getPermisoModelo($em, $modelo, $metodo, $event, $url);
                 }
                 if($controladorInformacion->tipo == 'proceso') {
-                    $proceso = $controladorInformacion->proceso;
-                    $this->getPermisoProceso($em, $proceso, $metodo, $event, $url);
+                    //$proceso = $controladorInformacion->proceso;
+                    //$this->getPermisoProceso($em, $proceso, $metodo, $event, $url);
                 }
             }
         }
@@ -230,6 +230,8 @@ class ControllerListener extends MaestroController{
                     $this->redireccionar($event, $url, "No tiene permisos asignados para el modulo " . $arModelo->getCodigoModuloFk() . " funcion " . $arModelo->getCodigoFuncionFk() . " grupo " . $arModelo->getCodigoGrupoFk() . " opcion " . $arModelo->getCodigoModeloPk());
                 }
             }
+        } else {
+            $this->redireccionar($event, $url, "Problema de seguridad de la aplicacion no se encuentra el proceso " . $proceso . " comuniquese con soporte de su proveedor ");
         }
     }
 

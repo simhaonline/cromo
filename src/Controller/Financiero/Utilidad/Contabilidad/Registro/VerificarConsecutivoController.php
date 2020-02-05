@@ -25,8 +25,7 @@ use App\Controller\Estructura\FuncionesController;
 class VerificarConsecutivoController extends MaestroController
 {
 
-
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "finu0004";
 
     /**

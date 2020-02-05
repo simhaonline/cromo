@@ -20,7 +20,7 @@ class CostoController extends MaestroController
 {
 
 
-    public $tipo = "transporte";
+    public $tipo = "proceso";
     public $proceso = "ttet0005";
 
 

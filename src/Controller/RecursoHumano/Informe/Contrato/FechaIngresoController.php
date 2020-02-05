@@ -19,10 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FechaIngresoController extends MaestroController
 {
 
-
-
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "rhui0001";
 
     /**

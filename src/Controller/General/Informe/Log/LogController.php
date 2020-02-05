@@ -26,7 +26,7 @@ class LogController extends MaestroController {
 
 
 
-    public $tipo = "administracion";
+    public $tipo = "proceso";
     public $modelo = "GenLog";
 
     protected $class = GenLog::class;

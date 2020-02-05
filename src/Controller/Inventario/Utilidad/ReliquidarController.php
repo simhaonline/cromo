@@ -15,7 +15,7 @@ class ReliquidarController extends MaestroController
 {
 
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "invu0003";
 
 

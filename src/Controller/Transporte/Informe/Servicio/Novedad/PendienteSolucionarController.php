@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityRepository;
 
 class PendienteSolucionarController extends MaestroController
 {
-    public $tipo = "Informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0002";
 
 

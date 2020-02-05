@@ -15,7 +15,7 @@ class ProduccionController extends MaestroController
 
 
 
-    public $tipo = "transporte";
+    public $tipo = "proceso";
     public $proceso = "ttet0004";
 
 

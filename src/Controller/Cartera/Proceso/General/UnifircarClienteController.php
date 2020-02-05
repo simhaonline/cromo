@@ -21,13 +21,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UnifircarClienteController extends MaestroController
 {
 
-
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "carp0005";
-
-
-
 
     /**
      * @Route("/cartera/proceso/general/unificarcliente/lista", name="cartera_proceso_general_unificarcliente_lista")

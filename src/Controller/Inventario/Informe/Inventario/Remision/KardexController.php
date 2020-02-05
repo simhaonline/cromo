@@ -27,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class KardexController extends MaestroController
 {
 
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0009";
 
     /**

@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ImportarGuiaExcelController extends MaestroController
 {
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0010";
 
 

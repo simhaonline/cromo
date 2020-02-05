@@ -30,7 +30,7 @@ class KardexController extends MaestroController
 {
 
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "invi0005";
 
 

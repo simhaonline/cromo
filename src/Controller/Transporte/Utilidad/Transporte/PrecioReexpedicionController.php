@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class PrecioReexpedicionController extends MaestroController
 {
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0007";
 
 

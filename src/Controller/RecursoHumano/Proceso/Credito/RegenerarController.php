@@ -26,8 +26,6 @@ class RegenerarController extends MaestroController
     public $tipo = "proceso";
     public $proceso = "rhup0003";
 
-
-
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

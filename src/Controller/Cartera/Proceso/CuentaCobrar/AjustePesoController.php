@@ -20,11 +20,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class AjustePesoController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "carp0003";
-
-
-
 
     /**
      * @Route("/cartera/proceso/cuentacobrar/ajustepeso/lista", name="cartera_proceso_cuentacobrar_ajustepeso_lista")

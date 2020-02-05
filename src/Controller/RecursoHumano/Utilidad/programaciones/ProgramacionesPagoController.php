@@ -21,9 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
     class ProgramacionesPagoController extends MaestroController
 {
-        public $tipo = "utilidad";
+        public $tipo = "proceso";
         public $proceso = "rhuu0002";
-
 
     /**
      * @Route("/recursohumano/utilidad/intercambio/programacion", name="recursohumano_utilidad_intercambio_programacion")

@@ -21,11 +21,8 @@ class CorregirSaldosController extends MaestroController
 {
 
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "carp0004";
-
-
-
 
     /**
      * @Route("/cartera/proceso/cuentacobrar/corregirsaldos/lista", name="cartera_proceso_cuentacobrar_corregirsaldos_lista")

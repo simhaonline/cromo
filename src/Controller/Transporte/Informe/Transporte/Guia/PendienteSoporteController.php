@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class PendienteSoporteController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0009";
 
     /**

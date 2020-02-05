@@ -25,12 +25,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FechaRetiroController extends MaestroController
 {
-
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "rhui0002";
-
-
 
     /**
      * @Route("/recursohumano/informe/contrato/fecha/terminacion/lista", name="recursohumano_informe_contrato_fecha_terminacion_lista")

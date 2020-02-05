@@ -27,13 +27,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class CrearReciboMasivoController extends MaestroController
 {
 
-
-
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "carp0002";
-
-
 
     /**
      * @param Request $request

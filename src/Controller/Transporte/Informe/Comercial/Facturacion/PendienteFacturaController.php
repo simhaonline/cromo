@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class PendienteFacturaController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0026";
 
 

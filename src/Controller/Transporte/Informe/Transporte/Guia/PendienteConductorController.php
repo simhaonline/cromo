@@ -23,7 +23,7 @@ class PendienteConductorController extends MaestroController
 {
 
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0008";
 
 

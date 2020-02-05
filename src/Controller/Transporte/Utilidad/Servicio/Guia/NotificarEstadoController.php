@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NotificarEstadoController extends MaestroController
 {
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0003";
 
 

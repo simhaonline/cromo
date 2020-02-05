@@ -26,7 +26,7 @@ class RotacionController extends MaestroController
 {
 
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "invi0002";
 
 

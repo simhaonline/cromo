@@ -27,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 class CuentaPagarController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "tesi0001";
 
 

@@ -26,7 +26,7 @@ class AsesorController extends MaestroController
 {
 
 
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0014";
 
 

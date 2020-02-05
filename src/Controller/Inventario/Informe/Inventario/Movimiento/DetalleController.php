@@ -26,12 +26,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class DetalleController extends MaestroController
 {
 
-
-
-
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0007";
-
 
     protected $procestoTipo = "I";
     protected $nombreProceso = "MovimientoDetalle";

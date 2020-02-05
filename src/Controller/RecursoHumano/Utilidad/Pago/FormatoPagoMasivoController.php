@@ -23,10 +23,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class FormatoPagoMasivoController extends MaestroController
 {
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "rhuu0001";
-
-
 
     /**
      * @param Request $request

@@ -21,7 +21,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class RemisionPendienteController extends MaestroController
 {
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0012";
 
     /**

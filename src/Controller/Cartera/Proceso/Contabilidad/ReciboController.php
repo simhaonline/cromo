@@ -24,7 +24,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 class ReciboController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "carp0001";
 
     /**

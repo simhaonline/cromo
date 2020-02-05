@@ -24,7 +24,7 @@ use App\Controller\Estructura\FuncionesController;
 class InconsistenciaDocumentoController extends MaestroController
 {
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "finu0003";
 
 

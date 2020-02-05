@@ -21,7 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 class PendienteDespachoRutaController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0007";
 
 

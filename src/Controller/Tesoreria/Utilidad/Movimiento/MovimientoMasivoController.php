@@ -25,7 +25,7 @@ class MovimientoMasivoController extends MaestroController
 
 
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tesu0001";
 
 

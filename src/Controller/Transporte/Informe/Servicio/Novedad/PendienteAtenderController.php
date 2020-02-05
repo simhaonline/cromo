@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 
 class PendienteAtenderController extends MaestroController
 {
-    public $tipo = "Informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0001";
 
 

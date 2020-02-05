@@ -22,7 +22,7 @@ use App\General\General;
 class InventarioValorizadoController extends MaestroController
 {
 
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0008";
 
 

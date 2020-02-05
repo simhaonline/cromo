@@ -15,10 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FormatoReciboMasivoController extends MaestroController
 {
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "caru0001";
-
 
     /**
      * @param Request $request

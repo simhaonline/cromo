@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProduccionAsesorController extends MaestroController
 {
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0023";
 
 

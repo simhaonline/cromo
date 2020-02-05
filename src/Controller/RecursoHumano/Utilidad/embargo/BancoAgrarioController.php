@@ -20,7 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class BancoAgrarioController extends MaestroController
 {
 
-
     public $tipo = "proceso";
     public $proceso = "rhuu0003";
 

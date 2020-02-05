@@ -26,11 +26,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 class RecaudoDetalleAsesorController extends MaestroController
 {
 
-
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "cari0003";
-
 
     /**
      * @param Request $request

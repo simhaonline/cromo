@@ -24,7 +24,7 @@ class ProvisionController extends MaestroController
 {
 
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "rhup0002";
 
 

@@ -24,12 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Ingreso extends MaestroController
 {
-
-
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "rhuu0004";
-
-
 
     /**
      * @param Request $request

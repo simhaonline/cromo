@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class DesembarcoController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0013";
 
 

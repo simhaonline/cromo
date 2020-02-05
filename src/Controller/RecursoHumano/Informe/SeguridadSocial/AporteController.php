@@ -23,11 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class AporteController extends  MaestroController
 {
 
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "rhui0007";
-
-
 
     /**
      * @Route("/recursohumano/informe/seguridadsocial/aporte/lista", name="recursohumano_informe_seguridadsocial_aporte_lista")

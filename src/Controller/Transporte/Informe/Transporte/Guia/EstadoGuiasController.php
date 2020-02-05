@@ -27,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class EstadoGuiasController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0012";
 
     /**

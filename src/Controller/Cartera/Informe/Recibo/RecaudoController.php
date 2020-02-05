@@ -24,7 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 class RecaudoController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "cari0002";
 
 

@@ -28,7 +28,7 @@ class RentabilidadController extends MaestroController
 {
 
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0029";
 
     /**

@@ -25,7 +25,7 @@ use App\General\General;
 class ProduccionClienteController extends MaestroController
 {
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "ttei0022";
 
 

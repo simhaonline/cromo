@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CorreccionGuiaValoresController extends MaestroController
 {
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0005";
 
 

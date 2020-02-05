@@ -16,10 +16,8 @@ use App\Controller\Estructura\FuncionesController;
 class TerceroController extends MaestroController
 {
 
-
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "finu0002";
-
 
     /**
      * @param Request $request

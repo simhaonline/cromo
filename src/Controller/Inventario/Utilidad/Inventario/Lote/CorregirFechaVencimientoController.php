@@ -26,7 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class CorregirFechaVencimientoController extends MovimientoController
 {
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "invu0001";
 
 

@@ -24,7 +24,7 @@ class DetalleController extends MaestroController
 {
 
 
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "cari0004";
 
 

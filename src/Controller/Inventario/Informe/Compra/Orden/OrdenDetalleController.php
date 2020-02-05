@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 class OrdenDetalleController extends MaestroController
 {
 
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0018";
 
 

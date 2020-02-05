@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class ExistenciaController extends MaestroController
 {
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "invi0004";
 
 

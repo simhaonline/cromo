@@ -22,7 +22,7 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 class ResumenController extends MaestroController
 {
 
-    public $tipo = "transporte";
+    public $tipo = "proceso";
     public $proceso = "ttet0002";
 
 

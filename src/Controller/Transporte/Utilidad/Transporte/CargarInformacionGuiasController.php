@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class CargarInformacionGuiasController extends MaestroController
 {
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0006";
 
 

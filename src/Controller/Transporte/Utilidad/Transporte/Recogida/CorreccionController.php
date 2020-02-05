@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CorreccionController extends MaestroController
 {
 
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0012";
 
 

@@ -25,7 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class VentasController extends MaestroController
 {
-    public $tipo = "inventario";
+    public $tipo = "proceso";
     public $proceso = "invi0019";
 
 

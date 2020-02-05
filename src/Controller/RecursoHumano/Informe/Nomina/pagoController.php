@@ -18,13 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class pagoController extends  MaestroController
 {
 
-
-
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "rhui0003";
-
-
-
 
     /**
      * @Route("/recursohumano/informe/nomina/pago/lista", name="recursohumano_informe_nomina_pago_lista")

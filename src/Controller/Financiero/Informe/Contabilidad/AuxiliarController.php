@@ -24,7 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AuxiliarController extends MaestroController
 {
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "fini0002";
 
 

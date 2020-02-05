@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityRepository;
 
 class NotificarController extends MaestroController
 {
-    public $tipo = "utilidad";
+    public $tipo = "proceso";
     public $proceso = "tteu0001";
 
 

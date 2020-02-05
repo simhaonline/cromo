@@ -20,10 +20,8 @@ class GenProcesoRepository extends ServiceEntityRepository
         $session=new Session();
         $arProceso=$em->createQueryBuilder()
             ->from('App:General\GenProceso','genProceso')
-            ->join('genProceso.procesoTipoRel','pt')
             ->select('genProceso.codigoProcesoPk')
             ->addSelect('genProceso.nombre')
-            ->addSelect('pt.nombre as tipo')
             ->addSelect('genProceso.codigoModuloFk as modulo');
 
         if($session->get('arSeguridadUsuarioProcesofiltroModulo')!=="" && $session->get('arSeguridadUsuarioProcesofiltroModulo')!==null){
@@ -33,8 +31,19 @@ class GenProcesoRepository extends ServiceEntityRepository
 
         if($session->get('arSeguridadUsuarioProcesofiltroProcesoTipo')!=="" && $session->get('arSeguridadUsuarioProcesofiltroProcesoTipo')!==null){
             $procesoTipo=$session->get('arSeguridadUsuarioProcesofiltroProcesoTipo')->getCodigoProcesoTipoPk();
-            $arProceso=$arProceso->andWhere("pt.codigoProcesoTipoPk= '{$procesoTipo}'");
+            $arProceso=$arProceso->andWhere("genProceso.codigoProcesoTipoFk= '{$procesoTipo}'");
         }
+
+        if($session->get('arGrupoProcesoProcesofiltroModulo')){
+            $modulo=$session->get('arGrupoProcesoProcesofiltroModulo')->getCodigoModuloPk();
+            $arProceso=$arProceso->andWhere("genProceso.codigoModuloFk = '{$modulo}'");
+        }
+
+        if($session->get('arGrupoProcesoProcesofiltroProcesoTipo')){
+            $procesoTipo=$session->get('arGrupoProcesoProcesofiltroProcesoTipo')->getCodigoProcesoTipoPk();
+            $arProceso=$arProceso->andWhere("genProceso.codigoProcesoTipoFk= '{$procesoTipo}'");
+        }
+
         $arProceso=$arProceso->getQuery()->getResult();
 
         return $arProceso;

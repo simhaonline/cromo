@@ -20,77 +20,120 @@
     </table>
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#modelos" aria-expanded="true">Modelos</a></li>
+        <li><a data-toggle="tab" href="#procesos" aria-expanded="true">Procesos</a></li>
     </ul>
     <div class="tab-content">
         <div id="modelos" class="tab-pane fade active in">
             <br>
-            <form name="form" method="post" class="form_horizontal">
-                <table class="table table-striped table-bordered table-hover tabla-datos">
-                    <thead>
+            <table class="table table-striped table-bordered table-hover tabla-datos">
+                <thead>
+                <tr>
+                    <th rowspan="2">MODELO</th>
+                    <th colspan="6">PERMISOS</th>
+                    <th rowspan="2"></th>
+                    <th rowspan="2" style="text-align: center;">
+                        <input type="checkbox" name="chkSeleccionarTodosPermisos" id="chkSeleccionarTodosPermisos"
+                               onclick="ChequearTodosTabla(this, 'ChkSeleccionarPermiso[]')">
+                    </th>
+                </tr>
+                <tr>
+                    <th>LISTA</th>
+                    <th>NUEVO</th>
+                    <th>DETALLE</th>
+                    <th>AUTORIZAR</th>
+                    <th>APROBAR</th>
+                    <th>ANULAR</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for arGrupoModelo in arGrupoModelos %}
                     <tr>
-                        <th rowspan="2">MODELO</th>
-                        <th colspan="6">PERMISOS</th>
-                        <th rowspan="2"></th>
-                        <th rowspan="2" style="text-align: center;">
-                            <input type="checkbox" name="chkSeleccionarTodosPermisos" id="chkSeleccionarTodosPermisos"
-                                   onclick="ChequearTodosTabla(this, 'ChkSeleccionarPermiso[]')">
-                        </th>
+                        <td>  {{ arGrupoModelo.codigoModeloFk }}</td>
+                        <td class="text-center">
+                            {{ arGrupoModelo.lista ? "SI":"NO" }}
+                        </td>
+                        <td class="text-center">
+                            {{ arGrupoModelo.detalle ? "SI":"NO" }}
+                        </td>
+                        <td class="text-center">
+                            {{ arGrupoModelo.nuevo ? "SI":"NO" }}
+                        </td>
+                        <td class="text-center">
+                            {{ arGrupoModelo.autorizar ? "SI":"NO" }}
+                        </td>
+                        <td class="text-center">
+                            {{ arGrupoModelo.aprobar ? "SI":"NO" }}
+                        </td>
+                        <td class="text-center">
+                            {{ arGrupoModelo.anular ? "SI":"NO" }}
+                        </td>
+                        <td style="text-align: center;">
+                            <a title="Cambiar permisos"
+                               href="javascript:abrirVentana3('{{ path('general_seguridad_grupo_editar',
+                                   {'codigoModelo': arGrupoModelo.codigoGrupoModeloPk }) }}','editarPermisos',600,900)">
+                                <i class="fa fa-edit" style="font-size: large;color: black;"></i>
+                            </a>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="checkbox" name="ChkSeleccionarPermiso[]"
+                                   value="{{ arGrupoModelo.codigoGrupoModeloPk }}"/>
+                        </td>
                     </tr>
-                    <tr>
-                        <th>LISTA</th>
-                        <th>NUEVO</th>
-                        <th>DETALLE</th>
-                        <th>AUTORIZAR</th>
-                        <th>APROBAR</th>
-                        <th>ANULAR</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for arGrupoModelo in arGrupoModelos %}
-                        <tr>
-                            <td>  {{ arGrupoModelo.codigoModeloFk }}</td>
-                            <td class="text-center">
-                                {{ arGrupoModelo.lista ? "SI":"NO" }}
-                            </td>
-                            <td class="text-center">
-                                {{ arGrupoModelo.detalle ? "SI":"NO" }}
-                            </td>
-                            <td class="text-center">
-                                {{ arGrupoModelo.nuevo ? "SI":"NO" }}
-                            </td>
-                            <td class="text-center">
-                                {{ arGrupoModelo.autorizar ? "SI":"NO" }}
-                            </td>
-                            <td class="text-center">
-                                {{ arGrupoModelo.aprobar ? "SI":"NO" }}
-                            </td>
-                            <td class="text-center">
-                                {{ arGrupoModelo.anular ? "SI":"NO" }}
-                            </td>
-                            <td style="text-align: center;">
-                                <a title="Cambiar permisos"
-                                   href="javascript:abrirVentana3('{{ path('general_seguridad_grupo_editar',
-                                       {'codigoModelo': arGrupoModelo.codigoGrupoModeloPk }) }}','editarPermisos',600,900)">
-                                    <i class="fa fa-edit" style="font-size: large;color: black;"></i>
-                                </a>
-                            </td>
-                            <td style="text-align: center;">
-                                <input type="checkbox" name="ChkSeleccionarPermiso[]"
-                                       value="{{ arGrupoModelo.codigoGrupoModeloPk }}"/>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <div class="modal-footer">
-                    <a class="btn btn-default btn-sm"
-                       href="javascript:abrirVentana3('{{ path('general_seguridad_grupo_modelo_nuevo',
-                           {'id': 0, 'codigoGrupo': arGrupo.codigoGrupoPk }) }}', 'AgregarGrupomodelos', 600, 900)">Nuevo</a>
-                    <div class="btn-group" style="float: right; margin-right: 5px !important;">
-                        {{ form_widget(form.btnElimarGrupoModelo, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
-                    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="modal-footer">
+                <a class="btn btn-default btn-sm"
+                   href="javascript:abrirVentana3('{{ path('general_seguridad_grupo_modelo_nuevo',
+                       {'id': 0, 'codigoGrupo': arGrupo.codigoGrupoPk }) }}', 'AgregarGrupomodelos', 600, 900)">Nuevo</a>
+                <div class="btn-group" style="float: right; margin-right: 5px !important;">
+                    {{ form_widget(form.btnElimarGrupoModelo, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
                 </div>
-            </form>
+            </div>
+        </div>
+        <div id="procesos" class="tab-pane fade in">
+            <table class="table table-striped table-bordered table-hover tabla-datos">
+                <thead>
+                <tr>
+                    <th>MODULO</th>
+                    <th>NOMBRE</th>
+                    <th>PROCESO</th>
+                    <th style="text-align: center;">
+                        <input type="checkbox" name="chkSeleccionarTodosPermisos" id="chkSeleccionarTodosPermisos"
+                               onclick="ChequearTodosTabla(this, 'ChkSeleccionarGrupoProcesos[]')"/>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for arGrupoProceso in arGrupoProcesos %}
+                    <tr>
+                        <td>
+                            {{ arGrupoProceso.codigo_modulo_fk }}
+                        </td>
+                        <td>
+                            {{ arGrupoProceso.nombre }}
+                        </td>
+                        <td>
+                            {{ arGrupoProceso.codigo_proceso_fk }}
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="checkbox" name="ChkSeleccionarGrupoProcesos[]"
+                                   value="{{ arGrupoProceso.codigo_grupo_proceso_pk }}"/>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="modal-footer">
+                <a class="btn btn-default btn-sm"
+                   href="javascript:abrirVentana3('{{ path('general_seguridad_grupo_proceso_nuevo',
+                       {'id': 0, 'codigoGrupo': arGrupo.codigoGrupoPk }) }}', 'AgregarGrupoProcesos', 600, 900)">Nuevo</a>
+                <div class="btn-group" style="float: right; margin-right: 5px !important;">
+                    {{ form_widget(form.btnElimarGrupoModelo, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+                </div>
+                {{ form_widget(form.btnElimarGrupoProceso, { 'attr': {'class': 'btn btn-danger btn-sm'} }) }}
+
+            </div>
         </div>
     </div>
     {{ form_end(form) }}

@@ -32,17 +32,6 @@ class SegUsuarioProceso
     private $codigoProcesoFk;
 
     /**
-     * @ORM\Column(name="ingreso", type="boolean", options={"default"=false})
-     */
-    private $ingreso;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenProceso", inversedBy="seguridadUsuariosProcesosProcesoRel")
-     * @ORM\JoinColumn(name="codigo_proceso_fk", referencedColumnName="codigo_proceso_pk")
-     */
-    protected $procesoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoSeguridadUsuarioProcesoPk()
@@ -53,10 +42,9 @@ class SegUsuarioProceso
     /**
      * @param mixed $codigoSeguridadUsuarioProcesoPk
      */
-    public function setCodigoSeguridadUsuarioProcesoPk( $codigoSeguridadUsuarioProcesoPk )
+    public function setCodigoSeguridadUsuarioProcesoPk($codigoSeguridadUsuarioProcesoPk): void
     {
         $this->codigoSeguridadUsuarioProcesoPk = $codigoSeguridadUsuarioProcesoPk;
-        return $this;
     }
 
     /**
@@ -70,10 +58,9 @@ class SegUsuarioProceso
     /**
      * @param mixed $codigoUsuarioFk
      */
-    public function setCodigoUsuarioFk( $codigoUsuarioFk )
+    public function setCodigoUsuarioFk($codigoUsuarioFk): void
     {
         $this->codigoUsuarioFk = $codigoUsuarioFk;
-        return $this;
     }
 
     /**
@@ -87,44 +74,9 @@ class SegUsuarioProceso
     /**
      * @param mixed $codigoProcesoFk
      */
-    public function setCodigoProcesoFk( $codigoProcesoFk )
+    public function setCodigoProcesoFk($codigoProcesoFk): void
     {
         $this->codigoProcesoFk = $codigoProcesoFk;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIngreso()
-    {
-        return $this->ingreso;
-    }
-
-    /**
-     * @param mixed $ingreso
-     */
-    public function setIngreso( $ingreso )
-    {
-        $this->ingreso = $ingreso;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProcesoRel()
-    {
-        return $this->procesoRel;
-    }
-
-    /**
-     * @param mixed $procesoRel
-     */
-    public function setProcesoRel($procesoRel)
-    {
-        $this->procesoRel = $procesoRel;
-        return $this;
     }
 
 

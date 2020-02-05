@@ -37,17 +37,6 @@ class GenProceso
     private $nombre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\General\GenProcesoTipo", inversedBy="procesosProcesoTipoRel")
-     * @ORM\JoinColumn(name="codigo_proceso_tipo_fk", referencedColumnName="codigo_proceso_tipo_pk")
-     */
-    protected $procesoTipoRel;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Seguridad\SegUsuarioProceso", mappedBy="procesoRel")
-     */
-    protected $seguridadUsuariosProcesosProcesoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoProcesoPk()
@@ -58,10 +47,9 @@ class GenProceso
     /**
      * @param mixed $codigoProcesoPk
      */
-    public function setCodigoProcesoPk( $codigoProcesoPk )
+    public function setCodigoProcesoPk($codigoProcesoPk): void
     {
         $this->codigoProcesoPk = $codigoProcesoPk;
-        return $this;
     }
 
     /**
@@ -75,10 +63,9 @@ class GenProceso
     /**
      * @param mixed $codigoProcesoTipoFk
      */
-    public function setCodigoProcesoTipoFk( $codigoProcesoTipoFk )
+    public function setCodigoProcesoTipoFk($codigoProcesoTipoFk): void
     {
         $this->codigoProcesoTipoFk = $codigoProcesoTipoFk;
-        return $this;
     }
 
     /**
@@ -92,10 +79,9 @@ class GenProceso
     /**
      * @param mixed $codigoModuloFk
      */
-    public function setCodigoModuloFk( $codigoModuloFk )
+    public function setCodigoModuloFk($codigoModuloFk): void
     {
         $this->codigoModuloFk = $codigoModuloFk;
-        return $this;
     }
 
     /**
@@ -109,28 +95,11 @@ class GenProceso
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre )
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
-        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProcesoTipoRel()
-    {
-        return $this->procesoTipoRel;
-    }
-
-    /**
-     * @param mixed $procesoTipoRel
-     */
-    public function setProcesoTipoRel( $procesoTipoRel )
-    {
-        $this->procesoTipoRel = $procesoTipoRel;
-        return $this;
-    }
 
 
 }

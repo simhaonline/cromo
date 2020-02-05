@@ -4,6 +4,7 @@ namespace  App\Controller\Estructura;
 
 use App\Controller\MaestroController;
 use App\Entity\General\GenModelo;
+use App\Entity\General\GenProceso;
 use App\Entity\Seguridad\SegGrupoModelo;
 use App\Entity\Seguridad\SegUsuarioModelo;
 use App\Utilidades\Mensajes;
@@ -49,10 +50,11 @@ class ControllerListener extends MaestroController{
                 $metodo = $controlador[1];
                 if($tipo == 'movimiento') {
                     $modelo = $controladorInformacion->modelo;
-                    $this->getPermisoModelo($em, $modelo, $metodo, $controlador, $event, $url);
+                    $this->getPermisoModelo($em, $modelo, $metodo, $event, $url);
                 }
                 if($controladorInformacion->tipo == 'proceso') {
-
+                    $proceso = $controladorInformacion->proceso;
+                    $this->getPermisoProceso($em, $proceso, $metodo, $event, $url);
                 }
             }
         }
@@ -77,7 +79,7 @@ class ControllerListener extends MaestroController{
      * @param $event
      * @param $url
      */
-    public function getPermisoModelo($em, $modelo, $metodo, $controller, $event, $url){
+    public function getPermisoModelo($em, $modelo, $metodo, $event, $url){
         $requestPhp = $_REQUEST;
         $funcionesProtegidas = array('lista','nuevo','detalle','aprobar','autorizar','anular');
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
@@ -150,26 +152,6 @@ class ControllerListener extends MaestroController{
                 }
             }
         }
-
-        /*if((isset($permisos[$controller[1]]) && $permisos[$controller[1]]) || !in_array($controller[1],$funcionesProtegidas) || $arUsuarioRol=="ROLE_ADMIN"){
-            if($controller[1]==="detalle"){
-                foreach ($permisos as $key=>$permiso){
-                    $permisoMayuscula=ucfirst($key);
-                    if(isset($requestPhp['form']['btn'.$permisoMayuscula])){
-                        if(call_user_func(array($arSeguridadUsuarioModelo,"get{$permisoMayuscula}")) || $arUsuarioRol=="ROLE_ADMIN"){
-                            return;
-                        }
-                        else{
-                            $this->redireccionar($event, $url, "No tiene permisos para esta funcionalidad '{$permisoMayuscula}'");
-                        }
-                    }
-                }
-            }
-            return;
-        }
-        else{
-            $this->redireccionar($event, $url, "No tiene permisos para esta funcionalidad '{$controller[1]}'");
-        }*/
     }
 
     /**
@@ -178,30 +160,76 @@ class ControllerListener extends MaestroController{
      * @param $event
      * @param $url
      */
-    public function getPermisosProcesos($em, $controller, $event, $url){
-        $codigoProceso = $controller[0]->getProceso();
-        $codigoUsuario = $this->user->getToken()->getUserName();
+    public function getPermisoProceso($em, $proceso, $metodo, $event, $url){
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
-        $arSegUsuarioProceso=$em->getRepository('App:Seguridad\SegUsuarioProceso')->findOneBy(
-            [
-                'codigoProcesoFk'=> $codigoProceso,
-                'codigoUsuarioFk' => $codigoUsuario
-            ]);
-        $arProceso=$em->getRepository('App:General\GenProceso')->find($controller[0]->getProceso());
-        if($arSegUsuarioProceso && $arUsuarioRol!="ROLE_ADMIN"){
-            if(!$arSegUsuarioProceso->getIngreso()){
-                $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
-            }
-            return;
+        $arUsuario=$this->user->getToken()->getUser();
+        $arProceso = $em->getRepository(GenProceso::class)->find($proceso);
 
-        }
-        elseif($arUsuarioRol=="ROLE_ADMIN"){
-            return;
-        }
-        else{
-            //se valida los permisos del usuario
-            $this->getPermisoModelo($em, $controller, $event, $url );
-//            $this->redireccionar($event, $url, "No tiene permiso para ingresar al proceso '{$arProceso->getNombre()}'");
+        if($arProceso) {
+            if($arUsuarioRol=="ROLE_ADMIN") {
+                return;
+            } else {
+                $permisoGrupo = false;
+                if($arUsuario->getCodigoGrupoFk()) {
+                    $arGrupoModelo = $em->getRepository(SegGrupoModelo::class)->findOneBy(['codigoGrupoFk' => $arUsuario->getCodigoGrupoFk(), 'codigoModeloFk' => $modelo]);
+                    if($arGrupoModelo) {
+                        switch ($metodo) {
+                            case "lista":
+                                if($arGrupoModelo->getLista()) {
+                                    $permisoGrupo = true;
+                                }
+                                break;
+                            case "nuevo":
+                                if($arGrupoModelo->getNuevo()) {
+                                    $permisoGrupo = true;
+                                }
+                                break;
+                            case "detalle":
+                                if($arGrupoModelo->getDetalle()) {
+                                    $permisoGrupo = true;
+                                }
+                                break;
+                            default:
+                                $permisoGrupo = true;
+                                break;
+                        }
+                    }
+                }
+                if($permisoGrupo == true) {
+                    return;
+                }
+                $permisoUsuario = false;
+                $arUsuarioModelo = $em->getRepository(SegUsuarioModelo::class)->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $modelo]);
+                if($arUsuarioModelo) {
+                    switch ($metodo) {
+                        case "lista":
+                            if($arUsuarioModelo->getLista()) {
+                                $permisoUsuario = true;
+                            }
+                            break;
+                        case "nuevo":
+                            if($arUsuarioModelo->getNuevo()) {
+                                $permisoUsuario = true;
+                            }
+                            break;
+                        case "detalle":
+                            if($arUsuarioModelo->getDetalle()) {
+                                $permisoUsuario = true;
+                            }
+                            break;
+                        default:
+                            $permisoUsuario = true;
+                            break;
+                    }
+
+
+                }
+                if($permisoUsuario) {
+                    return;
+                } else {
+                    $this->redireccionar($event, $url, "No tiene permisos asignados para el modulo " . $arModelo->getCodigoModuloFk() . " funcion " . $arModelo->getCodigoFuncionFk() . " grupo " . $arModelo->getCodigoGrupoFk() . " opcion " . $arModelo->getCodigoModeloPk());
+                }
+            }
         }
     }
 

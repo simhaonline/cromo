@@ -27,11 +27,6 @@ class GenProcesoTipo
     private $nombre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\General\GenProceso", mappedBy="procesoTipoRel")
-     */
-    protected $procesosProcesoTipoRel;
-
-    /**
      * @return mixed
      */
     public function getCodigoProcesoTipoPk()
@@ -42,7 +37,7 @@ class GenProcesoTipo
     /**
      * @param mixed $codigoProcesoTipoPk
      */
-    public function setCodigoProcesoTipoPk( $codigoProcesoTipoPk ): void
+    public function setCodigoProcesoTipoPk($codigoProcesoTipoPk): void
     {
         $this->codigoProcesoTipoPk = $codigoProcesoTipoPk;
     }
@@ -58,27 +53,10 @@ class GenProcesoTipo
     /**
      * @param mixed $nombre
      */
-    public function setNombre( $nombre ): void
+    public function setNombre($nombre): void
     {
         $this->nombre = $nombre;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getProcesosProcesoTipoRel()
-    {
-        return $this->procesosProcesoTipoRel;
-    }
-
-    /**
-     * @param mixed $procesosProcesoTipoRel
-     */
-    public function setProcesosProcesoTipoRel( $procesosProcesoTipoRel ): void
-    {
-        $this->procesosProcesoTipoRel = $procesosProcesoTipoRel;
-    }
-
 
 
 }

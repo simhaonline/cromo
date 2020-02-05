@@ -29,10 +29,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class pagoDetalleController extends MaestroController
 {
-    public $tipo = "informe";
+    public $tipo = "proceso";
     public $proceso = "rhui0004";
-
-
 
     /**
      * @param Request $request

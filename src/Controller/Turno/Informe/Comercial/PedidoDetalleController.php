@@ -44,6 +44,11 @@ class PedidoDetalleController extends Controller
             if ($form->get('btnFiltrar')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
             }
+            if ($form->get('btnExcel')->isClicked()) {
+                set_time_limit(0);
+                ini_set("memory_limit", -1);
+                General::get()->setExportar($em->getRepository(TurPedidoDetalle::class)->informe($raw), "Pedidos detalle");
+            }
         }
         $arPedidosDetalles = $paginator->paginate($em->getRepository(TurPedidoDetalle::class)->informe($raw), $request->query->getInt('page', 1), 30);
         return $this->render('turno/informe/comercial/pedidoDetalle.html.twig', [

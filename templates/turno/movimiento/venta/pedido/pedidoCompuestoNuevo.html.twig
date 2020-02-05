@@ -16,6 +16,12 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">Periodo:</label>
+                    <div class="col-sm-4">
+                        {{ form_widget(form.periodo) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
                     <label class="col-sm-2 control-label">Dia desde:</label>
                     <div class="col-sm-4">
                         {{ form_widget(form.diaDesde) }}
@@ -30,9 +36,13 @@
                     <div class="col-sm-4">
                         {{ form_widget(form.horaDesde) }}
                     </div>
-                    <label for="form_liquidarDiasReales" class="col-sm-2 control-label"></label>
-                    <div class="col-sm-4">
+                    <label for="form_liquidarDiasReales" class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
                         {{ form_widget(form.DiasReales) }}
+                    </div>
+                    <label for="form_dia31" class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.dia31) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">
@@ -40,9 +50,9 @@
                     <div class="col-sm-4">
                         {{ form_widget(form.horaHasta) }}
                     </div>
-                    <label for="form_dia31" class="col-sm-2 control-label"></label>
+                    <label for="form_dia31" class="col-sm-1 control-label"></label>
                     <div class="col-sm-4">
-                        {{ form_widget(form.dia31) }}
+                        {{ form_widget(form.cortesia) }}
                     </div>
                 </div>
                 <div class="form-group form-group-sm">

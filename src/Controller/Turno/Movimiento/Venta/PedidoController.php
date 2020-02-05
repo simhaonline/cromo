@@ -297,9 +297,17 @@ class PedidoController extends MaestroController
         $em = $this->getDoctrine()->getManager();
         $arPedidoDetalle = $em->getRepository(TurPedidoDetalle::class)->find($codigoPedidoDetalle);
         $arPedido = $em->getRepository(TurPedido::class)->find($arPedidoDetalle->getCodigoPedidoFk());
+
+        $arrBtnEliminar = ['label' => 'Eliminar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-danger']];
+        $arrBtnActualizar = ['label' => 'Actualizar', 'disabled' => false, 'attr' => ['class' => 'btn btn-sm btn-default']];
+        if ($arPedido->getEstadoAutorizado()) {
+            $arrBtnEliminar['disabled'] = true;
+            $arrBtnActualizar['disabled'] = true;
+        }
+
         $form = $this->createFormBuilder()
-            ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
-            ->add('btnActualizar', SubmitType::class, array('label' => 'Actualizar'))
+            ->add('btnActualizar', SubmitType::class, $arrBtnActualizar)
+            ->add('btnEliminar', SubmitType::class, $arrBtnEliminar)
             ->getForm();
         $form->handleRequest($request);
 

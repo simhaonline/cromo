@@ -26,7 +26,7 @@ class BodegaUsuarioType extends AbstractType
                         ->orderBy('b.nombre', 'ASC');
                 },
                 'choice_label' => 'nombre',
-                'label' => 'Bodega:'
+                'label' => 'bodega:'
             ])
             ->add('usuario')
         ;

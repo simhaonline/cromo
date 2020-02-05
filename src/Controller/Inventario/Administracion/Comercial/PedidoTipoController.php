@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Controller\Inventario\Administracion\Inventario;
+namespace App\Controller\Inventario\Administracion\Comercial;
 
 use App\Controller\Estructura\ControllerListenerGeneral;
 use App\Controller\MaestroController;
-use App\Entity\Inventario\InvDocumento;
-use App\Entity\Inventario\InvFacturaTipo;
-use App\Entity\Inventario\InvItem;
-use App\Form\Type\Inventario\DocumentoType;
-use App\Form\Type\Inventario\FacturaTipoType;
-use App\Form\Type\Inventario\ItemType;
+use App\Entity\Inventario\InvGrupo;
+use App\Entity\Inventario\InvOrdenTipo;
+use App\Entity\Inventario\InvPedidoTipo;
+use App\Entity\Inventario\InvSolicitudTipo;
+use App\Form\Type\Inventario\GrupoType;
+use App\Form\Type\Inventario\OrdenTipoType;
+use App\Form\Type\Inventario\SolicitudTipoType;
+use App\Form\Type\Turno\PedidoTipoType;
 use App\General\General;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
@@ -22,83 +24,84 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-class FacturaTipoController extends MaestroController
+class PedidoTipoController extends MaestroController
 {
 
     public $tipo = "administracion";
-    public $modelo = "InvFacturaTipo";
-    public $entidad = InvFacturaTipo::class;
+    public $modelo = "InvPedidoTipo";
+    public $entidad = InvPedidoTipo::class;
 
     /**
-     * @Route("/inventario/administracion/inventario/facturatipo/lista", name="inventario_administracion_inventario_facturatipo_lista")
+     * @Route("/inventario/administracion/comercial/pedidotipo/lista", name="inventario_administracion_comercial_pedidotipo_lista")
      */
-    public function lista(Request $request, PaginatorInterface $paginator)
+    public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
-            ->add('codigo', TextType::class, array('required' => false))
-            ->add('nombre', TextType::class, array('required' => false))
+            ->add('codigo', TextType::class, array('required' => false ))
+            ->add('nombre', TextType::class, array('required' => false ))
             ->add('btnFiltrar', SubmitType::class, array('label' => 'Filtrar'))
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
             ->getForm();
         $form->handleRequest($request);
-        $raw = ['limiteRegistros' => $form->get('limiteRegistros')->getData()];
+        $raw=['limiteRegistros' => $form->get('limiteRegistros')->getData()];
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltrar')->isClicked() || $form->get('btnExcel')->isClicked()) {
                 $raw['filtros'] = $this->filtros($form);
             }
             if ($form->get('btnEliminar')->isClicked()) {
                 $arrSeleccionados = $request->request->get('ChkSeleccionar');
-                $em->getRepository($this->entidad)->eliminar($arrSeleccionados);
+                $em->getRepository($this->entidad)-> eliminar($arrSeleccionados);
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arRegistros = $em->getRepository($this->entidad)->lista($raw);
-                $this->excelLista($arRegistros, "Sucursal");
+                $this->excelLista($arRegistros, "PedidoTipo");
             }
         }
         $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('inventario/administracion/inventario/facturatipo/lista.html.twig', [
+        return $this->render('inventario/administracion/comercial/pedidotipo/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/inventario/administracion/inventario/facturatipo/nuevo/{id}", name="inventario_administracion_inventario_facturatipo_nuevo")
+     *  @Route("/inventario/administracion/comercial/pedidotipo/nuevo/{id}", name="inventario_administracion_comercial_pedidotipo_nuevo")
      */
     public function nuevo(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = new $this->entidad;
-        if ($id != 0 || $id != "") {
+        if ($id != 0 ||  $id != "") {
             $arRegistro = $em->getRepository($this->entidad)->find($id);
         }
-        $form = $this->createForm(FacturaTipoType::class, $arRegistro);
+        $form = $this->createForm( \App\Form\Type\Inventario\PedidoTipoType::class, $arRegistro);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('btnGuardar')->isClicked()) {
                 $arRegistro = $form->getData();
                 $em->persist($arRegistro);
                 $em->flush();
-                return $this->redirect($this->generateUrl('inventario_administracion_inventario_facturatipo_detalle', array('id' => $arRegistro->getcodigoFacturaTipoPk())));
+                return $this->redirect($this->generateUrl('inventario_administracion_comercial_pedidotipo_detalle', array('id' => $arRegistro->getcodigoPedidoTipoPk())));
             }
         }
-        return $this->render('inventario/administracion/inventario/facturatipo/nuevo.html.twig', [
+        return $this->render('inventario/administracion/comercial/pedidotipo/nuevo.html.twig', [
             'form' => $form->createView(),
             'arRegistro' => $arRegistro
         ]);
     }
 
     /**
-     * @Route("/inventario/administracion/inventario/facturatipo/detalle/{id}", name="inventario_administracion_inventario_facturatipo_detalle")
+     *  @Route("/inventario/administracion/comercial/pedidotipo/detalle/{id}", name="inventario_administracion_comercial_pedidotipo_detalle")
+
      */
     public function detalle(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->entidad)->find($id);
-        return $this->render('inventario/administracion/inventario/facturatipo/detalle.html.twig', [
+        return $this->render('inventario/administracion/comercial/pedidotipo/detalle.html.twig', [
 
             'arRegistro' => $arRegistro,
         ]);
@@ -122,9 +125,9 @@ class FacturaTipoController extends MaestroController
             $libro = new Spreadsheet();
             $hoja = $libro->getActiveSheet();
             $hoja->getStyle(1)->getFont()->setName('Arial')->setSize(9);
-            $hoja->setTitle('Items');
+            $hoja->setTitle('PedidoTipo');
             $j = 0;
-            $arrColumnas = ['ID', 'NOMBRE'];
+            $arrColumnas=['ID', 'NOMBRE' ];
 
             for ($i = 'A'; $j <= sizeof($arrColumnas) - 1; $i++) {
                 $hoja->getColumnDimension($i)->setAutoSize(true);
@@ -136,7 +139,7 @@ class FacturaTipoController extends MaestroController
             $j = 2;
             foreach ($arRegistros as $arRegistro) {
                 $hoja->getStyle($j)->getFont()->setName('Arial')->setSize(9);
-                $hoja->setCellValue('A' . $j, $arRegistro['codigoFacturaTipoPk']);
+                $hoja->setCellValue('A' . $j, $arRegistro['codigoPedidoTipoPk']);
                 $hoja->setCellValue('B' . $j, $arRegistro['nombre']);
 
                 $j++;
@@ -147,7 +150,7 @@ class FacturaTipoController extends MaestroController
             header('Cache-Control: max-age=0');
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($libro, 'Xls');
             $writer->save('php://output');
-        } else {
+        }else{
             Mensajes::error("No existen registros para exportar");
         }
     }

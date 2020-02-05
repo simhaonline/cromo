@@ -256,6 +256,9 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()->from(TurPedidoDetalle::class, 'pd')
             ->select('pd.codigoPedidoDetallePk')
+            ->addSelect('cl.nombreCorto AS cliente')
+            ->addSelect('c.nombre as conceptoNombre')
+            ->addSelect('m.nombre as modalidadNombre')
             ->addSelect('pd.cantidad')
             ->addSelect('pd.diaDesde')
             ->addSelect('pd.diaHasta')
@@ -277,8 +280,6 @@ class TurPedidoDetalleRepository extends ServiceEntityRepository
             ->addSelect('pd.porcentajeIva')
             ->addSelect('pd.vrIva')
             ->addSelect('pd.vrSubtotal')
-            ->addSelect('c.nombre as conceptoNombre')
-            ->addSelect('m.nombre as modalidadNombre')
             ->leftJoin('pd.conceptoRel', 'c')
             ->leftJoin('pd.modalidadRel', 'm')
             ->leftJoin('pd.pedidoRel ', 'p')

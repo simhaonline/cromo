@@ -56,7 +56,6 @@ class Programacion extends AbstractController
                 $session->set('filtroTurCodigoCliente', $form->get('codigoClienteFk')->getData());
                 $session->set('filtroTurProgramacionCodigoPuesto', $form->get('codigoPuesto')->getData());
                 $session->set('filtroTurProgramacionNumeroPedido', $form->get('numeroPedido')->getData());
-                $nombreCliente = $em->getRepository(TurCliente::class)->find($form->get('codigoClienteFk')->getData());
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arProgramaciones = $em->getRepository(TurProgramacion::class)->programaciones();
@@ -73,7 +72,6 @@ class Programacion extends AbstractController
         return $this->render('turno/informe/operacion/programacion/programacion.html.twig', [
             'arProgramaciones' => $arProgramaciones,
             'arrDiaSemana' => $arrDiaSemana,
-            'nombreCliente' => $nombreCliente ?? null,
             'form' => $form->createView()
         ]);
     }

@@ -72,6 +72,9 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>CLIENTE</th>
+            <th title="CONCEPTO NOMBRE">NOMBRE</th>
+            <th title="MODALIDAD NOMBRE">MODALIDAD</th>
             <th>CANTIDAD</th>
             <th>DESDE</th>
             <th>HASTA</th>
@@ -86,9 +89,6 @@
             <th title="HORAS PROGRAMADAS">H.P.</th>
             <th title="HORAS DIURNAS">H.DIU</th>
             <th title="HORAS NOCTURNAS">H.NOC</th>
-            <th title="CONCEPTO NOMBRE">NOMBRE</th>
-            <th title="MODALIDAD NOMBRE">MODALIDAD</th>
-
             <th title="VALOR SALARIO BASE">BASE</th>
             <th title="VALOR PRECIO AJUSTADO">PRECIO AJUSTADO</th>
             <th title="BASE IVA">BASE IVA</th>
@@ -101,6 +101,9 @@
         {% for arPedidosDetalle in arPedidosDetalles %}
             <tr>
                 <td>{{ arPedidosDetalle.codigoPedidoDetallePk }}</td>
+                <td>{{ arPedidosDetalle.cliente }}</td>
+                <td>{{ arPedidosDetalle.conceptoNombre }}</td>
+                <td>{{ arPedidosDetalle.modalidadNombre }}</td>
                 <td>{{ arPedidosDetalle.cantidad }}</td>
                 <td>{{ arPedidosDetalle.diaDesde }}</td>
                 <td>{{ arPedidosDetalle.diaHasta }}</td>
@@ -115,8 +118,6 @@
                 <td>{{ arPedidosDetalle.horasProgramadas }}</td>
                 <td>{{ arPedidosDetalle.horasDiurnasProgramadas }}</td>
                 <td>{{ arPedidosDetalle.horasNocturnasProgramadas }}</td>
-                <td>{{ arPedidosDetalle.conceptoNombre }}</td>
-                <td>{{ arPedidosDetalle.modalidadNombre }}</td>
                 <td class="numero">{{ arPedidosDetalle.vrSalarioBase | number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arPedidosDetalle.vrPrecioAjustado| number_format(0, '.', ',') }}</td>
                 <td class="numero">{{ arPedidosDetalle.porcentajeBaseIva| number_format(0, '.', ',') }}</td>

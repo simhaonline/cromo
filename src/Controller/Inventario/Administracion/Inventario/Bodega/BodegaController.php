@@ -55,11 +55,11 @@ class BodegaController extends MaestroController
             }
             if ($form->get('btnExcel')->isClicked()) {
                 $arRegistros = $em->getRepository($this->entidad)->lista($raw);
-                $this->excelLista($arRegistros, "Bodega");
+                $this->excelLista($arRegistros, "bodega");
             }
         }
         $arRegistros = $paginator->paginate($em->getRepository($this->entidad)->lista($raw), $request->query->getInt('page', 1), 30);
-        return $this->render('inventario/administracion/inventario/bodega/bodega/lista.html.twig', [
+        return $this->render('inventario/administracion/inventario/bodega/lista.html.twig', [
             'arRegistros' => $arRegistros,
             'form' => $form->createView(),
         ]);
@@ -85,7 +85,7 @@ class BodegaController extends MaestroController
                 return $this->redirect($this->generateUrl('inventario_administracion_inventario_bodega_bodega_detalle', array('id' => $arRegistro->getcodigoBodegaPk())));
             }
         }
-        return $this->render('inventario/administracion/inventario/bodega/bodega/nuevo.html.twig', [
+        return $this->render('inventario/administracion/inventario/bodega/nuevo.html.twig', [
             'form' => $form->createView(),
             'arRegistro' => $arRegistro
         ]);
@@ -99,7 +99,7 @@ class BodegaController extends MaestroController
     {
         $em = $this->getDoctrine()->getManager();
         $arRegistro = $em->getRepository($this->entidad)->find($id);
-        return $this->render('inventario/administracion/inventario/bodega/bodega/detalle.html.twig', [
+        return $this->render('inventario/administracion/inventario/bodega/detalle.html.twig', [
 
             'arRegistro' => $arRegistro,
         ]);

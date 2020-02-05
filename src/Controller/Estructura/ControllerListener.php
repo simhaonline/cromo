@@ -6,7 +6,9 @@ use App\Controller\MaestroController;
 use App\Entity\General\GenModelo;
 use App\Entity\General\GenProceso;
 use App\Entity\Seguridad\SegGrupoModelo;
+use App\Entity\Seguridad\SegGrupoProceso;
 use App\Entity\Seguridad\SegUsuarioModelo;
+use App\Entity\Seguridad\SegUsuarioProceso;
 use App\Utilidades\Mensajes;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,24 +55,11 @@ class ControllerListener extends MaestroController{
                     $this->getPermisoModelo($em, $modelo, $metodo, $event, $url);
                 }
                 if($controladorInformacion->tipo == 'proceso') {
-                    //$proceso = $controladorInformacion->proceso;
-                    //$this->getPermisoProceso($em, $proceso, $metodo, $event, $url);
+                    $proceso = $controladorInformacion->proceso;
+                    $this->getPermisoProceso($em, $proceso, $metodo, $event, $url);
                 }
             }
         }
-
-        /*if($controller[0] instanceof ControllerListenerGeneral){
-            if(is_array($controller)){
-                if(isset($controller[0]) && isset($controller[1])){
-                    if($controller[0]->getProceso()){
-                        $this->getPermisosProcesos($em, $controller, $event, $url);
-                    }
-                    else{
-                        $this->getPermisoModelo($em,$controller, $event, $url);
-                    }
-                }
-            }
-        }*/
     }
 
     /**
@@ -164,70 +153,21 @@ class ControllerListener extends MaestroController{
         $arUsuarioRol=$this->user->getToken()->getRoles()[0]->getRole()??"ROLE_USER";
         $arUsuario=$this->user->getToken()->getUser();
         $arProceso = $em->getRepository(GenProceso::class)->find($proceso);
-
         if($arProceso) {
             if($arUsuarioRol=="ROLE_ADMIN") {
                 return;
             } else {
-                $permisoGrupo = false;
                 if($arUsuario->getCodigoGrupoFk()) {
-                    $arGrupoModelo = $em->getRepository(SegGrupoModelo::class)->findOneBy(['codigoGrupoFk' => $arUsuario->getCodigoGrupoFk(), 'codigoModeloFk' => $modelo]);
+                    $arGrupoModelo = $em->getRepository(SegGrupoProceso::class)->findOneBy(['codigoGrupoFk' => $arUsuario->getCodigoGrupoFk(), 'codigoProcesoFk' => $proceso]);
                     if($arGrupoModelo) {
-                        switch ($metodo) {
-                            case "lista":
-                                if($arGrupoModelo->getLista()) {
-                                    $permisoGrupo = true;
-                                }
-                                break;
-                            case "nuevo":
-                                if($arGrupoModelo->getNuevo()) {
-                                    $permisoGrupo = true;
-                                }
-                                break;
-                            case "detalle":
-                                if($arGrupoModelo->getDetalle()) {
-                                    $permisoGrupo = true;
-                                }
-                                break;
-                            default:
-                                $permisoGrupo = true;
-                                break;
-                        }
+                        return;
                     }
                 }
-                if($permisoGrupo == true) {
-                    return;
-                }
-                $permisoUsuario = false;
-                $arUsuarioModelo = $em->getRepository(SegUsuarioModelo::class)->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoModeloFk' => $modelo]);
-                if($arUsuarioModelo) {
-                    switch ($metodo) {
-                        case "lista":
-                            if($arUsuarioModelo->getLista()) {
-                                $permisoUsuario = true;
-                            }
-                            break;
-                        case "nuevo":
-                            if($arUsuarioModelo->getNuevo()) {
-                                $permisoUsuario = true;
-                            }
-                            break;
-                        case "detalle":
-                            if($arUsuarioModelo->getDetalle()) {
-                                $permisoUsuario = true;
-                            }
-                            break;
-                        default:
-                            $permisoUsuario = true;
-                            break;
-                    }
-
-
-                }
-                if($permisoUsuario) {
+                $arUsuarioProceso = $em->getRepository(SegUsuarioProceso::class)->findOneBy(['codigoUsuarioFk' => $arUsuario->getUsername(), 'codigoProcesoFk' => $proceso]);
+                if($arUsuarioProceso) {
                     return;
                 } else {
-                    $this->redireccionar($event, $url, "No tiene permisos asignados para el modulo " . $arModelo->getCodigoModuloFk() . " funcion " . $arModelo->getCodigoFuncionFk() . " grupo " . $arModelo->getCodigoGrupoFk() . " opcion " . $arModelo->getCodigoModeloPk());
+                    $this->redireccionar($event, $url, "No tiene permisos asignados para el proceso " . $arProceso->getCodigoProcesoPk() . "-" . $arProceso->getNombre() . " modulo " . $arProceso->getCodigoModuloFk());
                 }
             }
         } else {

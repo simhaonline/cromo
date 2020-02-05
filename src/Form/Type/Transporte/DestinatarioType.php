@@ -73,27 +73,4 @@ class DestinatarioType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoDestinatarioPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombreCorto",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"numeroIdentificacion",            "tipo":"texto",     "ayuda":"Codigo transporte",       "titulo":"IDENTIFICACION"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoDestinatarioPk",            "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                      "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"codigoTransporte",            "tipo":"texto",     "ayuda":"Codigo transporte",       "titulo":"CODIGO TRANSPORTE"},	
-            {"campo":"orden",                       "tipo":"numero",    "ayuda":"Numero",                  "titulo":"NUMERO"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[	
-            {"child":"codigoDestinatarioPk",                "tipo":"TextType",      "propiedades":{"label":"Codigo"}},	
-            {"child":"nombreCorto",                "tipo":"TextType",      "propiedades":{"label":"Nombre"}}	
-        ]';
-        return $campos;
-    }
 }

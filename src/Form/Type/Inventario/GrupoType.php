@@ -29,22 +29,4 @@ class GrupoType extends AbstractType
         ]);
     }
 
-//        $builder
-//            ->add('codigoGrupoPk',TextType::class,['label' => 'Código grupo: '])
-//            ->add('lineaRel',EntityType::class,[
-//                'class' => 'App\Entity\Inventario\InvLinea',
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('l')
-//                        ->orderBy('l.nombre','DESC');
-//                },
-//                'choice_label' => 'nombre',
-//                'label' => 'Linea:'
-//            ])
-//            ->add('nombre',TextType::class,['label' => 'Nombre: '])
-//            ->add('guardar',SubmitType::class,['label' => 'Guardar','attr' => ['class' => 'btn btn-sm btn-primary']])
-//        ;
-
-
-
-
 }

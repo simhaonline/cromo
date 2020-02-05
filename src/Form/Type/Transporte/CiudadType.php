@@ -78,47 +78,4 @@ class CiudadType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista(){
-        return '[	
-            {"campo":"codigoCiudadPk",        "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",                "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},            	
-            {"campo":"codigoDepartamentoFk",  "tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"COD"},	
-            {"campo":"departamentoRel.nombre","tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"DEPARTAMENTO","relacion":""},	
-            {"campo":"codigoRutaFk",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"COD"},	
-            {"campo":"rutaRel.nombre",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"RUTA","relacion":""},	
-            {"campo":"ordenRuta",             "tipo":"numero",    "ayuda":"Orden ruta",              "titulo":"ORD"},	
-            {"campo":"codigoInterface",       "tipo":"texto",     "ayuda":"Codigo interface",        "titulo":"INTERFACE"},	
-            {"campo":"reexpedicion",          "tipo":"bool",      "ayuda":"Reexpedicion",            "titulo":"REEX"},	
-            {"campo":"lunes",          "tipo":"bool",      "ayuda":"Lunes",            "titulo":"LU"},	
-            {"campo":"martes",          "tipo":"bool",      "ayuda":"Martes",            "titulo":"MA"},	
-            {"campo":"miercoles",          "tipo":"bool",      "ayuda":"Miercoles",            "titulo":"MI"},	
-            {"campo":"jueves",          "tipo":"bool",      "ayuda":"Jueves",            "titulo":"JU"},	
-            {"campo":"viernes",          "tipo":"bool",      "ayuda":"Viernes",            "titulo":"VI"},	
-            {"campo":"sabado",          "tipo":"bool",      "ayuda":"Sabado",            "titulo":"SA"},	
-            {"campo":"domingo",          "tipo":"bool",      "ayuda":"Domingo",            "titulo":"DO"}	
-        ]';
-    }
-    public function getEstructuraPropiedadesExportar(){
-        return '[	
-            {"campo":"codigoCiudadPk",      "tipo":"pk",        "ayuda":"Codigo del registro",     "titulo":"ID"},	
-            {"campo":"nombre",              "tipo":"texto",     "ayuda":"Nombre del registro",     "titulo":"NOMBRE"},	
-            {"campo":"codigoDivision",      "tipo":"texto",     "ayuda":"Codigo division",         "titulo":"CODIGO DIVISION"},	
-            {"campo":"nombreDivision",      "tipo":"texto",     "ayuda":"Nombre division",         "titulo":"NOMBRE DIVISION"},	
-            {"campo":"codigoZona",          "tipo":"texto",     "ayuda":"Codigo zona",             "titulo":"CODIGO ZONA"},	
-            {"campo":"codigoMunicipio",     "tipo":"texto",     "ayuda":"Codigo municipio",        "titulo":"CODIGO MUNICIPIO"},	
-            {"campo":"nombreMunicipio",     "tipo":"texto",     "ayuda":"Nombre municipio",        "titulo":"NOMBRE MUNICIPIO"},	
-            {"campo":"codigoDepartamentoFk","tipo":"texto",     "ayuda":"Codigo departamento",     "titulo":"CODIGO DEPARTAMENTO"},	
-            {"campo":"codigoRutaFk",        "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"CODIGO RUTA"},	
-            {"campo":"rutaRel.nombre",          "tipo":"texto",     "ayuda":"Codigo ruta",             "titulo":"RUTA","relacion":""},	
-            {"campo":"ordenRuta",           "tipo":"numero",    "ayuda":"Orden ruta",              "titulo":"ORDEN RUTA"},	
-            {"campo":"codigoInterface",     "tipo":"texto",     "ayuda":"Codigo interface",        "titulo":"CODIGO INTERFACE"},	
-            {"campo":"reexpedicion",        "tipo":"bool",   "ayuda":"Reexpedicion",            "titulo":"REEXPEDICION"}	
-        ]';
-    }
-    public function getOrdenamiento(){
-        $campos ='[	
-            {"campo":"nombre","tipo":"ASC"}	
-        ]';
-        return $campos;
-    }
 }

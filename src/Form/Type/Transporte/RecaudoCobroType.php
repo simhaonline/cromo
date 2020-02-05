@@ -33,26 +33,4 @@ class RecaudoCobroType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[	
-            {"campo":"codigoRecaudoCobroPk",                    "tipo":"pk",        "ayuda":"Codigo de recaudo cobro",                  "titulo":"ID"},	
-            {"campo":"fecha",                                   "tipo":"fecha",     "ayuda":"Fecha",                                    "titulo":"FECHA"},	
-            {"campo":"vrTotal",                                 "tipo":"moneda",    "ayuda":"Total",                                    "titulo":"TOTAL"},	
-            {"campo":"usuario",                                 "tipo":"texto",     "ayuda":"Usuario",                                  "titulo":"USUARIO"},	
-            {"campo":"estadoAutorizado",                        "tipo":"bool",      "ayuda":"Autorizado",                               "titulo":"AUT"},	
-            {"campo":"estadoAprobado",                          "tipo":"bool",      "ayuda":"Aprobado",                                 "titulo":"APR"},	
-            {"campo":"estadoAnulado",                           "tipo":"bool",      "ayuda":"Anulado",                                  "titulo":"ANU"}	
-        ]';
-        return $campos;
-    }
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[	
-            {"child":"estadoAutorizado",                "tipo":"ChoiceType",    "propiedades":{"label":"Autorizado",     "choices":{"SI":true,"NO":false}}},	
-            {"child":"estadoAprobado",                "tipo":"ChoiceType",    "propiedades":{"label":"Aprobado",     "choices":{"SI":true,"NO":false}}},	
-            {"child":"estadoAnulado",                "tipo":"ChoiceType",    "propiedades":{"label":"Anulado",     "choices":{"SI":true,"NO":false}}}	
-        ]';
-        return $campos;
-    }
 }

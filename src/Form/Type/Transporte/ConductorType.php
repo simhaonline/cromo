@@ -83,17 +83,6 @@ class ConductorType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[	
-            {"campo":"codigoConductorPk",                       "tipo":"pk",        "ayuda":"Codigo de conductor",                      "titulo":"ID"},	
-            {"campo":"numeroIdentificacion",                    "tipo":"texto",     "ayuda":"Identificacion",                           "titulo":"IDENTIFICACION"},	
-            {"campo":"nombreCorto",                             "tipo":"texto",     "ayuda":"Nombre",                                   "titulo":"NOMBRE"},	
-            {"campo":"telefono",                                "tipo":"texto",     "ayuda":"Telefono",                                 "titulo":"TELEFONO"},	
-            {"campo":"movil",                                   "tipo":"texto",     "ayuda":"Celular",                                  "titulo":"CELULAR"}	
-        ]';
-        return $campos;
-    }
     public function getEstructuraPropiedadesFiltro()
     {
         $campos = '[	

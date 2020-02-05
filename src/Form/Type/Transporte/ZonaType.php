@@ -28,20 +28,4 @@ class ZonaType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[	
-            {"campo":"codigoZonaPk",    "tipo":"pk",        "ayuda":"Codigo de la zona",   "titulo":"ID"},	
-            {"campo":"nombre",          "tipo":"texto",     "ayuda":"zona",                "titulo":"nombre"}	
-        ]';
-        return $campos;
-    }
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[	
-            {"child":"codigoZonaPk",    "tipo":"TextType",  "propiedades":{"label":"codigo zona:"}, "operador":"like"},	
-            {"child":"nombre",          "tipo":"TextType",  "propiedades":{"label":"nombre"},       "operador":"like"}	
-        ]';
-        return $campos;
-    }
 }

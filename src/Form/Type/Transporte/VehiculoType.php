@@ -137,28 +137,4 @@ class VehiculoType extends AbstractType
         ]);
     }
 
-    public function getEstructuraPropiedadesLista()
-    {
-        $campos = '[	
-            {"campo":"codigoVehiculoPk",                        "tipo":"pk",        "ayuda":"Codigo de vehiculo",                       "titulo":"ID"},	
-            {"campo":"placa",                                   "tipo":"texto",     "ayuda":"placa",                                    "titulo":"PLACA"},	
-            {"campo":"placaRemolque",                           "tipo":"texto",     "ayuda":"Placa remolque",                           "titulo":"REM"},	
-            {"campo":"marcaRel.nombre",                         "tipo":"texto",     "ayuda":"Marca",                                    "titulo":"MARCA",                   "relacion":""},	
-            {"campo":"modelo",                                  "tipo":"texto",     "ayuda":"Modelo",                                   "titulo":"MODELO"},	
-            {"campo":"motor",                                   "tipo":"texto",     "ayuda":"Motor",                                    "titulo":"MOTOR"},	
-            {"campo":"numeroEjes",                              "tipo":"entero",    "ayuda":"Numero ejes",                              "titulo":"EJES"},	
-            {"campo":"celular",                                   "tipo":"texto",     "ayuda":"Celular",                                    "titulo":"CELULAR"},	
-            {"campo":"fechaVencePoliza",                            "tipo":"fecha",     "ayuda":"Fecha vence poliza",                            "titulo":"F_POL"},	
-            {"campo":"poseedorRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Poseedor del vehiculo",                           "titulo":"POSEEDOR",         "relacion":""},	
-            {"campo":"propietarioRel.nombreCorto",                  "tipo":"texto",     "ayuda":"Propietario",                           "titulo":"PROPIETARIO",         "relacion":""}	
-        ]';
-        return $campos;
-    }
-    public function getEstructuraPropiedadesFiltro()
-    {
-        $campos = '[	
-            {"child":"placa",               "tipo":"TextType",   "propiedades":{"label":"Placa"},   "operador":"like"}	
-        ]';
-        return $campos;
-    }
 }

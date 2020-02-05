@@ -52,7 +52,6 @@ class EmpleadoController extends MaestroController
     public function lista(Request $request, PaginatorInterface $paginator )
     {
         $em = $this->getDoctrine()->getManager();
-
         $form = $this->createFormBuilder()
             ->add('codigoGrupoFk', EntityType::class, [
                 'class' => RhuGrupo::class,
@@ -72,11 +71,10 @@ class EmpleadoController extends MaestroController
             ->add('btnExcel', SubmitType::class, array('label' => 'Excel'))
             ->add('btnEliminar', SubmitType::class, array('label' => 'Eliminar'))
             ->add('limiteRegistros', TextType::class, array('required' => false, 'data' => 100))
+            ->setMethod('GET')
             ->getForm();
         $form->handleRequest($request);
-        $raw = [
-            'limiteRegistros' => $form->get('limiteRegistros')->getData()
-        ];
+        $raw['limiteRegistros'] = $form->get('limiteRegistros')->getData();
         if ($form->isSubmitted()) {
             if ($form->get('btnFiltro')->isClicked()) {
                 $raw['filtros'] = $this->getFiltros($form);
